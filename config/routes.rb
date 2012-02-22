@@ -1,4 +1,12 @@
 SimpleFrontEndTesting::Application.routes.draw do
+  
+  devise_for :users
+  
+  resources :test_files
+  
+  root :to => "test_files#index"
+  
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

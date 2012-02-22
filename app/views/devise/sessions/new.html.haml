@@ -1,0 +1,21 @@
+.user_form.well
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+    %legend
+      %h2 Sign in
+    %ul.unstyled
+      %li
+        = f.label :email
+        = f.email_field :email
+      %li
+        = f.label :password
+        = f.password_field :password
+      - if devise_mapping.rememberable?
+        %li
+          = f.label :remember_me, :class => "checkbox"
+          = f.check_box :remember_me
+          - # For some reason bootstrap requires us to nest the checkbox within the label, so we need to break the pattern here
+          / %label.checkbox{ :for => "user_remember_me" }      
+          /             = f.check_box :remember_me
+          /             Remember me
+    = f.submit "Sign in", :class => "btn btn-primary"
+  = render "links"

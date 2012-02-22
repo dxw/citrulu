@@ -1,0 +1,20 @@
+.user_form.well
+  = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+    = devise_error_messages!
+    %legend
+      %h2 Sign up
+    %ul.unstyled
+      %li
+        = f.label :email
+        = f.email_field :email
+      %li
+        = f.label :password
+        = f.password_field :password
+      %li
+        = f.label :password_confirmation
+        = f.password_field :password_confirmation
+
+    
+    = f.submit "Sign up", :class => "btn btn-primary", :onclick => ("alert(#{params})")
+  %div
+    = render "links"

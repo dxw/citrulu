@@ -1,0 +1,21 @@
+<h1>Listing test_files</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @test_files.each do |test_file| %>
+  <tr>
+    <td><%= link_to 'Show', test_file %></td>
+    <td><%= link_to 'Edit', edit_test_file_path(test_file) %></td>
+    <td><%= link_to 'Destroy', test_file, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Test file', new_test_file_path %>
