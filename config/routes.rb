@@ -6,7 +6,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   #    root :to => "test_files#index"
   #  end
   # The above SHOULD work, but doesn't not work in production. The following is from see https://github.com/plataformatec/devise/wiki/How-To%3A-Redirect-to-a-specific-page-on-successful-sign-in-out
-  match '/user' => "test_files#index", :as => :user_root
+  match '/user' => "website#test_file_editor", :as => :user_root
    
   resources :test_files
 
