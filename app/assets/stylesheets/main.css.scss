@@ -2,6 +2,13 @@ body {
 	//background: #EEE url("square_paper.png") top left repeat;
 }
 
+#editor {
+        position: absolute;
+        width: 500px;
+        height: 400px;
+    }
+
+
 .user_form {
 	margin: auto;
 	width: 240px;

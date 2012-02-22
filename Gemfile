@@ -6,6 +6,9 @@ gem 'sqlite3'
 # Authentication management with devise:
 gem 'devise'
 
+# Text editor:
+gem 'ace-rails-ap'
+
 
 # Gems used only for assets and not required
 # in production environments by default.

@@ -6,4 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require ace
+//= require theme-twilight.js
+//= require mode-javascript.js
 //= require_tree .

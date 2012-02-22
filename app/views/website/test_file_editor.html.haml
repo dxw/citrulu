@@ -1,0 +1,14 @@
+
+#editor
+  =@file.test_file_text
+:javascript
+  window.onload = function() {
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/twilight");
+      var JavascriptMode = require("ace/mode/javascript").Mode;
+          editor.getSession().setMode(new JavascriptMode());     
+  };
+
+- #TODO: there may be a better place to put this JS...
+/ var TestGrammarMode = require("ace/mode/testgrammar").Mode;
+/           editor.getSession().setMode(new TestGrammarMode());
