@@ -19,5 +19,6 @@
 
     - flash.each do |name, message|
       = flash_message(name, message)
- 
-    = content_for?(:content) ? yield(:content) : yield
+    
+    .container{ :style => "width: 1170px;"}
+      = content_for?(:content) ? yield(:content) : yield

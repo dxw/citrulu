@@ -2,11 +2,18 @@ body {
 	//background: #EEE url("square_paper.png") top left repeat;
 }
 
-#editor {
-        position: absolute;
-        width: 500px;
-        height: 400px;
-    }
+
+
+#test_suite{	
+	#editor, #editor_wrapper {
+	  width: 620px;
+		height: 400px;
+	}
+	#console {
+		//margin-top: 420px;
+	}
+}
+
 
 
 .user_form {
@@ -88,3 +95,4 @@ body {
 
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
+//@import "bootstrap-responsive";

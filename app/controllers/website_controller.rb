@@ -9,7 +9,7 @@ class WebsiteController < ApplicationController
   end
   
   def test_file_editor
-    @file = current_user.test_file
+    @test_file = current_user.test_file
   end
   
 end
