@@ -1,4 +1,10 @@
-- content_for :content do 
-  .user_form.well
+- content_for :content do
+  .container{ :style => "width: 1170px;"}
+    %header
+      %h1 Simple Front End Testing
+      %p.lead This is some blurb about the site.
+
+    - flash.each do |name, message|
+      = flash_message(name, message)
     = yield
 = render :template => 'layouts/application'

@@ -5,39 +5,48 @@ class TestFilesController < ApplicationController
   # GET /test_files
   # GET /test_files.json
   def index
-    @test_files = TestFile.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @test_files }
-    end
+    @test_file = current_user.test_file
+    render :edit
+    # @test_files = TestFile.all
+    # 
+    #     respond_to do |format|
+    #       format.html # index.html.erb
+    #       format.json { render json: @test_files }
+    #     end
   end
 
   # GET /test_files/1
   # GET /test_files/1.json
   def show
-    @test_file = TestFile.find(params[:id])
+    @test_file = current_user.test_file
+    render :edit
+    #@test_file = TestFile.find(params[:id])
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @test_file }
-    end
+    # respond_to do |format|
+    #   format.html # show.html.erb
+    #   format.json { render json: @test_file }
+    # end
   end
 
   # GET /test_files/new
   # GET /test_files/new.json
   def new
     @test_file = TestFile.new
+    render :edit
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @test_file }
-    end
+    # respond_to do |format|
+    #   format.html # new.html.erb
+    #   format.json { render json: @test_file }
+    # end
   end
 
   # GET /test_files/1/edit
   def edit
-    @test_file = TestFile.find(params[:id])
+    # if params[:id].nil?
+      @test_file = current_user.test_file
+    # else
+    #   @test_file = TestFile.find(params[:id])
+    # end
   end
 
   # POST /test_files

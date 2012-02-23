@@ -5,11 +5,9 @@ class WebsiteController < ApplicationController
   #  end
     
   def index
-  
-  end
-  
-  def test_file_editor
-    @test_file = current_user.test_file
+    if user_signed_in?
+      redirect_to test_files_path
+    end
   end
   
 end

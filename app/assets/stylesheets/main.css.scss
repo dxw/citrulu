@@ -3,6 +3,13 @@ body {
 }
 
 
+.navbar #user_nav {
+	padding: 10px 10px 11px;
+	line-height: 19px;
+	color: #fff;
+	text-decoration: none;
+	float: right;
+}
 
 #test_suite{	
 	#editor, #editor_wrapper {
@@ -14,17 +21,46 @@ body {
 	}
 }
 
-
-
-.user_form {
-	margin: auto;
-	width: 240px;
+.span-one-third {
+	width: 300px;
 }
 
-.devise\/sessions {
+
+body.website {
+	 legend {
+		margin-bottom: 1em;
+	}
+}
+
+
+//.devise\/sessions {
+body.devise, body.website {
+	header {
+		text-align: center;
+		margin: 40px 0;
+		h1 {
+			font-size: 54px;
+			line-height: 1;
+			margin-bottom: 9px;
+		}
+	}
 	.alert {
 		width: 229px;
 		margin: 0 auto 20px;
+	}
+	.user_form {
+		margin: auto;
+		width: 240px;
+	}
+	
+	.field_with_errors {
+		@extend .form_inline input;
+	}
+}
+
+.test_files {
+	h1 {
+		margin-bottom: 19px;
 	}
 }
 

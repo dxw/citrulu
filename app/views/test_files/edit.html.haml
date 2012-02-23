@@ -1,0 +1,59 @@
+%h1 Test File Editor
+
+.row
+  #test_suite.span8
+    
+    = form_for(@test_file, :html => {:id => "editor_form"}) do |f|
+      = f.text_area :test_file_text, :id => "editor_content"
+      #editor_wrapper 
+        - #infuriating div required (?) to deal with the fact that the #editor element has no size 
+        #editor
+          Sorry the editor could not be loaded
+      = f.submit "Save", :class => "btn btn-primary"
+ 
+    %section#console
+      %h3 Console
+    
+      #console_body.well
+        %p This is some stuff in your console
+  #help.span4.well
+    %h2 Help
+    %p This is some help text
+    %h3 This is some hipster lorem ipsum (from kottke):
+    %p Organic sustainable lomo, +1 irony McSweeney's skateboard Portland PBR tattooed farm-to-table Terry Richardson Williamsburg. 
+    %p Organic farm-to-table wolf, next level shit put a bird on it freegan American Apparel Williamsburg chambray gentrify viral you probably haven't heard of them keffiyeh Cosby sweater. 
+    %p Pitchfork photo booth fuck, DIY cardigan messenger bag butcher Thundercats tofu you probably haven't heard of them whatever squid VHS put a bird on it. 
+    %p Thundercats fixie Williamsburg, photo booth synth vinyl dreamcatcher Wes Anderson cliche. You probably haven't heard of them DIY mlkshk biodiesel McSweeney's raw denim. 
+    %p Skateboard Pitchfork Etsy, photo booth messenger bag artisan raw denim beard Tumblr retro Austin. Wes Anderson sustainable keffiyeh, blog lomo craft beer cliche brunch homo skateboard biodiesel fanny pack Pitchfork you probably haven't heard of them Stumptown.
+    
+    
+-# API: https://github.com/ajaxorg/ace/wiki/Embedding---API
+:javascript
+  $(document).ready(function(){
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setTabSize(4);
+    editor.getSession().setUseSoftTabs(true);
+    editor.getSession().setValue($("#editor_content").val());
+
+    $("#editor_content").hide();
+    $("#editor_form").submit(function(){
+      $("#editor_content").val(editor.getSession().getValue());
+    });
+  });
+
+
+
+/ :javascript
+/   window.onload = function() {
+/       var editor = ace.edit("editor");
+/       editor.setTheme("ace/theme/twilight");
+/       
+/       var JavaScriptMode = require("ace/mode/javascript").Mode;
+/       editor.getSession().setMode(new JavaScriptMode());
+/   };
+
+- #TODO: there may be a better place to put this JS...
+-# Here's the code to include the (currently aborted) attempt to write our own syntax highlighting
+-# var TestGrammarMode = require("ace/mode/testgrammar").Mode;
+-# editor.getSession().setMode(new TestGrammarMode());

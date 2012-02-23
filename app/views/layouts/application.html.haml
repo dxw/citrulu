@@ -5,20 +5,7 @@
     = stylesheet_link_tag    "application"
     = javascript_include_tag "application"
     = csrf_meta_tags
-  %body{ :class => params[:controller] }
-  
-    #user_nav
-      - if user_signed_in?
-        %p 
-          = "Signed in as #{current_user.email}."
-          = "Not you?"
-          = link_to( 'Sign out', destroy_user_session_path, :method => :delete )
-      - else
-        %p 
-          = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
-
-    - flash.each do |name, message|
-      = flash_message(name, message)
-    
-    .container{ :style => "width: 1170px;"}
-      = content_for?(:content) ? yield(:content) : yield
+  %body{ :class => params[:controller].split("/")[0] }
+    -#there is undoubtedly a cleaner way to handle the class above...
+    -#the point is that the "devise" controller has multiple parts e.g. devise/sessions ...
+    = content_for?(:content) ? yield(:content) : yield
