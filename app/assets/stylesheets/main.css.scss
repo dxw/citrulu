@@ -54,7 +54,7 @@ body.devise, body.website {
 	}
 	
 	.field_with_errors {
-		@extend .form_inline input;
+		//TODO - need to make these go inline to match the existing layout
 	}
 }
 
