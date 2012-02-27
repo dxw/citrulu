@@ -11,16 +11,6 @@ body {
 	float: right;
 }
 
-#test_suite{	
-	#editor, #editor_wrapper {
-	  width: 620px;
-		height: 400px;
-	}
-	#console {
-		//margin-top: 420px;
-	}
-}
-
 .span-one-third {
 	width: 300px;
 }
@@ -62,14 +52,38 @@ body.devise, body.website {
 	h1 {
 		margin-bottom: 19px;
 	}
-	#console {
-		pre {
-			height: 200px;
-			.success {
-				color: green;
+	#editor_status{
+		color: gray;
+		font-size: 1.5em;
+		text-align: right;
+		//FRAGILE!!!
+		line-height: 36px;
+		width: 270px;
+		padding-right: 30px;
+	}
+	#editor_status.working{
+		background: transparent url("loader.gif") no-repeat right;
+	}
+	
+	#test_suite{
+		#editor, #editor_wrapper {
+		  width: 620px;
+			height: 400px;
+		}
+		#console {
+			pre {
+				height: 200px;
+				.success {
+					color: green;
+				}
+				.error {
+					color: red;
+				}
 			}
 		}
 	}
+	
+	
 }
 
 

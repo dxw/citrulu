@@ -1,1 +1,8 @@
-$("#console pre").prepend("<%=j console_line(@console_msg) %>");
+$("#console pre").prepend("<%=j console_line(@console_msg, @console_msg_type) %>");
+$("#editor_status").removeClass("working");
+$("#editor_status").html("<%= @status_msg %>");
+$("#editor_form input[type='submit']").attr("disabled", false);
+var save_interval;
+//need to clear any existing timeouts in case the user pressed the save button
+clearTimeout(save_interval);
+save_interval = setTimeout("window.save_file()", 5000);

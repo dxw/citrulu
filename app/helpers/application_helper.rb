@@ -1,4 +1,7 @@
 module ApplicationHelper
+  def controller_name
+    params[:controller].split("/")[0]
+  end
   
   def flash_message(name, message)
     cl = 'alert'

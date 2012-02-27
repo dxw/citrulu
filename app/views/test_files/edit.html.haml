@@ -1,4 +1,6 @@
-%h1 Test File Editor
+.row 
+  %h1.span4 Test File Editor
+  #editor_status.span4
 
 .row
   #test_suite.span8
@@ -14,8 +16,8 @@
     %section#console
       %h3 Console
     
-      %pre.pre-scrollable
-        = @console_output
+      %pre.pre-scrollable=console_line(@console_output)
+      
   #help.span4.well
     %h2 Help
     %p This is some help text
@@ -28,19 +30,19 @@
     
     
 -# API: https://github.com/ajaxorg/ace/wiki/Embedding---API
-:javascript
-  $(document).ready(function(){
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
-    editor.getSession().setTabSize(4);
-    editor.getSession().setUseSoftTabs(true);
-    editor.getSession().setValue($("#editor_content").val());
-
-    $("#editor_content").hide();
-    $("#editor_form").submit(function(){
-      $("#editor_content").val(editor.getSession().getValue());
-    });
-  });
+/ :javascript
+/   $(document).ready(function(){
+/     var editor = ace.edit("editor");
+/     editor.setTheme("ace/theme/twilight");
+/     editor.getSession().setTabSize(4);
+/     editor.getSession().setUseSoftTabs(true);
+/     editor.getSession().setValue($("#editor_content").val());
+/ 
+/     $("#editor_content").hide();
+/     $("#editor_form").submit(function(){
+/       $("#editor_content").val(editor.getSession().getValue());
+/     });
+/   });
 
 
 
