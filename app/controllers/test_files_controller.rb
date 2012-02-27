@@ -6,6 +6,7 @@ class TestFilesController < ApplicationController
   # GET /test_files.json
   def index
     @test_file = current_user.test_file
+
     # redirect_to @test_file
     redirect_to edit_test_file_path(@test_file)
     
@@ -48,7 +49,7 @@ class TestFilesController < ApplicationController
   def edit
     # if params[:id].nil?
       @test_file = current_user.test_file
-      @foo = "bar"
+      
       @console_output = %{
 Started GET "/assets/theme-twilight.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
 Served asset /theme-twilight.js - 304 Not Modified (0ms)
@@ -106,7 +107,8 @@ Served asset /application.js - 304 Not Modified (1ms)
   def update
     @test_file = TestFile.find(params[:id])
 
-    flash[:notice] = "Saved!"
+    # flash[:notice] = "Saved!"
+    @console_msg = "Saved!"
     
     respond_to do |format|
       if @test_file.update_attributes(params[:test_file])

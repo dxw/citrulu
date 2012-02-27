@@ -64,7 +64,10 @@ body.devise, body.website {
 	}
 	#console {
 		pre {
-			height: 200px
+			height: 200px;
+			.success {
+				color: green;
+			}
 		}
 	}
 }
