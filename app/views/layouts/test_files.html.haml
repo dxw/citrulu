@@ -1,5 +1,5 @@
 - content_for :content do
-  .navbar
+  #navbar.navbar
     .navbar-inner
       .container{ :style => "width: 1170px;"}
         %h2.brand Simple Front-End Testing
@@ -11,6 +11,7 @@
           - else 
             = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
   .container{ :style => "width: 1170px;"}
+    #flash_messages
     - flash.each do |name, message|
       = flash_message(name, message)
     = yield

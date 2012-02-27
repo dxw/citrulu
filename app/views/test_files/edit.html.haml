@@ -3,7 +3,7 @@
 .row
   #test_suite.span8
     
-    = form_for(@test_file, :html => {:id => "editor_form"}) do |f|
+    = form_for(@test_file, :remote => true, :html => {:id => "editor_form"}) do |f|
       = f.text_area :test_file_text, :id => "editor_content"
       #editor_wrapper 
         - #infuriating div required (?) to deal with the fact that the #editor element has no size 
@@ -12,10 +12,13 @@
       = f.submit "Save", :class => "btn btn-primary"
  
     %section#console
-      %h3 Console
+      %h3 Console 
+      faff
+      =@foo
+      fluff
     
-      #console_body.well
-        %p This is some stuff in your console
+      %pre.pre-scrollable
+        = @console_output
   #help.span4.well
     %h2 Help
     %p This is some help text

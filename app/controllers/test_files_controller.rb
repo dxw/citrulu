@@ -6,7 +6,10 @@ class TestFilesController < ApplicationController
   # GET /test_files.json
   def index
     @test_file = current_user.test_file
-    render :edit
+    # redirect_to @test_file
+    redirect_to edit_test_file_path(@test_file)
+    
+    
     # @test_files = TestFile.all
     # 
     #     respond_to do |format|
@@ -19,7 +22,8 @@ class TestFilesController < ApplicationController
   # GET /test_files/1.json
   def show
     @test_file = current_user.test_file
-    render :edit
+    
+    redirect_to edit_test_file_path(@test_file)
     #@test_file = TestFile.find(params[:id])
 
     # respond_to do |format|
@@ -32,7 +36,7 @@ class TestFilesController < ApplicationController
   # GET /test_files/new.json
   def new
     @test_file = TestFile.new
-    render :edit
+    redirect_to edit_test_file_path(@test_file)
 
     # respond_to do |format|
     #   format.html # new.html.erb
@@ -44,6 +48,38 @@ class TestFilesController < ApplicationController
   def edit
     # if params[:id].nil?
       @test_file = current_user.test_file
+      @foo = "bar"
+      @console_output = %{
+Started GET "/assets/theme-twilight.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /theme-twilight.js - 304 Not Modified (0ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+
+Started GET "/assets/mode-javascript.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /mode-javascript.js - 304 Not Modified (0ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+
+Started GET "/assets/mode-testgrammar.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /mode-testgrammar.js - 304 Not Modified (0ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+
+Started GET "/assets/test_files.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /test_files.js - 304 Not Modified (0ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+
+Started GET "/assets/website.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /website.js - 304 Not Modified (0ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at 2012-02-23 16:43:42 +0000
+Served asset /application.js - 304 Not Modified (1ms)
+[2012-02-23 16:43:42] WARN  Could not determine content-length of response body. Set content-length of the response or set Response#chunked = true
+
+      }
     # else
     #   @test_file = TestFile.find(params[:id])
     # end
@@ -70,9 +106,12 @@ class TestFilesController < ApplicationController
   def update
     @test_file = TestFile.find(params[:id])
 
+    flash[:notice] = "Saved!"
+    
     respond_to do |format|
       if @test_file.update_attributes(params[:test_file])
         format.html { redirect_to @test_file, notice: 'Test file was successfully updated.' }
+        format.js { }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

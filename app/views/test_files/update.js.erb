@@ -1,0 +1,4 @@
+$("#flash_messages").html("")
+<% flash.each do |name, message| %>
+  $("#flash_messages").append("<%= raw flash_message(name, message) %>");
+<% end %>

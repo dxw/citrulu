@@ -62,6 +62,11 @@ body.devise, body.website {
 	h1 {
 		margin-bottom: 19px;
 	}
+	#console {
+		pre {
+			height: 200px
+		}
+	}
 }
 
 
