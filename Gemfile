@@ -29,6 +29,8 @@ group :development, :test do
    gem "factory_girl_rails", "~> 1.2"
    gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
    gem 'guard-rspec'
+   gem "spork", "> 0.9.0.rc"
+   gem "guard-spork"
    gem 'guard-livereload'
 end
 
