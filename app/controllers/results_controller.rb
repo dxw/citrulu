@@ -3,62 +3,6 @@ class ResultsController < ApplicationController
   
   before_filter :authenticate_user!
   
-  
-  DUMMY_TEST_RESULT = %{7) ResultsController POST create with valid params assigns a newly created result as @result
-   Failure/Error: assigns(:result).should be_a(Result)
-     expected nil to be a kind of Result(Table doesn't exist)
-   # ./spec/controllers/results_controller_spec.rb:78:in `block (4 levels) in <top (required)>'
-
-8) ResultsController POST create with valid params redirects to the created result
-   Failure/Error: response.should redirect_to(Result.last)
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:84:in `block (4 levels) in <top (required)>'
-
-9) ResultsController POST create with invalid params assigns a newly created but unsaved result as @result
-   Failure/Error: assigns(:result).should be_a_new(Result)
-     expected nil to be a new Result(Table doesn't exist)
-   # ./spec/controllers/results_controller_spec.rb:93:in `block (4 levels) in <top (required)>'
-
-10) ResultsController POST create with invalid params re-renders the 'new' template
-   Failure/Error: response.should render_template("new")
-     expecting <"new"> but rendering with <"">
-   # ./spec/controllers/results_controller_spec.rb:100:in `block (4 levels) in <top (required)>'
-
-11) ResultsController PUT update with valid params updates the requested result
-   Failure/Error: result = Result.create! valid_attributes
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:108:in `block (4 levels) in <top (required)>'
-
-12) ResultsController PUT update with valid params assigns the requested result as @result
-   Failure/Error: result = Result.create! valid_attributes
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:118:in `block (4 levels) in <top (required)>'
-
-13) ResultsController PUT update with valid params redirects to the result
-   Failure/Error: result = Result.create! valid_attributes
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:124:in `block (4 levels) in <top (required)>'
-
-14) ResultsController PUT update with invalid params assigns the result as @result
-   Failure/Error: result = Result.create! valid_attributes
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:132:in `block (4 levels) in <top (required)>'
-
-15) ResultsController PUT update with invalid params re-renders the 'edit' template
-   Failure/Error: result = Result.create! valid_attributes
-   ActiveRecord::StatementInvalid:
-     Could not find table 'results'
-   # ./spec/controllers/results_controller_spec.rb:140:in `block (4 levels) in <top (required)>'
-
-16) ResultsController DELETE destroy destroys the requested result
-}
-  
-  
   # GET /results
   # GET /results.json
   def index
@@ -72,7 +16,21 @@ class ResultsController < ApplicationController
     offset = 0
     while @results.length < 10
       offset += rand(100)
-      @results << Result.new(:id => offset, :time_run => Time.now - offset, :result => DUMMY_TEST_RESULT)
+      
+      
+      result_object = []
+      number_of_pages = rand(3) + 5
+      while result_object.length < number_of_pages
+        steps = []
+        number_of_steps = rand(3) + 3
+        while steps.length < number_of_steps
+          step = "This is a result" 
+          steps << step
+        end
+        result_object << ["http://thisisapage#{Time.now.to_i}", steps]
+      end
+      
+      @results << Result.new(:id => offset, :time_run => Time.now - offset, :result => result_object)
     end
 ##END TEMPORARY CODE
 
