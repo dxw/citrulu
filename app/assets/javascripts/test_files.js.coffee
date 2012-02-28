@@ -6,7 +6,9 @@ $("body.test_files.edit").ready ->
   # save the file for the first time: 
   window.save_file()
 
+
 setup_editor = ->
+  # API: https://github.com/ajaxorg/ace/wiki/Embedding---API
   window.editor = ace.edit("editor")
   window.editor.setTheme "ace/theme/twilight"
   window.editor.getSession().setTabSize 2
@@ -19,6 +21,11 @@ setup_editor = ->
     $("#editor_content").val editor_text
     window.text_hash = make_hash(editor_text)
     
+  # Here's the code to include the (currently aborted) attempt to write our own syntax highlighting:
+  # TestGrammarMode = require("ace/mode/testgrammar").Mode
+  # window.editor.getSession().setMode new TestGrammarMode()
+
+
 saving_file = ->
   $("#editor_status").html "Saving..."
   $("#editor_status").addClass "working"

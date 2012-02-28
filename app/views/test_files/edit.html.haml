@@ -1,6 +1,7 @@
 .row 
   %h1.span4 Test File Editor
-  #editor_status.span4
+  #editor_status.span4 
+    = @status_msg
 
 .row
   #test_suite.span8
@@ -27,35 +28,3 @@
     %p Pitchfork photo booth fuck, DIY cardigan messenger bag butcher Thundercats tofu you probably haven't heard of them whatever squid VHS put a bird on it. 
     %p Thundercats fixie Williamsburg, photo booth synth vinyl dreamcatcher Wes Anderson cliche. You probably haven't heard of them DIY mlkshk biodiesel McSweeney's raw denim. 
     %p Skateboard Pitchfork Etsy, photo booth messenger bag artisan raw denim beard Tumblr retro Austin. Wes Anderson sustainable keffiyeh, blog lomo craft beer cliche brunch homo skateboard biodiesel fanny pack Pitchfork you probably haven't heard of them Stumptown.
-    
-    
--# API: https://github.com/ajaxorg/ace/wiki/Embedding---API
-/ :javascript
-/   $(document).ready(function(){
-/     var editor = ace.edit("editor");
-/     editor.setTheme("ace/theme/twilight");
-/     editor.getSession().setTabSize(4);
-/     editor.getSession().setUseSoftTabs(true);
-/     editor.getSession().setValue($("#editor_content").val());
-/ 
-/     $("#editor_content").hide();
-/     $("#editor_form").submit(function(){
-/       $("#editor_content").val(editor.getSession().getValue());
-/     });
-/   });
-
-
-
-/ :javascript
-/   window.onload = function() {
-/       var editor = ace.edit("editor");
-/       editor.setTheme("ace/theme/twilight");
-/       
-/       var JavaScriptMode = require("ace/mode/javascript").Mode;
-/       editor.getSession().setMode(new JavaScriptMode());
-/   };
-
-- #TODO: there may be a better place to put this JS...
--# Here's the code to include the (currently aborted) attempt to write our own syntax highlighting
--# var TestGrammarMode = require("ace/mode/testgrammar").Mode;
--# editor.getSession().setMode(new TestGrammarMode());
