@@ -7,7 +7,6 @@ body {
 	min-width: 1170px
 }
 
-
 .navbar {
 	.container {
 		width: 100%;
@@ -59,59 +58,6 @@ body.devise, body.website {
 	.field_with_errors {
 		//TODO - need to make these go inline to match the existing layout
 	}
-}
-
-body.test_files {
-	h1 {
-		margin-bottom: 19px;
-		padding-left: 20px;
-	}
-	#editor_status{
-		color: gray;
-		font-size: 1.5em;
-		text-align: right;
-		margin-right: 60px;
-		padding-right: 10px;
-		//FRAGILE!!!
-		line-height: 36px;
-	}
-	#editor_status.working{
-		padding-right: 25px;
-		background: transparent url("loader.gif") no-repeat right;
-	}
-	
-	#test_suite{
-		padding-left: 20px;
-		#editor_form {
-			input[type=submit] {
-				// FRAGILITY ABOUNDS!!!
-				
-				//This leaves a hole... = Bad
-				//position: relative;
-				//top: -450px;
-				//left: 549px;
-				
-				position: absolute;
-				top: 62px;
-				left: 569px;
-			}
-		}
-		#editor, #editor_wrapper {
-		  width: 600px;
-			height: 400px;
-		}
-		#console {
-			pre {
-				height: 200px;
-				.success {
-					color: green;
-				}
-				.error {
-					color: red;
-				}
-			}
-		}
-	}	
 }
 
 //Twitter bootstrap, in sass, via a gem.
