@@ -1,16 +1,25 @@
-%h1 Results
-- if @results.empty?
-  %p You don't have any results to show yet
--else
-  %ul#results_list.unstyled.accordion
-    - @results.each do |result| 
-      %li.accordion-group 
-        %header{ :class => "accordion-heading #{result.result_status}" }
-          %time.accordion-toggle{ "data-parent" => "#results_list", "data-target"=> "##{result.time_run.to_i}", "data-toggle" => "collapse"} 
-            / %time.accordion-toggle{ "data-parent" => "#results_list", "data-target"=> "##{result.id}", "data-toggle" => "collapse"} 
-            = result.time_run.to_s(:result_time)
+.page
+  %h1 Results
+  - if @results.empty?
+    %p You don't have any results to show yet
+  -else
+    %ul#results_list.unstyled.accordion
+      - @results.each do |result| 
+        %li.accordion-group 
+          %header{ :class => "accordion-heading #{result.result_status}" }
+            .accordion-toggle{ "data-parent" => "#results_list", "data-target"=> "##{result.time_run.to_i}", "data-toggle" => "collapse"} 
+              / %time.accordion-toggle{ "data-parent" => "#results_list", "data-target"=> "##{result.id}", "data-toggle" => "collapse"} 
+              %time
+                = result.time_run.to_s(:result_time)
+              %span.failures
+                = "#{result.failures} failures" unless result.failures == 0
             
-        %section.accordion-body.collapse{ :id => result.time_run.to_i }  
-          / %section.accordion-body.collapse{ :id => result.id }  
-          %pre.accordion-inner
-            = result.result
+          
+            
+          .accordion-body.collapse{ :id => result.time_run.to_i }  
+            / %section.accordion-body.collapse{ :id => result.id }  
+            %section.accordion-inner
+              %pre
+                = result.result
+              %p.close_link
+                %a{ "data-parent" => "#results_list", "data-target"=> "##{result.time_run.to_i}", "data-toggle" => "collapse"} Close

@@ -1,4 +1,13 @@
 ul#results_list{
 	width: 600px;
+	header {
+		.failures {
+			float: right;
+		}
+	}
+	.close_link{
+		text-align:right;
+	}
 }
+
 
