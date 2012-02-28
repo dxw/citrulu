@@ -1,4 +1,5 @@
 class TestFilesController < ApplicationController
+  layout "logged_in"
   
   before_filter :authenticate_user!
   

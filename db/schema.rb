@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120228140532) do
+ActiveRecord::Schema.define(:version => 20120228171709) do
+
+  create_table "results", :force => true do |t|
+    t.integer  "test_file_id"
+    t.time     "time_run"
+    t.text     "result"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"
