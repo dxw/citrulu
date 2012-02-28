@@ -1,7 +1,7 @@
 - content_for :content do
   #navbar.navbar
     .navbar-inner
-      .container{ :style => "width: 1170px;"}
+      .container
         %h2.brand Simple Front-End Testing
         #user_nav
           - if user_signed_in?
@@ -10,9 +10,8 @@
             = link_to( 'Sign out', destroy_user_session_path, :method => :delete )
           - else 
             = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
-  .container{ :style => "width: 1170px;"}
-    #flash_messages
-    - flash.each do |name, message|
-      = flash_message(name, message)
-    = yield
+  #flash_messages
+  - flash.each do |name, message|
+    = flash_message(name, message)
+  = yield
 = render :template => 'layouts/application'
