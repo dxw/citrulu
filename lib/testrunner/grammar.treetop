@@ -1,0 +1,56 @@
+grammar TesterGrammar
+  rule test_file
+    test_group+ {
+      def process
+        elements.collect{|e| e.process}
+      end
+    }
+  end
+
+  rule test_group
+    comment* on_clause test+  {
+      def process
+        {:test_url => on_clause.url.text_value, :tests => elements[2].elements.collect{|e| e.process}}
+      end
+    }
+  end
+
+  rule on_clause
+    "On " url newline 
+  end
+
+  rule test
+    comment* space assertion value newline {
+      def process
+      {:assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym, :value => value.text_value}
+      end
+    }
+  end
+ 
+  rule assertion
+    "Source should contain " / "Source should not contain " / 
+    "Page should contain " / "Page should not contain " /
+    "Headers should include " / "Headers should not include "
+  end
+
+  rule newline
+    [\n]+ 
+  end
+
+  rule value
+    [^\n]+    
+  end
+
+  rule url
+    ('http://' / 'https://') [^\n]+
+  end
+
+  rule comment
+    space '#' [^\n]+ newline 
+  end
+
+  rule space
+    [\s\t]*  
+  end
+end
+
