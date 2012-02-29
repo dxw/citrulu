@@ -83,8 +83,12 @@ class TestFilesController < ApplicationController
   def update
     @test_file = TestFile.find(params[:id])
     begin
-      Compiler.new.compile_tests(params[:test_file][:test_file_text])
+      compiler ||= Compiler.new
+
+      compiler.compile_tests(params[:test_file][:test_file_text])
     rescue Compiler::TestCompileError => e
+      error = compiler.format_error(e)
+
       @console_msg = "Failed to compile: #{e.message}" #strip removes the annoying newline on the console message
       @console_msg_type = "error"
       @status_msg = "Saved (with errors)"
