@@ -35,17 +35,25 @@ body.test_files {
 		}
 		#editor, #editor_wrapper {
 		  width: 600px;
-			height: 400px;
+  		  height: 400px;
 		}
 		#console {
 			pre {
 				height: 200px;
+                                padding: 0;
+                                background-color: #ccc;
 				.success {
 					color: green;
 				}
 				.error {
 					color: red;
 				}
+                                p {
+                                  margin: 0;
+                                  padding: 3px;
+                                }
+                                p:nth-child(odd)    { background-color:#ddd; }
+                                p:nth-child(even)    { background-color:#eee; }
 			}
 		}
 	}	
