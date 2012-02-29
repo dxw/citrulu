@@ -1,8 +1,12 @@
+// Prepend the current status message to the console
 $("#console pre").prepend("<%=j console_line(@console_msg, @console_msg_type) %>");
+
+// Update the status by the button and re-enable it
 $("#editor_status").removeClass("working");
 $("#editor_status").html("<%= @status_msg %>");
 $("#editor_form input[type='submit']").attr("disabled", false);
+
+// Clear existing timeouts (in case the user pressed the save button) and set next one
 var save_interval;
-//need to clear any existing timeouts in case the user pressed the save button
 clearTimeout(save_interval);
 save_interval = setTimeout("window.save_file()", 5000);
