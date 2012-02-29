@@ -1,5 +1,5 @@
 // Prepend the current status message to the console
-$("#console pre").prepend("<%=j console_line(@console_msg_hash, @console_msg_type) %>");
+$("#console div.output").prepend("<%=j console_line(@console_msg_hash, @console_msg_type) %>");
 
 // Update the status by the button and re-enable it
 $("#editor_status").removeClass("working");
