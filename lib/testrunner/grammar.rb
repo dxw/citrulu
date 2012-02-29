@@ -185,7 +185,7 @@ module TesterGrammar
   module Test1
     def process
       {
-        :assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym,
+        :assertion => assertion.to_test_sym,
         :value => value.text_value
       }
     end

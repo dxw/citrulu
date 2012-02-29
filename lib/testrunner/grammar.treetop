@@ -1,4 +1,5 @@
 grammar TesterGrammar
+
   rule test_file
     test_group+ {
       def process
@@ -26,7 +27,7 @@ grammar TesterGrammar
     space assertion space value newline {
       def process
         {
-          :assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym,
+          :assertion => assertion.to_test_sym,
           :value => value.text_value
         }
       end

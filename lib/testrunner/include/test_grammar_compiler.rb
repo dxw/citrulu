@@ -1,5 +1,6 @@
 require 'treetop'
 require_relative '../grammar.rb'
+require_relative 'symbolizer.rb'
 
 
 class Compiler

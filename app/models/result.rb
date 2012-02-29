@@ -1,5 +1,12 @@
 class Result < ActiveRecord::Base
+  require 'psych'
+  
   belongs_to :test_file
+  
+  # parse the YAML which is stored in the database...
+  def result_object
+    Psych.load(result)
+  end
   
   #TODO should be in the helper? Didn't put it there initially on the assumption that this is useful in logic as well...
   def result_status

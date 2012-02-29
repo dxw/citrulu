@@ -11,7 +11,7 @@ module ApplicationHelper
       end
     else
       content_tag :li, :class => "active" do 
-        link_to text, test_files_path
+        link_to text, :controller => controller
       end
     end
   end
