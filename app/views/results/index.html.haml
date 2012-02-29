@@ -19,12 +19,12 @@
             %section.accordion-inner
               %pre
                 %ul.unstyled
-                  - result.result.each do |page, steps|
+                  - result.result_object.each do |test_group|
                     %li>
-                      = page
+                      = "On #{test_group[:test_url]}"
                       %ul.unstyled>
-                        -steps.each do |step|
-                          %li><
-                            ~ "  #{step}"
+                        -test_group[:tests].each do |test|
+                          %li{ :class => test_class(test)}><
+                            ~ "  #{test_text(test)}"
               %p.close_link
                 %a{ "data-parent" => "#results_list", "data-target"=> "##{result.time_run.to_i}", "data-toggle" => "collapse"} Close
