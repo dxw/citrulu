@@ -13,7 +13,13 @@ class Compiler
     result = parser.parse(code)
 
     if result == nil
-      raise TestCompileError.new(parser.failure_reason.strip)
+      
+      if parser.failure_reason.nil?
+        raise TestCompileError.new("Unknown error")
+      else
+        # For some unfathomable reason, the failure reason seems to include a newline at the end...
+        raise TestCompileError.new(parser.failure_reason.strip!)
+      end
     end
 
     result.process
