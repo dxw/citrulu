@@ -8,14 +8,17 @@ class Compiler
   end
 
   def format_error(error)
-    matches = error.to_s.match(/^Failed to compile: Expected one of ((([^,]+,)+[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/)
+    matches = error.to_s.match(/^Expected one of ((([^,]+,)+[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/)
 
-    {
-      :expected => matches[2].split(', '),
+    results = {
+      :expected => matches[2],
       :line => matches[4],
       :column => matches[5],
-      :after => matches[7]
+      :after => matches[7],
+      :hash => Digest::SHA1.hexdigest(error.to_s)
     }
+
+    results
   end
   
   def compile_tests(code)
