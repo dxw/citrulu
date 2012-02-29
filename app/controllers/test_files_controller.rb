@@ -82,9 +82,8 @@ class TestFilesController < ApplicationController
   # PUT /test_files/1.json
   def update
     @test_file = TestFile.find(params[:id])
-    puts @test_file.test_file_text
     begin
-      Compiler.new.compile_tests(@test_file.test_file_text)
+      Compiler.new.compile_tests(params[:test_file][:test_file_text])
     rescue Compiler::TestCompileError => e
       @console_msg = "Failed to compile: #{e.message}" #strip removes the annoying newline on the console message
       @console_msg_type = "error"
@@ -100,6 +99,7 @@ class TestFilesController < ApplicationController
 
     respond_to do |format|
       @test_file.update_attributes(params[:test_file])
+
       # TODO: is there a case where the test_file can't be updated? What on earth would we do then??
       
       format.html { render action: "edit" }
