@@ -35,7 +35,7 @@ saving_file = ->
 window.save_file = ->
   new_text_hash = make_hash(window.editor.getSession().getValue())
   # new_text_hash = make_hash($("#editor").getSession().getValue())
-  if new_text_hash isnt window.text_hash
+  if (new_text_hash isnt window.text_hash) and window.editor.getSession().getValue() isnt ''
     $("#editor_form input[type='submit']").click()
     saving_file()
   else

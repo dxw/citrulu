@@ -49,7 +49,7 @@ module TesterGrammar
 
   module TestGroup0
     def on_clause
-      elements[1]
+      elements[0]
     end
 
   end
@@ -58,7 +58,7 @@ module TesterGrammar
     def process
       {
         :test_url => on_clause.url.text_value, 
-        :tests => elements[2].elements.collect{|e| e.process}
+        :tests => elements[1].elements.collect{|e| e.process}
       }
     end
   end
@@ -75,38 +75,25 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    s1, i1 = [], index
-    loop do
-      r2 = _nt_comment
-      if r2
-        s1 << r2
-      else
-        break
-      end
-    end
-    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    r1 = _nt_on_clause
     s0 << r1
     if r1
-      r3 = _nt_on_clause
-      s0 << r3
-      if r3
-        s4, i4 = [], index
-        loop do
-          r5 = _nt_test
-          if r5
-            s4 << r5
-          else
-            break
-          end
-        end
-        if s4.empty?
-          @index = i4
-          r4 = nil
+      s2, i2 = [], index
+      loop do
+        r3 = _nt_test
+        if r3
+          s2 << r3
         else
-          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+          break
         end
-        s0 << r4
       end
+      if s2.empty?
+        @index = i2
+        r2 = nil
+      else
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      end
+      s0 << r2
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -175,21 +162,24 @@ module TesterGrammar
 
   module Test0
     def space1
-      elements[1]
+      elements[0]
     end
 
     def assertion
-      elements[2]
+      elements[1]
     end
 
     def space2
-      elements[3]
+      elements[2]
     end
 
     def value
-      elements[4]
+      elements[3]
     end
 
+    def newline
+      elements[4]
+    end
   end
 
   module Test1
@@ -213,45 +203,20 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    s1, i1 = [], index
-    loop do
-      r2 = _nt_comment
-      if r2
-        s1 << r2
-      else
-        break
-      end
-    end
-    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    r1 = _nt_space
     s0 << r1
     if r1
-      r3 = _nt_space
-      s0 << r3
-      if r3
-        r4 = _nt_assertion
-        s0 << r4
-        if r4
-          r5 = _nt_space
-          s0 << r5
-          if r5
-            r6 = _nt_value
-            s0 << r6
-            if r6
-              i7 = index
-              r8 = _nt_newline
-              if r8
-                r7 = r8
-              else
-                r9 = _nt_eof
-                if r9
-                  r7 = r9
-                else
-                  @index = i7
-                  r7 = nil
-                end
-              end
-              s0 << r7
-            end
+      r2 = _nt_assertion
+      s0 << r2
+      if r2
+        r3 = _nt_space
+        s0 << r3
+        if r3
+          r4 = _nt_value
+          s0 << r4
+          if r4
+            r5 = _nt_newline
+            s0 << r5
           end
         end
       end
@@ -302,21 +267,21 @@ module TesterGrammar
       if r2
         r0 = r2
       else
-        if has_terminal?("Page should contain", false, index)
-          r3 = instantiate_node(SyntaxNode,input, index...(index + 19))
-          @index += 19
+        if has_terminal?("I should see", false, index)
+          r3 = instantiate_node(SyntaxNode,input, index...(index + 12))
+          @index += 12
         else
-          terminal_parse_failure("Page should contain")
+          terminal_parse_failure("I should see")
           r3 = nil
         end
         if r3
           r0 = r3
         else
-          if has_terminal?("Page should not contain", false, index)
-            r4 = instantiate_node(SyntaxNode,input, index...(index + 23))
-            @index += 23
+          if has_terminal?("I should not see", false, index)
+            r4 = instantiate_node(SyntaxNode,input, index...(index + 16))
+            @index += 16
           else
-            terminal_parse_failure("Page should not contain")
+            terminal_parse_failure("I should not see")
             r4 = nil
           end
           if r4
@@ -389,37 +354,6 @@ module TesterGrammar
     end
 
     node_cache[:newline][start_index] = r0
-
-    r0
-  end
-
-  def _nt_eof
-    start_index = index
-    if node_cache[:eof].has_key?(index)
-      cached = node_cache[:eof][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0 = index
-    if index < input_length
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
-      @index += 1
-    else
-      terminal_parse_failure("any character")
-      r1 = nil
-    end
-    if r1
-      r0 = nil
-    else
-      @index = i0
-      r0 = instantiate_node(SyntaxNode,input, index...index)
-    end
-
-    node_cache[:eof][start_index] = r0
 
     r0
   end
@@ -534,80 +468,6 @@ module TesterGrammar
     end
 
     node_cache[:url][start_index] = r0
-
-    r0
-  end
-
-  module Comment0
-    def space
-      elements[0]
-    end
-
-    def newline
-      elements[3]
-    end
-  end
-
-  def _nt_comment
-    start_index = index
-    if node_cache[:comment].has_key?(index)
-      cached = node_cache[:comment][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    r1 = _nt_space
-    s0 << r1
-    if r1
-      if has_terminal?('#', false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
-        @index += 1
-      else
-        terminal_parse_failure('#')
-        r2 = nil
-      end
-      s0 << r2
-      if r2
-        s3, i3 = [], index
-        loop do
-          if has_terminal?('\G[^\\n]', true, index)
-            r4 = true
-            @index += 1
-          else
-            r4 = nil
-          end
-          if r4
-            s3 << r4
-          else
-            break
-          end
-        end
-        if s3.empty?
-          @index = i3
-          r3 = nil
-        else
-          r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-        end
-        s0 << r3
-        if r3
-          r5 = _nt_newline
-          s0 << r5
-        end
-      end
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Comment0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:comment][start_index] = r0
 
     r0
   end

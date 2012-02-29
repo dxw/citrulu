@@ -82,16 +82,36 @@ class TestFilesController < ApplicationController
   # PUT /test_files/1.json
   def update
     @test_file = TestFile.find(params[:id])
-    puts @test_file.test_file_text
+  
     begin
-      Compiler.new.compile_tests(@test_file.test_file_text)
+      compiler ||= Compiler.new
+      compiler.compile_tests(params[:test_file][:test_file_text])
+
+    # Compile fail
     rescue Compiler::TestCompileError => e
-      @console_msg = "Failed to compile: #{e.message}" #strip removes the annoying newline on the console message
+      error = compiler.format_error(e)
+
+      @console_msg_hash = {
+        :text1 => "Compilation failed! Expected one of: ",
+        :expected => error[:expected],
+        :text2 => " at line ",
+        :line => error[:line],
+        :text3 => ", column ",
+        :column => error[:column],
+      }
+
+      if !error[:after].empty?
+        @console_msg_hash[:text4] = " after '"
+        @console_msg_hash[:after] = error[:after].strip
+        @console_msg_hash[:text5] = "'"
+      end
+
       @console_msg_type = "error"
       @status_msg = "Saved (with errors)"
+
+    # Compile win
     else
-      # Compiled successfully: 
-      @console_msg = "Saved!"
+      @console_msg_hash = {:text0 => "Saved!"}
       @console_msg_type = "success"
       @status_msg = "Saved!"
       
@@ -100,6 +120,7 @@ class TestFilesController < ApplicationController
 
     respond_to do |format|
       @test_file.update_attributes(params[:test_file])
+
       # TODO: is there a case where the test_file can't be updated? What on earth would we do then??
       
       format.html { render action: "edit" }

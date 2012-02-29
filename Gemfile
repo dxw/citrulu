@@ -12,6 +12,9 @@ gem 'ace-rails-ap'
 # Treetop to drive the grammar:
 gem 'treetop'
 
+# Rails seems to depend on this
+gem 'therubyracer'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
