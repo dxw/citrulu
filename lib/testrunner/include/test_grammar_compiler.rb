@@ -10,6 +10,12 @@ class Compiler
   def compile_tests(code)
     parser = TesterGrammarParser.new
 
+    # Strip comments
+    code.gsub!(/#[^\n]+\n/, '')
+
+    # Ensure the file ends with a line return
+    code = code + "\n"
+
     result = parser.parse(code)
 
     if result == nil

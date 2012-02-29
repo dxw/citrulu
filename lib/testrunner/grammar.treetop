@@ -8,11 +8,11 @@ grammar TesterGrammar
   end
 
   rule test_group
-    comment* on_clause test+  {
+    on_clause test+  {
       def process
         {
           :test_url => on_clause.url.text_value, 
-          :tests => elements[2].elements.collect{|e| e.process}
+          :tests => elements[1].elements.collect{|e| e.process}
         }
       end
     }
@@ -23,7 +23,7 @@ grammar TesterGrammar
   end
 
   rule test
-    comment* space assertion space value ( newline / eof ) {
+    space assertion space value newline {
       def process
         {
           :assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym,
@@ -34,27 +34,19 @@ grammar TesterGrammar
   end
  
   rule assertion
-    "Source should contain" / "Source should not contain" / "Page should contain" / "Page should not contain" / "Headers should include" / "Headers should not include"
+    "Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include"
   end
 
   rule newline
     [\n]+ 
   end
   
-  rule eof
-    !.
-  end
-
   rule value
     [^\n]+    
   end
 
   rule url
     ('http://' / 'https://') [^\n]+
-  end
-
-  rule comment
-    space '#' [^\n]+ newline 
   end
 
   rule space
