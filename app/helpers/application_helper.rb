@@ -3,6 +3,19 @@ module ApplicationHelper
     params[:controller].split("/")[0]
   end
   
+  def nav_link(text, controller)
+    if params[:controller] == controller
+      content_tag :li do 
+        #EWW! EWW! Bootstrap styles force you to render the current nav as a link instead of text
+        link_to text
+      end
+    else
+      content_tag :li, :class => "active" do 
+        link_to text, test_files_path
+      end
+    end
+  end
+  
   def flash_message(name, message)
     cl = 'alert'
     case name
@@ -14,7 +27,6 @@ module ApplicationHelper
     
     content_tag :div, message, :class => cl
   end
-  
   
   # See here: https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name

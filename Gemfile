@@ -9,6 +9,8 @@ gem 'devise'
 # Text editor:
 gem 'ace-rails-ap'
 
+# Treetop to drive the grammar:
+gem 'treetop'
 
 # Gems used only for assets and not required
 # in production environments by default.

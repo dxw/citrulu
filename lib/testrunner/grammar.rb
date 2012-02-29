@@ -56,7 +56,10 @@ module TesterGrammar
 
   module TestGroup1
     def process
-      {:test_url => on_clause.url.text_value, :tests => elements[2].elements.collect{|e| e.process}}
+      {
+        :test_url => on_clause.url.text_value, 
+        :tests => elements[2].elements.collect{|e| e.process}
+      }
     end
   end
 
@@ -171,7 +174,7 @@ module TesterGrammar
   end
 
   module Test0
-    def space
+    def space1
       elements[1]
     end
 
@@ -179,18 +182,22 @@ module TesterGrammar
       elements[2]
     end
 
-    def value
+    def space2
       elements[3]
     end
 
-    def newline
+    def value
       elements[4]
     end
+
   end
 
   module Test1
     def process
-    {:assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym, :value => value.text_value}
+      {
+        :assertion => assertion.text_value.strip.gsub(/should /, '').gsub(/\s+/, '_').downcase.to_sym,
+        :value => value.text_value
+      }
     end
   end
 
@@ -224,11 +231,27 @@ module TesterGrammar
         r4 = _nt_assertion
         s0 << r4
         if r4
-          r5 = _nt_value
+          r5 = _nt_space
           s0 << r5
           if r5
-            r6 = _nt_newline
+            r6 = _nt_value
             s0 << r6
+            if r6
+              i7 = index
+              r8 = _nt_newline
+              if r8
+                r7 = r8
+              else
+                r9 = _nt_eof
+                if r9
+                  r7 = r9
+                else
+                  @index = i7
+                  r7 = nil
+                end
+              end
+              s0 << r7
+            end
           end
         end
       end
@@ -259,61 +282,61 @@ module TesterGrammar
     end
 
     i0 = index
-    if has_terminal?("Source should contain ", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 22))
-      @index += 22
+    if has_terminal?("Source should contain", false, index)
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 21))
+      @index += 21
     else
-      terminal_parse_failure("Source should contain ")
+      terminal_parse_failure("Source should contain")
       r1 = nil
     end
     if r1
       r0 = r1
     else
-      if has_terminal?("Source should not contain ", false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 26))
-        @index += 26
+      if has_terminal?("Source should not contain", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 25))
+        @index += 25
       else
-        terminal_parse_failure("Source should not contain ")
+        terminal_parse_failure("Source should not contain")
         r2 = nil
       end
       if r2
         r0 = r2
       else
-        if has_terminal?("Page should contain ", false, index)
-          r3 = instantiate_node(SyntaxNode,input, index...(index + 20))
-          @index += 20
+        if has_terminal?("Page should contain", false, index)
+          r3 = instantiate_node(SyntaxNode,input, index...(index + 19))
+          @index += 19
         else
-          terminal_parse_failure("Page should contain ")
+          terminal_parse_failure("Page should contain")
           r3 = nil
         end
         if r3
           r0 = r3
         else
-          if has_terminal?("Page should not contain ", false, index)
-            r4 = instantiate_node(SyntaxNode,input, index...(index + 24))
-            @index += 24
+          if has_terminal?("Page should not contain", false, index)
+            r4 = instantiate_node(SyntaxNode,input, index...(index + 23))
+            @index += 23
           else
-            terminal_parse_failure("Page should not contain ")
+            terminal_parse_failure("Page should not contain")
             r4 = nil
           end
           if r4
             r0 = r4
           else
-            if has_terminal?("Headers should include ", false, index)
-              r5 = instantiate_node(SyntaxNode,input, index...(index + 23))
-              @index += 23
+            if has_terminal?("Headers should include", false, index)
+              r5 = instantiate_node(SyntaxNode,input, index...(index + 22))
+              @index += 22
             else
-              terminal_parse_failure("Headers should include ")
+              terminal_parse_failure("Headers should include")
               r5 = nil
             end
             if r5
               r0 = r5
             else
-              if has_terminal?("Headers should not include ", false, index)
-                r6 = instantiate_node(SyntaxNode,input, index...(index + 27))
-                @index += 27
+              if has_terminal?("Headers should not include", false, index)
+                r6 = instantiate_node(SyntaxNode,input, index...(index + 26))
+                @index += 26
               else
-                terminal_parse_failure("Headers should not include ")
+                terminal_parse_failure("Headers should not include")
                 r6 = nil
               end
               if r6
@@ -366,6 +389,37 @@ module TesterGrammar
     end
 
     node_cache[:newline][start_index] = r0
+
+    r0
+  end
+
+  def _nt_eof
+    start_index = index
+    if node_cache[:eof].has_key?(index)
+      cached = node_cache[:eof][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0 = index
+    if index < input_length
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
+      @index += 1
+    else
+      terminal_parse_failure("any character")
+      r1 = nil
+    end
+    if r1
+      r0 = nil
+    else
+      @index = i0
+      r0 = instantiate_node(SyntaxNode,input, index...index)
+    end
+
+    node_cache[:eof][start_index] = r0
 
     r0
   end
