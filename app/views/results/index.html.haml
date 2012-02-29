@@ -11,20 +11,26 @@
               / %time.accordion-toggle{ "data-parent" => "#results_list", "data-target"=> "##{result.id}", "data-toggle" => "collapse"} 
               %time
                 = result.time_run.to_s(:result_time)
-              %span.failures
-                = "#{result.failures} failures" unless result.failures == 0
+              %span.outcome
+                - if result.number_of_failures == 0
+                  Everything works!
+                - else
+                  = result.number_of_failures
+                  failures
 
           .accordion-body.collapse{ :id => result.time_run.to_i }  
-            / %section.accordion-body.collapse{ :id => result.id }  
+            / %section.accordion-body.collapse{ :id => result.id }
             %section.accordion-inner
-              %pre
-                %ul.unstyled
-                  - result.result_object.each do |test_group|
-                    %li>
-                      = "On #{test_group[:test_url]}"
-                      %ul.unstyled>
-                        -test_group[:tests].each do |test|
-                          %li{ :class => test_class(test)}><
-                            ~ "  #{test_text(test)}"
+              %p 
+                ="Ran #{result.number_of_checks} checks on #{result.number_of_pages} page, of which #{result.number_of_failures} failed"
+              %ul.unstyled
+                - result.result_object.each do |test_group|
+                  %li
+                    0n 
+                    = link_to test_group[:test_url], nil , :target => "_blank"
+                    %ul.unstyled
+                      -test_group[:tests].each do |test|
+                        %li{ :class => "test_result #{test_class(test)}"}
+                          = test_text(test)
               %p.close_link
                 %a{ "data-parent" => "#results_list", "data-target"=> "##{result.time_run.to_i}", "data-toggle" => "collapse"} Close
