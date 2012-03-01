@@ -86,7 +86,7 @@ class TestFilesController < ApplicationController
 
     # Compile fail
     rescue TestFile::TestCompileError => e
-      error = compiler.format_error(e)
+      error = TestFile.format_error(e)
 
       @console_msg_hash = {
         :text1 => "Compilation failed! Expected: ",
@@ -98,9 +98,8 @@ class TestFilesController < ApplicationController
       }
 
       if !error[:after].empty?
-        @console_msg_hash[:text4] = " after '"
-        @console_msg_hash[:after] = error[:after].strip
-        @console_msg_hash[:text5] = "'"
+        @console_msg_hash[:text4] = " after "
+        @console_msg_hash[:after] = error[:after]
       end
 
       @console_msg_type = "error"

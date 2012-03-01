@@ -41,7 +41,7 @@ define('ace/mode/safewtf_highlight_rules', function(require, exports, module) {
 
         {
           token: "constant",
-          regex: "I should see|I should not see"
+          regex: "I should see|I should not see|Source should contain|Source should not contain|Headers should include|Headers should not include"
         },
 
         {
