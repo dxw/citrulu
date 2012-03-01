@@ -24,11 +24,12 @@ grammar TesterGrammar
   end
 
   rule test
-    space assertion space value newline {
+    space assertion ' ' (name / value) newline {
       def process
         {
           :assertion => assertion.text_value.to_test_sym,
-          :value => value.text_value
+          :value => elements[2].text_value,
+          :name => elements[3].text_value
         }
       end
     }
@@ -44,6 +45,10 @@ grammar TesterGrammar
   
   rule value
     [^\n]+    
+  end
+
+  rule name
+    '=' [a-zA-Z0-9 _-]*
   end
 
   rule url
