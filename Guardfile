@@ -1,10 +1,10 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-guard 'rails' do
-  watch('Gemfile.lock')
-  watch(%r{^(config|lib)/.*})
-end
+#guard 'rails' do
+#  watch('Gemfile.lock')
+#  watch(%r{^(config|lib)/.*})
+#end
 
 guard 'rspec', :version => 2, :cli => "--drb" do
   watch(%r{^spec/.+_spec\.rb$})
