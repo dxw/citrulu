@@ -181,7 +181,7 @@ module TesterGrammar
   module Test1
     def process
       {
-        :assertion => assertion.to_test_sym,
+        :assertion => assertion.text_value.to_test_sym,
         :value => value.text_value
       }
     end
