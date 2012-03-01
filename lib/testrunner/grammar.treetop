@@ -24,7 +24,7 @@ grammar TesterGrammar
   end
 
   rule test
-    space assertion space value newline {
+    space assertion ' ' value newline {
       def process
         {
           :assertion => assertion.to_test_sym,

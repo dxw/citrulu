@@ -161,16 +161,12 @@ module TesterGrammar
   end
 
   module Test0
-    def space1
+    def space
       elements[0]
     end
 
     def assertion
       elements[1]
-    end
-
-    def space2
-      elements[2]
     end
 
     def value
@@ -209,7 +205,13 @@ module TesterGrammar
       r2 = _nt_assertion
       s0 << r2
       if r2
-        r3 = _nt_space
+        if has_terminal?(' ', false, index)
+          r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          @index += 1
+        else
+          terminal_parse_failure(' ')
+          r3 = nil
+        end
         s0 << r3
         if r3
           r4 = _nt_value
