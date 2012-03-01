@@ -23,10 +23,44 @@
       
   #help.span4.well
     %h2 Help
-    %p This is some help text
-    %h3 This is some hipster lorem ipsum (from kottke):
-    %p Organic sustainable lomo, +1 irony McSweeney's skateboard Portland PBR tattooed farm-to-table Terry Richardson Williamsburg. 
-    %p Organic farm-to-table wolf, next level shit put a bird on it freegan American Apparel Williamsburg chambray gentrify viral you probably haven't heard of them keffiyeh Cosby sweater. 
-    %p Pitchfork photo booth fuck, DIY cardigan messenger bag butcher Thundercats tofu you probably haven't heard of them whatever squid VHS put a bird on it. 
-    %p Thundercats fixie Williamsburg, photo booth synth vinyl dreamcatcher Wes Anderson cliche. You probably haven't heard of them DIY mlkshk biodiesel McSweeney's raw denim. 
-    %p Skateboard Pitchfork Etsy, photo booth messenger bag artisan raw denim beard Tumblr retro Austin. Wes Anderson sustainable keffiyeh, blog lomo craft beer cliche brunch homo skateboard biodiesel fanny pack Pitchfork you probably haven't heard of them Stumptown.
+    %p SafeWTF's syntax is very simple. First, decide which URLs you would like to test. Then, add each URL with at least one test:
+    %pre="On http://example.com\n  I should see Welcome to example.com"
+    %p You can add as many URLs as you like, and as many tests as you like under each URL. Valid tests are:
+    %dl
+      %dt I should see, I should not see
+      %dd Looks for text in the rendered page
+
+      %dt Source should contain, source should not contain
+      %dd Looks for a string the source code of the page
+
+      %dt Headers should contain, headers should not contain
+      %dd Looks for a particular named header
+        
+    %h3 I should see
+    %p This check retreives a page and looks for text without looking at HTML tags. So, the following check:
+    %pre="  I should see Hello, world!"
+    %p Would match all of:
+    %pre="Hello, world!"
+    %pre="<strong>Hello</strong> world!"
+    %pre="Hello,<br>world!"
+
+    %h3 Source should contain
+    %p This check retreives a page and looks for text in its source code. So, the following check:
+    %pre="  I should see <strong>Hello</strong>, world!"
+    %p Would match:
+    %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
+    
+    %h3 Headers should conttain
+    %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
+    %pre="  Headers should contain: X-Varnish"
+    %p Would match if there was a header like:
+    %pre="X-Varnish: 128371292"
+    %p But would not match:
+    %pre="X-Varnish-Check: miss"
+
+    %h3 General tips
+    %ul
+      %li SafeWTF is case sensitive! So make sure your lines are capitalised.
+
+
+
