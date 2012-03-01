@@ -3,8 +3,6 @@ class TestFilesController < ApplicationController
   
   before_filter :authenticate_user!
   
-  require 'test_grammar_compiler'
-  
   # require "#{Rails.root}/lib/testrunner/test_grammar_compiler.rb"
   # include TestGrammarCompiler
 
@@ -84,11 +82,10 @@ class TestFilesController < ApplicationController
     @test_file = TestFile.find(params[:id])
   
     begin
-      compiler ||= Compiler.new
-      compiler.compile_tests(params[:test_file][:test_file_text])
+      TestFile.compile_tests(params[:test_file][:test_file_text])
 
     # Compile fail
-    rescue Compiler::TestCompileError => e
+    rescue TestFile::TestCompileError => e
       error = compiler.format_error(e)
 
       @console_msg_hash = {
