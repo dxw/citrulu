@@ -92,7 +92,7 @@ class TestFilesController < ApplicationController
       error = compiler.format_error(e)
 
       @console_msg_hash = {
-        :text1 => "Compilation failed! Expected one of: ",
+        :text1 => "Compilation failed! Expected: ",
         :expected => error[:expected],
         :text2 => " at line ",
         :line => error[:line],

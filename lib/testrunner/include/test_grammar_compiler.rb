@@ -9,15 +9,19 @@ class Compiler
   end
 
   def format_error(error)
-    matches = error.to_s.match(/^Expected one of ((([^,]+,)+[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/)
+    matches = error.to_s.match(/^Expected( one of)? ((([^,]+,)*[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/m)
+
+    throw ArgumentError.new("This error doesn't match any of the expected formats: #{error.to_s}") if !matches 
 
     results = {
-      :expected => matches[2],
-      :line => matches[4],
-      :column => matches[5],
-      :after => matches[7],
-      :hash => Digest::SHA1.hexdigest(error.to_s)
+      :hash => Digest::SHA1.hexdigest(matches[3])
+      :expected => matches[3],
+      :line => matches[5],
+      :column => matches[6],
+      :after => matches[8],
     }
+
+    results[:expected] = "' '" if results[:expected] == ' '
 
     results
   end
@@ -36,10 +40,9 @@ class Compiler
     if result == nil
       
       if parser.failure_reason.nil?
-        raise TestCompileError.new("Unknown error")
+        raise TestCompileError.new("An strange compiler error has occurred. Sorry! This is a bug. Please let us know")
       else
-        # For some unfathomable reason, the failure reason seems to include a newline at the end...
-        raise TestCompileError.new(parser.failure_reason.strip!)
+        raise TestCompileError.new(parser.failure_reason)
       end
     end
 
