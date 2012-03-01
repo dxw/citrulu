@@ -21,7 +21,14 @@ class TestFile < ActiveRecord::Base
       :after => matches[8],
     }
 
-    results[:expected] = "' '" if results[:expected] == ' '
+    case results[:after] 
+    when ' '
+      results[:after] = "a space" 
+    when "\n" 
+      results[:after] = "a newline"
+    else 
+      results[:after] = "'" + results[:after] + "'"
+    end
 
     results
   end
