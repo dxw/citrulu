@@ -29,8 +29,9 @@ end
 gem 'jquery-rails'
 
 group :development do
+  gem 'guard-rails'
   gem 'guard-rspec'
-  gem 'guard-cucumber'
+  # gem 'guard-cucumber'
   gem 'guard-spork'
   gem 'guard-livereload'
 end
