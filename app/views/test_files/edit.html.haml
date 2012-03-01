@@ -30,18 +30,19 @@
           %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section1", "data-toggle" => "collapse"}  Overview
         .accordion-body.collapse.in{ :id => "section1" }
           %section.accordion-inner
-            %p SafeWTF's syntax is very simple. First, decide which URLs you would like to test. Then, add each URL with at least one test:
-            %pre="On http://example.com\n  I should see Welcome to example.com"
+            %p SafeWTF's syntax is very simple. 
+            %p First, decide which URLs you would like to test. Then, add each URL with at least one test:
+            %pre="On http://example.com\n  I should see Welcome to this site"
             %p You can add as many URLs as you like, and as many tests as you like under each URL. Valid tests are:
             %dl
-              %dt I should see, I should not see
+              %dt I should see,<br> I should not see
               %dd Looks for text in the rendered page
 
-              %dt Source should contain, Source should not contain
+              %dt Source should contain,<br> Source should not contain
               %dd Looks for a string the source code of the page
 
-              %dt Headers should contain, Headers should not contain
-              %dd Looks for a particular named header
+              %dt Headers should include,<br> Headers should not include
+              %dd Looks for an individual named header
       %li.accordion-group 
         %heading.accordion-heading        
           %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section2", "data-toggle" => "collapse"}  I should see
@@ -64,12 +65,12 @@
             %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
       %li.accordion-group 
         %heading.accordion-heading
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section4", "data-toggle" => "collapse"}  Headers should contain
+          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section4", "data-toggle" => "collapse"}  Headers should include
         .accordion-body.collapse{ :id => "section4" }
           %section.accordion-inner
             %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
-            %pre="  Headers should contain: X-Varnish"
-            %p Would match if there was a header like:
+            %pre="  Headers should include: X-Varnish"
+            %p Would match:
             %pre="X-Varnish: 128371292"
             %p But would not match:
             %pre="X-Varnish-Check: miss"
