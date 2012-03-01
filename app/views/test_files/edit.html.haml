@@ -22,64 +22,44 @@
       %div.output=console_line({:welcome => @console_output})
       
   #help.span4
-    %heading.section_title
+    %header.section_title
       %h2 Help
-    %ul#help_sections.unstyled.accordion
-      %li.accordion-group 
-        %heading.accordion-heading
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section1", "data-toggle" => "collapse"}  Overview
-        .accordion-body.collapse.in{ :id => "section1" }
-          %section.accordion-inner
-            %p SafeWTF's syntax is very simple. First, decide which URLs you would like to test. Then, add each URL with at least one test:
-            %pre="On http://example.com\n  I should see Welcome to example.com"
-            %p You can add as many URLs as you like, and as many tests as you like under each URL. Valid tests are:
-            %dl
-              %dt I should see, I should not see
-              %dd Looks for text in the rendered page
+    = accordion "help_sections" do 
+      = accordion_group("help_sections", "Overview", :h3, true) do
+        %p SafeWTF's syntax is very simple. First, decide which URLs you would like to test. Then, add each URL with at least one test:
+        %pre="On http://example.com\n  I should see Welcome to example.com"
+        %p You can add as many URLs as you like, and as many tests as you like under each URL. Valid tests are:
+        %dl
+          %dt I should see, I should not see
+          %dd Looks for text in the rendered page
 
-              %dt Source should contain, Source should not contain
-              %dd Looks for a string the source code of the page
+          %dt Source should contain, Source should not contain
+          %dd Looks for a string the source code of the page
 
-              %dt Headers should contain, Headers should not contain
-              %dd Looks for a particular named header
-      %li.accordion-group 
-        %heading.accordion-heading        
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section2", "data-toggle" => "collapse"}  I should see
-        .accordion-body.collapse{ :id => "section2" }  
-          %section.accordion-inner
-            %p This check retrieves a page and looks for text without looking at HTML tags. So, the following check:
-            %pre="  I should see Hello, world!"
-            %p Would match all of:
-            %pre="Hello, world!"
-            %pre="<strong>Hello</strong> world!"
-            %pre="Hello,<br>world!"
-      %li.accordion-group 
-        %heading.accordion-heading
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section3", "data-toggle" => "collapse"}  Source should contain
-        .accordion-body.collapse{ :id => "section3" }
-          %section.accordion-inner
-            %p This check retrieves a page and looks for text in its source code. So, the following check:
-            %pre="  I should see <strong>Hello</strong>, world!"
-            %p Would match:
-            %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
-      %li.accordion-group 
-        %heading.accordion-heading
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section4", "data-toggle" => "collapse"}  Headers should contain
-        .accordion-body.collapse{ :id => "section4" }
-          %section.accordion-inner
-            %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
-            %pre="  Headers should contain: X-Varnish"
-            %p Would match if there was a header like:
-            %pre="X-Varnish: 128371292"
-            %p But would not match:
-            %pre="X-Varnish-Check: miss"
-      %li.accordion-group 
-        %heading.accordion-heading
-          %h3.accordion-toggle{ "data-parent" => "#help_sections", "data-target"=> "#section5", "data-toggle" => "collapse"}  General tips
-        .accordion-body.collapse{ :id => "section5" }
-          %section.accordion-inner
-            %ul
-              %li SafeWTF is case sensitive! So make sure your lines are capitalised.
+          %dt Headers should contain, Headers should not contain
+          %dd Looks for a particular named header
+      = accordion_group("help_sections", "I should see", :h3, false) do
+        %p This check retrieves a page and looks for text without looking at HTML tags. So, the following check:
+        %pre="  I should see Hello, world!"
+        %p Would match all of:
+        %pre="Hello, world!"
+        %pre="<strong>Hello</strong> world!"
+        %pre="Hello,<br>world!"
+      = accordion_group("help_sections", "Source should contain", :h3, false) do
+        %p This check retrieves a page and looks for text in its source code. So, the following check:
+        %pre="  I should see <strong>Hello</strong>, world!"
+        %p Would match:
+        %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
+      = accordion_group("help_sections", "Headers should contain", :h3, false) do
+        %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
+        %pre="  Headers should contain: X-Varnish"
+        %p Would match if there was a header like:
+        %pre="X-Varnish: 128371292"
+        %p But would not match:
+        %pre="X-Varnish-Check: miss"
+      = accordion_group("help_sections", "General tips", :h3, false) do
+        %ul
+          %li SafeWTF is case sensitive! So make sure your lines are capitalised.
 
 
 
