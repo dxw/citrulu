@@ -50,16 +50,18 @@ body.test_files {
                     .error {
                             color: red;
                     }
-                    
-                    p.timestamp {
+
+                    p {
+                      margin: 0;
                       display: block;
                       float: left;
+                    }
+                    
+                    p.timestamp {
                       padding-right: 10px;
                     }
 
                     p.error, p.neutral, p.success {
-                      display: block;
-                      float: left;
                       width: 70%;
                     }
                     
