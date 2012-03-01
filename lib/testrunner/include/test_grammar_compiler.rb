@@ -14,7 +14,7 @@ class Compiler
     throw ArgumentError.new("This error doesn't match any of the expected formats: #{error.to_s}") if !matches 
 
     results = {
-      :hash => Digest::SHA1.hexdigest(matches[3])
+      :hash => Digest::SHA1.hexdigest(matches[3]),
       :expected => matches[3],
       :line => matches[5],
       :column => matches[6],
