@@ -176,11 +176,17 @@ module TesterGrammar
 
   module Test1
     def process
-      {
+      hash = {
         :assertion => assertion.text_value.to_test_sym,
-        :value => elements[2].text_value,
-        :name => elements[3].text_value
       }
+
+      if elements[3].text_value.match(/^=/)
+        hash[:name] = elements[3].text_value 
+      else
+        hash[:value] = elements[3].text_value 
+      end
+
+      hash
     end
   end
 
