@@ -17,6 +17,13 @@ body.test_files {
 		background: transparent url("loader.gif") no-repeat right;
 	}
 	
+	#help {
+		header.section_title {
+			//FRAGILE
+			padding: 8px 20px;  
+		}
+	}
+	
 	#test_suite{
 		padding-left: 20px;
 		#editor_form {
