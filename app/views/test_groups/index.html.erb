@@ -1,0 +1,29 @@
+<h1>Listing test_groups</h1>
+
+<table>
+  <tr>
+    <th>Test run</th>
+    <th>Page content</th>
+    <th>Response time</th>
+    <th>Time run</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @test_groups.each do |test_group| %>
+  <tr>
+    <td><%= test_group.test_run_id %></td>
+    <td><%= test_group.page_content %></td>
+    <td><%= test_group.response_time %></td>
+    <td><%= test_group.time_run %></td>
+    <td><%= link_to 'Show', test_group %></td>
+    <td><%= link_to 'Edit', edit_test_group_path(test_group) %></td>
+    <td><%= link_to 'Destroy', test_group, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Test group', new_test_group_path %>

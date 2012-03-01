@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120228171709) do
+ActiveRecord::Schema.define(:version => 20120301172441) do
 
   create_table "results", :force => true do |t|
     t.integer  "test_file_id"
@@ -27,6 +27,32 @@ ActiveRecord::Schema.define(:version => 20120228171709) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "compiled_test_file_text"
+  end
+
+  create_table "test_groups", :force => true do |t|
+    t.integer  "test_run_id"
+    t.text     "page_content"
+    t.integer  "response_time"
+    t.time     "time_run"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "test_runs", :force => true do |t|
+    t.integer  "test_file_id"
+    t.time     "time_run"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tests", :force => true do |t|
+    t.integer  "test_group_id"
+    t.string   "assertion"
+    t.string   "value"
+    t.string   "name"
+    t.boolean  "result"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

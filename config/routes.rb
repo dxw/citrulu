@@ -1,5 +1,11 @@
 SimpleFrontEndTesting::Application.routes.draw do
   
+  resources :tests
+
+  resources :test_groups
+
+  resources :test_runs
+
   resources :results
 
   devise_for :users
