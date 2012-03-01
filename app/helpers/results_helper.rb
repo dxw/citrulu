@@ -1,5 +1,5 @@
 module ResultsHelper
-  require 'symbolizer'
+  require 'grammar/symbolizer'
   
   def test_class(test_hash)
     "passed_#{test_hash[:passed]}"
