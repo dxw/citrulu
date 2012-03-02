@@ -9,18 +9,10 @@ class TestFilesController < ApplicationController
   # GET /test_files
   # GET /test_files.json
   def index
-    @test_file = current_user.test_file
-
-    # redirect_to @test_file
-    redirect_to edit_test_file_path(@test_file)
-    
-    
-    # @test_files = TestFile.all
-    # 
-    #     respond_to do |format|
-    #       format.html # index.html.erb
-    #       format.json { render json: @test_files }
-    #     end
+    respond_to do |format|
+      format.html 
+      format.json { render json: @test_files }
+    end
   end
 
   # GET /test_files/1
