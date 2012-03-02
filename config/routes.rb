@@ -1,27 +1,25 @@
 SimpleFrontEndTesting::Application.routes.draw do
-  
-  resources :tests
-
-  resources :test_groups
-
-  resources :test_runs
-
-  devise_for :users
+    
+  devise_for :users 
   
   devise_scope :user do
     root :to => "website#index"
-    # root :to => "test_files#index"
   end
   # The above SHOULD work, but might not work in production. The following is from see https://github.com/plataformatec/devise/wiki/How-To%3A-Redirect-to-a-specific-page-on-successful-sign-in-out
   # match '/user' => "website#test_file_editor", :as => :user_root
-   
+
   resources :test_files
+  
+  resources :test_runs
+  
+  resources :test_groups
+  
+  resources :tests
 
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   
   root :to => "website#index"
-  # root :to => "test_files#index"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
