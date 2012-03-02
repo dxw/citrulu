@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe "tests/index" do
+describe "test_results/index" do
   before(:each) do
-    assign(:tests, [
-      stub_model(Test,
+    assign(:test_results, [
+      stub_model(TestResult,
         :test_group_id => 1,
         :assertion => "Assertion",
         :value => "Value",
         :name => "Name",
         :result => false
       ),
-      stub_model(Test,
+      stub_model(TestResult,
         :test_group_id => 1,
         :assertion => "Assertion",
         :value => "Value",
@@ -20,7 +20,7 @@ describe "tests/index" do
     ])
   end
 
-  it "renders a list of tests" do
+  it "renders a list of test_results" do
     render
     # Run the generator again with the --webrat flag if you want to use webrat matchers
     assert_select "tr>td", :text => 1.to_s, :count => 2

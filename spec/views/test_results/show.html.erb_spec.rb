@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "tests/show" do
+describe "test_results/show" do
   before(:each) do
-    @test = assign(:test, stub_model(Test,
+    @test_result = assign(:test_result, stub_model(TestResult,
       :test_group_id => 1,
       :assertion => "Assertion",
       :value => "Value",

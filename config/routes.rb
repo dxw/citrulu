@@ -1,5 +1,5 @@
 SimpleFrontEndTesting::Application.routes.draw do
-    
+
   devise_for :users 
   
   devise_scope :user do
@@ -14,8 +14,8 @@ SimpleFrontEndTesting::Application.routes.draw do
   
   resources :test_groups
   
-  resources :tests
-
+  resources :test_results
+    
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   
