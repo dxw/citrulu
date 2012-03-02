@@ -3,10 +3,13 @@
     .navbar
       .navbar-inner
         .container
-          %h2.brand SafeWTF
-          %ul.nav
-            = nav_link("Test File", "test_files")
-            = nav_link("Test Runs", "test_runs")
+          %h2.brand 
+            = link_to 'SafeWTF', test_files_path
+          %div
+            %ul.nav
+              = nav_link "Home", test_files_path
+              = nav_link "Test File", edit_test_file_path(current_user.test_file)
+              = nav_link "Test Runs", test_runs_path
           #user_nav
             - if user_signed_in?
               = "Signed in as #{current_user.email}."

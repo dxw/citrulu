@@ -1,4 +1,15 @@
 .navbar {
+	.brand a {
+		color: #fff;
+		&:hover { 
+			text-decoration: none;
+		}
+	}
+	.nav li a { 
+		clear: left;
+		//otherwise the nav links look even worse when the page gets narrow
+	}
+	
 	#user_nav {
 		padding: 10px 40px 11px;
 		line-height: 19px;
