@@ -1,12 +1,29 @@
 class TestRunsController < ApplicationController
+  
+  layout "logged_in"
+  
+  before_filter :authenticate_user!
+  
   # GET /test_runs
   # GET /test_runs.json
   def index
-    @test_runs = TestRun.all
+    #for now, just return the (single) test file associated with the current logged-in user
+    # test_file = current_user.test_files[0]
+    # @test_runs = test_file.test_runs
+    
+##TEMPORARY CODE
+    @test_runs = []
+    offset = 0
+    while @test_runs.length < 10
+      offset += rand(100)
+      
+      @test_runs << TestRun.new(:id => offset, :time_run => Time.now - offset)
+    end
+##END TEMPORARY CODE
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @test_runs }
+      # format.json { render json: @test_runs }
     end
   end
 

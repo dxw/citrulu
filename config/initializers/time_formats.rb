@@ -1,1 +1,1 @@
-Time::DATE_FORMATS[:result_time] = lambda { |time| time.strftime("#{time.day.ordinalize} %B %Y - %I:%M%p") }
+Time::DATE_FORMATS[:test_run_time] = lambda { |time| time.strftime("#{time.day.ordinalize} %B %Y - %I:%M%p") }

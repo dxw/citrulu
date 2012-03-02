@@ -3,7 +3,7 @@ require 'grammar/symbolizer'
 
 class TestFile < ActiveRecord::Base
   belongs_to :user 
-  has_many :results
+  has_many :test_runs
 
   class TestCompileError < StandardError
   end

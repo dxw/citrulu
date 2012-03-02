@@ -6,8 +6,6 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   resources :test_runs
 
-  resources :results
-
   devise_for :users
   
   devise_scope :user do
