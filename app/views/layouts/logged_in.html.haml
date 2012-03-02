@@ -1,6 +1,6 @@
 - content_for :content do
   %div.container
-    #navbar.navbar
+    .navbar
       .navbar-inner
         .container
           %h2.brand SafeWTF
@@ -18,3 +18,4 @@
     - flash.each do |name, message|
       = flash_message(name, message)
     = yield
+= render :template => 'layouts/application'
