@@ -5,12 +5,12 @@ module ApplicationHelper
   
   def nav_link(text, controller)
     if params[:controller] == controller
-      content_tag :li do 
+      content_tag :li, :class => "active" do 
         #EWW! EWW! Bootstrap styles force you to render the current nav as a link instead of text
         link_to text
       end
     else
-      content_tag :li, :class => "active" do 
+      content_tag :li do 
         link_to text, :controller => controller
       end
     end
