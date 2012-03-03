@@ -9,8 +9,18 @@ module TesterGrammar
   end
 
   module TestFile0
+    def space1
+      elements[0]
+    end
+
+    def space2
+      elements[2]
+    end
+  end
+
+  module TestFile1
     def process
-      elements.collect{|e| e.process}
+      elements[1].elements.collect{|e| e.process}
     end
   end
 
@@ -25,21 +35,38 @@ module TesterGrammar
       return cached
     end
 
-    s0, i0 = [], index
-    loop do
-      r1 = _nt_test_group
-      if r1
-        s0 << r1
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      s2, i2 = [], index
+      loop do
+        r3 = _nt_test_group
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      if s2.empty?
+        @index = i2
+        r2 = nil
       else
-        break
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      end
+      s0 << r2
+      if r2
+        r4 = _nt_space
+        s0 << r4
       end
     end
-    if s0.empty?
-      @index = i0
-      r0 = nil
-    else
+    if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
       r0.extend(TestFile0)
+      r0.extend(TestFile1)
+    else
+      @index = i0
+      r0 = nil
     end
 
     node_cache[:test_file][start_index] = r0
@@ -351,7 +378,7 @@ module TesterGrammar
 
     s0, i0 = [], index
     loop do
-      if has_terminal?('\G[\\n]', true, index)
+      if has_terminal?('\G[\\r\\n]', true, index)
         r1 = true
         @index += 1
       else

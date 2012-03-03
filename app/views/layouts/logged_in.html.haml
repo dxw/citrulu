@@ -1,20 +1,24 @@
 - content_for :content do
-  #navbar.navbar
-    .navbar-inner
-      .container
-        %h2.brand SafeWTF
-        %ul.nav
-          = nav_link("Test Files", "test_files")
-          = nav_link("Results", "results")
-        #user_nav
-          - if user_signed_in?
-            = "Signed in as #{current_user.email}."
-            = "Not you?"
-            = link_to( 'Sign out', destroy_user_session_path, :method => :delete )
-          - else 
-            = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
-  #flash_messages
-  - flash.each do |name, message|
-    = flash_message(name, message)
-  = yield
+  %div.container
+    .navbar
+      .navbar-inner
+        .container
+          %h2.brand 
+            = link_to 'SafeWTF', test_files_path
+          %div
+            %ul.nav
+              = nav_link "Home", test_files_path
+              = nav_link "Test File", edit_test_file_path(current_user.test_file)
+              = nav_link "Test Runs", test_runs_path
+          #user_nav
+            - if user_signed_in?
+              = "Signed in as #{current_user.email}."
+              = "Not you?"
+              = link_to( 'Sign out', destroy_user_session_path, :method => :delete )
+            - else 
+              = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
+    #flash_messages
+    - flash.each do |name, message|
+      = flash_message(name, message)
+    = yield
 = render :template => 'layouts/application'

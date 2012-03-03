@@ -1,23 +1,17 @@
-body {
-	//background: #EEE url("square_paper.png") top left repeat;
-}
-
-.page {
-	margin-left: 20px;
-}
-
-//blearg, ugly nonsense:
-.row{
-	min-width: 1170px
-}
-
 .navbar {
-	.container {
-		width: 100%;
-		min-width: 800px
+	.brand a {
+		color: #fff;
+		&:hover { 
+			text-decoration: none;
+		}
 	}
+	.nav li a { 
+		clear: left;
+		//otherwise the nav links look even worse when the page gets narrow
+	}
+	
 	#user_nav {
-		padding: 10px 10px 11px;
+		padding: 10px 40px 11px;
 		line-height: 19px;
 		color: #fff;
 		text-decoration: none;
@@ -25,9 +19,6 @@ body {
 	}
 }
 
-.span-one-third {
-	width: 300px;
-}
 
 #error_explanation{
 	@extend .alert, .alert-error;
@@ -66,4 +57,4 @@ body.devise, body.website {
 
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
-//@import "bootstrap-responsive";
+@import "bootstrap-responsive";

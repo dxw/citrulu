@@ -1,9 +1,9 @@
 grammar TesterGrammar
 
   rule test_file
-    test_group+ {
+    space test_group+ space {
       def process
-        elements.collect{|e| e.process}
+        elements[1].elements.collect{|e| e.process}
       end
     }
   end
@@ -42,11 +42,13 @@ grammar TesterGrammar
   end
  
   rule assertion
-    "Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include"
+    "Source should contain" / "Source should not contain" / 
+    "I should see" / "I should not see" / 
+    "Headers should include" / "Headers should not include"
   end
 
   rule newline
-    [\n]+ 
+    [\r\n]+ 
   end
   
   rule value

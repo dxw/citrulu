@@ -3,7 +3,7 @@ require 'grammar/symbolizer'
 
 class TestFile < ActiveRecord::Base
   belongs_to :user 
-  has_many :results
+  has_many :test_runs
 
   class TestCompileError < StandardError
   end
@@ -21,7 +21,14 @@ class TestFile < ActiveRecord::Base
       :after => matches[8],
     }
 
-    results[:expected] = "' '" if results[:expected] == ' '
+    case results[:after] 
+    when ' '
+      results[:after] = "a space" 
+    when "\n" 
+      results[:after] = "a newline"
+    else 
+      results[:after] = "'" + results[:after] + "'"
+    end
 
     results
   end

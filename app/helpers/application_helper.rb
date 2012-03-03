@@ -3,15 +3,15 @@ module ApplicationHelper
     params[:controller].split("/")[0]
   end
   
-  def nav_link(text, controller)
-    if params[:controller] == controller
-      content_tag :li do 
+  def nav_link(text, path)
+    if path == request.fullpath # gives the current uri after the first slash
+      content_tag :li, :class => "active" do 
         #EWW! EWW! Bootstrap styles force you to render the current nav as a link instead of text
         link_to text
       end
     else
-      content_tag :li, :class => "active" do 
-        link_to text, :controller => controller
+      content_tag :li do 
+        link_to text, path
       end
     end
   end

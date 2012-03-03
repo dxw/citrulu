@@ -9,55 +9,37 @@ class TestFilesController < ApplicationController
   # GET /test_files
   # GET /test_files.json
   def index
-    @test_file = current_user.test_file
-
-    # redirect_to @test_file
-    redirect_to edit_test_file_path(@test_file)
-    
-    
-    # @test_files = TestFile.all
-    # 
-    #     respond_to do |format|
-    #       format.html # index.html.erb
-    #       format.json { render json: @test_files }
-    #     end
+    respond_to do |format|
+      format.html 
+      format.json { render json: @test_files }
+    end
   end
 
   # GET /test_files/1
   # GET /test_files/1.json
   def show
-    @test_file = current_user.test_file
-    
-    redirect_to edit_test_file_path(@test_file)
-    #@test_file = TestFile.find(params[:id])
+    @test_file = TestFile.find(params[:id])
 
-    # respond_to do |format|
-    #   format.html # show.html.erb
-    #   format.json { render json: @test_file }
-    # end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @test_file }
+    end
   end
 
   # GET /test_files/new
   # GET /test_files/new.json
   def new
     @test_file = TestFile.new
-    redirect_to edit_test_file_path(@test_file)
 
-    # respond_to do |format|
-    #   format.html # new.html.erb
-    #   format.json { render json: @test_file }
-    # end
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @test_file }
+    end
   end
 
   # GET /test_files/1/edit
   def edit
-    # if params[:id].nil?
-      @test_file = current_user.test_file
-      
-      @console_output = "Welcome back!"
-    # else
-    #   @test_file = TestFile.find(params[:id])
-    # end
+    @test_file = TestFile.find(params[:id])
   end
 
   # POST /test_files
@@ -80,41 +62,45 @@ class TestFilesController < ApplicationController
   # PUT /test_files/1.json
   def update
     @test_file = TestFile.find(params[:id])
-  
-    begin
-      TestFile.compile_tests(params[:test_file][:test_file_text])
-
-    # Compile fail
-    rescue TestFile::TestCompileError => e
-      error = compiler.format_error(e)
-
-      @console_msg_hash = {
-        :text1 => "Compilation failed! Expected: ",
-        :expected => error[:expected],
-        :text2 => " at line ",
-        :line => error[:line],
-        :text3 => ", column ",
-        :column => error[:column],
-      }
-
-      if !error[:after].empty?
-        @console_msg_hash[:text4] = " after '"
-        @console_msg_hash[:after] = error[:after].strip
-        @console_msg_hash[:text5] = "'"
-      end
-
-      @console_msg_type = "error"
-      @status_msg = "Saved (with errors)"
-
-    # Compile win
+    
+    if params[:test_file][:test_file_text].nil?
+      # will this ever happen?
     else
-      @console_msg_hash = {:text0 => "Saved!"}
-      @console_msg_type = "success"
-      @status_msg = "Saved!"
-      
-      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
-    end
+    
+      begin
+        TestFile.compile_tests(params[:test_file][:test_file_text])
 
+      # Compile fail
+      rescue TestFile::TestCompileError => e
+        error = TestFile.format_error(e)
+
+        @console_msg_hash = {
+          :text1 => "Compilation failed! Expected: ",
+          :expected => error[:expected],
+          :text2 => " at line ",
+          :line => error[:line],
+          :text3 => ", column ",
+          :column => error[:column],
+        }
+
+        if !error[:after].empty?
+          @console_msg_hash[:text4] = " after "
+          @console_msg_hash[:after] = error[:after]
+        end
+
+        @console_msg_type = "error"
+        @status_msg = "Saved (with errors)"
+
+      # Compile win
+      else
+        @console_msg_hash = {:text0 => "Saved!"}
+        @console_msg_type = "success"
+        @status_msg = "Saved!"
+      
+        @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      end
+    end
+    
     respond_to do |format|
       @test_file.update_attributes(params[:test_file])
 

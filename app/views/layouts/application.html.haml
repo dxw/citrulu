@@ -6,6 +6,4 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body{ :class => "#{controller_name} #{params[:action]}"}
-    -#there is undoubtedly a cleaner way to handle the class above...
-    -#the point is that the "devise" controller has multiple parts e.g. devise/sessions ...
     = content_for?(:content) ? yield(:content) : yield

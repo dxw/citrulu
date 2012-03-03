@@ -14,6 +14,7 @@ setup_editor = ->
   window.editor.getSession().setTabSize 2
   window.editor.getSession().setUseSoftTabs true 
   window.editor.getSession().setValue $("#editor_content").val()
+  window.editor.setShowPrintMargin(false);
   $("#editor_content").hide()
   $("#editor_form").submit ->
     saving_file()
@@ -22,9 +23,8 @@ setup_editor = ->
     window.text_hash = make_hash(editor_text)
     
   # Here's the code to include the (currently aborted) attempt to write our own syntax highlighting:
-  # TestGrammarMode = require("ace/mode/testgrammar").Mode
-  # window.editor.getSession().setMode new TestGrammarMode()
-
+  SafeWTFGrammar = require("ace/mode/safewtf").Mode
+  window.editor.getSession().setMode new SafeWTFGrammar()
 
 saving_file = ->
   $("#editor_status").html "Saving..."

@@ -1,0 +1,16 @@
+ul#test_runs_list{
+	width: 600px;
+	header {
+		.outcome {
+			float: right;
+		}
+	}
+	li.test_result {
+		padding-left: 1.5em;
+	}
+	.close_link{
+		text-align: right;
+	}
+}
+
+
