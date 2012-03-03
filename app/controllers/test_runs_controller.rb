@@ -14,10 +14,9 @@ class TestRunsController < ApplicationController
 ##TEMPORARY CODE
     @test_runs = []
     offset = 0
-    while @test_runs.length < 10
-      offset += rand(100)
-      
-      @test_runs << TestRun.new(:id => offset, :time_run => Time.now - offset)
+    while @test_runs.length < 10      
+      @test_runs << TestRun.new(:id => offset, :time_run => Time.new(2012,03,20) +offset.hours)
+      offset += 1
     end
 ##END TEMPORARY CODE
 
