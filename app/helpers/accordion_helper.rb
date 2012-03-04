@@ -6,12 +6,13 @@ module AccordionHelper
   end
   
   def accordion_group(accordion_id, heading, heading_content_tag, default_open, &block)
-    group_id = "##{heading.downcase.gsub(/\s+/, '_')}"
+    # create a sensible id: take the heading, strip out any special characters and replace spaces with underscored 
+    group_id = heading.downcase.gsub(/[^0-9A-Za-z ]/, '').gsub(/\s+/, '_')
     
     heading = content_tag :heading, :class => "accordion-heading" do 
                 content_tag heading_content_tag, heading, :class => "accordion-toggle", 
                   "data-parent" => "##{accordion_id}",
-                  "data-target"=> group_id,
+                  "data-target"=> "##{group_id}",
                   "data-toggle" => "collapse"
               end
     
