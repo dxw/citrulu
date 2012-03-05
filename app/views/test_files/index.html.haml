@@ -6,7 +6,16 @@
   #test_list.span8
     #welcome
       %h3 Welcome to Citrulu
-      %p To get started, click things
+      %p To get started, edit your default test file. It contains some examples to help you get started.
+      %h3 Your tests
+      - @test_files.each do |file|
+        .test_file
+          %span.name=file.name
+          %span.last_updated=file.updated_at
+          %span.controls
+            %a.edit{:href => edit_test_file_path(file)} Edit
+            /%a.delete{:href => delete_path(file)} Delete
+
       
   #sidebar.span4
     #recent_results

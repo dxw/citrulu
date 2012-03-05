@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120302161929) do
+ActiveRecord::Schema.define(:version => 20120305121325) do
 
   create_table "results", :force => true do |t|
     t.integer  "test_file_id"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20120302161929) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "compiled_test_file_text"
+    t.string   "name"
   end
 
   create_table "test_groups", :force => true do |t|

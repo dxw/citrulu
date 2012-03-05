@@ -9,6 +9,8 @@ class TestFilesController < ApplicationController
   # GET /test_files
   # GET /test_files.json
   def index
+    @test_files = TestFile.find(:all, :order => "updated_at")
+
     respond_to do |format|
       format.html 
       format.json { render json: @test_files }
