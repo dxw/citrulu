@@ -3,34 +3,30 @@
   - if @test_runs.empty?
     %p You don't have any test runs to show yet
   -else
-    %ul#test_runs_list.unstyled.accordion
-      - @test_runs.each do |test_run| 
-        %li.accordion-group 
-          %header{ :class => "accordion-heading #{test_run.status}" }
-            .accordion-toggle{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} 
-              / %time.accordion-toggle{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.id}", "data-toggle" => "collapse"} 
-              %time
-                = test_run.time_run.to_s(:test_run_time)
-              %span.outcome
-                - if test_run.number_of_failures == 0
-                  Everything works!
-                - else
-                  = test_run.number_of_failures
-                  failures
-
-          .accordion-body.collapse{ :id => test_run.time_run.to_i }  
-            / %section.accordion-body.collapse{ :id => test_run.id }
-            %section.accordion-inner
-              %p 
-                ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} page, of which #{test_run.number_of_failures} failed"
-              %ul.unstyled
-                - test_run.test_run_object.each do |test_group|
-                  %li
-                    0n 
-                    = link_to test_group[:test_url], nil , :target => "_blank"
-                    %ul.unstyled
-                      -test_group[:tests].each do |test|
-                        %li{ :class => "test_result #{test_class(test)}"}
-                          = test_text(test)
-              %p.close_link
-                %a{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} Close
+    =accordion("test_runs_list") do
+      - @test_runs.each do |test_run|
+        =accordion_group( test_run.time_run.to_i ) do
+          -# =accordion_group(test_run.id, true) do
+          =accordion_heading({:class => test_run.status}) do
+            %time
+              = test_run.time_run.to_s(:test_run_time)
+            %span.outcome
+              - if test_run.number_of_failures == 0
+                Everything works!
+              - else
+                = test_run.number_of_failures
+                failures
+          =accordion_body do
+            %p 
+              ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} page, of which #{test_run.number_of_failures} failed"
+            %ul.unstyled
+              - test_run.test_run_object.each do |test_group|
+                %li
+                  0n 
+                  = link_to test_group[:test_url], nil , :target => "_blank"
+                  %ul.unstyled
+                    -test_group[:tests].each do |test|
+                      %li{ :class => "test_result #{test_class(test)}"}
+                        = test_text(test)
+            %p.close_link
+              %a{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} Close
