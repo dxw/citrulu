@@ -44,7 +44,8 @@ group :test do
   gem 'capybara'
   gem 'factory_girl_rails', '~> 1.2'
   gem 'spork', '> 0.9.0.rc'
-  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+#  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+  gem 'rb-fsevent', :require => false 
 end
 
 group :development, :test do
