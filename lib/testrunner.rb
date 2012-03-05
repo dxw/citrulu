@@ -10,28 +10,28 @@ class TestRunner
   end
 
   def run_all_tests
-    TestFile.find(:all).each do |file|
+    TestFile.all.each do |file|
       test_run = TestRun.new
       test_run.time_run = Time.now
       test_run.test_file_id = Time.now
       test_run.save
 
-      results = execute_tests(parser.compile_tests(file.compiled_test_file_text))
+      groups = execute_tests(parser.compile_tests(file.compiled_test_file_text))
 
-      results.each do |result|
+      groups.each do |group|
         test_group = TestGroup.new
         test_group.test_run_id = test_run.id
-        test_group.time_run = result[:test_date]
-        test_group.response_time = result[:response_time]
+        test_group.time_run = group[:test_date]
+        test_group.response_time = group[:response_time]
         test_group.save
 
-        result[:tests].each do |test|
-          test_result = TestResult.new
+        group[:tests].each do |test|
+          test_result = TestGroup.new
           test_result.test_group_id = test_group.id
           test_result.assertion = test[:assertion]
           test_result.value = test[:value]
           test_result.name = test[:name]
-          test_result.result = test[:passed]
+          test_result.group = test[:passed]
           test_result.save
         end
       end
@@ -113,6 +113,8 @@ class TestRunner
         test[:message] = "Internal error: no such test' #{test[:assertion]}"
       end
     end
+
+    tests
   end
 
   end
