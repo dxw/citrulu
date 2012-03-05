@@ -1,0 +1,10 @@
+header {margin-top:30px}
+h1.masthead {font-size: 10em}
+h2 {font-size:3.5em; line-height:1em}
+#mailing_list form{height:90px; /*FRAGILE!*/
+  background-color: #D9EDF7; border-color: #BCE8F1;} 
+legend {border:0; width:220px; float:left}
+ul{width:220px; float:left }
+.submit {float:left; padding-left:20px}
+#selling_points{ margin-top:10px}
+section img { margin-bottom: 18px }
