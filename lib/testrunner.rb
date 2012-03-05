@@ -10,7 +10,9 @@ class TestRunner
   end
 
   def run_all_tests
-    TestFile.all.each do |file|
+    return "Nothing to run" if TestFile.compiled_files.empty?
+    
+    TestFile.compiled_files.each do |file|
       test_run = TestRun.new
       test_run.time_run = Time.now
       test_run.test_file_id = Time.now
