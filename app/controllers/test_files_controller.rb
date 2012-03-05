@@ -73,7 +73,7 @@ class TestFilesController < ApplicationController
         TestFile.compile_tests(params[:test_file][:test_file_text])
 
       # Compile fail
-      rescue TestFile::TestCompileError => e
+      rescue CitruluParser::TestCompileError => e
         error = TestFile.format_error(e)
 
         @console_msg_hash = {
