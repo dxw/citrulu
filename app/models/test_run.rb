@@ -52,7 +52,7 @@ class TestRun < ActiveRecord::Base
   def number_of_failures  
     # Simulate random successes and failures:
     
-    unless time_run.to_i.modulo(5)==0
+    unless (time_run.to_i/1000).modulo(5)==0
       0
     else
       rand(20) + 1
