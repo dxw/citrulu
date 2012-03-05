@@ -46,7 +46,7 @@ class CitruluParser < TesterGrammarParser
       if failure_reason.nil?
         raise TestCompileUnknownError.new("An strange compiler error has occurred. Sorry! This is a bug. Please let us know")
       else
-        raise TestCompileError.new(parser.failure_reason)
+        raise TestCompileError.new(failure_reason)
       end
     end
 
