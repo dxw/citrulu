@@ -83,10 +83,21 @@ module TesterGrammar
 
   module TestGroup1
     def process
-      {
-        :test_url => on_clause.url.text_value.strip, 
-        :tests => elements[1].elements.collect{|e| e.process}
+#        elements.each do |e|
+#          puts "=-----------------"
+#          puts e.inspect
+#
+#        end
+
+      results = {
+        :test_url => on_clause.url.text_value.strip,
+        :tests => elements[2].elements.collect{|e| e.process}
       }
+
+      results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
+      results[:finally] = elements[3].url.text_value.strip if !elements[3].empty?
+
+      results
     end
   end
 
@@ -105,22 +116,40 @@ module TesterGrammar
     r1 = _nt_on_clause
     s0 << r1
     if r1
-      s2, i2 = [], index
-      loop do
-        r3 = _nt_test
-        if r3
-          s2 << r3
-        else
-          break
-        end
-      end
-      if s2.empty?
-        @index = i2
-        r2 = nil
+      r3 = _nt_first_clause
+      if r3
+        r2 = r3
       else
-        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+        r2 = instantiate_node(SyntaxNode,input, index...index)
       end
       s0 << r2
+      if r2
+        s4, i4 = [], index
+        loop do
+          r5 = _nt_test
+          if r5
+            s4 << r5
+          else
+            break
+          end
+        end
+        if s4.empty?
+          @index = i4
+          r4 = nil
+        else
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        end
+        s0 << r4
+        if r4
+          r7 = _nt_finally_clause
+          if r7
+            r6 = r7
+          else
+            r6 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s0 << r6
+        end
+      end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -137,12 +166,16 @@ module TesterGrammar
   end
 
   module OnClause0
+    def space
+      elements[0]
+    end
+
     def url
-      elements[1]
+      elements[2]
     end
 
     def newline
-      elements[2]
+      elements[3]
     end
   end
 
@@ -158,20 +191,24 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    if has_terminal?("On ", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
-      @index += 3
-    else
-      terminal_parse_failure("On ")
-      r1 = nil
-    end
+    r1 = _nt_space
     s0 << r1
     if r1
-      r2 = _nt_url
+      if has_terminal?("On ", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 3))
+        @index += 3
+      else
+        terminal_parse_failure("On ")
+        r2 = nil
+      end
       s0 << r2
       if r2
-        r3 = _nt_newline
+        r3 = _nt_url
         s0 << r3
+        if r3
+          r4 = _nt_newline
+          s0 << r4
+        end
       end
     end
     if s0.last
@@ -183,6 +220,124 @@ module TesterGrammar
     end
 
     node_cache[:on_clause][start_index] = r0
+
+    r0
+  end
+
+  module FirstClause0
+    def space
+      elements[0]
+    end
+
+    def url
+      elements[2]
+    end
+
+    def newline
+      elements[3]
+    end
+  end
+
+  def _nt_first_clause
+    start_index = index
+    if node_cache[:first_clause].has_key?(index)
+      cached = node_cache[:first_clause][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      if has_terminal?("First, fetch ", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 13))
+        @index += 13
+      else
+        terminal_parse_failure("First, fetch ")
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        r3 = _nt_url
+        s0 << r3
+        if r3
+          r4 = _nt_newline
+          s0 << r4
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(FirstClause0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:first_clause][start_index] = r0
+
+    r0
+  end
+
+  module FinallyClause0
+    def space
+      elements[0]
+    end
+
+    def url
+      elements[2]
+    end
+
+    def newline
+      elements[3]
+    end
+  end
+
+  def _nt_finally_clause
+    start_index = index
+    if node_cache[:finally_clause].has_key?(index)
+      cached = node_cache[:finally_clause][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      if has_terminal?("Finally, fetch ", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 15))
+        @index += 15
+      else
+        terminal_parse_failure("Finally, fetch ")
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        r3 = _nt_url
+        s0 << r3
+        if r3
+          r4 = _nt_newline
+          s0 << r4
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(FinallyClause0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:finally_clause][start_index] = r0
 
     r0
   end

@@ -9,18 +9,37 @@ grammar TesterGrammar
   end
 
   rule test_group
-    on_clause test+  {
+    on_clause first_clause? test+ finally_clause? {
       def process
-        {
-          :test_url => on_clause.url.text_value.strip, 
-          :tests => elements[1].elements.collect{|e| e.process}
+#        elements.each do |e|
+#          puts "=-----------------"
+#          puts e.inspect
+#
+#        end
+
+        results = {
+          :test_url => on_clause.url.text_value.strip,
+          :tests => elements[2].elements.collect{|e| e.process}
         }
+
+        results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
+        results[:finally] = elements[3].url.text_value.strip if !elements[3].empty?
+
+        results
       end
     }
   end
 
   rule on_clause
-    "On " url newline 
+    space "On " url newline 
+  end
+
+  rule first_clause
+    space "First, fetch " url newline
+  end
+
+  rule finally_clause
+    space "Finally, fetch " url newline
   end
 
   rule test
