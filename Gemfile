@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.1.0'
-gem 'sqlite3'
 
 # Authentication management with devise:
 gem 'devise'
@@ -47,4 +46,5 @@ end
 
 group :development, :test do
    gem 'rspec-rails'
+   gem 'sqlite3'
 end
