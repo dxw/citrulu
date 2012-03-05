@@ -51,7 +51,17 @@ define('ace/mode/safewtf_highlight_rules', function(require, exports, module) {
 
         {
           token: "string",
-          regex: "http://.*|https://.*"
+          regex: "http://[^#]*|https://[^#]*"
+        },
+
+        {
+          token: "support",
+          regex: "First, fetch|Finally, fetch"
+        },
+
+        {
+          token: "comment",
+          regex: "#.*$"
         }
       ] 
     }
