@@ -22,6 +22,7 @@ class TestRunner
         test_group = TestGroup.new
         test_group.test_run_id = test_run.id
         test_group.time_run = result[:test_date]
+        test_group.response_time = result[:response_time]
         test_group.save
 
         result[:tests].each do |test|
@@ -57,6 +58,8 @@ class TestRunner
 
       begin
         page = agent.get(group[:test_url])
+        
+        group[:response_time] = (Time.now - group[:test_date])*1000
       rescue Mechanize::ResponseCodeError => e
 
         group[:result] = :fail
