@@ -9,21 +9,15 @@ grammar TesterGrammar
   end
 
   rule test_group
-    on_clause first_clause? test+ finally_clause? {
+    on_clause first_clause? finally_clause? test+ {
       def process
-#        elements.each do |e|
-#          puts "=-----------------"
-#          puts e.inspect
-#
-#        end
-
         results = {
           :test_url => on_clause.url.text_value.strip,
-          :tests => elements[2].elements.collect{|e| e.process}
+          :tests => elements[3].elements.collect{|e| e.process}
         }
 
         results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
-        results[:finally] = elements[3].url.text_value.strip if !elements[3].empty?
+        results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
 
         results
       end
