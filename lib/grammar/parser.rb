@@ -34,13 +34,8 @@ class CitruluParser < TesterGrammarParser
   end
 
   def compile_tests(code)
-    # Strip comments
-    code.gsub!(/#[^\n]+\n/, '')
-
-    # Ensure the file ends with a line return
-    code = code + "\n"
-
-    result = parse(code)
+    # Strip comments & ensure the file ends with a line return
+    result = parse(code.gsub(/#[^\n]+\n/, '') + "\n")
 
     if result == nil
       if failure_reason.nil?

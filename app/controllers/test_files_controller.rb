@@ -68,7 +68,6 @@ class TestFilesController < ApplicationController
     if params[:test_file][:test_file_text].nil?
       # will this ever happen?
     else
-    
       begin
         TestFile.compile_tests(params[:test_file][:test_file_text])
 
