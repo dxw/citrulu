@@ -15,6 +15,9 @@ gem 'treetop'
 # Rails seems to depend on this
 gem 'therubyracer'
 
+# For to run the tests
+gem 'mechanize'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
