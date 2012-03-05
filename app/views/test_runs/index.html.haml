@@ -18,7 +18,7 @@
                 failures
           =accordion_body do
             %p 
-              ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} page, of which #{test_run.number_of_failures} failed"
+              ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} pages, of which #{test_run.number_of_failures} failed"
             %ul.unstyled
               - test_run.test_run_object.each do |test_group|
                 %li
