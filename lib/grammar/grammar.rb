@@ -84,7 +84,7 @@ module TesterGrammar
   module TestGroup1
     def process
       {
-        :test_url => on_clause.url.text_value, 
+        :test_url => on_clause.url.text_value.strip, 
         :tests => elements[1].elements.collect{|e| e.process}
       }
     end
@@ -208,9 +208,9 @@ module TesterGrammar
       }
 
       if elements[3].text_value.match(/^=/)
-        hash[:name] = elements[3].text_value 
+        hash[:name] = elements[3].text_value.strip
       else
-        hash[:value] = elements[3].text_value 
+        hash[:value] = elements[3].text_value.strip
       end
 
       hash
