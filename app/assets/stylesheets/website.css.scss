@@ -1,3 +1,38 @@
 // Place all the styles related to the Website controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+table {
+  p {
+      margin: 0;
+  }
+
+  small {
+    font-size: 90%;
+  }
+
+  thead td {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 20px;
+  }
+
+  td {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  td.feature {
+    text-align: left;
+    padding: 10px;
+
+    p {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  td.comingsoon {
+    font-style: italic;
+  }
+}
