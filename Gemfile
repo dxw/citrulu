@@ -17,18 +17,19 @@ gem 'therubyracer'
 # For to run the tests
 gem 'mechanize'
 
+# Gems used in all environments
+gem 'haml'
+gem 'haml_rails'
+gem 'jquery-rails'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'haml'
-  gem 'haml_rails'
   gem 'sass-rails', '  ~> 3.1.0'
   gem 'bootstrap-sass', '~> 2.0.1'
   gem 'coffee-rails', '~> 3.1.0'
   gem 'uglifier'
 end
-
-gem 'jquery-rails'
 
 group :development do
   gem 'guard-rails'
@@ -51,4 +52,8 @@ end
 group :development, :test do
    gem 'rspec-rails'
    gem 'sqlite3'
+end
+
+group :production do
+   gem 'mysql2', '0.2.7'
 end
