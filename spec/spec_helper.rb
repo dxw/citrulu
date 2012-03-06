@@ -44,5 +44,8 @@ end
 Spork.each_run do
   # This code will be run each time you run your specs.
   FactoryGirl.reload
+  
+  # Reload everything in lib/grammar
+  Dir["#{Rails.root}/lib/grammar/*.rb"].each { |f| load f }
 end
 
