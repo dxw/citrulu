@@ -48,7 +48,7 @@ module SimpleFrontEndTesting
     
     # On the advice of Devise: 
     # If you are deploying Rails 3.1 on Heroku, you may want to set:
-       config.assets.initialize_on_precompile = false
+    # config.assets.initialize_on_precompile = false
     # forcing your application to not access the DB or load models when precompiling your assets.
     
   end
