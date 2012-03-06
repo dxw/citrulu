@@ -97,6 +97,14 @@ describe TestFilesController do
   end
   
   describe "PUT update" do
+    def successful_update
+      assigns(:console_msg_type).should == "success"
+    end
+    
+    def failed_update
+      assigns(:console_msg_type).should == "error"
+    end
+    
     describe "with valid params" do
       it "updates the requested test_file" do
         test_file = FactoryGirl.create(:test_file)
@@ -106,7 +114,7 @@ describe TestFilesController do
         # submitted in the request.
         TestFile.any_instance.should_receive(:update_attributes).with(valid_update_attributes)
         put :update, {:id => test_file.to_param, :test_file => valid_update_attributes}
-        # DGMS - Not sure if the above is correct... here's teh scaffold:
+        # DGMS - Not sure if the above is correct... here's the scaffold:
         # TestFile.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         # put :update, {:id => test_file.to_param, :test_file => {'these' => 'params'}}
       end
@@ -115,6 +123,20 @@ describe TestFilesController do
         test_file = FactoryGirl.create(:test_file)
         put :update, {:id => test_file.to_param, :test_file => valid_update_attributes}
         assigns(:test_file).should eq(test_file)
+      end
+      
+      it "handles a test file with nil text" do
+        test_file = FactoryGirl.create(:test_file)
+        TestFile.any_instance.should_receive(:update_attributes).with("test_file_text" => nil)
+        put :update, {:id => test_file.to_param, :test_file => valid_update_attributes.merge({"test_file_text" => nil})}
+        successful_update
+      end
+      
+      it "handles a test file with empty text" do
+        test_file = FactoryGirl.create(:test_file)
+        TestFile.any_instance.should_receive(:update_attributes).with("test_file_text" => "")
+        put :update, {:id => test_file.to_param, :test_file => valid_update_attributes.merge({"test_file_text" => ""})}
+        successful_update
       end
     end
   

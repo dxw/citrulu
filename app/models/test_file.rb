@@ -13,8 +13,12 @@ class TestFile < ActiveRecord::Base
 
   def self.compile_tests(code)
     @parser ||= CitruluParser.new
-
-    @parser.compile_tests(code)
+    
+    if code.nil?
+      raise @parser.no_code_exception
+    else
+      @parser.compile_tests(code)
+    end
   end
   
   # All the files which have compiled successfully at some point

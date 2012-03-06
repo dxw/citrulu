@@ -33,9 +33,15 @@ class CitruluParser < TesterGrammarParser
     results
   end
 
+  def no_code_exception
+    ArgumentError.new("Something has gone wrong: we tried to compile a nonexistent Test File! Sorry! This is a bug. Please let us know")
+  end
+
   def compile_tests(code)
+    raise no_code_exception if code.nil?
+    
     # Strip comments & ensure the file ends with a line return
-    result = parse(code.gsub(/#[^\n]+\n/, '') + "\n")
+    result = parse(code.gsub(/#[^\n]+\n/, '').gsub(/#.*$/, '') + "\n")
 
     if result == nil
       if failure_reason.nil?

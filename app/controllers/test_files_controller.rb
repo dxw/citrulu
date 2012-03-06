@@ -65,41 +65,38 @@ class TestFilesController < ApplicationController
   def update
     @test_file = TestFile.find(params[:id])
     
-    if params[:test_file][:test_file_text].nil?
-      # will this ever happen?
-    else
-      begin
-        TestFile.compile_tests(params[:test_file][:test_file_text])
+    code = params[:test_file][:test_file_text]
+    begin
+      # If there's no code to complile, don't even try - drop straight through to the 'else' block
+      TestFile.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+    # Compile fail
+    rescue CitruluParser::TestCompileError => e
+      error = TestFile.format_error(e)
 
-      # Compile fail
-      rescue CitruluParser::TestCompileError => e
-        error = TestFile.format_error(e)
+      @console_msg_hash = {
+        :text1 => "Compilation failed! Expected: ",
+        :expected => error[:expected],
+        :text2 => " at line ",
+        :line => error[:line],
+        :text3 => ", column ",
+        :column => error[:column],
+      }
 
-        @console_msg_hash = {
-          :text1 => "Compilation failed! Expected: ",
-          :expected => error[:expected],
-          :text2 => " at line ",
-          :line => error[:line],
-          :text3 => ", column ",
-          :column => error[:column],
-        }
-
-        if !error[:after].empty?
-          @console_msg_hash[:text4] = " after "
-          @console_msg_hash[:after] = error[:after]
-        end
-
-        @console_msg_type = "error"
-        @status_msg = "Saved (with errors)"
-
-      # Compile win
-      else
-        @console_msg_hash = {:text0 => "Saved!"}
-        @console_msg_type = "success"
-        @status_msg = "Saved!"
-      
-        @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      if !error[:after].empty?
+        @console_msg_hash[:text4] = " after "
+        @console_msg_hash[:after] = error[:after]
       end
+
+      @console_msg_type = "error"
+      @status_msg = "Saved (with errors)"
+
+    # Compile win
+    else
+      @console_msg_hash = {:text0 => "Saved!"}
+      @console_msg_type = "success"
+      @status_msg = "Saved!"
+  
+      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
     end
     
     respond_to do |format|

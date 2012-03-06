@@ -57,6 +57,9 @@ describe TestFile do
 
       code[0][:test_url].should == 'http://www.abc.com'
     end
-      
+    
+    it "should raise an exception if the input is nil" do
+      expect { TestFile.compile_tests(nil) }.to raise_error(ArgumentError)
+    end
   end    
 end
