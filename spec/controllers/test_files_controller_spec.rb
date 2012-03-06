@@ -27,6 +27,10 @@ describe TestFilesController do
   def valid_update_attributes
     {"test_file_text" => "this is some new text"}
   end
+  
+  def valid_create_attributes
+    FactoryGirl.build(:test_file).attributes
+  end
 
   describe "GET index" do
     # Nothing yet: the index page is just static atm.
@@ -59,18 +63,18 @@ describe TestFilesController do
     describe "with valid params" do
       it "creates a new TestFile" do
         expect {
-          post :create, {:test_file => {}}
+          post :create, {:test_file => valid_create_attributes}
         }.to change(TestFile, :count).by(1)
       end
   
       it "assigns a newly created test_file as @test_file" do
-        post :create, {:test_file => {}}
+        post :create, {:test_file => valid_create_attributes}
         assigns(:test_file).should be_a(TestFile)
         assigns(:test_file).should be_persisted
       end
   
       it "redirects to the created test_file" do
-        post :create, {:test_file => {}}
+        post :create, {:test_file => valid_create_attributes}
         response.should redirect_to(TestFile.last)
       end
     end
