@@ -41,7 +41,7 @@ class CitruluParser < TesterGrammarParser
     raise no_code_exception if code.nil?
     
     # Strip comments & ensure the file ends with a line return
-    result = parse(code.gsub(/#[^\n]+\n/, '').gsub(/#.*$/, '') + "\n")
+    result = parse((code + "\n").gsub(/#[^\n]+\n/, ''))
 
     if result == nil
       if failure_reason.nil?
