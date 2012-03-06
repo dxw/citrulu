@@ -83,19 +83,13 @@ module TesterGrammar
 
   module TestGroup1
     def process
-#        elements.each do |e|
-#          puts "=-----------------"
-#          puts e.inspect
-#
-#        end
-
       results = {
         :test_url => on_clause.url.text_value.strip,
-        :tests => elements[2].elements.collect{|e| e.process}
+        :tests => elements[3].elements.collect{|e| e.process}
       }
 
       results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
-      results[:finally] = elements[3].url.text_value.strip if !elements[3].empty?
+      results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
 
       results
     end
@@ -124,28 +118,28 @@ module TesterGrammar
       end
       s0 << r2
       if r2
-        s4, i4 = [], index
-        loop do
-          r5 = _nt_test
-          if r5
-            s4 << r5
-          else
-            break
-          end
-        end
-        if s4.empty?
-          @index = i4
-          r4 = nil
+        r5 = _nt_finally_clause
+        if r5
+          r4 = r5
         else
-          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+          r4 = instantiate_node(SyntaxNode,input, index...index)
         end
         s0 << r4
         if r4
-          r7 = _nt_finally_clause
-          if r7
-            r6 = r7
+          s6, i6 = [], index
+          loop do
+            r7 = _nt_test
+            if r7
+              s6 << r7
+            else
+              break
+            end
+          end
+          if s6.empty?
+            @index = i6
+            r6 = nil
           else
-            r6 = instantiate_node(SyntaxNode,input, index...index)
+            r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
           end
           s0 << r6
         end

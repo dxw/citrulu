@@ -28,12 +28,12 @@ class TestRunner
         test_group.save
 
         group[:tests].each do |test|
-          test_result = TestGroup.new
+          test_result = TestResult.new
           test_result.test_group_id = test_group.id
           test_result.assertion = test[:assertion]
           test_result.value = test[:value]
           test_result.name = test[:name]
-          test_result.group = test[:passed]
+          test_result.result = test[:passed]
           test_result.save
         end
       end
@@ -56,18 +56,27 @@ class TestRunner
     tests.each do |group|
       agent = Mechanize.new
 
+      if !group[:first].blank?
+        agent.get(group[:first])
+      end
+
       group[:test_date] = Time.now
 
       begin
         page = agent.get(group[:test_url])
-        
+
         group[:response_time] = (Time.now - group[:test_date])*1000
+        group[:response_code] = page.code
       rescue Mechanize::ResponseCodeError => e
 
         group[:result] = :fail
         group[:message] = e.to_s
 
         next
+      end
+      
+      if !group[:finally].blank?
+        agent.get(group[:finally])
       end
 
       group[:tests].each do |test|
