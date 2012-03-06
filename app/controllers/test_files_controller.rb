@@ -42,6 +42,8 @@ class TestFilesController < ApplicationController
   # GET /test_files/1/edit
   def edit
     @test_file = TestFile.find(params[:id])
+    @predefs = Predefs.all
+    puts @predefs.inspect
   end
 
   # POST /test_files
