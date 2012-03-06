@@ -20,5 +20,9 @@ class Predefs
 
     @predefs[name]
   end
+
+  def self.all
+    @predefs
+  end
 end
 
