@@ -10,6 +10,8 @@ class TestRunsController < ApplicationController
     #for now, just return the (single) test file associated with the current logged-in user
     test_file = current_user.test_files[0]
     @test_runs = test_file.test_runs
+    @test_files = current_user.test_files
+    @recent_failed_groups = current_user.test_files.collect{|t| t.last_run}.select{|r| r.number_of_failures != 0}.collect{|r| r.test_groups.select{|g| g.number_of_failures != 0}}[0]
 
 ##TEMPORARY CODE
     # @test_runs = []

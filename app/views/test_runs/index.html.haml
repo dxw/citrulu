@@ -1,34 +1,28 @@
 .page
   %h1 Results
-  - if @test_runs.empty?
+  - if @recent_failed_groups.empty?
     %p You don't have any test runs to show yet
   -else
-    - if @test_runs[1].number_of_failures == 0
+    - if @recent_failed_groups.empty?
       %h2.all_pass All your tests are passing. Hooray!
     - else
-      - test_run = @test_runs[1]
       .recentfails
-        %h2="#{test_run.number_of_failures} test#{test_run.number_of_failures == 1 ? '' : 's'} on #{test_run.number_of_pages} page#{test_run.number_of_pages == 1 ? '' : 's'} failed"
-        .row
-          - count = 0
-          - test_run.test_groups.each do |test_group|
-            -# next if test_group.number_of_failures == 0
-            - count = count+1
-            - if count == 3
-              - count=0
-              .row
-            .span4
-              .fail
-                %h3=test_group.test_url
-                %p.last-updated="#{test_group.updated_at} from #{test_run.test_file.name}"
-                %ul
-                  -test_group.test_results.each do |result|
-                    - next if !result.failed?
-                    %li 
-                      %i.icon-remove
-                      %span.assertion
-                        = result.assertion
-                      = value_or_name(result)
+        %h2="#{pluralize(@recent_failed_groups.count, 'test')} on #{pluralize(@recent_failed_groups.collect{|g| g.test_url}.uniq.count, 'page')} failed"
+        - @recent_failed_groups.each_slice(3).each do |fail_batch|
+          .row
+            - fail_batch.each do |group|
+              .span4
+                .fail
+                  %h3=group.test_url
+                  %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
+                  %ul
+                    -group.test_results.each do |result|
+                      - next if !result.failed?
+                      %li 
+                        %i.icon-remove
+                        %span.assertion
+                          = result.assertion
+                        = value_or_name(result)
 
     .row
       .testruns.span8
@@ -40,21 +34,24 @@
                 %p
                   %span.date=test_run.time_run.to_s(:test_run_time)
                   %span.file=test_run.test_file.name
-                %p.summary="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} pages with #{test_run.number_of_failures} failure#{test_run.number_of_failures == 1 ? '' : 's'}"
+                %p.summary="Ran #{pluralize(test_run.number_of_checks, 'check')} on #{pluralize(test_run.number_of_pages, 'page')} with #{pluralize(test_run.number_of_failures, 'failure')}"
 
       .sidebar.span4
         %h1 Test files status
 
         %ul.unstyled
-          %li.pass 
-            %h3 Default test file
-            %p.summary This file is working and was last executed on 20th March 2012 at 12:00
-          %li.fail
-            %h3 Default test file
-            %p.summary This file is not compiling successfully. 
-            %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.
-            %p.summary Those tests were last executed on 20th March 2012 at 12:00 
-            %button Edit this file
+          - @test_files.each do |file|
+            - if file.test_file_text == file.compiled_test_file_text 
+              %li.pass 
+                %h3=file.name
+                %p.summary="This file is working and was last executed on #{file.last_run.time_run.to_s(:test_run_time)}"
+            - else
+              %li.fail
+                %h3=file.name
+                %p.summary This file is not compiling successfully. 
+                %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.  TODO
+                %p.summary="Those tests were last executed on #{file.last_run.time_run.to_s(:test_run_time)}"
+                %a{:href => edit_test_file_path(file)} Edit this file
    
 -#%h1 Test Runs
 -#- if @test_runs.empty?
