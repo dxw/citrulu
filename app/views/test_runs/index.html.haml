@@ -1,9 +1,123 @@
 .page
-  %h1 Test Runs
+  %h1 Results
   - if @test_runs.empty?
     %p You don't have any test runs to show yet
   -else
-    =accordion("test_runs_list") do
+    .recentfails
+      %h2 7 tests on 4 pages are failing
+      .row
+        .span4
+          .fail
+            %h3 http://harrymetcalfe.com/
+            %p.last-updated 2012-03-20 12:00 from Default test file
+            %ul
+              %li 
+                %i.icon-remove
+                Page should contain Harry's Home on the Web
+              %li 
+                %i.icon-remove
+                Page should not contain "PHP Error"
+            
+        .span4
+          .fail
+            %h3 http://dxw.com
+            %p.last-updated 2012-03-20 12:00 from Default test file
+            %ul
+              %li 
+                %i.icon-remove
+                Headers should include "X-Varnish"
+
+              %li 
+                %i.icon-remove
+                Headers should not include "X-Spooge"
+        .span4
+          .fail
+            %h3 http://swingoutlondon.co.uk
+            %p.last-updated 2012-03-20 12:00 from Default test file
+            %ul
+              %li 
+                %i.icon-remove
+                Page should contain "Swing dancing"
+              %li 
+                %i.icon-remove
+                Page should not contain "Zumba"
+      .row
+        .span4
+          .fail
+            %h3 http://google.com
+            %p.last-updated 2012-03-20 12:00 from Default test file
+            %ul
+              %li
+                %i.icon-remove
+                Page should contain "We love privacies"
+
+    .row
+      .testruns.span8
+        %h1 Previous test runs
+        %ul.unstyled
+          - @test_runs.each do |test_run|
+            %li
+              %a.pass{:href => test_run_path(test_run)}
+                %p
+                  %span.date 20th March 2012 12:00
+                  %span.file Default test file
+                %p.summary Ran 13 checks on 3 pages with 0 failures
+          %li
+            %a.pass{:href => '#'}
+              %p
+                %span.date 20th March 2012 11:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 0 failures
+          %li
+            %a.pass{:href => '#'}
+              %p
+                %span.date 20th March 2012 10:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 0 failures
+          %li
+            %a.fail{:href => '#'}
+              %p
+                %span.date 20th March 2012 09:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 1 failure
+          %li
+            %a.fail{:href => '#'}
+              %p
+                %span.date 20th March 2012 08:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 4 failures
+          %li
+            %a.fail{:href => '#'}
+              %p
+                %span.date 20th March 2012 07:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 4 failures
+          %li
+            %a.pass{:href => '#'}
+              %p
+                %span.date 20th March 2012 06:00
+                %span.file Default test file
+              %p.summary Ran 13 checks on 3 pages with 0 failures
+
+      .sidebar.span4
+        %h1 Test files status
+
+        %ul.unstyled
+          %li.pass 
+            %h3 Default test file
+            %p.summary This file is working and was last executed on 20th March 2012 at 12:00
+          %li.fail
+            %h3 Default test file
+            %p.summary This file is not compiling successfully. 
+            %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.
+            %p.summary Those tests were last executed on 20th March 2012 at 12:00 
+            %button Edit this file
+   
+             
+
+
+
+    -#=accordion("test_runs_list") do
       - @test_runs.each do |test_run|
         =accordion_group( test_run.time_run.to_i ) do
           -# =accordion_group(test_run.id, true) do
