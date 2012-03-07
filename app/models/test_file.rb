@@ -6,12 +6,6 @@ class TestFile < ActiveRecord::Base
   has_many :test_runs
   
   validates_presence_of :name
-
-  def self.compile_tests(code)
-    @parser ||= CitruluParser.new
-    
-    @parser.compile_tests(code)
-  end
   
   def last_run
     TestRun.where(:test_file_id => id).first

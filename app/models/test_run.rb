@@ -25,7 +25,4 @@ class TestRun < ActiveRecord::Base
     end
     return count
   end
-  
-  
-  #TODO should be in the helper? Didn't put it there initially on the assumption that this is useful in logic as well...
 end
