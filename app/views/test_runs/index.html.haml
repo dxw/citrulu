@@ -44,13 +44,14 @@
             - if file.test_file_text == file.compiled_test_file_text 
               %li.pass 
                 %h3=file.name
-                %p.summary="This file is working and was last executed on #{file.last_run.time_run.to_s(:test_run_time)}"
+                %p.summary="This file is working and was last executed on #{file.last_run.time_run}"
+                %a{:href => edit_test_file_path(file)} Edit this file
             - else
               %li.fail
                 %h3=file.name
                 %p.summary This file is not compiling successfully. 
                 %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.  TODO
-                %p.summary="Those tests were last executed on #{file.last_run.time_run.to_s(:test_run_time)}"
+                %p.summary="Those tests were last executed on #{file.last_run.time_run}"
                 %a{:href => edit_test_file_path(file)} Edit this file
    
 -#%h1 Test Runs

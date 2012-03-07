@@ -1,0 +1,22 @@
+.page
+  %h1
+    %strong=@test_run.test_file.name
+    ="results for #{@test_run.time_run}"
+
+  - if @test_run.test_groups.count == 0
+    %p This test run contained no tests
+  - else 
+    - @test_run.test_groups.each_slice(3).each do |group_batch|
+      .row
+        - group_batch.each do |group|
+          .span4
+            %div{:class => group.number_of_failures != 0 ? "fail" : "pass"}
+              %h3=group.test_url
+              %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
+              %ul
+                -group.test_results.each do |result|
+                  %li 
+                    %i{:class => group.number_of_failures != 0 ? "icon-remove" : "icon-ok"}
+                    %span.assertion
+                      = result.assertion
+                    = value_or_name(result)
