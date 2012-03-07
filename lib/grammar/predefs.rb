@@ -2,27 +2,29 @@ class Predefs
   class PredefNotFoundError < StandardError
   end
 
-  @predefs = {
-    :php_errors => [
-      'PHP Error',
-      'PHP Warning',
-      'PHP Notice',
-      'PHP Fatal'
-    ]
-  }
+  def self.predefs 
+    {
+      :php_errors => [
+        'PHP Error',
+        'PHP Warning',
+        'PHP Notice',
+        'PHP Fatal'
+      ]
+    }
+  end
 
   def self.find(name)
     name = name.downcase.gsub(/^=/, '').gsub(/\s+/, '_').to_sym
 
-    if @predefs[name].blank?
+    if predefs[name].blank?
       raise PredefNotFoundError.new("Predef #{name} not found")
     end
 
-    @predefs[name]
+    predefs[name]
   end
 
   def self.all
-    @predefs
+    predefs
   end
 end
 
