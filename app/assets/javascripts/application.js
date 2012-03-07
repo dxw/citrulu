@@ -9,4 +9,5 @@
 //= require ace
 //= require theme-twilight.js
 //= require mode-javascript.js
+//= require bootstrap-collapse
 //= require_tree .
