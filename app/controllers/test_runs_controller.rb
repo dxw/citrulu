@@ -8,16 +8,16 @@ class TestRunsController < ApplicationController
   # GET /test_runs.json
   def index
     #for now, just return the (single) test file associated with the current logged-in user
-    # test_file = current_user.test_files[0]
-    # @test_runs = test_file.test_runs
+    test_file = current_user.test_files[0]
+    @test_runs = test_file.test_runs
     
 ##TEMPORARY CODE
-    @test_runs = []
-    offset = 0
-    while @test_runs.length < 10      
-      @test_runs << TestRun.new(:id => offset, :time_run => Time.new(2012,03,20) +offset.hours)
-      offset += 1
-    end
+    # @test_runs = []
+    # offset = 0
+    # while @test_runs.length < 10      
+    #   @test_runs << TestRun.new(:id => offset, :time_run => Time.new(2012,03,20) +offset.hours)
+    #   offset += 1
+    # end
 ##END TEMPORARY CODE
 
     respond_to do |format|

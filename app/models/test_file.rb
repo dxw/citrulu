@@ -1,4 +1,4 @@
-require 'grammar/parser'
+require 'parser'
 require 'symbolizer'
 
 class TestFile < ActiveRecord::Base
@@ -6,12 +6,6 @@ class TestFile < ActiveRecord::Base
   has_many :test_runs
   
   validates_presence_of :name
-
-  def self.format_error(error)
-    @parser ||= CitruluParser.new
-
-    @parser.format_error(error)
-  end
 
   def self.compile_tests(code)
     @parser ||= CitruluParser.new

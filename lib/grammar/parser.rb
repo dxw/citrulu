@@ -8,10 +8,10 @@ class CitruluParser < TesterGrammarParser
   class TestCompileUnknownError < StandardError
   end
 
-  def format_error(error)
+  def self.format_error(error)
     matches = error.to_s.match(/^Expected( one of)? ((([^,]+,)*[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/m)
 
-    throw ArgumentError.new("This error doesn't match any of the expected formats: #{error.to_s}") if !matches
+    raise ArgumentError.new("This error doesn't match any of the expected formats: #{error.to_s}") if !matches
 
     results = {
       :hash => Digest::SHA1.hexdigest(matches[3]),
@@ -44,7 +44,7 @@ class CitruluParser < TesterGrammarParser
     # Check for parser errors
     if result == nil
       if failure_reason.nil?
-        raise TestCompileUnknownError.new("An strange compiler error has occurred. Sorry! This is a bug. Please let us know")
+        raise TestCompileUnknownError.new("A strange compiler error has occurred. Sorry! This is a bug. Please let us know")
       else
         raise TestCompileError.new(failure_reason)
       end
@@ -66,7 +66,7 @@ class CitruluParser < TesterGrammarParser
       end
     end
 
-    raise TestCompileUnknownError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
+    raise TestCompileError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
   
     parsed_object
   end
