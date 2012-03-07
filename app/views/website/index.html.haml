@@ -1,19 +1,39 @@
 .container
-  %header
-    %h1 Citrulu
-    %p.lead Super-Awesome Front End Web Testing Framework
-    
-  =render "devise/registrations/new"
-
-  %section#brochure
-  %h2 Hosted front-end tests for your sites
+  %header.title
+  %h1.masthead Citrulu
+  %p Hosted, human-friendly, continuous front-end tests for your live websites
   .row
-    %section.span4
-      %h3 Front end tests for humans
-      %p Write tests for your site using natural language. No code or complicated forms - just simple instructions to check strings, headers and HTML.
-    %section.span4
-      %h3 Make sure stuff is working
-      %p SafeWTF doesn't just do uptime monitoring: by checking for specific strings, headers and HTML code you can write tests that check if specific functionality is working
-    %section.span4
-      %h3 Presets that make things easier
-      %p Want to check for nasty errors appearing in application code? We make that easy by predefining lists of commonly used strings that you can use in your tests
+    .span4
+      %h2.well We'll launch soon!
+    %section#mailing_list.span8
+    %form#subForm.form-horizontal.well{:action => "http://dxw.createsend.com/t/r/s/gwutt/", :method => "post", :onsubmit => "pageTracker._trackEvent('Goals','subscribe');"}
+      %legend Sign up, and we'll email you when exciting things happen.
+      %ul.unstyled
+        %li.control-group
+          %input#name.control{:name => "cm-name", :placeholder => "Name", :type => "text"}/
+        %li.control-group
+          %input#gwutt-gwutt{:name => "cm-gwutt-gwutt", :placeholder => "Email", :type => "email"}/
+      .submit
+        %input.btn-success.btn-large{:type => "submit", :value => "Sign up"}/
+  #selling_points.row
+    %section#for_humans.span4
+    = image_tag "test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax"
+    %header
+    %h3 Front end tests for humans
+    %p Write tests for your sites using natural language. No complex code or annoying forms - just simple instructions to check strings, headers and HTML in your pages.
+    %section#make_sure.span4
+    = image_tag "test_results_list.png", :alt => "A list of test results, showing successes and failures"
+    %header
+    %h3 Make sure everything's working
+    %p Citrulu runs regular checks on your website, but it's better than uptime monitoring: you can check for specific strings, headers and HTML code that prove specific features are working.
+    %section#presets.span4
+    = image_tag "notifications.png", :alt => "An inbox, showing some notifications from Citrulu"
+    %header
+    %h3 Respond quickly
+    %p When something goes wrong on your live site, you want to know immediately. Citrulu will email you the moment a test fails so that you can start fixing it right away.
+  #contact.row
+    If you'd like to know more, sign up at the top of this page, or
+    = succeed "." do
+      %a{:href => "mailto:contact@dxw.com?subject=About%20that%20Citrulu%20thing..."} get in touch (We're friendly).
+
+
