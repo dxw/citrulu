@@ -78,5 +78,23 @@ describe CitruluParser do
      code[0][:tests][0][:name].should == '=x'
      code[0][:tests][0][:value].should == nil
    end
+
+   it "should not allow nil values" do
+     expect { TestFile.compile_tests("On http://www.abc.com\n  I should see") }.to raise_error(CitruluParser::TestCompileError)
+   end
+   
+   #This one has never passed before - put it in to remind me to fix
+   it "should not allow empty values" do
+     expect { TestFile.compile_tests("On http://www.abc.com\n  I should see       ") }.to raise_error(CitruluParser::TestCompileError)
+   end
+   
+   it "should not allow nil names" do
+     expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =") }.to raise_error(CitruluParser::TestCompileError)
+   end
+   
+   it "should not allow empty names" do
+     expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =      ") }.to raise_error(CitruluParser::TestCompileError)
+   end
+
   end
 end
