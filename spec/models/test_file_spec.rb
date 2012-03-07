@@ -1,79 +1,32 @@
 require 'spec_helper'
 
 describe TestFile do
-  describe "compile_tests" do
-    it "should understand 'I should see x'" do
-      code = TestFile.compile_tests("On http://abc.com\n  I should see x")
+  before(:each) do
+    @test_files = [FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar"), FactoryGirl.create(:test_file, :compiled_test_file_text => nil)]
 
-      code[0][:tests][0][:assertion].should == :i_see
+    @test_runs = [
+      [
+        FactoryGirl.create(:test_run, :test_file => @test_files[0], :time_run => Time.now), 
+        FactoryGirl.create(:test_run, :test_file => @test_files[0], :time_run => Time.now-1)
+      ],
+
+      [
+        FactoryGirl.create(:test_run, :test_file => @test_files[1], :time_run => Time.now),
+        FactoryGirl.create(:test_run, :test_file => @test_files[1], :time_run => Time.now-1)
+      ]
+    ]
+  end
+
+  describe "last_run" do
+    it "should return the most recent test run for the file" do
+      @test_files[0].last_run.should== @test_runs[0][0]
+      @test_files[1].last_run.should== @test_runs[1][0]
     end
+  end
 
-    it "should understand 'I should not see x'" do
-      code = TestFile.compile_tests("On http://abc.com\n  I should not see x")
-
-      code[0][:tests][0][:assertion].should == :i_not_see
+  describe "compiled_files" do
+    it "Should only return successfully compiled files" do
+      TestFile.compiled_files.should==[@test_files[0]]
     end
-
-    it "should understand 'Source should contain x'" do
-      code = TestFile.compile_tests("On http://abc.com\n  Source should contain x")
-
-      code[0][:tests][0][:assertion].should == :source_contain
-    end
-
-    it "should understand 'Source should not contain x'" do
-      code = TestFile.compile_tests("On http://abc.com\n  Source should not contain x")
-
-      code[0][:tests][0][:assertion].should == :source_not_contain
-    end
-
-    it "should understand 'Headers should include x'" do
-      code = TestFile.compile_tests("On http://abc.com\n  Headers should include x")
-
-      code[0][:tests][0][:assertion].should == :headers_include
-    end
-
-    it "should understand 'Headers should not include'" do
-      code = TestFile.compile_tests("On http://abc.com\n  Headers should not include x")
-
-      code[0][:tests][0][:assertion].should == :headers_not_include
-    end
-
-   it "should understand values" do
-     code = TestFile.compile_tests("On http://abc.com\n  I should see x")
-
-     code[0][:tests][0][:value].should == 'x'
-     code[0][:tests][0][:name].should == nil
-   end
-   
-   it "should understand names" do
-     Predefs.stub(:find).and_return(["a thing", "another thing"])
-     code = TestFile.compile_tests("On http://abc.com\n  I should see =x")
-
-     code[0][:tests][0][:name].should == '=x'
-     code[0][:tests][0][:value].should == nil
-   end
-
-    it "should understand URLs" do
-      code = TestFile.compile_tests("On http://www.abc.com\n  I should see x")
-
-      code[0][:test_url].should == 'http://www.abc.com'
-    end
-    
-    it "should not allow nil values" do
-      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see") }.to raise_error(CitruluParser::TestCompileError)
-    end
-    
-    #This one has never passed before - put it in to remind me to fix 
-    it "should not allow empty values" do
-      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see       ") }.to raise_error(CitruluParser::TestCompileError)
-    end
-    
-    it "should not allow nil names" do
-      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =") }.to raise_error(CitruluParser::TestCompileError)
-    end
-    
-    it "should not allow empty names" do
-      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =      ") }.to raise_error(CitruluParser::TestCompileError)
-    end
-  end    
+  end
 end
