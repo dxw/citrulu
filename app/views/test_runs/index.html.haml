@@ -3,53 +3,32 @@
   - if @test_runs.empty?
     %p You don't have any test runs to show yet
   -else
-    .recentfails
-      %h2 7 tests on 4 pages are failing
-      .row
-        .span4
-          .fail
-            %h3 http://harrymetcalfe.com/
-            %p.last-updated 2012-03-20 12:00 from Default test file
-            %ul
-              %li 
-                %i.icon-remove
-                Page should contain Harry's Home on the Web
-              %li 
-                %i.icon-remove
-                Page should not contain "PHP Error"
-            
-        .span4
-          .fail
-            %h3 http://dxw.com
-            %p.last-updated 2012-03-20 12:00 from Default test file
-            %ul
-              %li 
-                %i.icon-remove
-                Headers should include "X-Varnish"
-
-              %li 
-                %i.icon-remove
-                Headers should not include "X-Spooge"
-        .span4
-          .fail
-            %h3 http://swingoutlondon.co.uk
-            %p.last-updated 2012-03-20 12:00 from Default test file
-            %ul
-              %li 
-                %i.icon-remove
-                Page should contain "Swing dancing"
-              %li 
-                %i.icon-remove
-                Page should not contain "Zumba"
-      .row
-        .span4
-          .fail
-            %h3 http://google.com
-            %p.last-updated 2012-03-20 12:00 from Default test file
-            %ul
-              %li
-                %i.icon-remove
-                Page should contain "We love privacies"
+    - if @test_runs[1].number_of_failures == 0
+      %h2.all_pass All your tests are passing. Hooray!
+    - else
+      - test_run = @test_runs[1]
+      .recentfails
+        %h2="#{test_run.number_of_failures} test#{test_run.number_of_failures == 1 ? '' : 's'} on #{test_run.number_of_pages} page#{test_run.number_of_pages == 1 ? '' : 's'} failed"
+        .row
+          - count = 0
+          - test_run.test_groups.each do |test_group|
+            -# next if test_group.number_of_failures == 0
+            - count = count+1
+            - if count == 3
+              - count=0
+              .row
+            .span4
+              .fail
+                %h3=test_group.test_url
+                %p.last-updated="#{test_group.updated_at} from #{test_run.test_file.name}"
+                %ul
+                  -test_group.test_results.each do |result|
+                    - next if !result.failed?
+                    %li 
+                      %i.icon-remove
+                      %span.assertion
+                        = result.assertion
+                      = value_or_name(result)
 
     .row
       .testruns.span8
@@ -57,47 +36,11 @@
         %ul.unstyled
           - @test_runs.each do |test_run|
             %li
-              %a.pass{:href => test_run_path(test_run)}
+              %a{:href => test_run_path(test_run), :class => test_run.number_of_failures == 0 ? 'pass' : 'fail'}
                 %p
-                  %span.date 20th March 2012 12:00
-                  %span.file Default test file
-                %p.summary Ran 13 checks on 3 pages with 0 failures
-          %li
-            %a.pass{:href => '#'}
-              %p
-                %span.date 20th March 2012 11:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 0 failures
-          %li
-            %a.pass{:href => '#'}
-              %p
-                %span.date 20th March 2012 10:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 0 failures
-          %li
-            %a.fail{:href => '#'}
-              %p
-                %span.date 20th March 2012 09:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 1 failure
-          %li
-            %a.fail{:href => '#'}
-              %p
-                %span.date 20th March 2012 08:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 4 failures
-          %li
-            %a.fail{:href => '#'}
-              %p
-                %span.date 20th March 2012 07:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 4 failures
-          %li
-            %a.pass{:href => '#'}
-              %p
-                %span.date 20th March 2012 06:00
-                %span.file Default test file
-              %p.summary Ran 13 checks on 3 pages with 0 failures
+                  %span.date=test_run.time_run.to_s(:test_run_time)
+                  %span.file=test_run.test_file.name
+                %p.summary="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} pages with #{test_run.number_of_failures} failure#{test_run.number_of_failures == 1 ? '' : 's'}"
 
       .sidebar.span4
         %h1 Test files status
@@ -113,34 +56,37 @@
             %p.summary Those tests were last executed on 20th March 2012 at 12:00 
             %button Edit this file
    
-             
-
-
-
-    -#=accordion("test_runs_list") do
-      - @test_runs.each do |test_run|
-        =accordion_group( test_run.time_run.to_i ) do
-          -# =accordion_group(test_run.id, true) do
-          =accordion_heading({:class => test_run.status}) do
-            %time
-              = test_run.time_run.to_s(:test_run_time)
-            %span.outcome
-              - if test_run.number_of_failures == 0
-                Everything works!
-              - else
-                = test_run.number_of_failures
-                failures
-          =accordion_body do
-            %p 
-              ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} pages, of which #{test_run.number_of_failures} failed"
-            %ul.unstyled
-              - test_run.test_run_object.each do |test_group|
-                %li
-                  0n 
-                  = link_to test_group[:test_url], nil , :target => "_blank"
-                  %ul.unstyled
-                    -test_group[:tests].each do |test|
-                      %li{ :class => "test_result #{test_class(test)}"}
-                        = test_text(test)
-            %p.close_link
-              %a{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} Close
+-#%h1 Test Runs
+-#- if @test_runs.empty?
+  %p You don't have any test runs to show yet
+-#-else
+  .row
+    .span6
+      =accordion("test_runs_list") do
+        - @test_runs.each do |test_run|
+          =accordion_group("test_run_#{test_run.id}") do
+            =accordion_heading({:class => test_run.status}) do
+              %time
+                = test_run.time_run.to_s(:test_run_time)
+              %span.outcome
+                - if test_run.number_of_failures == 0
+                  Everything works!
+                - else
+                  = test_run.number_of_failures
+                  failures
+            =accordion_body do
+              %p 
+                ="Ran #{test_run.number_of_checks} checks on #{test_run.number_of_pages} pages, of which #{test_run.number_of_failures} failed"
+              %ul.unstyled
+                - test_run.test_groups.each do |test_group|
+                  %li
+                    0n 
+                    = link_to test_group.test_url, nil , :target => "_blank"
+                    %ul.unstyled
+                      -test_group.test_results.each do |test_result|
+                        %li{ :class => "test_result #{test_class(test_result)}"}
+                          %span.assertion
+                            = test_result.assertion
+                          = value_or_name(test_result)
+              %p.close_link
+                %a{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} Close

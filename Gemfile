@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'rake'
-gem 'rails', '3.1.0'
+gem 'rails', '3.2.0'
 
 # Authentication management with devise:
 gem 'devise'
@@ -25,22 +25,20 @@ gem 'jquery-rails'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails', '  ~> 3.1.0'
+  gem 'sass-rails', '  ~> 3.2.0'
   gem 'bootstrap-sass', '~> 2.0.1'
-  gem 'coffee-rails', '~> 3.1.0'
+  gem 'coffee-rails', '~> 3.2.0'
   gem 'uglifier'
 end
 
 group :development do
   gem 'guard-rails'
   gem 'guard-rspec'
-  # gem 'guard-cucumber'
   gem 'guard-spork'
   gem 'guard-livereload'
 end
 
 group :test do
-  gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'capybara'
   gem 'factory_girl_rails', '~> 1.2'

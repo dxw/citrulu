@@ -42,8 +42,10 @@ class TestFilesController < ApplicationController
   # GET /test_files/1/edit
   def edit
     @test_file = TestFile.find(params[:id])
+
     @predefs = Predefs.all
-    puts @predefs.inspect
+
+    @test_file.name = "Unnamed file" if @test_file.name.nil?
   end
 
   # POST /test_files
@@ -71,33 +73,51 @@ class TestFilesController < ApplicationController
     begin
       # If there's no code to complile, don't even try - drop straight through to the 'else' block
       TestFile.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+  
     # Compile fail
     rescue CitruluParser::TestCompileError => e
-      error = TestFile.format_error(e)
+      begin 
+        error = CitruluParser.format_error(e)
+      rescue => e
+        @console_msg_hash = {
+          :text1 => "Something has gone wrong: ",
+          :exception_text => e,
+          :text2 => " Sorry! This is a bug. Please let us know."
+        }
+        @console_msg_type = "error"
+        @status_msg = "Saved (with errors)"
+      else
+      
+        @console_msg_hash = {
+          :text1 => "Compilation failed! Expected: ",
+          :expected => error[:expected],
+          :text2 => " at line ",
+          :line => error[:line],
+          :text3 => ", column ",
+          :column => error[:column],
+        }
 
-      @console_msg_hash = {
-        :text1 => "Compilation failed! Expected: ",
-        :expected => error[:expected],
-        :text2 => " at line ",
-        :line => error[:line],
-        :text3 => ", column ",
-        :column => error[:column],
-      }
+        if !error[:after].empty?
+          @console_msg_hash[:text4] = " after "
+          @console_msg_hash[:after] = error[:after]
+        end
 
-      if !error[:after].empty?
-        @console_msg_hash[:text4] = " after "
-        @console_msg_hash[:after] = error[:after]
+        @console_msg_type = "error"
+        @status_msg = "Saved (with errors)"
       end
-
+    
+    # catch-all, including CitruluParser::TestCompileUnknownError
+    rescue  => e
+      @console_msg_hash = {:text0 => "#{e}"}
       @console_msg_type = "error"
       @status_msg = "Saved (with errors)"
-
+      
     # Compile win
     else
       @console_msg_hash = {:text0 => "Saved!"}
       @console_msg_type = "success"
       @status_msg = "Saved!"
-  
+
       @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
     end
     

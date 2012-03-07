@@ -151,6 +151,11 @@ describe TestFilesController do
   
       it "renders an error message"
     end
+    
+    describe "with a compilation error" do 
+      it "handles compilation errors gracefully"
+      it "handles unknown compilation errors gracefully" 
+    end
   end
   
   describe "DELETE destroy" do

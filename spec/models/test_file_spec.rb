@@ -44,8 +44,9 @@ describe TestFile do
      code[0][:tests][0][:value].should == 'x'
      code[0][:tests][0][:name].should == nil
    end
-
+   
    it "should understand names" do
+     Predefs.stub(:find).and_return(["a thing", "another thing"])
      code = TestFile.compile_tests("On http://abc.com\n  I should see =x")
 
      code[0][:tests][0][:name].should == '=x'
@@ -58,8 +59,21 @@ describe TestFile do
       code[0][:test_url].should == 'http://www.abc.com'
     end
     
-    it "should raise an exception if the input is nil" do
-      expect { TestFile.compile_tests(nil) }.to raise_error(ArgumentError)
+    it "should not allow nil values" do
+      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see") }.to raise_error(CitruluParser::TestCompileError)
+    end
+    
+    #This one has never passed before - put it in to remind me to fix 
+    it "should not allow empty values" do
+      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see      ") }.to raise_error(CitruluParser::TestCompileError)
+    end
+    
+    it "should not allow nil names" do
+      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =") }.to raise_error(CitruluParser::TestCompileError)
+    end
+    
+    it "should not allow empty names" do
+      expect { TestFile.compile_tests("On http://www.abc.com\n  I should see =      ") }.to raise_error(CitruluParser::TestCompileError)
     end
   end    
 end

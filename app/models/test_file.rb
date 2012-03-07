@@ -1,24 +1,16 @@
-require 'grammar/parser'
-require 'grammar/symbolizer'
+require 'parser'
+require 'symbolizer'
 
 class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs
-
-  def self.format_error(error)
-    @parser ||= CitruluParser.new
-
-    @parser.format_error(error)
-  end
+  
+  validates_presence_of :name
 
   def self.compile_tests(code)
     @parser ||= CitruluParser.new
     
-    if code.nil?
-      raise @parser.no_code_exception
-    else
-      @parser.compile_tests(code)
-    end
+    @parser.compile_tests(code)
   end
   
   # All the files which have compiled successfully at some point
