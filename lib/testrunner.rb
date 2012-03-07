@@ -14,7 +14,7 @@ class TestRunner
     
     TestFile.compiled_files.each do |file|
       test_run = TestRun.new
-      test_run.time_run = Time.now
+      test_run.time_run = Time.zone.now
       test_run.test_file_id = file.id
       test_run.save
 
