@@ -13,10 +13,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   match "/test_runs" => "test_runs#index"
   match "/test_runs/:id" => "test_runs#show"
   
-  resources :test_groups
-  
-  resources :test_results
-    
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   
