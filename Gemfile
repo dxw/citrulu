@@ -40,6 +40,7 @@ end
 
 group :test do
   gem 'database_cleaner'
+  gem 'simplecov', :require => false
   gem 'capybara'
   gem 'factory_girl_rails', '~> 1.2'
   gem 'spork', '> 0.9.0.rc'
