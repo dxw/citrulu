@@ -3,10 +3,6 @@ class TestRun < ActiveRecord::Base
   
   belongs_to :test_file
   has_many :test_groups
-
-  def assertion
-    self[:assertion].to_test_s
-  end
   
   def number_of_pages
     test_groups.length

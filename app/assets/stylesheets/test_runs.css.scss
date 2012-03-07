@@ -5,8 +5,21 @@ ul#test_runs_list{
 			float: right;
 		}
 	}
+	li {
+		margin-bottom: 0.2em;
+	}
 	li.test_result {
 		padding-left: 1.5em;
+		abbr.predef_name {
+			text-transform: none;
+			font-style: italic;
+		}
+		.test_value {
+			font-style: italic;
+		}
+	}
+	li.test_result.passed_false {
+		color: #B94A48;
 	}
 	.close_link{
 		text-align: right;

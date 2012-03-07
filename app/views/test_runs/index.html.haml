@@ -29,6 +29,6 @@
                         %li{ :class => "test_result #{test_class(test_result)}"}
                           %span.assertion
                             = test_result.assertion
-                          -#= value_or_name(test_result)
+                          = value_or_name(test_result)
               %p.close_link
                 %a{ "data-parent" => "#test_runs_list", "data-target"=> "##{test_run.time_run.to_i}", "data-toggle" => "collapse"} Close

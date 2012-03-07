@@ -59,7 +59,7 @@ class CitruluParser < TesterGrammarParser
         unless test_result[:name].nil?
           begin 
             Predefs.find(test_result[:name])
-          rescue Predefs::PredefNotFoundError => e
+          rescue Predefs::PredefNotFoundError
             undefined_predefs << test_result[:name]
           end
         end
