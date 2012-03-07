@@ -20,6 +20,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match ':action' => 'website', :as => "page"
   
   root :to => "website#index"
+  match '/features' => "website#features"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

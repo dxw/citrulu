@@ -64,6 +64,15 @@
           %pre="X-Varnish: 128371292"
           %p But would not match:
           %pre="X-Varnish-Check: miss"
+
+      =accordion_group("predefines") do
+        =accordion_heading do
+          Predefines
+        =accordion_body do
+          %p Predefines give you quick access to commonly-used lists of strings. For example, many people add a test to check that no erroneous PHP output is present in their code.
+          %p You can use predefines by using the an equals sign followed by the name of the predefine as your value:
+          %pre="  I should not see =PHP errors"
+          %p See a bit further down this page for a list of the predefines you can use
     
       =accordion_group("general_tips") do 
         =accordion_heading do
@@ -71,3 +80,14 @@
         =accordion_body do
           %ul
             %li Citrulu is case sensitive! So make sure your lines are capitalised.
+
+      %h2 Predefines
+      =accordion("predefines", :h3) do
+        -@predefs.each do |predef, values|
+          =accordion_group(predef.to_sym) do
+            = accordion_heading do
+              = predef
+            = accordion_body do
+              %ul
+                - values.each do |value|
+                  %li=value
