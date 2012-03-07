@@ -1,6 +1,6 @@
 SimpleFrontEndTesting::Application.routes.draw do
 
-  devise_for :users 
+  devise_for :users, :controllers => {:registrations => "registrations"}
   
   devise_scope :user do
     root :to => "website#index"
@@ -10,7 +10,8 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   resources :test_files
   
-  resources :test_runs
+  match "/test_runs" => "test_runs#index"
+  match "/test_runs/:id" => "test_runs#show"
   
   resources :test_groups
   
@@ -21,6 +22,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   
   root :to => "website#index"
   match '/features' => "website#features"
+  
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

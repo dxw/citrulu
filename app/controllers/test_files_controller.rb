@@ -2,14 +2,12 @@ class TestFilesController < ApplicationController
   layout "logged_in"
   
   before_filter :authenticate_user!
-  
-  # require "#{Rails.root}/lib/testrunner/test_grammar_compiler.rb"
-  # include TestGrammarCompiler
-
+  before_filter :check_ownership!, :only => [:show, :edit, :update, :destroy]
+   
   # GET /test_files
   # GET /test_files.json
   def index
-    @test_files = TestFile.find(:all, :order => "updated_at")
+    @test_files = current_user.test_files.sort{ |a,b| a.updated_at > b.updated_at }
 
     respond_to do |format|
       format.html 
@@ -32,6 +30,7 @@ class TestFilesController < ApplicationController
   # GET /test_files/new.json
   def new
     @test_file = TestFile.new
+    @test_file.user_id = current_user.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -52,7 +51,9 @@ class TestFilesController < ApplicationController
   # POST /test_files.json
   def create
     @test_file = TestFile.new(params[:test_file])
-
+    # In case the user tries to be sneaky and create a test file for someone other than themselves:
+    @test_file.user_id = current_user.id
+    
     respond_to do |format|
       if @test_file.save
         format.html { redirect_to @test_file, notice: 'Test file was successfully created.' }
@@ -142,4 +143,19 @@ class TestFilesController < ApplicationController
       format.json { head :ok }
     end
   end
+  
+  protected
+  
+  # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page
+  def check_ownership!
+    # If :id is numeric, assume it's an ID, otherwise let the page return a 404
+    return if params[:id].to_i == 0
+    begin
+      raise ActiveRecord::RecordNotFound unless TestFile.find(params[:id]).user_id == current_user.id
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "You tried to access a test file which doesn't exist!"
+      redirect_to test_files_path
+    end
+  end
+
 end
