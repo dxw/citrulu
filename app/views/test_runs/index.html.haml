@@ -38,7 +38,6 @@
 
       .sidebar.span4
         %h1 Test files status
-
         %ul.unstyled
           - @test_files.each do |file|
             - if file.test_file_text == file.compiled_test_file_text 

@@ -13,15 +13,6 @@ class TestRunsController < ApplicationController
     @test_files = current_user.test_files
     @recent_failed_groups = current_user.test_files.collect{|t| t.last_run}.select{|r| r.number_of_failures != 0}.collect{|r| r.test_groups.select{|g| g.number_of_failures != 0}}[0]
 
-##TEMPORARY CODE
-    # @test_runs = []
-    # offset = 0
-    # while @test_runs.length < 10      
-    #   @test_runs << TestRun.new(:id => offset, :time_run => Time.new(2012,03,20) +offset.hours)
-    #   offset += 1
-    # end
-##END TEMPORARY CODE
-
     respond_to do |format|
       format.html # index.html.erb
       # format.json { render json: @test_runs }
