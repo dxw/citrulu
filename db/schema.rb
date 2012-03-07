@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120305183947) do
+ActiveRecord::Schema.define(:version => 20120306113819) do
 
   create_table "results", :force => true do |t|
     t.integer  "test_file_id"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20120305183947) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "response_code"
+    t.string   "test_url"
   end
 
   create_table "test_results", :force => true do |t|

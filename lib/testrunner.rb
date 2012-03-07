@@ -15,7 +15,7 @@ class TestRunner
     TestFile.compiled_files.each do |file|
       test_run = TestRun.new
       test_run.time_run = Time.now
-      test_run.test_file_id = Time.now
+      test_run.test_file_id = file.id
       test_run.save
 
       groups = execute_tests(parser.compile_tests(file.compiled_test_file_text))
@@ -25,6 +25,7 @@ class TestRunner
         test_group.test_run_id = test_run.id
         test_group.time_run = group[:test_date]
         test_group.response_time = group[:response_time]
+        test_group.test_url = group[:test_url]
         test_group.save
 
         group[:tests].each do |test|
