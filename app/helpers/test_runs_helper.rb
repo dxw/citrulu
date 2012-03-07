@@ -22,5 +22,4 @@ module TestRunsHelper
     
     return content
   end
-  
 end

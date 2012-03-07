@@ -73,7 +73,7 @@ class TestFilesController < ApplicationController
     code = params[:test_file][:test_file_text]
     begin
       # If there's no code to complile, don't even try - drop straight through to the 'else' block
-      TestFile.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+      CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
   
     # Compile fail
     rescue CitruluParser::TestCompileError => e

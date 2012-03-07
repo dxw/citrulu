@@ -58,16 +58,6 @@ ActiveRecord::Schema.define(:version => 20120307135543) do
     t.datetime "updated_at"
   end
 
-  create_table "tests", :force => true do |t|
-    t.integer  "test_group_id"
-    t.string   "assertion"
-    t.string   "value"
-    t.string   "name"
-    t.boolean  "result"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
     t.string   "encrypted_password",     :default => "", :null => false
