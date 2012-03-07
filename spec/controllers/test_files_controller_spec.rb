@@ -38,6 +38,7 @@ describe TestFilesController do
   
   describe "GET show" do
     it "assigns the requested test_file as @test_file" do
+      TestFilesController.skip_before_filter :check_ownership!
       test_file = FactoryGirl.create(:test_file)
       get :show, {:id => test_file.to_param}
       assigns(:test_file).should eq(test_file)
@@ -53,6 +54,7 @@ describe TestFilesController do
   
   describe "GET edit" do
     it "assigns the requested test_file as @test_file" do
+      TestFilesController.skip_before_filter :check_ownership!
       test_file = FactoryGirl.create(:test_file)
       get :edit, {:id => test_file.to_param}
       assigns(:test_file).should eq(test_file)
@@ -159,7 +161,11 @@ describe TestFilesController do
   end
   
   describe "DELETE destroy" do
-    it "destroys the requested test_file" do
+    before (:each) do
+      TestFilesController.skip_before_filter :check_ownership!
+    end
+    
+    it "destroys the requested test_file" do 
       test_file = FactoryGirl.create(:test_file)
       expect {
         delete :destroy, {:id => test_file.to_param}
