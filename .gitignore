@@ -5,3 +5,7 @@ log/*.log
 tmp/
 .sass-cache/
 .DS_Store
+public/assets
+public/system
+vendor/bundle
+log
