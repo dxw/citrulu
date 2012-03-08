@@ -64,6 +64,7 @@
           %pre="X-Varnish: 128371292"
           %p But would not match:
           %pre="X-Varnish-Check: miss"
+          %p At the moment, you can only check for the presence or absence of headers. We might add the ability to check header values in a future release.
 
       =accordion_group("predefines") do
         =accordion_heading do
@@ -71,7 +72,7 @@
         =accordion_body do
           %p Predefines give you quick access to commonly-used lists of strings. For example, many people add a test to check that no erroneous PHP output is present in their code.
           %p You can use predefines by using the an equals sign followed by the name of the predefine as your value:
-          %pre="  I should not see =PHP errors"
+          %pre="  I should not see :php_errors"
           %p See a bit further down this page for a list of the predefines you can use
     
       =accordion_group("general_tips") do 
@@ -86,7 +87,7 @@
         -@predefs.each do |predef, values|
           =accordion_group(predef.to_sym) do
             = accordion_heading do
-              = predef
+              = ':' + predef
             = accordion_body do
               %ul
                 - values.each do |value|
