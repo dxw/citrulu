@@ -22,9 +22,4 @@ module TestRunsHelper
     
     return content
   end
-  
-  
-  def test_run_path(test_run)
-    "test_runs/#{test_run.id}"
-  end
 end

@@ -11,5 +11,19 @@ require 'spec_helper'
 #   end
 # end
 describe TestFilesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before(:each) do
+    @console_hash = {:text0 => 'foobar', :blargh => 'barfoo'}
+  end
+
+  describe "console line" do
+    it "should emit the text of the error" do
+      helper.console_line(@console_hash).should include('foobar')
+      helper.console_line(@console_hash).should include('barfoo')
+    end
+
+    it "should emit spans with the correct classes" do
+      helper.console_line(@console_hash).should include('class="blargh"')
+      helper.console_line(@console_hash).should include('<span')
+    end
+  end
 end
