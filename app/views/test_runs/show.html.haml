@@ -13,7 +13,7 @@
             %div{:class => group.number_of_failures != 0 ? "fail" : "pass"}
               %h3=group.test_url
               %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
-              %ul
+              %ul.recentfails
                 -group.test_results.each do |result|
                   %li 
                     %i{:class => group.number_of_failures != 0 ? "icon-remove" : "icon-ok"}
