@@ -13,18 +13,10 @@
 
 ActiveRecord::Schema.define(:version => 20120308144732) do
 
-  create_table "results", :force => true do |t|
-    t.integer  "test_file_id"
-    t.time     "time_run"
-    t.text     "result"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
     t.integer  "user_id"
     t.text     "compiled_test_file_text"
     t.string   "name"
@@ -35,8 +27,8 @@ ActiveRecord::Schema.define(:version => 20120308144732) do
     t.text     "page_content"
     t.integer  "response_time"
     t.time     "time_run"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.text     "response_code"
     t.string   "test_url"
     t.text     "message"
@@ -48,15 +40,15 @@ ActiveRecord::Schema.define(:version => 20120308144732) do
     t.string   "value"
     t.string   "name"
     t.boolean  "result"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "test_runs", :force => true do |t|
     t.integer  "test_file_id"
     t.datetime "time_run"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -70,8 +62,8 @@ ActiveRecord::Schema.define(:version => 20120308144732) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

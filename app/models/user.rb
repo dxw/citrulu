@@ -14,6 +14,10 @@ class User < ActiveRecord::Base
   private 
   
   def create_default_test_file
-    self.test_files.create_default_test_file(self.id)
+    self.test_files.create(
+        :user => self,
+        :name => "My first test file",
+        :test_file_text => DEFAULT_TEST_FILE
+      )
   end
 end
