@@ -8,9 +8,12 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
   
   has_many :test_files
-    
-  def test_file
-    self.test_files << TestFile.new if test_files.empty?
-    test_files[0]
+  
+  after_create :create_default_test_file 
+
+  private 
+  
+  def create_default_test_file
+    self.test_files.create_default_test_file(self.id)
   end
 end
