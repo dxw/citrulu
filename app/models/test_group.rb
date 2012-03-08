@@ -5,4 +5,8 @@ class TestGroup < ActiveRecord::Base
   def number_of_failures
     test_results.select{|t| t.failed?}.count
   end
+  
+  def has_failures?
+    number_of_failures != 0
+  end
 end
