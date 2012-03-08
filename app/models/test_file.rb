@@ -15,4 +15,5 @@ class TestFile < ActiveRecord::Base
   def self.compiled_files
     all(:conditions => "compiled_test_file_text is not null")
   end
+    
 end

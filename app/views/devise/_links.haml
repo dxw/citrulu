@@ -1,5 +1,5 @@
 %ul.unstyled.devise_links
-  - if controller_name != 'sessions' && controller_name != 'devise'
+  - if controller_name != 'sessions'
     %li=link_to "Sign in", new_session_path(resource_name)
   - if devise_mapping.registerable? && controller_name != 'registrations' && controller_name != 'website' 
     %li= link_to "Sign up", new_registration_path(resource_name)

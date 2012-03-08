@@ -36,65 +36,12 @@ describe TestFilesController do
     # Nothing yet: the index page is just static atm.
   end
   
-  describe "GET show" do
-    it "assigns the requested test_file as @test_file" do
-      TestFilesController.skip_before_filter :check_ownership!
-      test_file = FactoryGirl.create(:test_file)
-      get :show, {:id => test_file.to_param}
-      assigns(:test_file).should eq(test_file)
-    end
-  end
-  
-  describe "GET new" do
-    it "assigns a new test_file as @test_file" do
-      get :new
-      assigns(:test_file).should be_a_new(TestFile)
-    end
-  end
-  
   describe "GET edit" do
     it "assigns the requested test_file as @test_file" do
       TestFilesController.skip_before_filter :check_ownership!
       test_file = FactoryGirl.create(:test_file)
       get :edit, {:id => test_file.to_param}
       assigns(:test_file).should eq(test_file)
-    end
-  end
-  
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new TestFile" do
-        expect {
-          post :create, {:test_file => valid_create_attributes}
-        }.to change(TestFile, :count).by(1)
-      end
-  
-      it "assigns a newly created test_file as @test_file" do
-        post :create, {:test_file => valid_create_attributes}
-        assigns(:test_file).should be_a(TestFile)
-        assigns(:test_file).should be_persisted
-      end
-  
-      it "redirects to the created test_file" do
-        post :create, {:test_file => valid_create_attributes}
-        response.should redirect_to(TestFile.last)
-      end
-    end
-  
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved test_file as @test_file" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        TestFile.any_instance.stub(:save).and_return(false)
-        post :create, {:test_file => {}}
-        assigns(:test_file).should be_a_new(TestFile)
-      end
-  
-      it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        TestFile.any_instance.stub(:save).and_return(false)
-        post :create, {:test_file => {}}
-        response.should render_template("new")
-      end
     end
   end
   
@@ -157,6 +104,11 @@ describe TestFilesController do
     describe "with a compilation error" do 
       it "handles compilation errors gracefully"
       it "handles unknown compilation errors gracefully" 
+    end
+    
+    describe "shouldn't try and compile" do
+      it "if the code is empty"
+      it "if the code is nil"
     end
   end
   
