@@ -8,6 +8,7 @@ class TestFilesController < ApplicationController
   # GET /test_files.json
   def index
     @test_files = current_user.test_files.sort{ |a,b| a.updated_at > b.updated_at }
+    @recent_failed_groups = @test_files.collect{|t| t.last_run}.select{|r| r.number_of_failures != 0}.collect{|r| r.test_groups.select{|g| g.number_of_failures != 0}}[0]
 
     respond_to do |format|
       format.html 

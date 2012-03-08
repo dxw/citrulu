@@ -82,3 +82,102 @@ body.test_files {
 		}
 	}	
 }
+
+body.test_files.index {
+  .welcome {
+    a.btn {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+
+    .dismiss {
+      float:right;
+      margin-top: -120px;
+      margin-right: -20px;
+      font-size: 14px;
+    }
+  }
+
+  #test_list {
+    .title {
+      a.btn {
+        float: right;
+        margin-top: -40px;
+      }
+    } 
+
+    ul {
+      padding-top: 10px;
+      
+      li.test_file {
+        a {
+          display: block;
+          color: inherit;
+          text-align: left;
+          padding: 15px 10px;
+
+          &:hover {
+            text-decoration: none;
+            border-color: rgba(0,0,0,0.3);
+          }
+
+          span.name {
+            font-size: 16px;
+            font-weight: bold;
+          }
+
+          span.last_updated {
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+
+  #sidebar {
+    #recent_results {
+      .fail, .pass {
+        padding: 15px;
+      }
+
+      img {
+        float: left;
+        padding: 0 20px 0 0;
+      }
+
+      p {
+        font-size: 20px;
+      }
+
+      .fail a.btn {
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      .pass a.btn {
+        margin-top: 10px;
+      }
+    }
+
+    #sexy_stats {
+      img {
+        float: left;
+        padding: 3px 20px 0 0;
+      }
+
+      .stat {
+        clear: both;
+        padding: 15px;
+
+        p {
+          font-size: 22px;
+          vertical-align: middle;
+          line-height: 24px;
+          color: #999;
+        }
+      }
+    }
+  }
+}

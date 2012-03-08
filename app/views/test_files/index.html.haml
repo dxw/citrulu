@@ -1,27 +1,72 @@
-.row 
-  %header.span4
-    %h1 Tests
-
+.welcome.hero-unit
+  %h1 Welcome to Citrulu
+  %a.dismiss{:href => '#', :onclick => "alert('Implement me')"} Hide this message
+  .row
+    .dismiss
+    .span5{:style => "padding-right: 70px;"}
+      %p Citrulu is currently in Alpha! So please don't depend on it just yet. But please do use it, and let us know what you think, and what we could improve.
+      %p Until we release, all the features of Citrulu will be available to everyone. After we release, some features will only be available to users with premium accounts. 
+      %p To see how we currently think the features will break down, visit the frequently updated and changed <a href="/features">features page</a>.
+    .span5
+      %p Want to get straight to the tests? Your default test file has some examples to help you get started.
+      %p 
+        %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Edit your first test file
+      %p Once your tests are up &amp; running, you'll want to see some results.
+      %p
+        %a.btn.btn-primary.get-resulting{:href => test_runs_path} View your results
 .row
   #test_list.span8
-    #welcome
-      %h3 Welcome to Citrulu
-      %p To get started, edit your default test file. It contains some examples to help you get started.
-      %h3 Your tests
+    .title
+      %h2 Your tests
+      %a.btn{:href => '#', :onclick => "alert('Implement meeee')"} 
+        %i.icon-pencil
+        Create a new test file
+    %ul.unstyled
       - @test_files.each do |file|
-        .test_file
-          %span.name=file.name
-          %span.last_updated=file.updated_at
-          %span.controls
-            %a.edit{:href => edit_test_file_path(file)} Edit
-            /%a.delete{:href => delete_path(file)} Delete
+        %li.test_file
+          %a.btn{:href => edit_test_file_path(file)}
+            %span.name=file.name
+            .row
+              .span4
+                %span.last_updated="Last updated at #{file.updated_at}"
+              .span3
+                %span.stats This file contains <strong>18</strong> checks on <strong>14</strong> pages
 
       
   #sidebar.span4
     #recent_results
-      %h3 Recent test results
-      %p Recent test results will go here
+      - if !@recent_failed_groups.empty?
+        .fail
+          %img{:src => "http://placehold.it/60x66"}
+          %p="#{@recent_failed_groups.count} of your tests are failing!"
+          %a.btn{:href => test_runs_path} View full results
+      - else
+        .pass
+          %img{:src => "http://placehold.it/60x66"}
+          %p Your tests all pass. Huzzah!
+          %a.btn{:href => test_runs_path} You can see results, but nowt's going on
+
     #sexy_stats
-      %h3 Sexah stats
-      %p Sexy stats will go here
+      %h3 Stats, for your reading pleasure
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p <strong>X</strong> test files  
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p Testing <strong>X</strong> pages
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p Checking <strong>X</strong> conditions
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p On average, checking <strong>X</strong> conditions per page
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p In a typical test run, <strong>X</strong> pages produce failures
+      .stat
+        %img{:src => "http://placehold.it/45x50"}
+        %p On average, failing pages are fixed within <strong>X hours</strong>
+
+
+
 
