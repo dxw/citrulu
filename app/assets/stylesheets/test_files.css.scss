@@ -15,7 +15,7 @@ body.test_files {
 
                 #save_btn {
                   overflow: auto;
-                  padding: 0 0 25px 0;
+                  padding: 0 0 15px 0;
                 }
 
                 #editor_status{
@@ -34,11 +34,10 @@ body.test_files {
 		#editor_form {
 			input[type=submit] {
                           float: right;
-                          margin-right: 20px;
 			}
 		}
 		#editor, #editor_wrapper {
-		  width: 770px;
+		  width: 620px;
   		  height: 400px;
 		}
 		#console {

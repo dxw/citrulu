@@ -1,57 +1,54 @@
 .page
   %h1 Results
   - if @recent_failed_groups.empty?
-    %p You don't have any test runs to show yet
-  -else
-    - if @recent_failed_groups.empty?
-      %h2.all_pass All your tests are passing. Hooray!
-    - else
-      .recentfails
-        %h2="#{pluralize(@recent_failed_groups.count, 'test')} on #{pluralize(@recent_failed_groups.collect{|g| g.test_url}.uniq.count, 'page')} failed"
-        - @recent_failed_groups.each_slice(3).each do |fail_batch|
-          .row
-            - fail_batch.each do |group|
-              .span4
-                .fail
-                  %h3=group.test_url
-                  %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
-                  %ul
-                    -group.test_results.each do |result|
-                      - next if !result.failed?
-                      %li 
-                        %i.icon-remove
-                        %span.assertion
-                          = result.assertion
-                        = value_or_name(result)
+    %h2.all_pass All your tests are passing. Hooray!
+  - else
+    .recentfails
+      %h2="#{pluralize(@recent_failed_groups.count, 'test')} on #{pluralize(@recent_failed_groups.collect{|g| g.test_url}.uniq.count, 'page')} failed"
+      - @recent_failed_groups.each_slice(3).each do |fail_batch|
+        .row
+          - fail_batch.each do |group|
+            .span4
+              .fail
+                %h3=group.test_url
+                %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
+                %ul
+                  -group.test_results.each do |result|
+                    - next if !result.failed?
+                    %li 
+                      %i.icon-remove
+                      %span.assertion
+                        = result.assertion
+                      = value_or_name(result)
 
-    .row
-      .testruns.span8
-        %h1 Previous test runs
-        %ul.unstyled
-          - @test_runs.each do |test_run|
-            %li
-              %a{:href => test_run_path(test_run), :class => test_run.number_of_failures == 0 ? 'pass' : 'fail'}
-                %p
-                  %span.date=test_run.time_run.to_s(:test_run_time)
-                  %span.file=test_run.test_file.name
-                %p.summary="Ran #{pluralize(test_run.number_of_checks, 'check')} on #{pluralize(test_run.number_of_pages, 'page')} with #{pluralize(test_run.number_of_failures, 'failure')}"
+  .row
+    .testruns.span8
+      %h1 Previous test runs
+      %ul.unstyled
+        - @test_runs.each do |test_run|
+          %li
+            %a{:href => test_run_path(test_run), :class => test_run.number_of_failures == 0 ? 'pass' : 'fail'}
+              %p
+                %span.date=test_run.time_run.to_s(:test_run_time)
+                %span.file=test_run.test_file.name
+              %p.summary="Ran #{pluralize(test_run.number_of_checks, 'check')} on #{pluralize(test_run.number_of_pages, 'page')} with #{pluralize(test_run.number_of_failures, 'failure')}"
 
-      .sidebar.span4
-        %h1 Test files status
-        %ul.unstyled
-          - @test_files.each do |file|
-            - if file.test_file_text == file.compiled_test_file_text 
-              %li.pass 
-                %h3=file.name
-                %p.summary="This file is working and was last executed on #{file.last_run.time_run}"
-                %a{:href => edit_test_file_path(file)} Edit this file
-            - else
-              %li.fail
-                %h3=file.name
-                %p.summary This file is not compiling successfully. 
-                %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.  TODO
-                %p.summary="Those tests were last executed on #{file.last_run.time_run}"
-                %a{:href => edit_test_file_path(file)} Edit this file
+    .sidebar.span4
+      %h1 Test files status
+      %ul.unstyled
+        - @test_files.each do |file|
+          - if file.test_file_text == file.compiled_test_file_text 
+            %li.pass 
+              %h3=file.name
+              %p.summary="This file is working and was last executed on #{file.last_run.time_run}"
+              %a{:href => edit_test_file_path(file)} Edit this file
+          - else
+            %li.fail
+              %h3=file.name
+              %p.summary This file is not compiling successfully. 
+              %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.  TODO
+              %p.summary="Those tests were last executed on #{file.last_run.time_run}"
+              %a{:href => edit_test_file_path(file)} Edit this file
    
 -#%h1 Test Runs
 -#- if @test_runs.empty?
