@@ -87,7 +87,7 @@
         -@predefs.each do |predef, values|
           =accordion_group(predef.to_sym) do
             = accordion_heading do
-              = ':' + predef
+              = ":#{predef}"
             = accordion_body do
               %ul
                 - values.each do |value|
