@@ -31,6 +31,24 @@ body.website {
 	}
 }
 
+body.devise.new {
+  .container {
+    padding-top: 100px;
+    width: 260px;
+  }
+}
+
+ul.devise_links {
+  li {
+    &:last-child {
+      border-right: 0;
+    }
+
+    border-right: 1px solid black;
+    padding: 0 10px 0 5px;
+    display: inline-block;
+  }
+}
 body.registrations, body.website {
 	header {
 		text-align: center;

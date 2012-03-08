@@ -1,9 +1,7 @@
 - content_for :content do
-  .container{ :style => "width: 1170px;"}
+  .container
     %header
       %h1 Citrulu
-      %p.lead Continuous front-end testing for humans
-
     - flash.each do |name, message|
       = flash_message(name, message)
     = yield
