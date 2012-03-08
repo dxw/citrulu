@@ -89,7 +89,7 @@ describe CitruluParser do
    end
    
    it "should not allow nil names" do
-     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see :") }.to raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see :") }.to raise_error(CitruluParser::TestPredefError)
    end
    
    it "should not allow empty names" do
