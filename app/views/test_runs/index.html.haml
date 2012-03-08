@@ -12,14 +12,19 @@
               .fail
                 %h3=group.test_url
                 %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
-                %ul.recentfails
-                  -group.test_results.each do |result|
-                    - next if !result.failed?
-                    %li 
-                      %i.icon-remove
-                      %span.assertion
-                        = result.assertion
-                      = value_or_name(result)
+                - if !group.message.blank?
+                  %div
+                    %p Uh-oh! We couldn't fetch this page because of an error:
+                    %pre=group.message
+                -else
+                  %ul.recentfails
+                    -group.test_results.each do |result|
+                      - next if !result.failed?
+                      %li 
+                        %i.icon-remove
+                        %span.assertion
+                          = result.assertion
+                        = value_or_name(result)
 
   .row
     .testruns.span8
