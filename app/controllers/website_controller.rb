@@ -24,7 +24,7 @@ class WebsiteController < ApplicationController
 
     @limits = [
       add('Free!', '10', '50', 'Cost', 'Monthly cost'),
-      add('10', '100', 'Unlimited', 'URLs', 'The maximum number of individual URLs you can runs tests for'),
+      add('10', '500', 'Unlimited', 'URLs', 'The maximum number of individual URLs you can runs tests for'),
       add('Once a day', 'Twice a day', 'Once an hour', 'Test Frequency', 'How often we\'ll run all your tests'),
     ]
 
@@ -37,6 +37,7 @@ class WebsiteController < ApplicationController
       add(false, true,  true, 'Multiple test files', 'Structure your tests into several files. For example, you might want one per site.', true),
       add(false, true,  true, 'View retrieved pages', 'Look at the page we retrieved from your site to see exactly what was returned when we tested it', true),
       add(false, false, true, 'Mobile alerts', 'Receive SMS messages when tests fail', true),
+      add(false, false, true, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
     ]
 
   end
