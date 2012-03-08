@@ -8,8 +8,7 @@
           %div
             %ul.nav
               = nav_link "Home", test_files_path
-              = nav_link "Test File", edit_test_file_path(current_user.test_file)
-              = nav_link "Test Runs", test_runs_path
+              = nav_link "Results", test_runs_path
           #user_nav
             - if user_signed_in?
               = "Signed in as #{current_user.email}."
