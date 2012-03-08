@@ -14,9 +14,10 @@ class Predefs
   end
 
   def self.find(name)
-    name = name.downcase.gsub(/^=/, '').gsub(/\s+/, '_').to_sym
+    
+    name.gsub!(/^:/, '')
 
-    if predefs[name].blank?
+    if predefs[name.to_sym].blank?
       raise PredefNotFoundError.new("Predef #{name} not found")
     end
 
