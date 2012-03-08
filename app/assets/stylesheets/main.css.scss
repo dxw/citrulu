@@ -24,18 +24,25 @@
 	@extend  .alert-error;
 }
 
-
-body.website {
-	 legend {
-		margin-bottom: 1em;
-	}
-}
-
 body.devise {
   .container {
     padding-top: 100px;
     width: 260px;
   }
+	.alert {
+		width: 229px;
+		margin: 0 auto 20px;
+	}
+	.user_form {
+		margin: auto;
+		width: 240px;
+	}
+	.form-inline {
+    input {
+      margin: 0 0 7px 0;
+    }
+  }
+  
 }
 
 ul.devise_links {
@@ -69,31 +76,6 @@ ul.devise_links {
     font-size: 18px;
     line-height: 22px;
   }
-}
-
-body.devise div.form-inline {
-  input {
-    margin: 0 0 7px 0;
-  }
-}
-
-body.website.index ul.devise_links {
-  margin-top: 20px;
-}
-
-body.devise, body.website {
-	.alert {
-		width: 229px;
-		margin: 0 auto 20px;
-	}
-	.user_form {
-		margin: auto;
-		width: 240px;
-	}
-	
-	.field_with_errors {
-		//TODO - need to make these go inline to match the existing layout
-	}
 }
 
 //Twitter bootstrap, in sass, via a gem.
