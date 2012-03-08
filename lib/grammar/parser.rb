@@ -5,6 +5,9 @@ class CitruluParser < TesterGrammarParser
   class TestCompileError < StandardError
   end
 
+  class TestPredefError < StandardError
+  end
+
   class TestCompileUnknownError < StandardError
   end
 
@@ -52,7 +55,6 @@ class CitruluParser < TesterGrammarParser
     
     parsed_object = result.process
     
-    #check_for_undefined_predefines(parsed_object)
     undefined_predefs = []
     parsed_object.each do |test_group|
       test_group[:tests].each do |test_result|
@@ -66,7 +68,7 @@ class CitruluParser < TesterGrammarParser
       end
     end
 
-    raise TestCompileError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
+    raise TestPredefError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
 
 
     parsed_object

@@ -76,6 +76,14 @@ class TestFilesController < ApplicationController
       # If there's no code to complile, don't even try - drop straight through to the 'else' block
       CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
   
+    # Unknown predef
+    rescue CitruluParser::TestPredefError => e
+      @console_msg_hash = {
+        :text0 => e.to_s,
+      }
+      @console_msg_type = "error"
+      @status_msg = "Saved (with errors)"
+
     # Compile fail
     rescue CitruluParser::TestCompileError => e
       begin 
