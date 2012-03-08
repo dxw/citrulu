@@ -51,6 +51,7 @@ class CitruluParser < TesterGrammarParser
     end
     
     parsed_object = result.process
+    puts parsed_object.inspect
     
     #check_for_undefined_predefines(parsed_object)
     undefined_predefs = []
@@ -67,7 +68,8 @@ class CitruluParser < TesterGrammarParser
     end
 
     raise TestCompileError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
-  
+
+
     parsed_object
   end
 end

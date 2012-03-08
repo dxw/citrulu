@@ -46,7 +46,7 @@ define('ace/mode/safewtf_highlight_rules', function(require, exports, module) {
 
         {
           token: "variable",
-          regex: "=[a-zA-Z0-9 _-]+"
+          regex: ":[a-zA-Z0-9_]+"
         },
 
         {

@@ -37,14 +37,18 @@ grammar TesterGrammar
   end
 
   rule test
-    space assertion ' ' (name / value) newline {
+    space assertion space (escaped_value / name / value) newline {
       def process
         hash = {
           :assertion => assertion.text_value.to_test_sym,
         }
 
-        if elements[3].text_value.match(/^=/)
-          hash[:name] = elements[3].text_value.strip
+        if elements[3].text_value.match(/^:/)
+          if elements[3].text_value.match(/^::/)
+            hash[:value] = elements[3].text_value.gsub(/^::/, ':').strip
+          else
+            hash[:name] = elements[3].text_value.strip
+          end
         else
           hash[:value] = elements[3].text_value.strip
         end
@@ -65,11 +69,15 @@ grammar TesterGrammar
   end
   
   rule value
-    [^\n]+    
+    [^\n]*
+  end
+
+  rule escaped_value
+    '::' [^\n]*
   end
 
   rule name
-    '=' [a-zA-Z0-9 _-]*
+    ':' [a-zA-Z0-9_]*
   end
 
   rule url
