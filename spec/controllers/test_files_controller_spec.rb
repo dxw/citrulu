@@ -45,7 +45,7 @@ describe TestFilesController do
       assigns(:recent_failed_groups).should be_a(Array)
     end
   end
-  
+
   describe "GET edit" do
     it "assigns the requested test_file as @test_file" do
       TestFilesController.skip_before_filter :check_ownership!
