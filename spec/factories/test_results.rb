@@ -1,8 +1,11 @@
 FactoryGirl.define do
-  factory :test_result do
+  factory :test_result, :aliases => [:successful_test_result] do
     assertion "i_see"
     value "foobar"
-    name ""
-    result false
-  end
+    result true
+    
+    factory :failed_test_result do
+      result false
+    end
+  end  
 end

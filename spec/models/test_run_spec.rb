@@ -1,13 +1,11 @@
 require 'spec_helper'
 
 describe TestRun do
-  before(:each) do
+  before(:each) do    
+    # Create a test run with a mixture of failures and successes
     @test_run = FactoryGirl.create(:test_run)
-    test_group_1 = FactoryGirl.create(:test_group, :test_run => @test_run)
-    test_group_2 = FactoryGirl.create(:test_group, :test_run => @test_run)
-    FactoryGirl.create(:test_result, :test_group => test_group_1, :result => false)
-    FactoryGirl.create(:test_result, :test_group => test_group_2, :result => false)
-    FactoryGirl.create(:test_result, :test_group => test_group_2, :result => true)
+    test_group_1 = FactoryGirl.create(:test_group, :successful_results => 0, :failed_results => 1, :test_run => @test_run)
+    test_group_2 = FactoryGirl.create(:test_group, :successful_results => 1, :failed_results => 1, :test_run => @test_run)
   end
 
   describe "number_of_pages" do
@@ -25,6 +23,16 @@ describe TestRun do
   describe "number_of_failures" do
     it "should return the total failures in all its groups" do
       @test_run.number_of_failures.should== 2
+    end
+  end
+  
+  describe "has_failures?" do
+    it "should return false if there are no failures" do
+      FactoryGirl.create(:test_run_no_failures).has_failures?.should == false
+    end
+    
+    it "should return true if there are failures" do
+      @test_run.has_failures?.should == true
     end
   end
 end

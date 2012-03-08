@@ -6,6 +6,17 @@ class TestRun < ActiveRecord::Base
 
   default_scope :order => 'time_run DESC'
   
+  def has_failures?
+    number_of_failures != 0
+  end
+  
+  def groups_with_failures
+    # Speed things up if there haven't been any failures:
+    return [] unless has_failures?
+    
+    test_groups.select{|g| g.has_failures? }
+  end
+  
   def number_of_pages
     test_groups.length
   end

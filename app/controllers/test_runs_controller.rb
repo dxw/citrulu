@@ -10,8 +10,8 @@ class TestRunsController < ApplicationController
   def index
     @test_files = current_user.test_files
     @test_runs = @test_files.collect{|f| f.test_runs}.flatten.sort{|a,b| b.time_run <=> a.time_run}
-    @recent_failed_groups = @test_files.collect{|t| t.last_run}.select{|r| r.number_of_failures != 0}.collect{|r| r.test_groups.select{|g| g.number_of_failures != 0}}[0]
-
+    @recent_failed_groups = @test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
+    
     respond_to do |format|
       format.html # index.html.erb
       # format.json { render json: @test_runs }
