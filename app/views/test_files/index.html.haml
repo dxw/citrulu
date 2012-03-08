@@ -3,11 +3,11 @@
   %a.dismiss{:href => '#', :onclick => "alert('Implement me')"} Hide this message
   .row
     .dismiss
-    .span5{:style => "padding-right: 70px;"}
+    .span5
       %p Citrulu is currently in Alpha! So please don't depend on it just yet. But please do use it, and let us know what you think, and what we could improve.
       %p Until we release, all the features of Citrulu will be available to everyone. After we release, some features will only be available to users with premium accounts. 
       %p To see how we currently think the features will break down, visit the frequently updated and changed <a href="/features">features page</a>.
-    .span5
+    .span4.offset1
       %p Want to get straight to the tests? Your default test file has some examples to help you get started.
       %p 
         %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Edit your first test file
@@ -30,20 +30,22 @@
               .span4
                 %span.last_updated="Last updated at #{file.updated_at}"
               .span3
-                %span.stats This file contains <strong>18</strong> checks on <strong>14</strong> pages
+                %span.stats <strong>18</strong> checks on <strong>14</strong> pages
 
       
   #sidebar.span4
     #recent_results
       - if !@recent_failed_groups.empty?
         .fail
-          %img{:src => "http://placehold.it/60x66"}
-          %p="#{@recent_failed_groups.count} of your tests are failing!"
+          %div
+            %img{:src => "http://placehold.it/60x66"}
+            %p="#{@recent_failed_groups.count} tests are failing!"
           %a.btn{:href => test_runs_path} View full results
       - else
         .pass
-          %img{:src => "http://placehold.it/60x66"}
-          %p Your tests all pass. Huzzah!
+          %div
+            %img{:src => "http://placehold.it/60x66"}
+            %p Your tests all pass. Huzzah!
           %a.btn{:href => test_runs_path} You can see results, but nowt's going on
 
     #sexy_stats
