@@ -51,7 +51,6 @@ class CitruluParser < TesterGrammarParser
     end
     
     parsed_object = result.process
-    puts parsed_object.inspect
     
     #check_for_undefined_predefines(parsed_object)
     undefined_predefs = []

@@ -73,9 +73,9 @@ describe CitruluParser do
    
    it "should understand names" do
      Predefs.stub(:find).and_return(["a thing", "another thing"])
-     code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see =x")
+     code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see :x")
 
-     code[0][:tests][0][:name].should == '=x'
+     code[0][:tests][0][:name].should == ':x'
      code[0][:tests][0][:value].should == nil
    end
 
@@ -89,11 +89,11 @@ describe CitruluParser do
    end
    
    it "should not allow nil names" do
-     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see =") }.to raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see :") }.to raise_error(CitruluParser::TestCompileError)
    end
    
    it "should not allow empty names" do
-     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see =      ") }.to raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see :      ") }.to raise_error(CitruluParser::TestCompileError)
    end
 
   end
