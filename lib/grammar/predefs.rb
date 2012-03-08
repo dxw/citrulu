@@ -21,7 +21,7 @@ class Predefs
       raise PredefNotFoundError.new("Predef #{name} not found")
     end
 
-    predefs[name]
+    predefs[name.to_sym]
   end
 
   def self.all

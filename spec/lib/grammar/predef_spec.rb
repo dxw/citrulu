@@ -8,7 +8,7 @@ describe Predefs do
 
       Predefs.stub(:predefs).and_return(test_predef)
 
-      Predefs.find("=test").should == test_predef[:test]
+      Predefs.find(":test").should == test_predef[:test]
     end
   end
 end
