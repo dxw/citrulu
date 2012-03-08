@@ -15,6 +15,10 @@ ul.recentfails {
   }
 }
 
+pre {
+  word-break: normal;
+}
+
 .fail, .pass {
   border: 1px solid rgba(0, 0, 0, 0.05);
   -webkit-border-radius: 4px;

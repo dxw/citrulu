@@ -25,6 +25,7 @@ class TestRunner
         test_group.test_run_id = test_run.id
         test_group.time_run = group[:test_date]
         test_group.response_time = group[:response_time]
+        test_group.message = group[:message]
         test_group.test_url = group[:test_url]
         test_group.save
 
@@ -68,7 +69,7 @@ class TestRunner
 
         group[:response_time] = (Time.now - group[:test_date])*1000
         group[:response_code] = page.code
-      rescue Mechanize::ResponseCodeError => e
+      rescue Exception => e
 
         group[:result] = :fail
         group[:message] = e.to_s
