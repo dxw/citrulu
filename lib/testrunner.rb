@@ -38,6 +38,8 @@ class TestRunner
           test_result.result = test[:passed]
           test_result.save
         end
+
+        mail = UserMailer.test_notification(test_group)
       end
     end
   end
