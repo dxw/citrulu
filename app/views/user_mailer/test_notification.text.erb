@@ -1,0 +1,13 @@
+<% if @failures == 0 %>
+
+  All tests succeeded!
+
+<% else %>
+
+  Failed tests (<%= @failures %>):
+
+  <% @test_group.test_results.each do |result| %>
+    * <%= "#{result.assertion} #{value_or_name(result)}" %>
+  <% end %>
+
+<% end %>

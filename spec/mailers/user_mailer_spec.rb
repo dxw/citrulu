@@ -65,18 +65,24 @@ describe UserMailer do
 
       email.subject.should include('1 test just failed')
       email.to.should == ['tom+tester@dxw.com']
+      email.body.should include('I should see blah (failed)')
     end
 
     it 'composes an email for multiple failures' do
       email = UserMailer.test_notification(@test_group2)
 
       email.subject.should include('3 tests just failed')
+      email.body.should include('I should see a cat (failed)')
+      email.body.should include('I should see blah (failed)')
+      email.body.should include('I should not see your face (failed)')
     end
 
     it 'composes an email for success' do
       email = UserMailer.test_notification(@test_group3)
 
       email.subject.should include('All tests passing')
+      email.body.should_not include('(failed)')
+      email.body.should include('All tests succeeded')
     end
   end
 end
