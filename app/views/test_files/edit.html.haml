@@ -81,14 +81,14 @@
         =accordion_body do
           %ul
             %li Citrulu is case sensitive! So make sure your lines are capitalised.
-
+    %header.section_title
       %h2 Predefines
-      =accordion("predefines", :h3) do
-        -@predefs.each do |predef, values|
-          =accordion_group(predef.to_sym) do
-            = accordion_heading do
-              = ":#{predef}"
-            = accordion_body do
-              %ul
-                - values.each do |value|
-                  %li=value
+    =accordion("predefines", :h3) do
+      -@predefs.each do |predef, values|
+        =accordion_group(predef.to_sym) do
+          = accordion_heading do
+            = ":#{predef}"
+          = accordion_body do
+            %ul
+              - values.each do |value|
+                %li=value
