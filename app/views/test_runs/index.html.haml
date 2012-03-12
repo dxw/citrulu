@@ -57,8 +57,11 @@
             %li.fail
               %h3=file.name
               %p.summary This file is not compiling successfully. 
-              %p.summary Tests are being executed based on the <a href="">last successfully compiled file</a>, dated 10th March 2012.  TODO
-              %p.summary="Those tests were last executed on #{file.last_run.time_run}"
+              - if file.last_run.nil?
+                %p.summary="No tests have yet been run."
+              - else
+                %p.summary Tests are being executed based on the <a href="" onclick="alert('Implement meeeee');">last successfully compiled file</a>, dated 10th March 2012.
+                %p.summary="Those tests were last executed on #{file.last_run.time_run}"
               %a.btn{:href => edit_test_file_path(file)} Edit
    
 -#%h1 Test Runs
