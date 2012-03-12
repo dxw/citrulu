@@ -5,20 +5,32 @@ module TestRunsHelper
   end
   
   #return a test value or test name as appropriate
-  def value_or_name(test_result)
+  def value_or_name(test_result, plain_text=false)
     if !test_result.value.nil?
       # Value
-      content = content_tag :span, test_result.value, :class => "test_value"
+      if plain_text
+        content = test_result.value
+      else
+        content = content_tag :span, test_result.value, :class => "test_value"
+      end
     elsif !test_result.name.nil?
       # Should have already ensured that the test_result name can be found before it was loaded into the db. 
       # In any case if .find Does raise an error, there's nothing we can do about it here.
       predefs = Predefs.find(test_result.name)
-      content = content_tag :abbr, test_result.name, :title => predefs.join(", "), :rel => "tooltip",  :class => "predef_name" 
+      if plain_text
+        content = test_result.name
+      else
+        content = content_tag :abbr, test_result.name, :title => predefs.join(", "), :rel => "tooltip",  :class => "predef_name" 
+      end
     else
       #raise?
     end
     
-    content << content_tag(:strong, " (failed)")if test_result.failed?
+    if plain_text
+      content << " (failed)"
+    else
+      content << content_tag(:strong, " (failed)")if test_result.failed?
+    end
     
     return content
   end
