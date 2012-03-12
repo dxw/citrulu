@@ -9,7 +9,7 @@
         .row
           - fail_batch.each do |group|
             .span4
-              .fail
+              .recent.fail
                 %h3=group.test_url
                 %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
                 - if !group.message.blank?
