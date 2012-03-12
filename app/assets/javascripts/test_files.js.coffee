@@ -2,7 +2,7 @@
 # Odds & ends for the index page
 #
 
-$("body.test_files.index").ready ->
+$(document).ready ->
   $("div.welcome a.dismiss").click ->
     $("div.welcome").fadeOut('fast')
     window.createCookie('hide_welcome', 'true', 999)
@@ -13,12 +13,13 @@ $("body.test_files.index").ready ->
 #
 #Setup the test file editor page:
 #
-$("body.test_files.edit").ready ->
-  setup_editor()
-  # create a placeholder to store a hash of the text:
-  window.text_hash = ""
-  # save the file for the first time: 
-  window.save_file()
+$(document).ready ->
+  if($('body').hasClass('test_files') && $('body').hasClass('edit'))
+    setup_editor()
+    # create a placeholder to store a hash of the text:
+    window.text_hash = ""
+    # save the file for the first time: 
+    window.save_file()
 
 
 setup_editor = ->

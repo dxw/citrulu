@@ -1,2 +1,2 @@
 $(document).ready ->
-  $(".recent.fail").equalHeights
+  $(".recent.fail").equalHeights()
