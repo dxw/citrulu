@@ -1,23 +1,23 @@
 grammar TesterGrammar
 
   rule test_file
-    space test_group+ space {
+    comment* space test_group+ space {
       def process
-        elements[1].elements.collect{|e| e.process}
+        elements[2].elements.collect{|e| e.process}
       end
     }
   end
 
   rule test_group
-    on_clause first_clause? finally_clause? test+ {
+    comment* on_clause comment* first_clause? comment* finally_clause? comment* test+ comment* {
       def process
         results = {
           :test_url => on_clause.url.text_value.strip,
-          :tests => elements[3].elements.collect{|e| e.process}
+          :tests => elements[7].elements.collect{|e| e.process}
         }
 
-        results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
-        results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
+        results[:first] = elements[3].url.text_value.strip if !elements[3].empty?
+        results[:finally] = elements[5].url.text_value.strip if !elements[5].empty?
 
         results
       end
@@ -25,32 +25,32 @@ grammar TesterGrammar
   end
 
   rule on_clause
-    space "On " url newline 
+    space "On " url comment* newline 
   end
 
   rule first_clause
-    space "First, fetch " url newline
+    space "First, fetch " url comment* newline
   end
 
   rule finally_clause
-    space "Finally, fetch " url newline
+    space "Finally, fetch " url comment* newline
   end
 
   rule test
-    space assertion space (escaped_value / name / value) newline {
+    comment* space assertion space (escaped_value / name / value) comment* newline {
       def process
         hash = {
           :assertion => assertion.text_value.to_test_sym,
         }
 
-        if elements[3].text_value.match(/^:/)
-          if elements[3].text_value.match(/^::/)
-            hash[:value] = elements[3].text_value.gsub(/^::/, ':').strip
+        if elements[4].text_value.match(/^:/)
+          if elements[4].text_value.match(/^::/)
+            hash[:value] = elements[4].text_value.gsub(/^::/, ':').strip
           else
-            hash[:name] = elements[3].text_value.strip
+            hash[:name] = elements[4].text_value.strip
           end
         else
-          hash[:value] = elements[3].text_value.strip
+          hash[:value] = elements[4].text_value.strip
         end
 
         hash
@@ -70,6 +70,10 @@ grammar TesterGrammar
   
   rule value
     [^\n]*
+  end
+
+  rule comment
+    space '#' [^\n]*
   end
 
   rule escaped_value
