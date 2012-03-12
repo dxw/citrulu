@@ -46,7 +46,10 @@
         .pass
           %div
             %img{:src => "http://placehold.it/60x66"}
-            %p Your tests all pass. Huzzah!
+            -if @test_files.collect{|f| f.last_run}.compact.empty?
+              %p Your tests haven't been run yet.
+            - else
+              %p Your tests all pass. Huzzah!
           %a.btn{:href => test_runs_path} You can see results, but nowt's going on
 
     #sexy_stats
