@@ -25,11 +25,12 @@ body.test_runs {
   }
 
   div.recentfails, div.all_pass {
-    padding-bottom: 15px;
+    padding-bottom: 30px;
   }
 
   div.all_pass {
     font-size: 2em;
+    color:  #468847;
   }
 
   ul.recentfails {

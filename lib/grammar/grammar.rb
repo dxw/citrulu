@@ -10,17 +10,17 @@ module TesterGrammar
 
   module TestFile0
     def space1
-      elements[0]
+      elements[1]
     end
 
     def space2
-      elements[2]
+      elements[3]
     end
   end
 
   module TestFile1
     def process
-      elements[1].elements.collect{|e| e.process}
+      elements[2].elements.collect{|e| e.process}
     end
   end
 
@@ -36,28 +36,41 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    r1 = _nt_space
+    s1, i1 = [], index
+    loop do
+      r2 = _nt_comment
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
     s0 << r1
     if r1
-      s2, i2 = [], index
-      loop do
-        r3 = _nt_test_group
-        if r3
-          s2 << r3
-        else
-          break
+      r3 = _nt_space
+      s0 << r3
+      if r3
+        s4, i4 = [], index
+        loop do
+          r5 = _nt_test_group
+          if r5
+            s4 << r5
+          else
+            break
+          end
         end
-      end
-      if s2.empty?
-        @index = i2
-        r2 = nil
-      else
-        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-      end
-      s0 << r2
-      if r2
-        r4 = _nt_space
+        if s4.empty?
+          @index = i4
+          r4 = nil
+        else
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        end
         s0 << r4
+        if r4
+          r6 = _nt_space
+          s0 << r6
+        end
       end
     end
     if s0.last
@@ -76,7 +89,7 @@ module TesterGrammar
 
   module TestGroup0
     def on_clause
-      elements[0]
+      elements[1]
     end
 
   end
@@ -85,11 +98,11 @@ module TesterGrammar
     def process
       results = {
         :test_url => on_clause.url.text_value.strip,
-        :tests => elements[3].elements.collect{|e| e.process}
+        :tests => elements[7].elements.collect{|e| e.process}
       }
 
-      results[:first] = elements[1].url.text_value.strip if !elements[1].empty?
-      results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
+      results[:first] = elements[3].url.text_value.strip if !elements[3].empty?
+      results[:finally] = elements[5].url.text_value.strip if !elements[5].empty?
 
       results
     end
@@ -107,41 +120,106 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    r1 = _nt_on_clause
+    s1, i1 = [], index
+    loop do
+      r2 = _nt_comment
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
     s0 << r1
     if r1
-      r3 = _nt_first_clause
+      r3 = _nt_on_clause
+      s0 << r3
       if r3
-        r2 = r3
-      else
-        r2 = instantiate_node(SyntaxNode,input, index...index)
-      end
-      s0 << r2
-      if r2
-        r5 = _nt_finally_clause
-        if r5
-          r4 = r5
-        else
-          r4 = instantiate_node(SyntaxNode,input, index...index)
+        s4, i4 = [], index
+        loop do
+          r5 = _nt_comment
+          if r5
+            s4 << r5
+          else
+            break
+          end
         end
+        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
         s0 << r4
         if r4
-          s6, i6 = [], index
-          loop do
-            r7 = _nt_test
-            if r7
-              s6 << r7
-            else
-              break
-            end
-          end
-          if s6.empty?
-            @index = i6
-            r6 = nil
+          r7 = _nt_first_clause
+          if r7
+            r6 = r7
           else
-            r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
+            r6 = instantiate_node(SyntaxNode,input, index...index)
           end
           s0 << r6
+          if r6
+            s8, i8 = [], index
+            loop do
+              r9 = _nt_comment
+              if r9
+                s8 << r9
+              else
+                break
+              end
+            end
+            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+            s0 << r8
+            if r8
+              r11 = _nt_finally_clause
+              if r11
+                r10 = r11
+              else
+                r10 = instantiate_node(SyntaxNode,input, index...index)
+              end
+              s0 << r10
+              if r10
+                s12, i12 = [], index
+                loop do
+                  r13 = _nt_comment
+                  if r13
+                    s12 << r13
+                  else
+                    break
+                  end
+                end
+                r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+                s0 << r12
+                if r12
+                  s14, i14 = [], index
+                  loop do
+                    r15 = _nt_test
+                    if r15
+                      s14 << r15
+                    else
+                      break
+                    end
+                  end
+                  if s14.empty?
+                    @index = i14
+                    r14 = nil
+                  else
+                    r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
+                  end
+                  s0 << r14
+                  if r14
+                    s16, i16 = [], index
+                    loop do
+                      r17 = _nt_comment
+                      if r17
+                        s16 << r17
+                      else
+                        break
+                      end
+                    end
+                    r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+                    s0 << r16
+                  end
+                end
+              end
+            end
+          end
         end
       end
     end
@@ -169,7 +247,7 @@ module TesterGrammar
     end
 
     def newline
-      elements[3]
+      elements[4]
     end
   end
 
@@ -200,8 +278,21 @@ module TesterGrammar
         r3 = _nt_url
         s0 << r3
         if r3
-          r4 = _nt_newline
+          s4, i4 = [], index
+          loop do
+            r5 = _nt_comment
+            if r5
+              s4 << r5
+            else
+              break
+            end
+          end
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
           s0 << r4
+          if r4
+            r6 = _nt_newline
+            s0 << r6
+          end
         end
       end
     end
@@ -228,7 +319,7 @@ module TesterGrammar
     end
 
     def newline
-      elements[3]
+      elements[4]
     end
   end
 
@@ -259,8 +350,21 @@ module TesterGrammar
         r3 = _nt_url
         s0 << r3
         if r3
-          r4 = _nt_newline
+          s4, i4 = [], index
+          loop do
+            r5 = _nt_comment
+            if r5
+              s4 << r5
+            else
+              break
+            end
+          end
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
           s0 << r4
+          if r4
+            r6 = _nt_newline
+            s0 << r6
+          end
         end
       end
     end
@@ -287,7 +391,7 @@ module TesterGrammar
     end
 
     def newline
-      elements[3]
+      elements[4]
     end
   end
 
@@ -318,8 +422,21 @@ module TesterGrammar
         r3 = _nt_url
         s0 << r3
         if r3
-          r4 = _nt_newline
+          s4, i4 = [], index
+          loop do
+            r5 = _nt_comment
+            if r5
+              s4 << r5
+            else
+              break
+            end
+          end
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
           s0 << r4
+          if r4
+            r6 = _nt_newline
+            s0 << r6
+          end
         end
       end
     end
@@ -338,19 +455,19 @@ module TesterGrammar
 
   module Test0
     def space1
-      elements[0]
-    end
-
-    def assertion
       elements[1]
     end
 
-    def space2
+    def assertion
       elements[2]
     end
 
+    def space2
+      elements[3]
+    end
+
     def newline
-      elements[4]
+      elements[6]
     end
   end
 
@@ -360,14 +477,14 @@ module TesterGrammar
         :assertion => assertion.text_value.to_test_sym,
       }
 
-      if elements[3].text_value.match(/^:/)
-        if elements[3].text_value.match(/^::/)
-          hash[:value] = elements[3].text_value.gsub(/^::/, ':').strip
+      if elements[4].text_value.match(/^:/)
+        if elements[4].text_value.match(/^::/)
+          hash[:value] = elements[4].text_value.gsub(/^::/, ':').strip
         else
-          hash[:name] = elements[3].text_value.strip
+          hash[:name] = elements[4].text_value.strip
         end
       else
-        hash[:value] = elements[3].text_value.strip
+        hash[:value] = elements[4].text_value.strip
       end
 
       hash
@@ -386,37 +503,63 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    r1 = _nt_space
+    s1, i1 = [], index
+    loop do
+      r2 = _nt_comment
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
     s0 << r1
     if r1
-      r2 = _nt_assertion
-      s0 << r2
-      if r2
-        r3 = _nt_space
-        s0 << r3
-        if r3
-          i4 = index
-          r5 = _nt_escaped_value
+      r3 = _nt_space
+      s0 << r3
+      if r3
+        r4 = _nt_assertion
+        s0 << r4
+        if r4
+          r5 = _nt_space
+          s0 << r5
           if r5
-            r4 = r5
-          else
-            r6 = _nt_name
-            if r6
-              r4 = r6
+            i6 = index
+            r7 = _nt_escaped_value
+            if r7
+              r6 = r7
             else
-              r7 = _nt_value
-              if r7
-                r4 = r7
+              r8 = _nt_name
+              if r8
+                r6 = r8
               else
-                @index = i4
-                r4 = nil
+                r9 = _nt_value
+                if r9
+                  r6 = r9
+                else
+                  @index = i6
+                  r6 = nil
+                end
               end
             end
-          end
-          s0 << r4
-          if r4
-            r8 = _nt_newline
-            s0 << r8
+            s0 << r6
+            if r6
+              s10, i10 = [], index
+              loop do
+                r11 = _nt_comment
+                if r11
+                  s10 << r11
+                else
+                  break
+                end
+              end
+              r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
+              s0 << r10
+              if r10
+                r12 = _nt_newline
+                s0 << r12
+              end
+            end
           end
         end
       end
@@ -586,6 +729,68 @@ module TesterGrammar
     r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
 
     node_cache[:value][start_index] = r0
+
+    r0
+  end
+
+  module Comment0
+    def space
+      elements[0]
+    end
+
+  end
+
+  def _nt_comment
+    start_index = index
+    if node_cache[:comment].has_key?(index)
+      cached = node_cache[:comment][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      if has_terminal?('#', false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure('#')
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        s3, i3 = [], index
+        loop do
+          if has_terminal?('\G[^\\n]', true, index)
+            r4 = true
+            @index += 1
+          else
+            r4 = nil
+          end
+          if r4
+            s3 << r4
+          else
+            break
+          end
+        end
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        s0 << r3
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Comment0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:comment][start_index] = r0
 
     r0
   end

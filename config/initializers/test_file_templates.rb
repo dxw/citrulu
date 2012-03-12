@@ -37,12 +37,12 @@ On http://example.com
   # You can do this using the First and Finally commands. Citrulu will
   # fetch the "First" url, then the test url, and then the "Finally"
   # url. These statements must appear at the start of the test group.
-On http://example.citrulu.com
-  First, fetch http://example.citrulu.com/28268-eba/log-in-citrulu
-  First, fetch http://example.citrulu.com/28268-eba/log-out-citrulu
-  I should see "Welcome, Citrulu!"
-  I should see "Log out"
-  I should not see "Log in to continue"
+#On http://example.com
+#  First, fetch http://example.com/example/28268-eba/log-in-citrulu
+#  First, fetch http://example.com/example/28268-eba/log-out-citrulu
+#  I should see "Welcome, Citrulu!"
+#  I should see "Log out"
+#  I should not see "Log in to continue"
   
 # That's it! Super simple right?
 # Check out the Help section over there => for more details}

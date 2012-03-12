@@ -74,6 +74,16 @@
           %pre="  I should not see :php_errors"
           %p See a bit further down this page for a list of the predefines you can use
     
+      =accordion_group("first_finally") do
+        =accordion_heading do
+          First &amp; Finally
+        =accordion_body do
+          %p First and Finally allow you to write scripts on your site that will be executed before and after we retrieve the page being tested.
+          %p For example, you could use these scripts to log into and out of a members-only site.
+          %p If used, First and Finally must be the first two lines in the test group:
+          %pre="On http://example.com\n  First, fetch http://example.com/22ebd/first-script\n  Finally, fetch http://example.com/22ebd/finally-script\n  I should see You are now logged in"
+          %p You don't have to use both first and finally: you can use either one by itself.
+
       =accordion_group("general_tips") do 
         =accordion_heading do
           General tips

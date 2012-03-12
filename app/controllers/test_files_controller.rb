@@ -45,6 +45,7 @@ class TestFilesController < ApplicationController
 
     @predefs = Predefs.all
 
+    @console_output = "Welcome to Citrulu"
     @test_file.name = "Unnamed file" if @test_file.name.nil?
   end
 
