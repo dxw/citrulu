@@ -1,0 +1,14 @@
+- if @status == :pass
+  %p Your failing tests are now passing. Everything's looking good! 
+  %p!="If you'd like, you can <a href='#{test_runs_path}'>review recent test results</a>."
+- elsif @status == :fail
+
+  %p = "Failed tests (#{@failures}):"
+
+  %ul
+  - @test_run.test_groups.each do |group|
+    %li
+      %p= "On #{group.test_url}"
+      %ul
+        - group.test_results.each do |result|
+          %li= "#{result.assertion} #{value_or_name(result, true)}"
