@@ -1,13 +1,17 @@
 <% if @failures == 0 %>
 
-  All tests succeeded!
+All tests succeeded!
 
 <% else %>
 
-  Failed tests (<%= @failures %>):
+Failed tests (<%= @failures %>):
 
-  <% @test_group.test_results.each do |result| %>
-    * <%= "#{result.assertion} #{value_or_name(result, true)}" %>
-  <% end %>
+<% @test_run.test_groups.each do |group| %>
+On <%= group.test_url %>:
+<% group.test_results.each do |result| %>
+* <%= "#{result.assertion} #{value_or_name(result, true)}" %>
+<% end %>
+
+<% end %>
 
 <% end %>

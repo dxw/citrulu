@@ -16,7 +16,7 @@ class TestRunner
       test_run = TestRun.new
       test_run.time_run = Time.zone.now
       test_run.test_file_id = file.id
-      test_run.save
+      test_run.save!
 
       groups = execute_tests(parser.compile_tests(file.compiled_test_file_text))
 
@@ -27,7 +27,7 @@ class TestRunner
         test_group.response_time = group[:response_time]
         test_group.message = group[:message]
         test_group.test_url = group[:test_url]
-        test_group.save
+        test_group.save!
 
         group[:tests].each do |test|
           test_result = TestResult.new
@@ -36,11 +36,11 @@ class TestRunner
           test_result.value = test[:value]
           test_result.name = test[:name]
           test_result.result = test[:passed]
-          test_result.save
+          test_result.save!
         end
 
-        mail = UserMailer.test_notification(test_group)
       end
+      mail = UserMailer.test_notification(test_run)
     end
   end
 
