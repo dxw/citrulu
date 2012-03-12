@@ -38,9 +38,12 @@ body.devise {
 		margin: auto;
 		width: 240px;
 	}
-	.form-inline {
+	.form-horizontal {
     input {
-      margin: 0 0 7px 0;
+      margin-bottom: 0.5em;
+    }
+    label.checkbox{
+      width: 100%;
     }
   }
   
