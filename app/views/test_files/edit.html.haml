@@ -1,14 +1,13 @@
 .row
-  %header.span8
-    %h1=@test_file.name
-
-.row
   #test_suite.span8
     
     = form_for(@test_file, :remote => true, :html => {:id => "editor_form"}) do |f|
-      #save_btn
-        = f.submit "Save now", :class => "btn btn-primary"
-        #editor_status=@status_msg
+      .row 
+        %legend.span4
+          %h1.editable=@test_file.name
+        #save_btn.span4
+          %span#editor_status=@status_msg
+          = f.submit "Save now", :class => "btn btn-primary"
       = f.text_area :test_file_text, :id => "editor_content"
       #editor_wrapper 
         - #infuriating div required (?) to deal with the fact that the #editor element has no size 

@@ -9,7 +9,6 @@ $("body.test_files.index").ready ->
 
 
 
-
 #
 #Setup the test file editor page:
 #
@@ -19,7 +18,21 @@ $("body.test_files.edit").ready ->
   window.text_hash = ""
   # save the file for the first time: 
   window.save_file()
+  # set up editable fields
+  $('.editable').editable({onEdit:setup_file_name_form, onSubmit:submit_file_name, submit:'Save', cancel:'Cancel'})
+  # can't get styles to work, so adding in here:
+  
+setup_file_name_form = ->
+  # add classes to buttons:
+  $(".editable button").addClass("btn btn-small");
+  $(".editable button:eq(0)").addClass("btn-primary");
+  # add attributes to the field
+  $("#editor_form .editable input").attr("name", "test_file[name]")
 
+submit_file_name = (content) ->
+  if content.current isnt content.previous
+    $("#editor_form").submit
+    
 
 setup_editor = ->
   # API: https://github.com/ajaxorg/ace/wiki/Embedding---API

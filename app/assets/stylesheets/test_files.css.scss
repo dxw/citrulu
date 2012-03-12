@@ -1,8 +1,4 @@
 body.test_files {
-	h1 {
-		margin-bottom: 19px;
-	}
-	
 	#help {
 		header.section_title {
 			//FRAGILE, but matches the padding applied to the accordion
@@ -11,31 +7,46 @@ body.test_files {
 	}
 	
 	#test_suite{
-                margin-top: -50px;
+	  margin-top: 1em;
+	  legend {
+	    border: none;
+	    margin-bottom: 0px;
+	    h1 {
+    		margin-bottom: 19px;
+    		
+    		input {
+          //Styles for when the field becomes editable:
+          font: inherit;
+          width: 100%;
+          height: auto;
+          //compensating so that the box doesn't move around
+          margin: -16px 0 -9px -6px;        
+    		}
+    		button{
+          //should just be "@extend .btn.btn-mini.btn-primary, but can't get @extend to work, so have added in classes with Jquery.   
+          margin: 0.5em 0.5em 0 0 
+        }
+    	}
+	  }
+    #save_btn {
+      text-align: right;
+      overflow: auto;
+      margin-bottom: 19px;
+      input[type=submit] {}
+    }
 
-                #save_btn {
-                  overflow: auto;
-                  padding: 0 0 15px 0;
-                }
-
-                #editor_status{
-                        color: gray;
-                        font-size: 1.5em;
-                        text-align: right;
-                        padding: 0 20px 0 0;
-                        //FRAGILE!!!
-                        line-height: 26px;
-                        float: right;
-                }
-                #editor_status.working{
-                        padding-right: 25px;
-                        background: transparent url("loader.gif") no-repeat right;
-                }
-		#editor_form {
-			input[type=submit] {
-                          float: right;
-			}
-		}
+    #editor_status{
+            color: gray;
+            font-size: 1.5em;
+            text-align: right;
+            padding: 0 20px 0 0;
+            //FRAGILE: to match the bootstrap styling on Legend
+            line-height: 36px;
+    }
+    #editor_status.working{
+            padding-right: 25px;
+            background: transparent url("loader.gif") no-repeat right;
+    }
 		#editor, #editor_wrapper {
 		  width: 620px;
   		  height: 400px;
