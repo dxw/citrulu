@@ -36,8 +36,9 @@ setup_editor = ->
     editor_text = window.editor.getSession().getValue()
     $("#editor_content").val editor_text
     window.text_hash = make_hash(editor_text)
+  $("#editor").keydown (event) ->
+    window.lastKeyPress = (new Date).getTime()
     
-  # Here's the code to include the (currently aborted) attempt to write our own syntax highlighting:
   SafeWTFGrammar = require("ace/mode/safewtf").Mode
   window.editor.getSession().setMode new SafeWTFGrammar()
 
@@ -45,16 +46,14 @@ saving_file = ->
   $("#editor_status").html "Saving..."
   $("#editor_status").addClass "working"
   $("#editor_form input[type='submit']").attr "disabled", true
-  # $("#editor_form").submit().click(); # doesn't seem to work...
 
 window.save_file = ->
   new_text_hash = make_hash(window.editor.getSession().getValue())
-  # new_text_hash = make_hash($("#editor").getSession().getValue())
-  if (new_text_hash isnt window.text_hash) and window.editor.getSession().getValue() isnt ''
+  if (new_text_hash isnt window.text_hash) and window.editor.getSession().getValue() isnt '' and (new Date).getTime() - window.lastKeyPress > 500
     $("#editor_form input[type='submit']").click()
     saving_file()
   else
-    setTimeout("window.save_file()", 5000);
+    setTimeout("window.save_file()", 1000);
 
 make_hash = (input_text) ->
   shaObj = new jsSHA input_text, "ASCII"
