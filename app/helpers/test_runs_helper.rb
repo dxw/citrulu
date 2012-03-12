@@ -22,4 +22,12 @@ module TestRunsHelper
     
     return content
   end
+
+  def ran_checks(test_run)
+    "Ran #{pluralize(test_run.number_of_checks, 'check')} on #{pluralize(test_run.number_of_pages, 'page')} with #{pluralize(test_run.number_of_failures, 'failure')}"
+  end
+  
+  def test_run_path(test_run)
+    "test_runs/#{test_run.id}"
+  end
 end
