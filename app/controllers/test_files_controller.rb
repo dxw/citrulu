@@ -72,64 +72,68 @@ class TestFilesController < ApplicationController
   def update
     @test_file = TestFile.find(params[:id])
     
+    # We're either going to get the test_file_text, or the name, but not both together.
+    # We only need to try and compile if we have text:
     code = params[:test_file][:test_file_text]
-    begin
-      # If there's no code to complile, don't even try - drop straight through to the 'else' block
-      CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+    unless code.nil?
+      begin
+        # If there's no code to complile, don't even try - drop straight through to the 'else' block
+        CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
   
-    # Unknown predef
-    rescue CitruluParser::TestPredefError => e
-      @console_msg_hash = {
-        :text0 => e.to_s,
-      }
-      @console_msg_type = "error"
-      @status_msg = "Saved (with errors)"
-
-    # Compile fail
-    rescue CitruluParser::TestCompileError => e
-      begin 
-        error = CitruluParser.format_error(e)
-      rescue => e
+      # Unknown predef
+      rescue CitruluParser::TestPredefError => e
         @console_msg_hash = {
-          :text1 => "Something has gone wrong: ",
-          :exception_text => e,
-          :text2 => " Sorry! This is a bug. Please let us know."
+          :text0 => e.to_s,
         }
         @console_msg_type = "error"
         @status_msg = "Saved (with errors)"
-      else
-      
-        @console_msg_hash = {
-          :text1 => "Compilation failed! Expected: ",
-          :expected => error[:expected],
-          :text2 => " at line ",
-          :line => error[:line],
-          :text3 => ", column ",
-          :column => error[:column],
-        }
 
-        if !error[:after].empty?
-          @console_msg_hash[:text4] = " after "
-          @console_msg_hash[:after] = error[:after]
+      # Compile fail
+      rescue CitruluParser::TestCompileError => e
+        begin 
+          error = CitruluParser.format_error(e)
+        rescue => e
+          @console_msg_hash = {
+            :text1 => "Something has gone wrong: ",
+            :exception_text => e,
+            :text2 => " Sorry! This is a bug. Please let us know."
+          }
+          @console_msg_type = "error"
+          @status_msg = "Saved (with errors)"
+        else
+      
+          @console_msg_hash = {
+            :text1 => "Compilation failed! Expected: ",
+            :expected => error[:expected],
+            :text2 => " at line ",
+            :line => error[:line],
+            :text3 => ", column ",
+            :column => error[:column],
+          }
+
+          if !error[:after].empty?
+            @console_msg_hash[:text4] = " after "
+            @console_msg_hash[:after] = error[:after]
+          end
+
+          @console_msg_type = "error"
+          @status_msg = "Saved (with errors)"
         end
-
+    
+      # catch-all, including CitruluParser::TestCompileUnknownError
+      rescue  => e
+        @console_msg_hash = {:text0 => "#{e}"}
         @console_msg_type = "error"
         @status_msg = "Saved (with errors)"
-      end
-    
-    # catch-all, including CitruluParser::TestCompileUnknownError
-    rescue  => e
-      @console_msg_hash = {:text0 => "#{e}"}
-      @console_msg_type = "error"
-      @status_msg = "Saved (with errors)"
       
-    # Compile win
-    else
-      @console_msg_hash = {:text0 => "Saved!"}
-      @console_msg_type = "success"
-      @status_msg = "Saved!"
+      # Compile win
+      else
+        @console_msg_hash = {:text0 => "Saved!"}
+        @console_msg_type = "success"
+        @status_msg = "Saved!"
 
-      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+        @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      end
     end
     
     respond_to do |format|
@@ -137,7 +141,14 @@ class TestFilesController < ApplicationController
 
       # TODO: is there a case where the test_file can't be updated? What on earth would we do then??
       
-      format.html { render action: "edit" }
+      format.html { 
+        if request.xhr?
+          # if the name has been updated, put its value back to the page
+          render :text => params[:test_file].values.first
+        else  
+          render action: "edit"
+        end
+      }
       format.js { }
     end
   end

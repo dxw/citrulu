@@ -4,7 +4,8 @@
     = form_for(@test_file, :remote => true, :html => {:id => "editor_form"}) do |f|
       .row 
         %legend.span4
-          %h1.editable=@test_file.name
+          %h1
+            = editable_field @test_file, :name
         #save_btn.span4
           %span#editor_status=@status_msg
           = f.submit "Save now", :class => "btn btn-primary"

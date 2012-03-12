@@ -20,7 +20,7 @@ body.test_files {
           width: 100%;
           height: auto;
           //compensating so that the box doesn't move around
-          margin: -16px 0 -9px -6px;        
+          margin: -16px 0 -9px -4px;        
     		}
     		button{
           //should just be "@extend .btn.btn-mini.btn-primary, but can't get @extend to work, so have added in classes with Jquery.   
