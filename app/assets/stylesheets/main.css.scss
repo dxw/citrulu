@@ -44,6 +44,11 @@ body.devise {
     }
     label.checkbox{
       width: 100%;
+      margin-bottom: 0.5em;
+    }
+    input[type="submit"] {
+      // handle buttons with long text:
+      white-space: normal;
     }
   }
   
