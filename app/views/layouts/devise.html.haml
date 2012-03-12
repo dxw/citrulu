@@ -4,5 +4,7 @@
       %h1 Citrulu
     - flash.each do |name, message|
       = flash_message(name, message)
-    = yield
+    = devise_error_messages!  
+    .form-horizontal.well
+      = yield
 = render :template => 'layouts/application'
