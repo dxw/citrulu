@@ -1,4 +1,18 @@
+#
+# Odds & ends for the index page
+#
+
+$("body.test_files.index").ready ->
+  $("div.welcome a.dismiss").click ->
+    $("div.welcome").fadeOut('fast')
+    window.createCookie('hide_welcome', 'true', 999)
+
+
+
+
+#
 #Setup the test file editor page:
+#
 $("body.test_files.edit").ready ->
   setup_editor()
   # create a placeholder to store a hash of the text:
