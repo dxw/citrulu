@@ -83,7 +83,7 @@ describe UserMailer do
     it 'composes an email for a single failure' do
       email = UserMailer.test_notification(@test_run1)
 
-      email.subject.should include('1 test just failed')
+      email.subject.should include('1 of your tests just failed')
       email.to.should == ['tom+tester@dxw.com']
       email.body.should include('I should see blah (failed)')
       email.body.should include('On http://dxw.com')
@@ -92,7 +92,7 @@ describe UserMailer do
     it 'composes an email for multiple failures' do
       email = UserMailer.test_notification(@test_run2)
 
-      email.subject.should include('3 tests just failed')
+      email.subject.should include('3 of your tests just failed')
       email.body.should include('I should see a cat (failed)')
       email.body.should include('I should see blah (failed)')
       email.body.should include('I should not see your face (failed)')
@@ -103,7 +103,7 @@ describe UserMailer do
     it 'composes an email for success' do
       email = UserMailer.test_notification(@test_run3)
 
-      email.subject.should include('All tests passing')
+      email.subject.should include('All of your tests are passing')
       email.body.should_not include('(failed)')
       email.body.should include('All tests succeeded')
     end
