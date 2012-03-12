@@ -33,9 +33,19 @@ describe TestFilesController do
   end
 
   describe "GET index" do
-    # Nothing yet: the index page is just static atm.
+    it "should create @test_files" do
+      get :index
+
+      assigns(:test_files).should be_a(Array)
+    end
+    
+    it "should create @recent_failed_groups" do
+      get :index
+
+      assigns(:recent_failed_groups).should be_a(Array)
+    end
   end
-  
+
   describe "GET edit" do
     it "assigns the requested test_file as @test_file" do
       TestFilesController.skip_before_filter :check_ownership!
