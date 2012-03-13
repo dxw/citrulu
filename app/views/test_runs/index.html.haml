@@ -1,7 +1,9 @@
 .page
   %h1 Results
-  - if @recent_failed_groups.empty?
-    %div.all_pass All your tests are passing. Hooray!
+  - if @recent_failed_groups.empty? && @test_runs.empty?
+    %div.bigmsg  Your tests have not yet been run.
+  - elsif @recent_failed_groups.empty? && !@test_runs.empty?
+    %div.bigmsg.all_pass All your tests are passing. Hooray!
   - else
     .recentfails
       %h2="#{pluralize(@recent_failed_groups.count, 'test')} on #{pluralize(@recent_failed_groups.collect{|g| g.test_url}.uniq.count, 'page')} failed"
@@ -56,7 +58,7 @@
           - else
             %li.fail
               %h3=file.name
-              %p.summary This file is not compiling successfully. 
+              %p.summary This file has not been compiled, or has not compiled successfully. 
               - if file.last_run.nil?
                 %p.summary="No tests have yet been run."
               - else
