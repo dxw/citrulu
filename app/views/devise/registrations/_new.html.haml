@@ -2,7 +2,7 @@
   %legend
     %h3 Sign up
   = f.email_field :email, :placeholder => "Email"
-  = f.password_field :invitation_code, :placeholder => "Invitation Code"
+  = f.text_field :invitation_code, :placeholder => "Invitation Code"
   = f.password_field :password, :placeholder => "Password"
   = f.password_field :password_confirmation, :placeholder => "Confirm Password"
   = f.submit "Sign up", :class => "btn btn-primary"
