@@ -91,10 +91,8 @@ describe UserMailer do
       email.subject.should include('1 of your tests just failed')
       email.to.should == ['tom+tester@dxw.com']
 
-      both_parts(email) do |body|
-        body.should include('I should see blah (failed)')
-        body.should include('On http://dxw.com')
-      end
+      email.body.should include('<span class="test_value">blah</span><strong> (failed)</strong>')
+      email.body.should include('On http://dxw.com')
     end
 
     it 'composes an email for multiple failures' do
@@ -102,13 +100,11 @@ describe UserMailer do
 
       email.subject.should include('3 of your tests just failed')
 
-      both_parts(email) do |body|
-        body.should include('I should see a cat (failed)')
-        body.should include('I should see blah (failed)')
-        body.should include('I should not see your face (failed)')
-        body.should include('On http://example.org')
-        body.should include('On http://example.org/test')
-      end
+      email.body.should include('<span class="test_value">a cat</span><strong> (failed)</strong>')
+      email.body.should include('<span class="test_value">blah</span><strong> (failed)</strong>')
+      email.body.should include('<span class="test_value">your face</span><strong> (failed)</strong>')
+      email.body.should include('On http://example.org')
+      email.body.should include('On http://example.org/test')
     end
 
     it 'composes an email for success' do
@@ -116,9 +112,7 @@ describe UserMailer do
 
       email.subject.should include('All of your tests are passing')
 
-      both_parts(email) do |body|
-        body.should_not include('(failed)')
-      end
+      email.body.should_not include('(failed)')
     end
   end
 end
