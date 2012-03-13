@@ -58,31 +58,19 @@ describe TestRunner do
         TestRunner.run_all_tests
       end
 
-      it "should send success messages if the last TestRun was a failure" do
-        pending "test doesn't work"
+      it "should send success messages if the last TestRun was a failure (1)" do
         @user.email_preference = 1
+        UserMailer.any_instance.should_receive(:test_notification)
 
         TestRunner.stub(:execute_test_groups) do |file,test_run_id|
           group = FactoryGirl.create(:test_group)
           group.test_run_id = test_run_id
           group.save!
         end
-        UserMailer.any_instance.should_receive(:test_notification).once
         TestRunner.run_all_tests
-
-        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
-          group = FactoryGirl.create(:test_group_no_failures)
-          group.test_run_id = test_run_id
-          group.save!
-        end
-        UserMailer.any_instance.should_receive(:test_notification).once
-        p 'waiting for test_not'
-        TestRunner.run_all_tests
-        p 'end test'
       end
 
-      it "should always send failure messages" do
-        pending "test doesn't work"
+      it "should send success messages if the last TestRun was a failure (2)" do
         @user.email_preference = 1
 
         TestRunner.stub(:execute_test_groups) do |file,test_run_id|
@@ -90,7 +78,59 @@ describe TestRunner do
           group.test_run_id = test_run_id
           group.save!
         end
+        TestRunner.run_all_tests
+
         UserMailer.any_instance.should_receive(:test_notification)
+
+        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
+          group = FactoryGirl.create(:test_group_no_failures)
+          group.test_run_id = test_run_id
+          group.save!
+        end
+        TestRunner.run_all_tests
+      end
+
+      it "should always send failure messages (1)" do
+        @user.email_preference = 1
+
+        UserMailer.any_instance.should_receive(:test_notification)
+
+        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
+          group = FactoryGirl.create(:test_group)
+          group.test_run_id = test_run_id
+          group.save!
+        end
+        TestRunner.run_all_tests
+      end
+
+      it "should always send failure messages (2)" do
+        @user.email_preference = 1
+
+        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
+          group = FactoryGirl.create(:test_group)
+          group.test_run_id = test_run_id
+          group.save!
+        end
+        TestRunner.run_all_tests
+
+        UserMailer.any_instance.should_receive(:test_notification)
+
+        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
+          group = FactoryGirl.create(:test_group_no_failures)
+          group.test_run_id = test_run_id
+          group.save!
+        end
+        TestRunner.run_all_tests
+      end
+
+      it "should always send failure messages (3)" do
+        @user.email_preference = 1
+
+        TestRunner.stub(:execute_test_groups) do |file,test_run_id|
+          group = FactoryGirl.create(:test_group)
+          group.test_run_id = test_run_id
+          group.save!
+        end
         TestRunner.run_all_tests
 
         TestRunner.stub(:execute_test_groups) do |file,test_run_id|
@@ -98,15 +138,15 @@ describe TestRunner do
           group.test_run_id = test_run_id
           group.save!
         end
-        UserMailer.any_instance.should_receive(:test_notification)
         TestRunner.run_all_tests
+
+        UserMailer.any_instance.should_receive(:test_notification)
 
         TestRunner.stub(:execute_test_groups) do |file,test_run_id|
           group = FactoryGirl.create(:test_group)
           group.test_run_id = test_run_id
           group.save!
         end
-        UserMailer.any_instance.should_receive(:test_notification)
         TestRunner.run_all_tests
       end
     end
