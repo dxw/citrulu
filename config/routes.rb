@@ -6,13 +6,7 @@ SimpleFrontEndTesting::Application.routes.draw do
     match 'sign_up' => "devise/registrations#new"
     match 'sign_in' => "devise/sessions#new"
     match 'settings' => "devise/registrations#edit"
-    
-    # redirect back to edit page on updating user details: (devise default is to go to index)
-    get 'users', :to => 'devise/registrations#edit', :as => :user_root
-    root :to => "website#index"
   end
-  # The above root SHOULD work, but might not work in production. The following is from see https://github.com/plataformatec/devise/wiki/How-To%3A-Redirect-to-a-specific-page-on-successful-sign-in-out
-  # match '/user' => "website#test_file_editor", :as => :user_root
 
   resources :test_files, :only => [:edit, :index, :update]
   resources :test_runs, :only => [:index, :show]
@@ -20,6 +14,10 @@ SimpleFrontEndTesting::Application.routes.draw do
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   
+  authenticated :user do
+    root :to => 'test_files#index'
+  end
+
   root :to => "website#index"
   
   # The priority is based upon order of creation:
