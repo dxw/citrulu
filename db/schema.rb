@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120308144732) do
+ActiveRecord::Schema.define(:version => 20120313032916) do
 
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120308144732) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.integer  "email_preference"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

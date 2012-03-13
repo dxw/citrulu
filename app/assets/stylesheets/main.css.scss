@@ -25,11 +25,10 @@
 }
 
 
-body.devise {
-  .container {
-    padding-top: 100px;
-    width: 260px;
-  }
+.container.devise {
+  padding-top: 100px;
+  width: 260px;
+
 	.alert {
 		margin: 0 auto 20px;
 	}

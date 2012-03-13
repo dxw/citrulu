@@ -1,6 +1,6 @@
 module ApplicationHelper
   def controller_name
-    params[:controller].split("/")[0]
+    params[:controller].split("/").join(" ")
   end
   
   def nav_link(text, path)
