@@ -6,10 +6,11 @@
           %h2.brand 
             = link_to 'Citrulu', test_files_path
           %div
-            %ul.nav
-              = nav_link "Home", test_files_path
-              = nav_link "Results", test_runs_path
-              = nav_link "Account Settings", edit_user_registration_path
+            - if user_signed_in?
+              %ul.nav
+                = nav_link "Home", test_files_path
+                = nav_link "Results", test_runs_path
+                = nav_link "Account Settings", edit_user_registration_path
           #user_nav
             - if user_signed_in?
               = "Signed in as #{current_user.email}."
