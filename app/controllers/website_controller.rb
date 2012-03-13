@@ -30,6 +30,7 @@ class WebsiteController < ApplicationController
       add(false,  true,  true, 'Custom Predefines', 'Write your own predefines, to make writing good tests for your apps quicker', true),
       add(false, true,  true, 'Multiple test files', 'Structure your tests into several files. For example, you might want one per site.', true),
       add(false, true,  true, 'View retrieved pages', 'Look at the page we retrieved from your site to see exactly what was returned when we tested it', true),
+      add(false, true,  true, 'Git support', 'Edit your files locally, push them to Citrulu\'s git server, and we\'ll take them from there', true),
       add(false, false, true, 'Mobile alerts', 'Receive SMS messages when tests fail', true),
       add(false, false, true, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
     ]
