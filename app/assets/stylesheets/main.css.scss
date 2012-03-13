@@ -42,7 +42,7 @@
     }
     label.checkbox{
       width: 100%;
-      margin-bottom: 0.5em;
+      rgin-bottom: 0.5em;
     }
     input[type="submit"] {
       // handle buttons with long text:
@@ -87,3 +87,7 @@ ul.devise_links {
 
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
+
+p {
+  font-size: 15px;
+}
