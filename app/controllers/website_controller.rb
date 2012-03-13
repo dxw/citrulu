@@ -35,6 +35,7 @@ class WebsiteController < ApplicationController
       add(false, false, true, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
     ]
 
+    render :layout => "logged_in"
   end
   
 end
