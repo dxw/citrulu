@@ -24,12 +24,15 @@ body.test_runs {
     padding-bottom: 10px;
   }
 
-  div.recentfails, div.all_pass {
+  div.recentfails, div.bigmsg {
     padding-bottom: 30px;
   }
 
-  div.all_pass {
+  div.bigmsg {
     font-size: 2em;
+  }
+
+  div.all_pass {
     color:  #468847;
   }
 

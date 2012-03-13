@@ -41,6 +41,7 @@ class TestRunner
 
       end
       mail = UserMailer.test_notification(test_run)
+      mail.deliver
     end
   end
 
