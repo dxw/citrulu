@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe TestFile do
   before(:each) do
-    @test_files = [FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar"), FactoryGirl.create(:test_file, :compiled_test_file_text => nil)]
+    @test_files = [
+      FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar"), 
+      FactoryGirl.create(:test_file, :compiled_test_file_text => nil),
+      FactoryGirl.create(:test_file, :compiled_test_file_text => "")
+    ]
 
     @test_runs = [
       [
@@ -27,6 +31,6 @@ describe TestFile do
   describe "compiled_files" do
     it "Should only return successfully compiled files" do
       TestFile.compiled_files.should==[@test_files[0]]
-    end
+    end    
   end
 end

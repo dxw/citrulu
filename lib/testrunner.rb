@@ -4,12 +4,7 @@ require 'mechanize'
 
 class TestRunner
 
-  def parser
-    @parser ||= CitruluParser.new
-    @parser
-  end
-
-  def run_all_tests
+  def self.run_all_tests
     return "Nothing to run" if TestFile.compiled_files.empty?
     
     TestFile.compiled_files.each do |file|
@@ -17,12 +12,28 @@ class TestRunner
       test_run.time_run = Time.zone.now
       test_run.test_file_id = file.id
       test_run.save!
-
-      groups = execute_tests(parser.compile_tests(file.compiled_test_file_text))
+      
+      execute_test_groups(file, test_run.id)
+      
+      if file.user.email_preference == 1
+        mail = UserMailer.test_notification(test_run)
+        mail.deliver
+      end
+    end
+  end
+  
+  # Factored out to make testing possible
+  def self.execute_test_groups(file, test_run_id)
+    begin
+      compiled_tests = CitruluParser.new.compile_tests(file.compiled_test_file_text)
+    rescue CitruluParser::TestCompileError => e
+      raise "Compile error on trying to execute test_groups in test file with id #{file.id}: #{e}"
+    else
+      groups = execute_tests(compiled_tests)
 
       groups.each do |group|
         test_group = TestGroup.new
-        test_group.test_run_id = test_run.id
+        test_group.test_run_id = test_run_id
         test_group.time_run = group[:test_date]
         test_group.response_time = group[:response_time]
         test_group.message = group[:message]
@@ -38,14 +49,13 @@ class TestRunner
           test_result.result = test[:passed]
           test_result.save!
         end
-
       end
-      mail = UserMailer.test_notification(test_run)
-      mail.deliver
     end
-  end
+  end  
+  
+  
 
-  def do_test(testvalues, &block)
+  def self.do_test(testvalues, &block)
     passed = false
 
     testvalues.each do |value|
@@ -57,7 +67,7 @@ class TestRunner
     passed
   end
 
-  def execute_tests(tests)
+  def self.execute_tests(tests)
     tests.each do |group|
       agent = Mechanize.new
 
