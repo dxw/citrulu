@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   attr_accessor :invitation_code
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference
   
   # Check that the entered invitation code matches this secret string:
   validates_each :invitation_code, :on => :create do |record, attr, value|
@@ -17,9 +17,15 @@ class User < ActiveRecord::Base
   
   has_many :test_files
   
+  after_initialize :init
   after_create :create_default_test_file 
   
   private
+  
+  def init
+    # When creating a new user, we want their email preference set to receive test run emails
+    self.email_preference  ||= 1
+  end
   
   def create_default_test_file
     self.test_files.create(

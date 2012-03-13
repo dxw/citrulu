@@ -9,6 +9,7 @@
             %ul.nav
               = nav_link "Home", test_files_path
               = nav_link "Results", test_runs_path
+              = nav_link "Account Settings", edit_user_registration_path
           #user_nav
             - if user_signed_in?
               = "Signed in as #{current_user.email}."
