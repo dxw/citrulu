@@ -17,12 +17,4 @@ describe WebsiteController do
     end
   end
 
-  describe "GET index" do
-    it "Redirects to test_files#index if the user is logged in" do
-      controller.stub(:user_signed_in?).and_return(true)
-      get :index
-      response.should redirect_to(test_files_path)
-    end
-  end
-
 end
