@@ -12,9 +12,14 @@ require 'spec_helper'
 # end
 describe TestFilesHelper do
   describe "controller_name" do
-    it "should return the name of the controller" do
+    it "should return the name of a simple controller" do
+      params[:controller] = 'baz'
+      helper.controller_name.should == 'baz'
+    end
+    
+    it "should return the name of a nested controller" do
       params[:controller] = 'foo/bar'
-      helper.controller_name.should == 'foo'
+      helper.controller_name.should == 'foo bar'
     end
   end
 
