@@ -27,9 +27,9 @@ module TestRunsHelper
     end
     
     if plain_text
-      content << " (failed)"
+      content = content + " (failed)"
     else
-      content << content_tag(:strong, " (failed)")if test_result.failed?
+      content = content + content_tag(:strong, " (failed)")if test_result.failed?
     end
     
     return content
