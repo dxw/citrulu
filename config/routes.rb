@@ -16,13 +16,11 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   resources :test_files, :only => [:edit, :index, :update]
   resources :test_runs, :only => [:index, :show]
-  
+   
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   
   root :to => "website#index"
-  match '/features' => "website#features"
-  
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
