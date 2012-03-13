@@ -80,31 +80,45 @@ describe UserMailer do
       end
     end
 
+    def both_parts email
+      yield email.text_part.body
+      yield email.html_part.body
+    end
+
     it 'composes an email for a single failure' do
       email = UserMailer.test_notification(@test_run1)
 
       email.subject.should include('1 of your tests just failed')
       email.to.should == ['tom+tester@dxw.com']
-      email.body.should include('I should see blah (failed)')
-      email.body.should include('On http://dxw.com')
+
+      both_parts(email) do |body|
+        body.should include('I should see blah (failed)')
+        body.should include('On http://dxw.com')
+      end
     end
 
     it 'composes an email for multiple failures' do
       email = UserMailer.test_notification(@test_run2)
 
       email.subject.should include('3 of your tests just failed')
-      email.body.should include('I should see a cat (failed)')
-      email.body.should include('I should see blah (failed)')
-      email.body.should include('I should not see your face (failed)')
-      email.body.should include('On http://example.org')
-      email.body.should include('On http://example.org/test')
+
+      both_parts(email) do |body|
+        body.should include('I should see a cat (failed)')
+        body.should include('I should see blah (failed)')
+        body.should include('I should not see your face (failed)')
+        body.should include('On http://example.org')
+        body.should include('On http://example.org/test')
+      end
     end
 
     it 'composes an email for success' do
       email = UserMailer.test_notification(@test_run3)
 
       email.subject.should include('All of your tests are passing')
-      email.body.should_not include('(failed)')
+
+      both_parts(email) do |body|
+        body.should_not include('(failed)')
+      end
     end
   end
 end

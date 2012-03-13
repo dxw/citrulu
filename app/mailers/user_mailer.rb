@@ -15,7 +15,14 @@ class UserMailer < ActionMailer::Base
 
     to = test_run.test_file.user.email
 
-    mail(to: to, subject: subject, template: 'test_notification')
+    mail(to: to, subject: subject, template: 'test_notification') do |format|
+      format.html
+      format.text
+    end
+  end
+
+  def welcome_email(user)
+    mail(to: user.email, subject: "Welcome to Citrulu", template: 'welcome_email')
   end
 
   def welcome_email(user)
