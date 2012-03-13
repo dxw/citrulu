@@ -33,8 +33,53 @@ table {
   }
 }
 
-body.website.index {
-  padding: 0 30px 40px;
+body.website.alpha {
+  .well.blue {
+    background-color: #D9EDF7;
+  }
+
+  #mailing_list form{
+    background-color: whiteSmoke !important;
+    border-color: #eee !important;
+  }
+
+  .signup {
+    height: 170px;
+  }
+
+  .row.no-invite {
+    margin-top: 10px; 
+    
+    .notrdy {
+      height: 80px !important;
+    }
+  }
+
+  #new_user {
+    margin: 0;
+
+    legend {
+      margin-bottom: 15px
+    }
+
+    input {
+      margin-bottom: 20px;
+
+
+      &.btn {
+        margin-left: 10px;
+      }
+    }
+
+    .devise_links {
+      margin: 0;
+    }
+  }
+}
+
+body.website.index, body.website.alpha {
+  padding: 0 30px 80px;
+
   header.title {
     margin: 30px 0 60px;
     text-align: center;
@@ -50,7 +95,7 @@ body.website.index {
     }
   }
   
-  h2 {
+  h2.well {
     font-size: 3em;
     line-height: 1em;
   }
@@ -85,7 +130,8 @@ body.website.index {
   }
   
   #selling_points{ 
-    margin-top: 20px;
+    margin-top: 10px;
+
     p {
       font-size: 15px;
       line-height: 20px;

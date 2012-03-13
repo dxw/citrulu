@@ -1,0 +1,57 @@
+.container
+  %header.title
+    %h1.masthead Citrulu
+    %p Hosted, human-friendly, continuous front-end tests for your live websites
+
+  .row
+    .span8
+      %div#subForm.form-horizontal.well.signup
+        = render 'devise/registrations/new'
+    .span4
+      .well.blue.signup
+        %h3 Welcome to the alpha
+        %p Thanks for coming along. It's very early days. But we want to get feedback and ideas as early as possible.
+        %p Please have a play and a poke about, and let us know what you think via the GetSatisfaction feedback tab.
+        %p Thanks again for coming!
+
+  .row
+    %h2.span12 No invitation code?
+  .row.no-invite
+    .span4
+      .well.blue.notrdy
+        %p We're not quite ready for everyone to start using Citrulu. It's under heavy development. 
+        %p If you'd like to have a play, please sign up, and we'll let you know when it's ready.
+    #mailing_list.span8
+      %form#subForm.notrdy.form-horizontal.well{:action => "http://dxw.createsend.com/t/r/s/gwutt/", :method => "post", :onsubmit => "pageTracker._trackEvent('Goals','subscribe');"}
+        %legend Sign up, and we'll email you when exciting things happen.
+        %ul.unstyled
+          %li.control-group
+            %input#name.control{:name => "cm-name", :placeholder => "Name", :type => "text"}/
+          %li.control-group
+            %input#gwutt-gwutt{:name => "cm-gwutt-gwutt", :placeholder => "Email", :type => "email"}/
+        .submit
+          %input.btn-success.btn-large{:type => "submit", :value => "Sign up"}/
+
+  .row
+    %h2.span12 What is Citrulu?
+  #selling_points.row
+    %section#for_humans.span4
+      =image_tag "brochure/test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax", :class => "thumbnail"
+      %header
+        %h3 Front end tests for humans
+      %p Write tests for your sites using natural language. No complex code or annoying forms - just simple instructions to check strings, headers and HTML in your pages.
+    %section#make_sure.span4
+      =image_tag "brochure/test_results_list.png", :alt => "A list of test results, showing successes and failures", :class => "thumbnail"
+      %header
+        %h3 Make sure everything's working
+      %p Citrulu runs regular checks on your website, but it's better than uptime monitoring: you can check for specific strings, headers and HTML code that prove specific features are working.
+    %section#presets.span4
+      =image_tag "brochure/notifications.png", :alt => "An inbox, showing some notifications from Citrulu", :class => "thumbnail"
+      %header
+        %h3 Respond quickly
+      %p When something goes wrong on your live site, you want to know immediately. Citrulu will email you the moment a test fails so that you can start fixing it right away.
+  #contact.row
+    If you'd like to know more, sign up at the top of this page, or
+    = succeed "." do
+      %a{:href => "mailto:contact@dxw.com?subject=About%20that%20Citrulu%20thing..."} get in touch
+    (We're friendly).

@@ -16,7 +16,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   
   root :to => "website#index"
   match '/features' => "website#features"
-  
+  match '/alpha' => "website#alpha"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
