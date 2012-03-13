@@ -22,6 +22,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def welcome_email(user)
+    @title = "Welcome to Citrulu"
     mail(to: user.email, subject: "Welcome to Citrulu", template: 'welcome_email')
   end
 end
