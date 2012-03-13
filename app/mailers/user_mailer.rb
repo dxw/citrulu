@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: "contact@citrulu.com"
 
   def test_notification(test_run)
     @test_run = test_run
