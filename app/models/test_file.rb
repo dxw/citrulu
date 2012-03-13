@@ -13,7 +13,8 @@ class TestFile < ActiveRecord::Base
 
   # All the files which have compiled successfully at some point
   def self.compiled_files
-    all(:conditions => "compiled_test_file_text is not null")
+    #todo - put this select into sql
+    all(:conditions => "compiled_test_file_text is not null").select{|f| !f.compiled_test_file_text.blank? }
   end
     
 end
