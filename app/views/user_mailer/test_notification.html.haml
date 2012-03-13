@@ -3,12 +3,18 @@
   %p!="If you'd like, you can <a href='#{test_runs_path}'>review recent test results</a>."
 - elsif @status == :fail
 
-  %p = "Failed tests (#{@failures}):"
+  %p 
+    To view your full test results, visit
+    %a{:href => "http://citrulu.com/#{test_run_path(@test_run)}"} your test results page.
 
-  %ul
-  - @test_run.test_groups.each do |group|
-    %li
+  %p= "Failed tests (#{@failures}):"
+
+  %div{:style => "padding-bottom: 15px;"}
+    - @test_run.test_groups.each do |group|
       %p= "On #{group.test_url}"
       %ul
         - group.test_results.each do |result|
-          %li= "#{result.assertion} #{value_or_name(result, true)}"
+          - next if !result.failed?
+          %li
+            = "#{result.assertion} " 
+            != value_or_name(result)
