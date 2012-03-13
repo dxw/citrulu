@@ -17,4 +17,8 @@ class UserMailer < ActionMailer::Base
 
     mail(to: to, subject: subject, template: 'test_notification')
   end
+
+  def welcome_email(user)
+    mail(to: user.email, subject: "Welcome to Citrulu", template: 'welcome_email')
+  end
 end

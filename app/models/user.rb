@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   
   after_initialize :init
   after_create :create_default_test_file 
+  after_create :send_welcome_email
   
   private
   
@@ -33,5 +34,9 @@ class User < ActiveRecord::Base
         :name => "My first test file",
         :test_file_text => DEFAULT_TEST_FILE
       )
+  end
+
+  def send_welcome_email
+    UserMailer.welcome_email(self)
   end
 end
