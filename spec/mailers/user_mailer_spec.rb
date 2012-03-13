@@ -105,7 +105,6 @@ describe UserMailer do
 
       email.subject.should include('All of your tests are passing')
       email.body.should_not include('(failed)')
-      email.body.should include('All tests succeeded')
     end
   end
 end
