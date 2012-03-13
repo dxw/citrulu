@@ -74,8 +74,9 @@ class TestFilesController < ApplicationController
     
     # We're either going to get the test_file_text, or the name, but not both together.
     # We only need to try and compile if we have text:
-    code = params[:test_file][:test_file_text]
-    unless code.nil?
+    if params[:test_file][:name].nil? 
+      # Then we should expect some code:
+      code = params[:test_file][:test_file_text]
       begin
         # If there's no code to complile, don't even try - drop straight through to the 'else' block
         CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
