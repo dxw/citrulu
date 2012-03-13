@@ -16,8 +16,14 @@ class TestRunner
       execute_test_groups(file, test_run.id)
       
       if file.user.email_preference == 1
-        mail = UserMailer.test_notification(test_run)
-        mail.deliver
+        #TODO: will this always work?
+        previous_run = file.test_runs.select{|run|run.id < test_run.id}.first
+
+        if previous_run.nil? || test_run.has_failures? || previous_run.has_failures?
+          mail = UserMailer.test_notification(test_run)
+          mail.deliver
+        else
+        end
       end
     end
   end
