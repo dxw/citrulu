@@ -24,8 +24,8 @@ $(window).load ->
     
 setup_editor = ->
   window.editor = CodeMirror.fromTextArea($('#editor_content')[0], {
-    theme: 'monokai',
-    lineNumbers: true,
+    theme: 'monokai';
+    lineNumbers: true;
   });
   $("#editor_form").submit ->
      saving_file()

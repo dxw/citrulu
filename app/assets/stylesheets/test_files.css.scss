@@ -54,7 +54,12 @@ body.test_files {
 		#editor_content {
       //FRAGILE = .span8 (620px) - padding (4px) - border (1px)
 	    width: 610px;
-		}
+	  }
+	  .CodeMirror-scroll {
+      height: 400px;
+	  }
+    // Other CodeMirror styles are in codemirror.css
+		
 		#console {
 		  div.output {	
                     height: 200px;
