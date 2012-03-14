@@ -35,6 +35,10 @@ body.test_files {
       input[type=submit] {}
     }
 
+    pre {
+      color: #ccc;
+    }
+
     #editor_status{
             color: gray;
             font-size: 1.5em;

@@ -12,16 +12,23 @@ $(document).ready ->
 #
 #Setup the test file editor page:
 #
-$(document).ready ->
+$(window).load ->
   if($('body').hasClass('test_files') && $('body').hasClass('edit'))
-    setup_editor()
+    setup_new_editor()
     # create a placeholder to store a hash of the text:
     window.text_hash = ""
     # save the file for the first time: 
-    window.save_file()
+# window.save_file()
+
+setup_new_editor = ->
+  editor = CodeMirror.fromTextArea(document.getElementById("editor_content"), {
+    theme: 'monokai',
+    lineNumbers: true,
+  });
 
 setup_editor = ->
   # API: https://github.com/ajaxorg/ace/wiki/Embedding---API
+  require "ace/lib/fixoldbrowsers"
   window.editor = ace.edit("editor")
   window.editor.setTheme "ace/theme/twilight"
   window.editor.getSession().setTabSize 2

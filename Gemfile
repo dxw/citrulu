@@ -6,7 +6,7 @@ gem 'rails', '3.2.0'
 gem 'devise'
 
 # Text editor:
-gem 'ace-rails-ap'
+gem 'codemirror-rails'
 
 # Treetop to drive the grammar:
 gem 'treetop'
