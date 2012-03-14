@@ -14,38 +14,26 @@ $(document).ready ->
 #
 $(window).load ->
   if($('body').hasClass('test_files') && $('body').hasClass('edit'))
-    setup_new_editor()
+    setup_editor()
     # create a placeholder to store a hash of the text:
     window.text_hash = ""
+    # initialise the key press tracker so that the file will save straight away:
+    window.lastKeyPress = (new Date).getTime()
     # save the file for the first time: 
-# window.save_file()
-
-setup_new_editor = ->
-  editor = CodeMirror.fromTextArea(document.getElementById("editor_content"), {
+    window.save_file()
+    
+setup_editor = ->
+  window.editor = CodeMirror.fromTextArea($('#editor_content')[0], {
     theme: 'monokai',
     lineNumbers: true,
   });
-
-setup_editor = ->
-  # API: https://github.com/ajaxorg/ace/wiki/Embedding---API
-  require "ace/lib/fixoldbrowsers"
-  window.editor = ace.edit("editor")
-  window.editor.setTheme "ace/theme/twilight"
-  window.editor.getSession().setTabSize 2
-  window.editor.getSession().setUseSoftTabs true 
-  window.editor.getSession().setValue $("#editor_content").val()
-  window.editor.setShowPrintMargin(false);
-  $("#editor_content").hide()
   $("#editor_form").submit ->
-    saving_file()
-    editor_text = window.editor.getSession().getValue()
-    $("#editor_content").val editor_text
-    window.text_hash = make_hash(editor_text)
-  $("#editor").keydown (event) ->
-    window.lastKeyPress = (new Date).getTime()
-    
-  SafeWTFGrammar = require("ace/mode/safewtf").Mode
-  window.editor.getSession().setMode new SafeWTFGrammar()
+     saving_file()
+     editor_text = window.editor.getValue()
+     window.text_hash = make_hash(editor_text)
+   $(".CodeMirror").keydown (event) ->
+     window.lastKeyPress = (new Date).getTime()
+
 
 saving_file = ->
   $("#editor_status").html "Saving..."
@@ -53,10 +41,9 @@ saving_file = ->
   $("#editor_form input[type='submit']").attr "disabled", true
 
 window.save_file = ->
-  new_text_hash = make_hash(window.editor.getSession().getValue())
-  if (new_text_hash isnt window.text_hash) and window.editor.getSession().getValue() isnt '' and (new Date).getTime() - window.lastKeyPress > 500
+  new_text_hash = make_hash(window.editor.getValue())
+  if (new_text_hash isnt window.text_hash) and window.editor.getValue() isnt '' and (new Date).getTime() - window.lastKeyPress > 500
     $("#editor_form input[type='submit']").click()
-    saving_file()
   else
     setTimeout("window.save_file()", 1000);
 

@@ -10,10 +10,6 @@
           %span#editor_status=@status_msg
           = f.submit "Save now", :class => "btn btn-primary"
       = f.text_area :test_file_text, :id => "editor_content"
-      #editor_wrapper 
-        - #infuriating div required (?) to deal with the fact that the #editor element has no size 
-        #editor
-          Sorry the editor could not be loaded
  
     %section#console
       %h3 Console

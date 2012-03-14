@@ -51,9 +51,9 @@ body.test_files {
             padding-right: 25px;
             background: transparent url("loader.gif") no-repeat right;
     }
-		#editor, #editor_wrapper {
-		  width: 620px;
-  		  height: 400px;
+		#editor_content {
+      //FRAGILE = .span8 (620px) - padding (4px) - border (1px)
+	    width: 610px;
 		}
 		#console {
 		  div.output {	
