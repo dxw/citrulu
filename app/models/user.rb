@@ -20,20 +20,18 @@ class User < ActiveRecord::Base
   
   after_create :create_default_test_file 
   after_create :send_welcome_email
-  after_create :add_invitation
-  after_create :set_enail_preference
+  before_save :add_invitation
+  before_save :set_email_preference
   
   private
   
   def set_email_preference
     # When creating a new user, we want their email preference set to receive test run emails
-    self.email_preference = 1
-    self.save!
+    self.email_preference ||= 1
   end
 
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
-    self.save!
   end
   
   def create_default_test_file
