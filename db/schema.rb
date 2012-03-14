@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120314162138) do
+ActiveRecord::Schema.define(:version => 20120314183305) do
+
+  create_table "invitations", :force => true do |t|
+    t.string   "code"
+    t.string   "description"
+    t.boolean  "enabled"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"
@@ -69,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20120314162138) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
+    t.integer  "invitation_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -12,20 +12,28 @@ class User < ActiveRecord::Base
   # Check that the entered invitation code matches this secret string:
   validates_each :invitation_code, :on => :create do |record, attr, value|
     record.errors.add attr, "isn't valid" unless
-      value && value == "4ec364d986d"
+      value && Invitation.exists?(:code => value) && Invitation.find_by_code(value).enabled
   end
   
   has_many :test_files
+  belongs_to :invitation
   
-  after_initialize :init
   after_create :create_default_test_file 
   after_create :send_welcome_email
+  after_create :add_invitation
+  after_create :set_enail_preference
   
   private
   
-  def init
+  def set_email_preference
     # When creating a new user, we want their email preference set to receive test run emails
-    self.email_preference  ||= 1
+    self.email_preference = 1
+    self.save!
+  end
+
+  def add_invitation
+    self.invitation = Invitation.find_by_code(self.invitation_code)
+    self.save!
   end
   
   def create_default_test_file
