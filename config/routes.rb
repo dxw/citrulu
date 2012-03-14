@@ -1,11 +1,11 @@
 SimpleFrontEndTesting::Application.routes.draw do
 
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => "registrations" }
   
   devise_scope :user do
-    match 'sign_up' => "devise/registrations#new"
+    match 'sign_up' => "registrations#new"
     match 'sign_in' => "devise/sessions#new"
-    match 'settings' => "devise/registrations#edit"
+    match 'settings' => "registrations#edit"
   end
 
   resources :test_files, :only => [:edit, :index, :update]
