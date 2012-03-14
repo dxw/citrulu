@@ -1,7 +1,6 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    ace-rails-ap (0.0.1)
     actionmailer (3.2.0)
       actionpack (= 3.2.0)
       mail (~> 2.4.0)
@@ -43,6 +42,8 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.3.1)
       ffi (~> 1.0.6)
+    codemirror-rails (2.22)
+      railties (~> 3.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -202,9 +203,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  ace-rails-ap
   bootstrap-sass (~> 2.0.1)
   capybara
+  codemirror-rails
   coffee-rails (~> 3.2.0)
   database_cleaner
   devise
