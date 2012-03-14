@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
-  # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  # :token_authenticatable, :encryptable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
 
   attr_accessor :invitation_code
@@ -10,10 +10,10 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference
   
   # Check that the entered invitation code matches this secret string:
-#validates_each :invitation_code, :on => :create do |record, attr, value|
-#      record.errors.add attr, "isn't valid" unless
-#        value && value == "4ec364d986d"
-#  end
+  validates_each :invitation_code, :on => :create do |record, attr, value|
+    record.errors.add attr, "isn't valid" unless
+      value && value == "4ec364d986d"
+  end
   
   has_many :test_files
   
