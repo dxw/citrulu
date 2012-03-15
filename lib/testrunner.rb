@@ -18,8 +18,11 @@ class TestRunner
       if file.user.email_preference == 1
         #TODO: will this always work?
         previous_run = file.test_runs.select{|run|run.id < test_run.id}.first
-
-        if previous_run.nil? || test_run.has_failures? || previous_run.has_failures?
+        
+        # Send email if:
+        # 1. It's not the first run
+        # 2. The current run has failures OR the previous run had failures
+        if test_run.has_failures? || (previous_run && previous_run.has_failures?)
           mail = UserMailer.test_notification(test_run)
           mail.deliver
         else
