@@ -19,9 +19,12 @@ class User < ActiveRecord::Base
   belongs_to :invitation
   
   after_create :create_default_test_file 
-  after_create :send_welcome_email
   before_save :add_invitation
   before_save :set_email_preference
+  
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver
+  end
   
   private
   
@@ -40,9 +43,5 @@ class User < ActiveRecord::Base
         :name => "My first test file",
         :test_file_text => DEFAULT_TEST_FILE
       )
-  end
-
-  def send_welcome_email
-    UserMailer.welcome_email(self).deliver
   end
 end
