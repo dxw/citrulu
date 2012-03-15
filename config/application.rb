@@ -18,6 +18,7 @@ module SimpleFrontEndTesting
     # Set the layout of the Registrations controller when the user is logged in (i.e. when they're editing their details)
     config.to_prepare do
       Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "devise" }   
+      Devise::Mailer.layout "user_mailer"
     end
 
     # Custom directories with classes and modules you want to be autoloadable.

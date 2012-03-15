@@ -1,20 +1,30 @@
-- if @status == :pass
-  %p Your failing tests are now passing. Everything's looking good! 
-  %p!="If you'd like, you can <a href='http://citrulu.com/#{test_runs_path}'>review recent test results</a>."
-- elsif @status == :fail
+- content_for :content do
+  - if @status == :pass
+    %p Your failing tests are now passing. Everything's looking good! 
+    %p!="If you'd like, you can <a href='http://citrulu.com/#{test_runs_path}'>review recent test results</a>."
+  - elsif @status == :fail
 
-  %p 
-    To view your full test results, visit
-    %a{:href => "http://citrulu.com/#{test_run_path(@test_run)}"} your test results page.
+    %p 
+      To view your full test results, visit
+      %a{:href => "http://citrulu.com/#{test_run_path(@test_run)}"} your test results page.
 
-  %p= "Failed tests (#{@failures}):"
+    %p= "Failed tests (#{@failures}):"
 
-  %div{:style => "padding-bottom: 15px;"}
-    - @test_run.test_groups.each do |group|
-      %p= "On #{group.test_url}"
-      %ul
-        - group.test_results.each do |result|
-          - next if !result.failed?
-          %li
-            = "#{result.assertion} " 
-            != value_or_name(result)
+    %div{:style => "padding-bottom: 15px;"}
+      - @test_run.test_groups.each do |group|
+        %p= "On #{group.test_url}"
+        %ul
+          - group.test_results.each do |result|
+            - next if !result.failed?
+            %li
+              = "#{result.assertion} " 
+              != value_or_name(result)
+              
+- content_for :footer_text do
+  %span You're receiving this because you enabled alerts for your tests at Citrulu.com
+- content_for :footer_links do
+  =link_to "Edit your subscription", edit_user_registration_url
+  / %a{:href => "http://citrulu.com#{edit_user_registration_path}"} Edit your subscription
+
+
+

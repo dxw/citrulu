@@ -150,7 +150,7 @@
                         %tr
                           %td.w30{:width => "30"}
                           %td.w580{:width => "580"}
-                            = yield
+                            = content_for?(:content) ? yield(:content) : yield
                           %td.w30{:width => "30"}
                 %tr
                   %td.w640{:bgcolor => "#ffffff", :height => "15", :width => "640"}
@@ -169,9 +169,9 @@
                           %td.w580{:valign => "top", :width => "360"}
                             %span.hide/
                             %p#permission-reminder.footer-content-left{:align => "left"}
-                              %span You're receiving this because you enabled alerts for your tests at Citrulu.com
+                              = content_for?(:footer_text) ? yield(:footer_text) : yield
                             %p.footer-content-left{:align => "left"}
-                              %a{:href => "http://citrulu.com#{edit_user_registration_path}"} Edit your subscription
+                              = content_for?(:footer_links) ? yield(:footer_links) : yield
                           %td.hide.w0{:width => "60"}
                           %td.hide.w0{:valign => "top", :width => "160"}
                           %td.w30{:width => "30"}
