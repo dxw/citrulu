@@ -1,11 +1,10 @@
+- @title = "Welcome to Citrulu"
 - content_for :content do
   %p="Welcome to Citrulu! We've received your registration from '#{@resource.email}'."
   %p You can now confirm your account email through the link below:
   %p= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)
 - content_for :footer_text do
   %span You're receiving this because you registered at Citrulu.com
-- content_for :footer_links do 
-  -
 
 
 

@@ -3,11 +3,7 @@ require "spec_helper"
 describe UserMailer do
   describe 'test notifications' do
     before(:each) do
-      user = User.new
-      user.email = 'tom+tester@dxw.com'
-      user.password = 'foobar'
-      user.invitation_code = '4ec364d986d'
-      user.save!
+      user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
 
       test_file = TestFile.new
       test_file.user_id = user.id
