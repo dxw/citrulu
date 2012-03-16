@@ -87,7 +87,7 @@
       'color':'#bababa', 
       'position': 'absolute', 
       'left':'5px',
-      'top':'-8px', 
+      'top':'5px', 
       'overflow-x': 'hidden'
     }
   };
