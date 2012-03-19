@@ -16,6 +16,28 @@ describe TestRunsHelper do
     @test_result_value = FactoryGirl.build(:test_result, :value => "foo_value", :name => nil, :result => false)
   end
 
+  describe "ran_checks" do
+    it "should return a non-empty string without throwing an exception" do
+      checks = ''
+
+      lambda{checks = ran_checks(FactoryGirl.build(:test_run))}.should_not raise_error
+      
+      checks.should be_a(String)
+      checks.should_not be_empty
+    end
+  end
+
+  describe "test_run_path" do
+    it "should return a non-empty string without throwing an exception" do
+      path = ''
+
+      lambda{path = test_run_path(FactoryGirl.build(:test_run))}.should_not raise_error
+      
+      path.should be_a(String)
+      path.should_not be_empty
+    end
+  end
+
   describe "test_class" do
     it "should return a string" do
       helper.test_class(@test_result_value).should be_a(String)
@@ -25,6 +47,13 @@ describe TestRunsHelper do
   describe "value_or_name" do
     it "should say that failed tests failed" do
       helper.value_or_name(@test_result_value).should include("failed")
+    end
+
+    it "should return plain text if specified" do
+      value = helper.value_or_name(@test_result_value, true)
+     
+      value.should_not include('<')
+      value.should_not include('>')
     end
 
     describe "values" do
