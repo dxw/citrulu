@@ -8,7 +8,7 @@ SimpleFrontEndTesting::Application.routes.draw do
     match 'settings' => "registrations#edit"
   end
 
-  resources :test_files, :only => [:index, :update]
+  resources :test_files, :only => [:index, :update, :edit]
   resources :test_runs, :only => [:index, :show]
    
   # Assume everything else is a page on the website:
