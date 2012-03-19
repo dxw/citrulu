@@ -49,14 +49,14 @@ describe TestRunsHelper do
       helper.value_or_name(@test_result_value).should include("failed")
     end
 
-    it "should return plain text if specified" do
-      value = helper.value_or_name(@test_result_value, true)
-     
-      value.should_not include('<')
-      value.should_not include('>')
-    end
-
     describe "values" do
+      it "should return plain text if specified" do
+        value = helper.value_or_name(@test_result_value, true)
+       
+        value.should_not include('<')
+        value.should_not include('>')
+      end
+
       it "should return the value" do
         helper.value_or_name(@test_result_value).should include("foo_value")
       end
@@ -73,6 +73,13 @@ describe TestRunsHelper do
     describe "names" do
       before(:each) do
         Predefs.stub(:find).and_return(['foo_a', 'foo_b', 'foo_c'])
+      end
+
+      it "should return plain text if specified" do
+        value = helper.value_or_name(@test_result_name, true)
+       
+        value.should_not include('<')
+        value.should_not include('>')
       end
 
       it "should include the name" do
