@@ -31,7 +31,7 @@ SimpleFrontEndTesting::Application.configure do
   # config.force_ssl = true
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+   config.log_level = :warn
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -57,4 +57,8 @@ SimpleFrontEndTesting::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  config.action_mailer.default_url_options = {
+    :host => 'citrulu.com'
+  }
 end
