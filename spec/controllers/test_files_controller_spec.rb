@@ -121,24 +121,27 @@ describe TestFilesController do
       it "if the code is nil"
     end
   end
-  
-  describe "DELETE destroy" do
-    before (:each) do
-      TestFilesController.skip_before_filter :check_ownership!
-    end
-    
-    it "destroys the requested test_file" do 
-      test_file = FactoryGirl.create(:test_file)
-      expect {
-        delete :destroy, {:id => test_file.to_param}
-      }.to change(TestFile, :count).by(-1)
-    end
-  
-    it "redirects to the test_files list" do
-      test_file = FactoryGirl.create(:test_file)
-      delete :destroy, {:id => test_file.to_param}
-      response.should redirect_to(test_files_url)
-    end
-  end
+
+#
+#  Commented out, along with the delete method, until we actually need it
+#
+#  describe "DELETE destroy" do
+#    before (:each) do
+#      TestFilesController.skip_before_filter :check_ownership!
+#    end
+#    
+#    it "destroys the requested test_file" do 
+#      test_file = FactoryGirl.create(:test_file)
+#      expect {
+#        delete :destroy, {:id => test_file.to_param}
+#      }.to change(TestFile, :count).by(-1)
+#    end
+#  
+#    it "redirects to the test_files list" do
+#      test_file = FactoryGirl.create(:test_file)
+#      delete :destroy, {:id => test_file.to_param}
+#      response.should redirect_to(test_files_url)
+#    end
+#  end
 
 end
