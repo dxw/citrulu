@@ -40,7 +40,8 @@
         .fail
           %div
             %img{:src => "http://placehold.it/60x66"}
-            %p="#{@recent_failed_groups.count} tests are failing!"
+            %p= "#{pluralize(@recent_failed_groups.count, 'test is')} failing!"
+            -# N.B. this pluralization is (nescessarily) achieved with a custom inflector in /config/initializers/inflectins.rb
           %a.btn{:href => test_runs_path} View full results
       - else
         .pass
