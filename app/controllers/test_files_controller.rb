@@ -18,26 +18,26 @@ class TestFilesController < ApplicationController
 
   # GET /test_files/1
   # GET /test_files/1.json
-  def show
-    @test_file = TestFile.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @test_file }
-    end
-  end
+#def show
+#    @test_file = TestFile.find(params[:id])
+#
+#    respond_to do |format|
+#      format.html # show.html.erb
+#      format.json { render json: @test_file }
+#    end
+#  end
 
   # GET /test_files/new
   # GET /test_files/new.json
-  def new
-    @test_file = TestFile.new
-    @test_file.user_id = current_user.id
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @test_file }
-    end
-  end
+#  def new
+#    @test_file = TestFile.new
+#    @test_file.user_id = current_user.id
+#
+#    respond_to do |format|
+#      format.html # new.html.erb
+#      format.json { render json: @test_file }
+#    end
+#  end
 
   # GET /test_files/1/edit
   def edit
@@ -51,21 +51,21 @@ class TestFilesController < ApplicationController
 
   # POST /test_files
   # POST /test_files.json
-  def create
-    @test_file = TestFile.new(params[:test_file])
-    # In case the user tries to be sneaky and create a test file for someone other than themselves:
-    @test_file.user_id = current_user.id
-    
-    respond_to do |format|
-      if @test_file.save
-        format.html { redirect_to @test_file, notice: 'Test file was successfully created.' }
-        format.json { render json: @test_file, status: :created, location: @test_file }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @test_file.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+#  def create
+#    @test_file = TestFile.new(params[:test_file])
+#    # In case the user tries to be sneaky and create a test file for someone other than themselves:
+#    @test_file.user_id = current_user.id
+#    
+#    respond_to do |format|
+#      if @test_file.save
+#        format.html { redirect_to @test_file, notice: 'Test file was successfully created.' }
+#        format.json { render json: @test_file, status: :created, location: @test_file }
+#      else
+#        format.html { render action: "new" }
+#        format.json { render json: @test_file.errors, status: :unprocessable_entity }
+#      end
+#    end
+#  end
 
   # PUT /test_files/1
   # PUT /test_files/1.json
@@ -156,15 +156,15 @@ class TestFilesController < ApplicationController
 
   # DELETE /test_files/1
   # DELETE /test_files/1.json
-  def destroy
-    @test_file = TestFile.find(params[:id])
-    @test_file.destroy
-
-    respond_to do |format|
-      format.html { redirect_to test_files_url }
-      format.json { head :ok }
-    end
-  end
+#  def destroy
+#    @test_file = TestFile.find(params[:id])
+#    @test_file.destroy
+#
+#    respond_to do |format|
+#      format.html { redirect_to test_files_url }
+#      format.json { head :ok }
+#    end
+#  end
   
   protected
   
