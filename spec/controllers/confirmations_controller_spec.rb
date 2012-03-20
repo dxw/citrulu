@@ -1,13 +1,20 @@
 require 'spec_helper'
 
 describe ConfirmationsController do
+  before(:each) do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+  end
+  
   describe "show" do
-    login_user
-
+    
     it "Sends a welcome email to logged in users" do
-      pending "This doesn't work and I don't know why"
-      User.should_receive(:send_welcome_email).and_return(true)
-      get :show
+      @user = Factory.create(:user)
+      @user.confirm!  
+      User.stub(:confirm_by_token).and_return(@user)
+
+      @user.should_receive(:send_welcome_email)
+      
+      get :show, :confirmation_token => "foo"   
     end
   end
 
