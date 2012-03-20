@@ -122,6 +122,30 @@ describe TestFilesController do
     end
   end
 
+  describe "check_ownership!" do
+    before(:each) do
+      TestFilesController.send(:public, *TestFilesController.protected_instance_methods)  
+    end
+
+    it "should return nil if the ID is not numeric" do
+      controller.params[:id] = 'foo'
+      controller.check_ownership!.should be_nil
+    end
+
+    it "should redirect to the index if the test run is not owned by the current user" do
+      pending
+
+      # Create another user with their own test run
+      user = FactoryGirl.create(:user)
+      test_file = FactoryGirl.create(:test_file, :user => user)
+
+      # Try to get the controller to retrieve this user's test file
+      controller.params[:id] = test_file.id
+
+      controller.check_ownership!.should route_to(:controller => "test_files", :action => "index")
+    end
+  end
+
 #
 #  Commented out, along with the delete method, until we actually need it
 #

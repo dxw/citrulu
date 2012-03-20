@@ -29,6 +29,32 @@ describe TestRunner do
       TestRunner.run_all_tests
     end
 
+
+#    describe "execute_tests" do
+#      before(:each) do
+#        Mechanize::HTTP::Agent.any_instance.stub(:fetch).and_return(Mechanize::Page.new)
+#      end
+#
+#      def gimme_tests(code)
+#        begin
+#          CitruluParser.new.compile_tests(code)
+#        rescue Exception => e
+#          puts "Couldn't compile your test code"
+#        end
+#      end
+#
+#      it "should create a new mechanize agent for each group" do
+#        Mechanize.should_receive(:new).twice
+#        TestRunner.execute_tests(gimme_tests("On http://example.com\n  I should see foobar\n\nOn http://example.com\n  I should see foobar\n"))
+#      end
+#
+#      it "should fetch the 'first' URL" do
+#        Mechanize.any_instance.should_receive(:get).with('http://example.com/first')
+#        TestRunner.execute_tests(gimme_tests("On http://example.com\n  First, fetch http://example.com/first\n  I should see foobar\n"))
+#      end
+#    end
+
+
     describe "execute_test_groups" do
       before(:each) do
         @user = FactoryGirl.create(:user)
