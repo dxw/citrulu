@@ -33,11 +33,7 @@ class TestRunsController < ApplicationController
   
   # If the user tries to access a test run that they don't own or doesn't exist, return them to the index page
   def check_ownership!
-    # If :id is numeric, assume it's an ID, otherwise let the page return a 404
-    return if params[:id].to_i == 0
-    begin  
-      raise ActiveRecord::RecordNotFound unless TestRun.find(params[:id]).test_file.user_id == current_user.id
-    rescue ActiveRecord::RecordNotFound
+    check_ownership(params[:id], TestRun) do
       flash[:error] = "You tried to access a test run which doesn't exist!"
       redirect_to test_runs_path
     end

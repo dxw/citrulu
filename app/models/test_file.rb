@@ -11,6 +11,10 @@ class TestFile < ActiveRecord::Base
     TestRun.where(:test_file_id => id).first
   end
 
+  def owner
+    user
+  end
+
   # All the files which have compiled successfully at some point
   def self.compiled_files
     #todo - put this select into sql

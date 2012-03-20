@@ -127,11 +127,6 @@ describe TestFilesController do
       TestFilesController.send(:public, *TestFilesController.protected_instance_methods)  
     end
 
-    it "should return nil if the ID is not numeric" do
-      controller.params[:id] = 'foo'
-      controller.check_ownership!.should be_nil
-    end
-
     it "should redirect to the index if the test run is not owned by the current user" do
       pending
 

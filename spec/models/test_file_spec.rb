@@ -21,6 +21,15 @@ describe TestFile do
     ]
   end
 
+  describe "owner" do
+    it "should return the user that owns the file" do
+      user = FactoryGirl.create(:user)
+      test_file = FactoryGirl.create(:test_file, :user => user)
+
+      test_file.owner.should == user
+    end
+  end
+
   describe "last_run" do
     it "should return the most recent test run for the file" do
       @test_files[0].last_run.should== @test_runs[0][0]

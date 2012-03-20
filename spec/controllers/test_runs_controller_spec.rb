@@ -59,11 +59,6 @@ describe TestRunsController do
       TestRunsController.send(:public, *TestRunsController.protected_instance_methods)  
     end
 
-    it "should return nil if the ID is not numeric" do
-      controller.params[:id] = 'foo'
-      controller.check_ownership!.should be_nil
-    end
-
     it "should raise an exception if the test run is not owned by the current user" do
     
       # This borks and I don't undestand why
