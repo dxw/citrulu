@@ -214,123 +214,124 @@ describe TestRunner do
   end
   
   describe "get_test_results" do
+    
+    shared_examples_for "an assertion" do
+      it "returns the correct result" do
+        TestRunner.should_receive(page_check).twice.and_return(matches)
+      
+        tests = [{:assertion => assertion}]
+        TestRunner.get_test_results(nil, tests).length.should == 1
+        TestRunner.get_test_results(nil, tests)[0][:result].should == expected_result
+      end
+    end
+      
     before(:each) do
       TestRunner.stub(:get_test_values).and_return(["foo"])
     end
     
-    context "(text in page:)" do
-      def mock_match_text_in_page(truth)
-        TestRunner.should_receive(:text_is_in_page?).twice.and_return(truth)
-      end
-    
-      it "should handle i_see correctly when there is a match" do
-        mock_match_text_in_page(true)
+    it "inherits values from the parser output"
+        
+    context "when checking for text in the page" do 
+      let(:page_check) { :text_is_in_page? }
       
-        tests = [{:assertion => :i_see}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result].should == true
-      end
-    
-      it "should handle i_see correctly when there is no match" do
-        mock_match_text_in_page(false)
+      context "using i_see" do
+        let(:assertion) { :i_see }
+        
+        it_behaves_like "an assertion" do
+          let(:matches) { true }     
+          let(:expected_result) { true }
+        end
       
-        tests = [{:assertion => :i_see}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result].should == false
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:expected_result) { false }
+        end
       end
-    
-      it "should handle i_not_see correctly when there is a match" do
-        mock_match_text_in_page(true)
       
-        tests = [{:assertion => :i_not_see}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result].should == false
-      end
-    
-      it "should handle i_not_see correctly when there is no match" do
-        mock_match_text_in_page(false)
+      context "using i_not_see" do
+        let(:assertion) { :i_not_see }
+        
+        it_behaves_like "an assertion" do
+          let(:matches) { true }
+          let(:expected_result) { false }
+        end
       
-        tests = [{:assertion => :i_not_see}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result].should == true
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:expected_result) { true }
+        end
       end
     end
     
-    context "(source in page:)" do
-      def mock_match_source_in_page(truth)
-        TestRunner.should_receive(:source_is_in_page?).twice.and_return(truth)
-      end
-    
-      it "should handle source_contain correctly when there is a match" do
-        mock_match_source_in_page(true)
+    context "when checking for source in the page" do
+      let(:page_check) { :source_is_in_page? }
       
-        tests = [{:assertion => :source_contain}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == true
-      end
-    
-      it "should handle source_contain correctly when there is no match" do
-        mock_match_source_in_page(false)
+      context "using source_contain" do
+        let(:assertion) { :source_contain }
       
-        tests = [{:assertion => :source_contain}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == false
+        it_behaves_like "an assertion" do
+          let(:matches) { true }
+          let(:expected_result) { true }
+        end
+
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:expected_result) { false }
+        end
       end
       
-      it "should handle source_not_contain correctly when there is a match" do
-        mock_match_source_in_page(true)
-      
-        tests = [{:assertion => :source_not_contain}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == false
-      end
-    
-      it "should handle source_not_contain correctly when there is no match" do
-        mock_match_source_in_page(false)
-      
-        tests = [{:assertion => :source_not_contain}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == true
+      context "using source_not-contain" do
+        let(:assertion) { :source_not_contain }
+        
+        it_behaves_like "an assertion" do
+          let(:matches) { true }
+          let(:expected_result) { false }
+        end
+        
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:expected_result) { true }
+        end
       end
     end
     
-    context "(headers in page:)" do
-      def mock_match_headers_in_page(truth)
-        TestRunner.should_receive(:header_is_in_page?).twice.and_return(truth)
+    context "when checking for headers in the page" do
+      let(:page_check) { :header_is_in_page? }
+      
+      context "using headers_include" do
+        let(:assertion) { :headers_include }
+        it_behaves_like "an assertion" do
+          let(:matches) { true }
+
+          let(:expected_result) { true }
+        end
+
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:assertion) { :headers_include }
+          let(:expected_result) { false }
+        end
       end
+      
+      context "using headers_not_include" do
+        let(:assertion) { :headers_not_include }
+        
+        it_behaves_like "an assertion" do
+          let(:matches) { true }
+          let(:expected_result) { false }
+        end
+
+        it_behaves_like "an assertion" do
+          let(:matches) { false }
+          let(:expected_result) { true }
+        end
+      end
+    end 
     
-      it "should handle headers_include correctly when there is a match" do
-        mock_match_headers_in_page(true)
-      
-        tests = [{:assertion => :headers_include}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == true
-      end
-    
-      it "should handle headers_include correctly when there is no match" do
-        mock_match_headers_in_page(false)
-      
-        tests = [{:assertion => :headers_include}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == false
-      end
-      
-      it "should handle headers_include correctly when there is a match" do
-        mock_match_headers_in_page(true)
-      
-        tests = [{:assertion => :headers_not_include}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == false
-      end
-    
-      it "should handle headers_include correctly when there is no match" do
-        mock_match_headers_in_page(false)
-      
-        tests = [{:assertion => :headers_not_include}]
-        TestRunner.get_test_results(nil, tests).length.should == 1
-        TestRunner.get_test_results(nil, tests)[0][:result]. should == true
-      end
-    end  
+    it "should throw an error if an assertion is not recognised" do
+      tests = [{:assertion => "foo"}]
+      expect {TestRunner.get_test_results(nil, tests)}.to raise_error
+    end 
   end
   
   
