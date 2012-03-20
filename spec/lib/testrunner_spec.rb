@@ -37,29 +37,38 @@ describe TestRunner do
 
         # Don't actually send any email
         Mail::Message.any_instance.stub(:deliver)
-
-        TestRunner.should_receive(:execute_tests).and_return([{
-          :test_date => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
-          :tests => [
-            {:assertion => :i_see, :value => 'foo', :name => nil, :passed => true}
-          ]
-        }])
       end
 
-      it "should create and save a new test group" do
-        a_test_group = TestGroup.new
-        a_test_group.should_receive('save!')
-        TestGroup.should_receive(:new).and_return(a_test_group)
-
-        TestRunner.execute_test_groups(@test_file, @test_run.id)
+      it "should throw TestRunner::TestCompileError if it receives CitruluParser::TestCompileError" do
+        CitruluParser.any_instance.should_receive(:compile_tests).and_raise(CitruluParser::TestCompileError)
+        expect {TestRunner.execute_test_groups(FactoryGirl.create(:test_file, :compiled_test_file_text => 'fladgebagger'), @test_run.id)}.to raise_error(TestRunner::TestCompileError)
       end
 
-      it "should create and save a new test result" do
-        a_test_result = TestResult.new
-        a_test_result.should_receive('save!')
-        TestResult.should_receive(:new).and_return(a_test_result)
+      describe "create and save results" do
+        before(:each) do
+          TestRunner.should_receive(:execute_tests).and_return([{
+            :test_date => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
+            :tests => [
+              {:assertion => :i_see, :value => 'foo', :name => nil, :passed => true}
+            ]
+          }])
+        end
 
-        TestRunner.execute_test_groups(@test_file, @test_run.id)
+        it "should create and save a new test group" do
+          a_test_group = TestGroup.new
+          a_test_group.should_receive('save!')
+          TestGroup.should_receive(:new).and_return(a_test_group)
+
+          TestRunner.execute_test_groups(@test_file, @test_run.id)
+        end
+
+        it "should create and save a new test result" do
+          a_test_result = TestResult.new
+          a_test_result.should_receive('save!')
+          TestResult.should_receive(:new).and_return(a_test_result)
+
+          TestRunner.execute_test_groups(@test_file, @test_run.id)
+        end
       end
     end
 
