@@ -16,7 +16,7 @@ class TestRunner
       test_run.test_file_id = file.id
       test_run.save!
       
-      execute_test_groups(file, test_run.id)
+      execute_test_groups(file, test_run)
       
       if file.user.email_preference == 1
         #TODO: will this always work?
@@ -35,38 +35,128 @@ class TestRunner
   end
   
   # Factored out to make testing possible
-  def self.execute_test_groups(file, test_run_id)
+  def self.execute_test_groups(file, test_run)
     begin
       compiled_tests = CitruluParser.new.compile_tests(file.compiled_test_file_text)
     rescue CitruluParser::TestCompileError => e
       raise TestCompileError.new("Compile error on trying to execute test_groups in test file with id #{file.id}: #{e}")
     else
-      groups = execute_tests(compiled_tests)
+      # run the tests...
+      test_run_params = execute_tests(compiled_tests)
 
-      groups.each do |group|
-        test_group = TestGroup.new
-        test_group.test_run_id = test_run_id
-        test_group.time_run = group[:test_date]
-        test_group.response_time = group[:response_time]
-        test_group.message = group[:message]
-        test_group.test_url = group[:test_url]
-        test_group.save!
-
-        group[:tests].each do |test|
-          test_result = TestResult.new
-          test_result.test_group_id = test_group.id
-          test_result.assertion = test[:assertion]
-          test_result.value = test[:value]
-          test_result.name = test[:name]
-          test_result.result = test[:passed]
-          test_result.save!
-        end
+      # create the objects in the database
+      test_run_params.each do |test_group_params|
+        test_group_params.merge! :test_run => test_run
+        test_group = TestGroup.create(test_group_params)
       end
     end
   end  
   
-  
 
+  def self.execute_tests(test_groups)    
+    test_groups.collect do |group|
+      group_params = {}
+      group_params[:test_url] = group[:test_url]
+      
+      agent = Mechanize.new
+
+      agent.get(group[:first]) unless group[:first].blank?
+
+      group_params[:time_run] = Time.now
+
+      begin
+        page = agent.get(group[:test_url])
+
+        group_params[:response_time] = (Time.now - group_params[:time_run])*1000
+        group_params[:response_code] = page.code
+      rescue Exception => e
+        group_params[:message] = e.to_s
+        next
+      end
+      
+      agent.get(group[:finally]) unless group[:finally].blank?
+      
+      group_params[:test_results_attributes] = get_test_results(page, group[:tests])
+
+      group_params
+    end
+  end
+  
+  
+  def self.get_test_results(page, tests)
+    tests.collect do |test|
+      test_result_params = {}
+      test_result_params[:assertion] = test[:assertion]
+      test_result_params[:value] = test[:value]
+      test_result_params[:name] = test[:name]
+
+      testvalues = get_test_values(test)
+
+      case test[:assertion]
+      when :i_see
+        test_result_params[:result] = do_test(testvalues) do |value|
+          text_is_in_page?(page, value)
+        end
+
+      when :i_not_see
+        test_result_params[:result] = do_test(testvalues) do |value|
+          !text_is_in_page?(page, value)
+        end
+
+      when :source_contain
+        test_result_params[:result] = do_test(testvalues) do |value|
+          source_is_in_page?(page, value)
+        end
+
+      when :source_not_contain
+        test_result_params[:result] = do_test(testvalues) do |value|
+          !source_is_in_page?(page, value)
+        end
+
+      when :headers_include
+        test_result_params[:result] = do_test(testvalues) do |value|
+          header_is_in_page?(page, value)
+        end
+
+      when :headers_not_include
+        test_result_params[:result] = do_test(testvalues) do |value|
+          !header_is_in_page?(page, value)
+        end
+
+      else
+        raise ArgumentError.new "Internal error: no such test' #{test_result_params[:assertion]}"
+      end
+      
+      test_result_params
+    end
+  end
+  
+  def self.text_is_in_page?(page, text)
+    page.root.inner_text.match(text) != nil 
+  end
+  
+  def self.source_is_in_page?(page, source_fragment)
+    page.content.match(source_fragment) != nil
+  end
+  
+  def self.header_is_in_page?(page, header)
+    page.header.include?(value)
+  end
+  
+  private 
+  
+  def self.get_test_values(test)
+    if test[:value].blank?
+      if test[:name].blank?
+        raise ArgumentError.new "Internal error: test for '#{test[:assertion]}' with no name or value."
+      else
+        return Predefs.find(test[:name])
+      end
+    else
+      return [test[:value]]
+    end
+  end
+  
   def self.do_test(testvalues, &block)
     passed = false
 
@@ -77,83 +167,5 @@ class TestRunner
     end
 
     passed
-  end
-
-  def self.execute_tests(tests)
-    tests.each do |group|
-      agent = Mechanize.new
-
-      if !group[:first].blank?
-        agent.get(group[:first])
-      end
-
-      group[:test_date] = Time.now
-
-      begin
-        page = agent.get(group[:test_url])
-
-        group[:response_time] = (Time.now - group[:test_date])*1000
-        group[:response_code] = page.code
-      rescue Exception => e
-
-        group[:result] = :fail
-        group[:message] = e.to_s
-
-        next
-      end
-      
-      if !group[:finally].blank?
-        agent.get(group[:finally])
-      end
-
-      group[:tests].each do |test|
- 
-      testvalues = []
-
-      if test[:value].blank? && !test[:name].blank?
-        testvalues += Predefs.find(test[:name])
-      else
-        testvalues << test[:value]
-      end
-
-      case test[:assertion]
-      when :i_see
-        test[:passed] = do_test(testvalues) do |value|
-          page.root.inner_text.match(value) != nil
-        end
-
-      when :i_not_see
-        test[:passed] = do_test(testvalues) do |value|
-          page.root.inner_text.match(value) == nil
-        end
-
-      when :source_contain
-        test[:passed] = do_test(testvalues) do |value|
-          page.content.match(value) != nil
-        end
-
-      when :source_not_contain
-        test[:passed] = do_test(testvalues) do |value|
-          page.content.match(value) == nil
-        end
-
-      when :headers_include
-        test[:passed] = do_test(testvalues) do |value|
-          page.header.include?(value)
-        end
-
-      when :headers_not_include
-        test[:passed] = do_test(testvalues) do |value|
-          !page.header.include?(value)
-        end
-
-      else
-        test[:message] = "Internal error: no such test' #{test[:assertion]}"
-      end
-    end
-
-    tests
-  end
-
   end
 end
