@@ -100,6 +100,63 @@ body.test_files {
 			
 		}
 	}	
+
+  #liveedit {
+    div.group {
+      border: 1px solid #000;
+      padding: 3px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+
+      div.on {
+        font-size: 13px;
+        font-weight: bold;
+        border: solid black;
+        border-width: 0 0 1px 0;
+
+        &.working {
+          background: transparent url("loader.gif") no-repeat right;
+        }
+      }
+
+      div.pending {
+        background-color: #EEF27E;
+      }
+
+      div.fail, div.pass, div.pending, div.error {
+        padding: 3px 5px 3px 15px;
+        margin: 5px 0;
+
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+
+        &.current {
+          border-color: #666;
+          -webkit-border-radius: 2px;
+          -moz-border-radius: 2px;
+          border-radius: 2px;
+        }
+
+        span.assertion {
+          color: #555;
+        }
+        span.value {
+          color: #111;
+        }
+
+      }
+
+      div.error {
+        padding-left: 5px;
+
+        h3 {
+          font-size: 16px;
+        }
+      }
+    }
+  }
 }
 
 body.test_files.index {

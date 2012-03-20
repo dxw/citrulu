@@ -15,8 +15,21 @@
       %h3 Console
     
       %div.output=console_line({:welcome => @console_output})
-      
   #help.span4
+    #liveedit
+      %h2 Current test
+      %div.group
+        %div.on On http://citrulu.com
+        %div.pass 
+          %span.assertion I should see
+          %span.value Foobar
+        %div.fail
+          %span.assertion Page should contain
+          %span.value="<strong>Foobar"
+        %div.pending
+          %span.assertion I should see
+          %span.value things
+
     %header.section_title
       %h2 Help
     =accordion("help_sections",:h3) do

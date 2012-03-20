@@ -1,3 +1,5 @@
+require 'testrunner.rb'
+
 class TestFilesController < ApplicationController
   layout "logged_in"
   
@@ -66,6 +68,19 @@ class TestFilesController < ApplicationController
 #      end
 #    end
 #  end
+
+  def update_liveview
+    begin
+      @test_url = params[:group].split("\n").first
+      @current_line = params[:current_line]
+
+      group = CitruluParser.new.compile_tests(params[:group])
+
+      @results = TestRunner.execute_tests(group)[0]
+    rescue Exception => e
+      @error = e.to_s
+    end
+  end
 
   # PUT /test_files/1
   # PUT /test_files/1.json
