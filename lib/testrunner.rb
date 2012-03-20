@@ -4,6 +4,9 @@ require 'mechanize'
 
 class TestRunner
 
+  class TestCompileError < Exception
+  end
+
   def self.run_all_tests
     return "Nothing to run" if TestFile.compiled_files.empty?
     
@@ -36,7 +39,7 @@ class TestRunner
     begin
       compiled_tests = CitruluParser.new.compile_tests(file.compiled_test_file_text)
     rescue CitruluParser::TestCompileError => e
-      raise "Compile error on trying to execute test_groups in test file with id #{file.id}: #{e}"
+      raise TestCompileError.new("Compile error on trying to execute test_groups in test file with id #{file.id}: #{e}")
     else
       groups = execute_tests(compiled_tests)
 
