@@ -36,4 +36,8 @@ class TestRun < ActiveRecord::Base
     end
     return count
   end
+
+  def owner
+    test_file.user
+  end
 end

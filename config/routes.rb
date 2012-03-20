@@ -10,7 +10,9 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   resources :test_files, :only => [:index, :update, :edit]
   resources :test_runs, :only => [:index, :show]
-   
+  
+  match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
+
   # Assume everything else is a page on the website:
   match ':action' => 'website', :as => "page"
   

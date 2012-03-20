@@ -475,6 +475,7 @@ module TesterGrammar
     def process
       hash = {
         :assertion => assertion.text_value.to_test_sym,
+        :original_line => text_value
       }
 
       if elements[4].text_value.match(/^:/)

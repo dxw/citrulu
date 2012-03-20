@@ -14,6 +14,16 @@ describe TestRun do
     end
   end
 
+  describe "owner" do
+    it "should return the user that owns the test run" do
+      user = FactoryGirl.create(:user)
+      test_file = FactoryGirl.create(:test_file, :user => user)
+      test_run = FactoryGirl.create(:test_run, :test_file => test_file)
+
+      test_run.owner.should == user
+    end
+  end
+
   describe "number_of_checks" do
     it "should return the total number of checks in all its groups" do
       @test_run.number_of_checks.should== 3

@@ -6,4 +6,15 @@ class ApplicationController < ActionController::Base
   #    stored_location_for(resource) || "/test_file_editor"
   #  end
 
+  helper_method :check_ownership
+
+  def check_ownership(id, model)
+    # If :id is numeric, assume it's an ID, otherwise let the page return a 404
+    return nil if id == 0
+    begin  
+      raise ActiveRecord::RecordNotFound unless model.find(id).owner == current_user
+    rescue ActiveRecord::RecordNotFound
+      yield
+    end
+  end
 end

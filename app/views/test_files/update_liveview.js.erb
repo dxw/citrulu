@@ -1,0 +1,18 @@
+$('#liveedit div.group').empty();
+$('#liveedit div.on').removeClass('working');
+
+$('#liveedit div.group').append("<div class='on'><%= @test_url %></div>");
+
+<% if !@error.blank? %>
+  $('#liveedit div.group').append("<div class='fail error'><h3>Compilation Error</h3><p><%=@error.strip%></p></div>");
+<% elsif !@results[:message].blank? %>
+  $('#liveedit div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=@results[:message]%></p></div>");
+<% else %>
+
+
+  <% @results[:tests].each_with_index do |test, index| %>
+    // <%= "#{index} #{@current_line}" %>
+    $('#liveedit div.group').append("<div class='<%= (test[:passed] ? 'pass' : 'fail')%><%= index.to_i == @current_line.to_i-1 ? ' current' : '' %>'><%= test[:original_line].strip %></div>");
+
+  <% end %>
+<% end %>
