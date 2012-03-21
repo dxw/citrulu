@@ -31,7 +31,13 @@
               .span4
                 %span.last_updated="Last updated at #{file.updated_at}"
               .span3
-                %span.stats <strong>X</strong> checks on <strong>X</strong> pages
+                %span.stats 
+                  %strong
+                    =file.number_of_tests
+                  tests on 
+                  %strong
+                    =file.number_of_pages
+                  pages
 
       
   #sidebar.span4
