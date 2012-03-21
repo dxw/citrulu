@@ -114,9 +114,11 @@ window.check_liveview = ->
 
     # Has the current group been changed?
     if make_hash(current_group.group) != make_hash(window.lastGroup.group)
-
-#      console.info "I'm updating now"
-      update_liveview()
+      
+      # Is the group big enough to be a valid group?
+      if current_group.group.split("\n").length > 1
+#        console.info "I'm updating now"
+        update_liveview()
 
   window.keyPressHasHappened = false
 
