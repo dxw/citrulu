@@ -1,14 +1,14 @@
-$('#liveedit div.group').empty();
-$('#liveedit div.on').removeClass('working');
+$('#liveview div.group').empty();
+$('#liveview div.on').removeClass('working');
 
-$('#liveedit div.group').append("<div class='on'><%= @test_url %></div>");
+$('#liveview div.group').append("<div class='on'><%= @test_url %></div>");
 
 <% if !@error.blank? %>
-  $('#liveedit div.group').append("<div class='fail error'><h3>Compilation Error</h3><p><%=@error.strip%></p></div>");
+  $('#liveview div.group').append("<div class='fail error'><h3>Compilation Error</h3><p><%=@error.strip%></p></div>");
 <% elsif !@results[:message].blank? %>
-  $('#liveedit div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=@results[:message]%></p></div>");
+  $('#liveview div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=@results[:message]%></p></div>");
 <% else %>
   <% @results[:test_results_attributes].each_with_index do |test, index| %>
-    $('#liveedit div.group').append("<div class='<%= (test[:results] ? 'pass' : 'fail')%><%= index.to_i == @current_line.to_i-1 ? ' current' : '' %>'><%= test[:original_line].strip %></div>");
+    $('#liveview div.group').append("<div class='<%= (test[:result] ? 'pass' : 'fail')%><%= index.to_i == @current_line.to_i-1 ? ' current' : '' %>'><%= test[:original_line].strip %></div>");
   <% end %>
 <% end %>
