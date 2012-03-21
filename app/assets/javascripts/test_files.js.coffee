@@ -61,6 +61,9 @@ get_current_group = ->
   end = line
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
+
+  return {group: '', current_line: 0} if !content.match(/^\s*On/)
+  
  
   {group: content, current_line: cur_line - start }
   
