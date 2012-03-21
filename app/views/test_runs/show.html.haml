@@ -10,7 +10,7 @@
     .row
       - group_batch.each do |group|
         .span4
-          %div{:class => group.number_of_failures != 0 ? "fail" : "pass"}
+          %div{:class => group.has_failures? ? "fail" : "pass"}
             %h3=group.test_url
             %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
             - if !group.message.blank?

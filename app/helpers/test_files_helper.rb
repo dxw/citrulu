@@ -8,6 +8,7 @@ module TestFilesHelper
 
     content_hash.each do |item, content|
       if !item.match(/^text/)
+        item = item.to_s.gsub(/\d+$/, '')
         line_items << content_tag(:span, content, :class => item) 
       else
         line_items << content

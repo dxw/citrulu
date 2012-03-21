@@ -71,7 +71,6 @@ get_current_group = ->
 # Requests an Ajax update of the live view area
 #
 update_liveview = -> 
-  window.lastCursorPosition = window.editor.getCursor().line
   window.lastGroup = get_current_group()
 
   $("#liveview div.on").addClass("working");
@@ -129,10 +128,11 @@ window.check_liveview = ->
 #      console.info group
 
       if group.length > 1
-        console.info "I'm updating now"
+#        console.info "I'm updating now"
         update_liveview()
 
   window.keyPressHasHappened = false
+  window.lastCursorPosition = window.editor.getCursor().line
 
 ##
 # Embeds the editor and adds event handlers

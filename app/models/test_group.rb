@@ -8,6 +8,8 @@ class TestGroup < ActiveRecord::Base
   end
   
   def has_failures?
-    number_of_failures != 0
+    # If there are failed tests, return the number of fails
+    # If there are no fails but the group has a message, they all failed. But we don't know that number
+    return number_of_failures > 0 || !message.blank?
   end
 end
