@@ -142,7 +142,7 @@ class TestRunner
   end
   
   def self.header_is_in_page?(page, header)
-    page.header.include?(value)
+    page.header.include?(header)
   end
   
   private 
