@@ -6,7 +6,14 @@ describe CitruluParser do
       expect { CitruluParser.new.compile_tests(nil) }.to raise_error(ArgumentError)
     end
     
-    COMPILER_OUTPUT = [{:test_url=>"http://www.google.com", :tests=>[{:assertion=>:i_see, :value=>"'are you feeling lucky?'"},{:assertion=>:i_not_see, :value=>"'are you feeling Stupid?'"}]}]
+    COMPILER_OUTPUT = [
+      {:test_url=>"http://www.google.com", 
+        :tests=>[
+          {:assertion=>:i_see, :original_line =>  "  I should see 'are you feeling lucky?'\n", :value=>"'are you feeling lucky?'"},
+          {:assertion=>:i_not_see, :original_line => "  I should not see 'are you feeling Stupid?'\n", :value=>"'are you feeling Stupid?'"}
+        ]
+      }
+    ]
 
     it "should handle input with an initial comment" do
       code = "#this is some code beginning with a comment\nOn http://www.google.com\n  I should see 'are you feeling lucky?'\n  I should not see 'are you feeling Stupid?'"
