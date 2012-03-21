@@ -128,7 +128,7 @@ window.check_liveview = ->
 #      console.info group
 
       if group.length > 1
-        console.info "I'm updating now"
+#        console.info "I'm updating now"
         update_liveview()
 
   window.keyPressHasHappened = false
