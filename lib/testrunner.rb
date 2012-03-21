@@ -53,32 +53,34 @@ class TestRunner
   end  
   
 
-  def self.execute_tests(test_groups)    
+  def self.execute_tests(test_groups)
     test_groups.collect do |group|
       group_params = {}
       group_params[:test_url] = group[:test_url]
+      group_params[:original_line] = group[:original_line]
       
       agent = Mechanize.new
 
       agent.get(group[:first]) unless group[:first].blank?
 
       group_params[:time_run] = Time.now
-
+      
       begin
         page = agent.get(group[:test_url])
-
-        group_params[:response_time] = (Time.now - group_params[:time_run])*1000
-        group_params[:response_code] = page.code
       rescue Exception => e
         group_params[:message] = e.to_s
-        next
+        # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
+        # ends up returning e.to_s instead...
+        group_params
+      else
+        group_params[:response_time] = (Time.now - group_params[:time_run])*1000
+        group_params[:response_code] = page.code
+    
+        agent.get(group[:finally]) unless group[:finally].blank?
+    
+        group_params[:test_results_attributes] = get_test_results(page, group[:tests])
+        group_params
       end
-      
-      agent.get(group[:finally]) unless group[:finally].blank?
-      
-      group_params[:test_results_attributes] = get_test_results(page, group[:tests])
-
-      group_params
     end
   end
   

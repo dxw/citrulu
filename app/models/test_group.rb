@@ -2,7 +2,8 @@ class TestGroup < ActiveRecord::Base
   belongs_to :test_run
   has_many :test_results
   accepts_nested_attributes_for :test_results
-
+  attr_accessor :original_line
+  
   def number_of_failures
     test_results.select{|t| t.failed?}.count
   end

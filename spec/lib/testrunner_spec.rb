@@ -139,6 +139,40 @@ describe TestRunner do
   end
   
   describe "execute_tests" do
+    before(:each) do
+      # @test_groups = [
+      #         {:test_url => "http://foo.com"}
+      #       ]
+      
+      TestRunner.stub(:get_test_results)
+      
+    end
+    
+    it "should inherit values from the compiled object" do
+      
+      url = "http://foo.com"
+      line = "this is an original line"
+      test_groups = [
+        {
+          :test_url => url,
+          :original_line => line
+        }
+      ]
+      
+      test_group_params = TestRunner.execute_tests(test_groups)
+      test_group_params[0][:test_url].should == url
+      test_group_params[0][:original_line].should == line
+    end
+    
+    
+    it "should set a message on the group when the Mechanize object page could not be retrived" do
+      test_groups = [
+        {:test_url => "foo"}
+      ]
+      
+      test_group_params = TestRunner.execute_tests(test_groups)
+      test_group_params[0][:message].should_not be_blank
+    end
     
     
   #      before(:each) do
@@ -335,7 +369,7 @@ describe TestRunner do
   end
   
   
-  describe "text_is_in_page?" do
+  describe "text_is_in_page?" do    
     it "should return true when the text is in the page" do
       pending("Testing this requires stubbing out Mechanize...")
     end
