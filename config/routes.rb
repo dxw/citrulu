@@ -1,6 +1,6 @@
 SimpleFrontEndTesting::Application.routes.draw do
 
-  devise_for :users, :controllers => { :registrations => "registrations", :confirmations => "confirmations" }
+  devise_for :users, :controllers => { :registrations => "registrations", :confirmations => "confirmations", :sessions => "sessions" }
   
   devise_scope :user do
     match 'sign_up' => "registrations#new"
