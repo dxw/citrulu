@@ -9,7 +9,7 @@ grammar TesterGrammar
   end
 
   rule test_group
-    comment* on_clause comment* first_clause? comment* finally_clause? comment* test+ comment* {
+    comment* on_clause comment* first_clause? comment* finally_clause? comment* test_line+ comment* {
       def process
         results = {
           :test_url => on_clause.url.text_value.strip,
@@ -36,29 +36,37 @@ grammar TesterGrammar
     space "Finally, fetch " url comment* newline
   end
 
+  rule test_line
+    comment* space test comment* newline {
+      def process
+        test.process
+      end
+    }
+  end
+ 
   rule test
-    comment* space assertion space (escaped_value / name / value) comment* newline {
+    assertion space (escaped_value / name / value) {
       def process
         hash = {
           :assertion => assertion.text_value.to_test_sym,
           :original_line => text_value
         }
 
-        if elements[4].text_value.match(/^:/)
-          if elements[4].text_value.match(/^::/)
-            hash[:value] = elements[4].text_value.gsub(/^::/, ':').strip
+        if elements[2].text_value.match(/^:/)
+          if elements[2].text_value.match(/^::/)
+            hash[:value] = elements[2].text_value.gsub(/^::/, ':').strip
           else
-            hash[:name] = elements[4].text_value.strip
+            hash[:name] = elements[2].text_value.strip
           end
         else
-          hash[:value] = elements[4].text_value.strip
+          hash[:value] = elements[2].text_value.strip
         end
 
         hash
       end
     }
   end
- 
+
   rule assertion
     "Source should contain" / "Source should not contain" / 
     "I should see" / "I should not see" / 

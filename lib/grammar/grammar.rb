@@ -189,7 +189,7 @@ module TesterGrammar
                 if r12
                   s14, i14 = [], index
                   loop do
-                    r15 = _nt_test
+                    r15 = _nt_test_line
                     if r15
                       s14 << r15
                     else
@@ -453,49 +453,30 @@ module TesterGrammar
     r0
   end
 
-  module Test0
-    def space1
+  module TestLine0
+    def space
       elements[1]
     end
 
-    def assertion
+    def test
       elements[2]
     end
 
-    def space2
-      elements[3]
-    end
-
     def newline
-      elements[6]
+      elements[4]
     end
   end
 
-  module Test1
+  module TestLine1
     def process
-      hash = {
-        :assertion => assertion.text_value.to_test_sym,
-        :original_line => text_value
-      }
-
-      if elements[4].text_value.match(/^:/)
-        if elements[4].text_value.match(/^::/)
-          hash[:value] = elements[4].text_value.gsub(/^::/, ':').strip
-        else
-          hash[:name] = elements[4].text_value.strip
-        end
-      else
-        hash[:value] = elements[4].text_value.strip
-      end
-
-      hash
+      test.process
     end
   end
 
-  def _nt_test
+  def _nt_test_line
     start_index = index
-    if node_cache[:test].has_key?(index)
-      cached = node_cache[:test][index]
+    if node_cache[:test_line].has_key?(index)
+      cached = node_cache[:test_line][index]
       if cached
         cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
@@ -519,50 +500,110 @@ module TesterGrammar
       r3 = _nt_space
       s0 << r3
       if r3
-        r4 = _nt_assertion
+        r4 = _nt_test
         s0 << r4
         if r4
-          r5 = _nt_space
+          s5, i5 = [], index
+          loop do
+            r6 = _nt_comment
+            if r6
+              s5 << r6
+            else
+              break
+            end
+          end
+          r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
           s0 << r5
           if r5
-            i6 = index
-            r7 = _nt_escaped_value
-            if r7
-              r6 = r7
-            else
-              r8 = _nt_name
-              if r8
-                r6 = r8
-              else
-                r9 = _nt_value
-                if r9
-                  r6 = r9
-                else
-                  @index = i6
-                  r6 = nil
-                end
-              end
-            end
-            s0 << r6
+            r7 = _nt_newline
+            s0 << r7
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(TestLine0)
+      r0.extend(TestLine1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:test_line][start_index] = r0
+
+    r0
+  end
+
+  module Test0
+    def assertion
+      elements[0]
+    end
+
+    def space
+      elements[1]
+    end
+
+  end
+
+  module Test1
+    def process
+      hash = {
+        :assertion => assertion.text_value.to_test_sym,
+        :original_line => text_value
+      }
+
+      if elements[2].text_value.match(/^:/)
+        if elements[2].text_value.match(/^::/)
+          hash[:value] = elements[2].text_value.gsub(/^::/, ':').strip
+        else
+          hash[:name] = elements[2].text_value.strip
+        end
+      else
+        hash[:value] = elements[2].text_value.strip
+      end
+
+      hash
+    end
+  end
+
+  def _nt_test
+    start_index = index
+    if node_cache[:test].has_key?(index)
+      cached = node_cache[:test][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_assertion
+    s0 << r1
+    if r1
+      r2 = _nt_space
+      s0 << r2
+      if r2
+        i3 = index
+        r4 = _nt_escaped_value
+        if r4
+          r3 = r4
+        else
+          r5 = _nt_name
+          if r5
+            r3 = r5
+          else
+            r6 = _nt_value
             if r6
-              s10, i10 = [], index
-              loop do
-                r11 = _nt_comment
-                if r11
-                  s10 << r11
-                else
-                  break
-                end
-              end
-              r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
-              s0 << r10
-              if r10
-                r12 = _nt_newline
-                s0 << r12
-              end
+              r3 = r6
+            else
+              @index = i3
+              r3 = nil
             end
           end
         end
+        s0 << r3
       end
     end
     if s0.last

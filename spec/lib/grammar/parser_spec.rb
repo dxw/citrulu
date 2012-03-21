@@ -9,8 +9,8 @@ describe CitruluParser do
     COMPILER_OUTPUT = [
       {:test_url=>"http://www.google.com", 
         :tests=>[
-          {:assertion=>:i_see, :original_line =>  "  I should see are you feeling lucky?\n", :value=>"are you feeling lucky?"},
-          {:assertion=>:i_not_see, :original_line => "  I should not see are you feeling Stupid?\n", :value=>"are you feeling Stupid?"}
+          {:assertion=>:i_see, :original_line =>  "I should see are you feeling lucky?", :value=>"are you feeling lucky?"},
+          {:assertion=>:i_not_see, :original_line => "I should not see are you feeling Stupid?", :value=>"are you feeling Stupid?"}
         ]
       }
     ]
