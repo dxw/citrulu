@@ -14,6 +14,7 @@
 
     %div{:style => "padding-bottom: 15px;"}
       - @test_run.test_groups.each do |group|
+        - next if !group.has_failures?
         %p= "On #{group.test_url}"
         %ul
           - group.test_results.each do |result|
