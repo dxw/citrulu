@@ -37,7 +37,7 @@
       %ul.unstyled
         - @test_runs.each do |test_run|
           %li
-            %a{:href => test_run_path(test_run), :class => test_run.number_of_failures == 0 ? 'pass' : 'fail'}
+            %a{:href => test_run_path(test_run), :class => test_run.has_failures? ? 'fail' : 'pass'}
               %p
                 %span.date=test_run.time_run.to_s(:test_run_time)
                 %span.file=test_run.test_file.name

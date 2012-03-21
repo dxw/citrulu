@@ -43,10 +43,12 @@ body.test_runs {
       i {
         margin-left: -19px;
       }
-      p.last-updated {
-        font-style: italic;
-      }
     }
+  }
+
+  p.last-updated {
+    font-style: italic;
+    font-size: 12px;
   }
 
   pre {

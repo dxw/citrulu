@@ -7,7 +7,7 @@ class TestRun < ActiveRecord::Base
   default_scope :order => 'time_run DESC'
   
   def has_failures?
-    number_of_failures != 0
+    test_groups.collect{|g| g.has_failures?}.uniq.include?(true) || number_of_failures != 0
   end
   
   def groups_with_failures
@@ -15,6 +15,10 @@ class TestRun < ActiveRecord::Base
     return [] unless has_failures?
     
     test_groups.select{|g| g.has_failures? }
+  end
+
+  def number_of_failing_groups
+    groups_with_failures.count
   end
   
   def number_of_pages
@@ -30,11 +34,7 @@ class TestRun < ActiveRecord::Base
   end
   
   def number_of_failures  
-    count = 0
-    test_groups.each do | test_group |
-      count += test_group.test_results.select{|result| result.failed?}.length
-    end
-    return count
+    test_groups.collect{|g| g.number_of_failures}.sum
   end
 
   def owner
