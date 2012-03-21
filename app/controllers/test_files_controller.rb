@@ -44,7 +44,6 @@ class TestFilesController < ApplicationController
   # GET /test_files/1/edit
   def edit
     @test_file = TestFile.find(params[:id])
-  puts session.inspect
 
     @predefs = Predefs.all
 
@@ -78,8 +77,28 @@ class TestFilesController < ApplicationController
       group = CitruluParser.new.compile_tests(params[:group])
 
       @results = TestRunner.execute_tests(group)[0]
+    rescue CitruluParser::TestCompileError => e
+      error = CitruluParser.format_error(e)
+
+      @error = {
+        :text1 => "Compilation failed! Expected: ",
+        :expected => error[:expected],
+        :text2 => " at line ",
+        :line => error[:line],
+        :text3 => ", column ",
+        :column => error[:column],
+      }
+
+      if !error[:after].empty?
+        @error[:text4] = " after "
+        @error[:after] = error[:after]
+      end
     rescue Exception => e
       @error = e.to_s
+    end
+
+    respond_to do |format|
+      format.js { }
     end
   end
 

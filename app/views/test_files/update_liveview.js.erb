@@ -4,7 +4,7 @@ $('#liveview div.on').removeClass('working');
 $('#liveview div.group').append("<div class='on'><%= @test_url %></div>");
 
 <% if !@error.blank? %>
-  $('#liveview div.group').append("<div class='fail error'><h3>Compilation Error</h3><p><%=@error.strip%></p></div>");
+  $('#liveview div.group').append('<div class="fail error"><h3>Compilation Error</h3><p><%=j console_line(@error, "neutral", false) %></p></div>');
 <% elsif !@results[:message].blank? %>
   $('#liveview div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=@results[:message]%></p></div>");
 <% else %>

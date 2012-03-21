@@ -103,9 +103,9 @@ window.check_liveview = ->
     current_group = get_current_group()
     update_selected_test(current_group)
 
-    console.info "#{make_hash(window.lastGroup.group)} #{make_hash(current_group.group)}"
+#    console.info "#{make_hash(window.lastGroup.group)} #{make_hash(current_group.group)}"
     if make_hash(current_group.group) != make_hash(window.lastGroup.group)
-      console.info "if#{(new Date).getTime()- window.lastKeyPress} > 150 && #{window.editor.getCursor().line} != #{window.lastCursorPosition}"
+#      console.info "if#{(new Date).getTime()- window.lastKeyPress} > 150 && #{window.editor.getCursor().line} != #{window.lastCursorPosition}"
 #      if window.editor.getCursor().line != window.lastCursorPosition
       console.info "I'm updating now"
       update_liveview()
