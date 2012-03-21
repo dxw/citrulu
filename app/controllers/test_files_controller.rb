@@ -74,6 +74,11 @@ class TestFilesController < ApplicationController
       @test_url = params[:group].split("\n").first
       @current_line = params[:current_line]
 
+      if params[:group].blank?
+        render :text => ""
+        return
+      end
+
       group = CitruluParser.new.compile_tests(params[:group])
 
       @results = TestRunner.execute_tests(group)[0]
