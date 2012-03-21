@@ -61,7 +61,7 @@ get_current_group = ->
 # Requests an Ajax update of the live view area
 #
 update_liveview = -> 
-  $("#liveedit div.on").addClass("working");
+  $("#liveview div.on").addClass("working");
   jQuery.ajax(url: '/test_files/update_liveview', data: get_current_group(), type: 'POST', dataType: 'script')
 
 ###
