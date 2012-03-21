@@ -19,6 +19,7 @@ class CitruluParser < TesterGrammarParser
     results = {
       :hash => Digest::SHA1.hexdigest(matches[3]),
       :expected => matches[3],
+      :expected_arr => matches[3].split(",").collect{|e| e.strip},
       :line => matches[5],
       :column => matches[6],
       :after => matches[8],

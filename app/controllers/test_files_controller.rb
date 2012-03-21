@@ -85,15 +85,26 @@ class TestFilesController < ApplicationController
     rescue CitruluParser::TestCompileError => e
       error = CitruluParser.format_error(e)
 
-      @error = {
-        :text1 => "Compilation failed! Expected: ",
-        :expected => error[:expected],
+      
+      @error = {}
+
+      if error[:expected_arr].size == 1
+        @error[:text0] = "Expected: " 
+      else
+        @error[:text0] = "Expected one of: " 
+      end
+      
+      error[:expected_arr].each_with_index do |e, i|
+        @error["expected#{i}".to_sym] = e
+      end
+
+      @error.merge({
         :text2 => " at line ",
         :line => error[:line],
         :text3 => ", column ",
         :column => error[:column],
         :text4 => " of the current group",
-      }
+      })
 
       if !error[:after].empty?
         @error[:text4] = " after "
