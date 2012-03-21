@@ -96,16 +96,13 @@ class TestFilesController < ApplicationController
         # If there's no code to complile, don't even try - drop straight through to the 'else' block
         CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
   
-      # Unknown predef
       rescue CitruluParser::TestPredefError => e
-        @console_msg_hash = {
-          :text0 => e.to_s,
-        }
-        @console_msg_type = "error"
-        @status_msg = "Saved (with errors)"
+        # Unknown predef:
+        @console_msg_hash = { :text0 => e.to_s }
+        succeeded = false
 
-      # Compile fail
       rescue CitruluParser::TestCompileError => e
+        # Compile fail:
         begin 
           error = CitruluParser.format_error(e)
         rescue => e
@@ -114,8 +111,7 @@ class TestFilesController < ApplicationController
             :exception_text => e,
             :text2 => " Sorry! This is a bug. Please let us know."
           }
-          @console_msg_type = "error"
-          @status_msg = "Saved (with errors)"
+          succeeded = false
         else
       
           @console_msg_hash = {
@@ -131,25 +127,29 @@ class TestFilesController < ApplicationController
             @console_msg_hash[:text4] = " after "
             @console_msg_hash[:after] = error[:after]
           end
-
-          @console_msg_type = "error"
-          @status_msg = "Saved (with errors)"
+          succeeded = false
         end
     
-      # catch-all, including CitruluParser::TestCompileUnknownError
-      rescue  => e
-        @console_msg_hash = {:text0 => "#{e}"}
-        @console_msg_type = "error"
-        @status_msg = "Saved (with errors)"
+      rescue => e
+        # catch-all, including CitruluParser::TestCompileUnknownError
+        @console_msg_hash = { :text0 => e.to_s }
+        succeeded = false
       
-      # Compile win
       else
-        @console_msg_hash = {:text0 => "Saved!"}
-        @console_msg_type = "success"
-        @status_msg = "Saved!"
+        # Compile win!
+        @console_msg_hash = { :text0 => "Saved!" }
+        succeeded = true
 
         @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
       end
+    end
+    
+    if succeeded
+      @console_msg_type = "success"
+      @status_msg = "Saved!"
+    else
+      @console_msg_type = "error"
+      @status_msg = "Saved (with errors)"
     end
     
     respond_to do |format|
@@ -182,7 +182,7 @@ class TestFilesController < ApplicationController
 #  end
   
   protected
-  
+    
   # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page
   def check_ownership!
     return check_ownership(params[:id], TestFile) do
