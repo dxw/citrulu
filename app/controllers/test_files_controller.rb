@@ -75,7 +75,7 @@ class TestFilesController < ApplicationController
       @current_line = params[:current_line]
 
       if params[:group].blank?
-        render :text => ""
+        render :text => "$('#liveview div.on').removeClass('working');"
         return
       end
 

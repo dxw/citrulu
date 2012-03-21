@@ -8,7 +8,7 @@ $('#liveview div.group').append("<div class='on'><%= @test_url %></div>");
 <% elsif !@results[:message].blank? %>
   $('#liveview div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=@results[:message]%></p></div>");
 <% else %>
-  <% @results[:test_results_attributes].each_with_index do |test, index| %>
-    $('#liveview div.group').append("<div class='<%= (test[:result] ? 'pass' : 'fail')%><%= index.to_i == @current_line.to_i-1 ? ' current' : '' %>'><%= test[:original_line].strip %></div>");
+  <% @results[:test_results_attributes].each do |test| %>
+    $('#liveview div.group').append("<div class='<%= (test[:result] ? 'pass' : 'fail')%>'><%= test[:original_line].strip %></div>");
   <% end %>
 <% end %>
