@@ -92,6 +92,7 @@ class TestFilesController < ApplicationController
         :line => error[:line],
         :text3 => ", column ",
         :column => error[:column],
+        :text4 => " of the current group",
       }
 
       if !error[:after].empty?
