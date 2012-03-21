@@ -1,79 +1,36 @@
 require "spec_helper"
 
 describe UserMailer do
+  before(:each) do
+    @user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
+  end
+  
   describe 'test notifications' do
     before(:each) do
-      user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
+      test_file = FactoryGirl.create(:test_file, :user => @user)
+      
+      @test_run1 = FactoryGirl.create(:test_run, :test_file => test_file)
+      @test_run2 = FactoryGirl.create(:test_run, :test_file => test_file)
+      @test_run3 = FactoryGirl.create(:test_run, :test_file => test_file)
 
-      test_file = TestFile.new
-      test_file.user_id = user.id
-      test_file.name = 'The File'
-      test_file.save!
-
-      @test_run1 = TestRun.new
-      @test_run1.time_run = Time.now
-      @test_run1.test_file_id = test_file.id
-      @test_run1.save!
-
-      @test_run2 = TestRun.new
-      @test_run2.time_run = Time.now
-      @test_run2.test_file_id = test_file.id
-      @test_run2.save!
-
-      @test_run3 = TestRun.new
-      @test_run3.time_run = Time.now
-      @test_run3.test_file_id = test_file.id
-      @test_run3.save!
-
-      test_group1 = TestGroup.new
-      test_group1.test_run_id = @test_run1.id
-      test_group1.time_run = Time.new(2012,01,01)
-      test_group1.response_time = 1000
-      test_group1.test_url = 'http://dxw.com'
-      test_group1.save!
-
-      test_group2 = TestGroup.new
-      test_group2.test_run_id = @test_run2.id
-      test_group2.time_run = Time.new(2012,01,01)
-      test_group2.response_time = 1000
-      test_group2.test_url = 'http://example.org'
-      test_group2.save!
-
-      test_group3 = TestGroup.new
-      test_group3.test_run_id = @test_run3.id
-      test_group3.time_run = Time.new(2012,01,01)
-      test_group3.response_time = 1000
-      test_group3.test_url = 'http://google.com'
-      test_group3.save!
-
-      test_group4 = TestGroup.new
-      test_group4.test_run_id = @test_run2.id
-      test_group4.time_run = Time.new(2012,01,01)
-      test_group4.response_time = 1000
-      test_group4.test_url = 'http://example.org/test'
-      test_group4.save!
-
-      [
-        [test_group1, {:assertion=>:i_see, :value=>"a cat", :passed=>true}],
-        [test_group1, {:assertion=>:i_see, :value=>"blah", :passed=>false}],
-        [test_group1, {:assertion=>:i_not_see, :value=>"your face", :passed=>true}],
-        [test_group2, {:assertion=>:i_see, :value=>"a cat", :passed=>false}],
-        [test_group2, {:assertion=>:i_see, :value=>"blah", :passed=>false}],
-        [test_group4, {:assertion=>:i_not_see, :value=>"your face", :passed=>false}],
-        [test_group3, {:assertion=>:i_see, :value=>"a cat", :passed=>true}],
-        [test_group3, {:assertion=>:i_see, :value=>"blah", :passed=>true}],
-        [test_group3, {:assertion=>:i_not_see, :value=>"your face", :passed=>true}],
-      ].each do |t|
-        group = t[0]
-        test = t[1]
-        test_result = TestResult.new
-        test_result.test_group_id = group.id
-        test_result.assertion = test[:assertion]
-        test_result.value = test[:value]
-        test_result.name = test[:name]
-        test_result.result = test[:passed]
-        test_result.save!
-      end
+      test_group1 = FactoryGirl.create(:test_group_no_results, :test_url => 'http://dxw.com', :test_run => @test_run1)
+      test_group2 = FactoryGirl.create(:test_group_no_results, :test_url => 'http://example.org', :test_run => @test_run2)
+      test_group3 = FactoryGirl.create(:test_group_no_results, :test_url => 'http://example.org/test', :test_run => @test_run2)
+      test_group4 = FactoryGirl.create(:test_group_no_results, :test_url => 'http://google.com', :test_run => @test_run3)
+      
+      
+      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_see, :value=>"a cat", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_see, :value=>"blah", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_not_see, :value=>"your face", :result=>true)
+                                                                   
+      FactoryGirl.create(:test_result, :test_group => test_group2, :assertion=>:i_see, :value=>"a cat", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group2, :assertion=>:i_see, :value=>"blah", :result=>false)
+                                                                   
+      FactoryGirl.create(:test_result, :test_group => test_group3, :assertion=>:i_not_see, :value=>"your face", :result=>false)
+                                                                   
+      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_see, :value=>"a cat", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_see, :value=>"blah", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_not_see, :value=>"your face", :result=>true)
     end
 
     def both_parts email
@@ -109,6 +66,12 @@ describe UserMailer do
       email.subject.should include('All of your tests are passing')
 
       email.body.should_not include('(failed)')
+    end
+  end
+  
+  describe "welcome_email" do
+    it "should create an email with the user's email as the subject" do
+      UserMailer.welcome_email(@user).to.should == [@user.email]
     end
   end
 end

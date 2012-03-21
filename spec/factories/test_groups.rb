@@ -12,7 +12,12 @@ FactoryGirl.define do
       FactoryGirl.create_list(:successful_test_result, evaluator.successful_results, :test_group => test_group)
       FactoryGirl.create_list(:failed_test_result, evaluator.failed_results, :test_group => test_group)
     end
-
+    
+    factory :test_group_no_results do
+      successful_results 0
+      failed_results 0
+    end
+    
     factory :test_group_no_failures do
       failed_results 0
     end
