@@ -78,9 +78,13 @@ update_liveview = ->
 # Moves the .current style in the live view to the currently selected group
 #
 update_selected_test = (current_group) ->
-  console.info "#{current_group.current_line}"
+
+  selected_test = current_group.group.split("\n")[current_group.current_line].trim()
+
+  return if selected_test == '' 
+
   $("#liveview div.group div").removeClass("current")
-  $("#liveview div.group div:nth-child(" + (current_group.current_line + 1) + ")").addClass('current')
+  $("#liveview div.group div:contains('" + selected_test + "')").addClass('current')
 
 
 ##
