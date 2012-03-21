@@ -90,28 +90,32 @@ update_selected_test = (current_group) ->
 ##
 # Checks whether a live view update is necessary and starts one if so
 #
+# A better way to do this would be to:
+#  - set a timeout whenever a key is pressed
+#  - if another key is pressed before the timeout fires, cancel the timeout
+#  - When the user stops typing, the timeout will fire. This is something like an 
+#    onUserStopsTyping event, which is what we really want
 window.check_liveview = ->
   setTimeout("window.check_liveview()", 150);
 
+#  console.info( "#{window.keyPressHasHappened} and #{(new Date).getTime()- window.lastKeyPress} < 150")
+ 
   # If there has been no input since we last run, bail out
-  return if !window.keyPressHasHappened
+  return if !window.keyPressHasHappened or (new Date).getTime()- window.lastKeyPress < 150
 
-  new_text_hash = make_hash(window.editor.getValue())
+#  console.info "#{window.editor.getCursor().line} != #{window.lastCursorPosition}"
 
-  
-  # If the text is different, update
-  # If the text is the same but they pressed a cursor key, update
-    # If the current group is different from the last group, update
-  # Don't update if the last keypress was recent
-  if new_text_hash != window.text_hash or window.lastKeyWasCursor
+  # Has the cursor moved?
+  if window.editor.getCursor().line != window.lastCursorPosition
+   
+    # Check what group we're now in, and update the cursor
     current_group = get_current_group()
     update_selected_test(current_group)
 
-#    console.info "#{make_hash(window.lastGroup.group)} #{make_hash(current_group.group)}"
+    # Has the current group been changed?
     if make_hash(current_group.group) != make_hash(window.lastGroup.group)
-#      console.info "if#{(new Date).getTime()- window.lastKeyPress} > 150 && #{window.editor.getCursor().line} != #{window.lastCursorPosition}"
-#      if window.editor.getCursor().line != window.lastCursorPosition
-      console.info "I'm updating now"
+
+#      console.info "I'm updating now"
       update_liveview()
 
   window.keyPressHasHappened = false
