@@ -14,6 +14,7 @@ class UserMailer < ActionMailer::Base
     end
 
     to = test_run.test_file.user.email
+    headers("Auto-Submitted" => "auto-generated", "List-Unsubscribe" => "<#{url_for(:controller => "registrations", :action => "edit", :only_path => false) }>")
 
     mail(to: to, subject: subject, template: 'test_notification') do |format|
       format.html
