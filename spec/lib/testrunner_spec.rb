@@ -139,62 +139,72 @@ describe TestRunner do
   end
   
   describe "execute_tests" do
-    before(:each) do
-      # @test_groups = [
-      #         {:test_url => "http://foo.com"}
-      #       ]
-      
+    before(:each) do  
       TestRunner.stub(:get_test_results)
       
+      Mechanize::HTTP::Agent.any_instance.stub(:fetch).and_return(Mechanize::Page.new)
     end
     
-    it "should inherit values from the compiled object" do
-      
+    it "should inherit values from the compiled object" do  
       url = "http://foo.com"
-      line = "this is an original line"
+
       test_groups = [
-        {
-          :test_url => url,
-          :original_line => line
-        }
+        {:test_url => url}
       ]
       
       test_group_params = TestRunner.execute_tests(test_groups)
       test_group_params[0][:test_url].should == url
     end
     
+    it "should fetch the 'first' URL"
     
-    it "should set a message on the group when the Mechanize object page could not be retrived" do
-      test_groups = [
-        {:test_url => "foo"}
-      ]
-      
-      test_group_params = TestRunner.execute_tests(test_groups)
-      test_group_params[0][:message].should_not be_blank
+    it "should set time_run to the current time" do
+      pending("There's a railscast on how to freeze time...")
     end
     
     
-  #      before(:each) do
-  #        Mechanize::HTTP::Agent.any_instance.stub(:fetch).and_return(Mechanize::Page.new)
-  #      end
-  #
-  #      def gimme_tests(code)
-  #        begin
-  #          CitruluParser.new.compile_tests(code)
-  #        rescue Exception => e
-  #          puts "Couldn't compile your test code"
-  #        end
-  #      end
-  #
-  #      it "should create a new mechanize agent for each group" do
-  #        Mechanize.should_receive(:new).twice
-  #        TestRunner.execute_tests(gimme_tests("On http://example.com\n  I should see foobar\n\nOn http://example.com\n  I should see foobar\n"))
-  #      end
-  #
-  #      it "should fetch the 'first' URL" do
-  #        Mechanize.any_instance.should_receive(:get).with('http://example.com/first')
-  #        TestRunner.execute_tests(gimme_tests("On http://example.com\n  First, fetch http://example.com/first\n  I should see foobar\n"))
-  #      end
+    context "when the 'page' object could not be retrived" do
+      before(:each) do
+        @test_groups = [
+          {:test_url => "foo"} # get will always fail, since this is not a valid URL
+        ]
+      end
+    
+      it "should set a message on the group when the Mechanize object page could not be retrived" do
+        test_group_params = TestRunner.execute_tests(@test_groups)
+        TestRunner.execute_tests(@test_groups)[0][:message].should_not be_blank
+      end
+      
+      it "should not fetch the 'finally' URL" do
+        @test_groups = [
+          {:test_url => "foo", :finally => "bar"}
+        ]
+        Mechanize.any_instance.should_not_receive(:get).with('bar')
+      end
+      
+      it "should not set the response time" do
+        TestRunner.execute_tests(@test_groups)[0][:response_time].should be_blank
+      end
+      
+      it "should not set a response code" do
+        TestRunner.execute_tests(@test_groups)[0][:response_code].should be_blank
+      end
+      
+      it "should not set test results" do
+        TestRunner.execute_tests(@test_groups)[0][:test_results_attributes].should be_blank
+      end
+    end
+    
+    context "when the 'page' object is successfully retrived" do
+      
+      it "should fetch the 'finally' URL"
+      
+      it "should set the response time"
+      it "should set the response code"
+      
+      it "should generate the test results"
+        #check that get_test_results is called
+    end  
   end
 
 
@@ -247,6 +257,35 @@ describe TestRunner do
   end
   
   describe "get_test_results" do
+    before(:each) do
+      TestRunner.stub(:get_test_values).and_return(["foo"])
+    end
+    
+    it "inherits values from the parser output" do
+      TestRunner.stub( :text_is_in_page? )
+      
+      assertion = :i_see
+      original_line = "I should see foo"
+      value = "foo"
+      name = ":a_name"
+      
+      test_results = [
+        {
+          :assertion => assertion,
+          :original_line => original_line,
+          :value => value,
+          :name => name
+        }
+      ]
+      
+      test_result_params = TestRunner.get_test_results(nil,test_results)
+      test_result_params[0][:assertion].should == assertion
+      test_result_params[0][:original_line].should == original_line
+      test_result_params[0][:value].should == value
+      test_result_params[0][:name].should == name
+    end
+    
+    
     
     shared_examples_for "an assertion" do
       it "returns the correct result" do
@@ -257,12 +296,6 @@ describe TestRunner do
         TestRunner.get_test_results(nil, tests)[0][:result].should == expected_result
       end
     end
-      
-    before(:each) do
-      TestRunner.stub(:get_test_values).and_return(["foo"])
-    end
-    
-    it "inherits values from the parser output"
         
     context "when checking for text in the page" do 
       let(:page_check) { :text_is_in_page? }
