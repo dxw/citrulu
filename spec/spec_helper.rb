@@ -54,5 +54,6 @@ Spork.each_run do
   
   # Reload everything in lib/grammar
   Dir["#{Rails.root}/lib/grammar/*.rb"].each { |f| load f }
+  Dir["#{Rails.root}/lib/*.rb"].each { |f| load f }
 end
 
