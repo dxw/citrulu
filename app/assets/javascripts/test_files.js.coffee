@@ -48,7 +48,7 @@ get_current_group = ->
   cur_line = line = window.editor.getCursor().line
 
   # Find the start of the group
-  while !window.editor.getLine(line).match(/^\s*On/)
+  while line > 0 && !window.editor.getLine(line).match(/^\s*On/)
     line--
   start = line
 
@@ -116,8 +116,17 @@ window.check_liveview = ->
     if make_hash(current_group.group) != make_hash(window.lastGroup.group)
       
       # Is the group big enough to be a valid group?
-      if current_group.group.split("\n").length > 1
-#        console.info "I'm updating now"
+
+      # Get an array with trimmed lines and comments removed
+      group = jQuery.map(current_group.group.split("\n"), (n) ->  n = $.trim(n); n = n.replace(/^# [^\n]*/, ''); return n; )
+
+      # Zap the empty lines
+      group = jQuery.grep(group, (n) -> return n;)
+
+#      console.info group
+
+      if group.length > 1
+        console.info "I'm updating now"
         update_liveview()
 
   window.keyPressHasHappened = false
