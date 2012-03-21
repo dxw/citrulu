@@ -161,7 +161,6 @@ describe TestRunner do
       
       test_group_params = TestRunner.execute_tests(test_groups)
       test_group_params[0][:test_url].should == url
-      test_group_params[0][:original_line].should == line
     end
     
     
@@ -220,7 +219,7 @@ describe TestRunner do
           [
             :time_run => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
             :test_results_attributes => [
-              { :assertion => :i_see, :value => 'foo', :name => nil, :result => true }
+              { :assertion => :i_see, :value => 'foo', :name => nil, :result => true, :original_line => "I should see foo" }
             ]
           ]
         )

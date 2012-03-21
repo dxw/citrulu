@@ -57,7 +57,6 @@ class TestRunner
     test_groups.collect do |group|
       group_params = {}
       group_params[:test_url] = group[:test_url]
-      group_params[:original_line] = group[:original_line]
       
       agent = Mechanize.new
 
@@ -91,6 +90,7 @@ class TestRunner
       test_result_params[:assertion] = test[:assertion]
       test_result_params[:value] = test[:value]
       test_result_params[:name] = test[:name]
+      test_result_params[:original_line] = test[:original_line]
 
       testvalues = get_test_values(test)
 
