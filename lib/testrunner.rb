@@ -19,8 +19,7 @@ class TestRunner
       execute_test_groups(file, test_run)
       
       if file.user.email_preference == 1
-        #TODO: will this always work?
-        previous_run = file.test_runs.select{|run|run.id < test_run.id}.first
+        previous_run = file.last_run
         
         # Send email if:
         # 1. It's not the first run

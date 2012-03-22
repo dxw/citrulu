@@ -8,11 +8,12 @@ describe TestFile do
     @test_file_compiled_empty = FactoryGirl.create(:test_file, :compiled_test_file_text => "")
     
     # Test Runs:
-    @test_run1 = FactoryGirl.create(:test_run, :test_file => @test_file_compiled_text, :time_run => Time.now) 
     FactoryGirl.create(:test_run, :test_file => @test_file_compiled_text, :time_run => Time.now-1)
+    @test_run2 = FactoryGirl.create(:test_run, :test_file => @test_file_compiled_text, :time_run => Time.now) 
     
-    FactoryGirl.create(:test_run, :test_file => @test_file_compiled_nil, :time_run => Time.now-1)
     @test_run3 = FactoryGirl.create(:test_run, :test_file => @test_file_compiled_nil, :time_run => Time.now)
+    FactoryGirl.create(:test_run, :test_file => @test_file_compiled_nil, :time_run => Time.now-1)
+    
     
   end
 
@@ -27,7 +28,12 @@ describe TestFile do
 
   describe "last_run" do
     it "should return the most recent test run for the file" do
-      @test_file_compiled_text.last_run.should== @test_run1
+      @test_file_compiled_text.last_run.should== @test_run2
+    end
+  end
+  
+  describe "last_run" do
+    it "should return the most recent test run for the if IDs are out of order" do
       @test_file_compiled_nil.last_run.should== @test_run3
     end
   end
