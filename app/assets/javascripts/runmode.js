@@ -2,7 +2,8 @@ CodeMirror.runMode = function(string, modespec, callback, options) {
   var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
   var isNode = callback.nodeType == 1;
   var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;
-  var escapeHtml = (options && options.escapeHtml) || true;
+  var escapeHtml = (typeof (options && options.escapeHtml) === 'undefined') ? true : options.escapeHtml;
+
   if (isNode) {
     var node = callback, accum = [], col = 0;
     callback = function(text, style) {
