@@ -30,7 +30,7 @@
         =accordion_body do
           %p Citrulu's syntax is very simple. 
           %p First, decide which URLs you would like to test. Then, add each URL with at least one test:
-          %pre="On http://example.com\n  I should see Welcome to this site"
+          %pre.editor-code="On http://example.com\n  I should see Welcome to this site"
           %p You can add as many URLs as you like, and as many tests as you like under each URL. 
           %p For more information on specific tests, expand the section below.
       
@@ -39,7 +39,7 @@
           I should see
         =accordion_body do
           %p This check retrieves a page and looks for text without looking at HTML tags. So, the following check:
-          %pre="  I should [not] see Hello, world!"
+          %pre.editor-code="  I should see Hello, world!"
           %p Would match all of:
           %pre="Hello, world!"
           %pre="<strong>Hello</strong> world!"
@@ -50,7 +50,7 @@
           Source should [not] contain
         =accordion_body do
           %p This check retrieves a page and looks for text in its source code. So, the following check:
-          %pre="  I should see <strong>Hello</strong>, world!"
+          %pre.editor-code="  Source should contain <strong>Hello</strong>, world!"
           %p Would match:
           %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
       
@@ -59,7 +59,7 @@
           Headers should [not] include
         =accordion_body do
           %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
-          %pre="  Headers should include X-Varnish"
+          %pre.editor-code="  Headers should include X-Varnish"
           %p Would match:
           %pre="X-Varnish: 128371292"
           %p But would not match:
@@ -72,7 +72,7 @@
         =accordion_body do
           %p Predefines give you quick access to commonly-used lists of strings. For example, many people add a test to check that no erroneous PHP output is present in their code.
           %p You can use predefines by using the an equals sign followed by the name of the predefine as your value:
-          %pre="  I should not see :php_errors"
+          %pre.editor-code="  I should not see :php_errors"
           %p See a bit further down this page for a list of the predefines you can use
     
       =accordion_group("first_finally") do
@@ -82,7 +82,7 @@
           %p First and Finally allow you to write scripts on your site that will be executed before and after we retrieve the page being tested.
           %p For example, you could use these scripts to log into and out of a members-only site.
           %p If used, First and Finally must be the first two lines in the test group:
-          %pre="On http://example.com\n  First, fetch http://example.com/22ebd/first-script\n  Finally, fetch http://example.com/22ebd/finally-script\n  I should see You are now logged in"
+          %pre.editor-code.scrolling="On http://example.com\n  First, fetch http://example.com/22ebd/first-script\n  Finally, fetch http://example.com/22ebd/finally-script\n  I should see You are now logged in"
           %p You don't have to use both first and finally: you can use either one by itself.
 
       =accordion_group("general_tips") do 

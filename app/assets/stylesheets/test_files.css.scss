@@ -4,6 +4,17 @@ body.test_files {
 			//FRAGILE, but matches the padding applied to the accordion
 			padding: 0 15px;  
 		}
+		
+		#help_sections {
+		  
+      // Allow a pre with particularly long lines to wrap and have a scrollbar
+		  pre.scrolling {
+        word-break: normal;
+        word-wrap: normal;
+        overflow: scroll;
+        white-space: pre;
+		  }
+		}
 	}
 	
 	#test_suite{

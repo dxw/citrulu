@@ -89,4 +89,4 @@ CodeMirror.defineMode('Citrulu', function(conf) {
     return external;
 });
 
-CodeMirror.defineMIME('text/x-citrulu-tests', 'Citrulu tests');
+CodeMirror.defineMIME('text/citrulu-tests', 'Citrulu');

@@ -19,6 +19,9 @@ $(document).ready ->
 $(window).load ->
   if($('body').hasClass('test_files') && $('body').hasClass('edit'))
     setup_editor()
+    
+    highlight_help_text_code()
+    
     # create a placeholder to store a hash of the text:
     window.text_hash = ""
     # initialise the key press tracker so that the file will save straight away:
@@ -183,3 +186,13 @@ window.save_file = ->
   else
     setTimeout("window.save_file()", 1000);
 
+##
+# Highlights the code fragments in the help text
+#
+
+highlight_help_text_code = ->
+  $("#help_sections pre.editor-code").each (i) ->
+    # Apply the mode:
+    CodeMirror.runMode( $(this).html(), "text/citrulu-tests", this, {escapeHtml: false})
+    # Apply the theme:
+    $(this).addClass("cm-s-monokai")
