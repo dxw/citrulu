@@ -1,0 +1,28 @@
+<% content_for :content do %>
+  <% if @status == :pass %>
+Your failing tests are now passing. Everything's looking good! 
+
+If you'd like, you can review recent test results
+  <%= url_for test_runs_url %>
+  <% elsif @status == :fail %>
+To view your full test results, visit your test results page
+  <%= url_for test_run_url(@test_run) %>
+      
+Failed tests (<%= @failures %>):
+
+    <% @test_run.test_groups.each do |group| %>
+      <% next if !group.has_failures? %>
+On <%= group.test_url %>
+      <% group.test_results.each do |result| %>
+        <% next if !result.failed? %>
+- <%= result.assertion %> <%= value_or_name(result, true) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+              
+<% content_for :footer do %>
+You're receiving this because you enabled alerts for your tests at Citrulu.com
+
+Edit your subscription: <%= url_for edit_user_registration_url %>
+<% end %>

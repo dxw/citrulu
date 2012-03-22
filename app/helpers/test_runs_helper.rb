@@ -9,7 +9,7 @@ module TestRunsHelper
     if !test_result.value.nil?
       # Value
       if plain_text
-        content = test_result.value
+        content = '"' + test_result.value + '"'
       else
         content = content_tag :span, test_result.value, :class => "test_value"
       end
