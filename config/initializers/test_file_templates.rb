@@ -1,7 +1,7 @@
 DEFAULT_TEST_FILE=%{# Welcome to your first test file!
 
 # This file tests example.com - you should change it so that it checks your 
-# own website. We should shortly start running running these tests! You can 
+# own website. We should shortly start running these tests! You can 
 # check the results on the results tab above.
 
 # A test file consists of any number of test groups.
