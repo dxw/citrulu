@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: "Citrulu <contact@citrulu.com>"
+  default "Message-ID"=>"#{Digest::SHA2.hexdigest(Time.now.to_s)}@citrulu.com"
 
   def test_notification(test_run)
     @test_run = test_run
