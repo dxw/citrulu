@@ -4,13 +4,13 @@ require 'testrunner'
 describe TestRunner do
   describe "run_all_tests" do
     
-    def stub_run_all_tests_to_succeed
+    def stub_execute_test_groups_to_succeed
       TestRunner.stub(:execute_test_groups) do |file,test_run_id|
         FactoryGirl.create(:test_group_no_failures, :test_run_id => test_run_id)
       end
     end
     
-    def stub_run_all_tests_to_fail
+    def stub_execute_test_groups_to_fail
       TestRunner.stub(:execute_test_groups) do |file,test_run_id|
         FactoryGirl.create(:test_group_with_failures, :test_run_id => test_run_id)
       end
@@ -48,7 +48,7 @@ describe TestRunner do
       it "should send an email if the mailing preferences allow it" do
         @user.email_preference = 1
         
-        stub_run_all_tests_to_fail
+        stub_execute_test_groups_to_fail
         
         # Check that the call is made to the mailer
         UserMailer.any_instance.should_receive(:test_notification)
@@ -58,7 +58,7 @@ describe TestRunner do
       it "should not send an email if the mailing preferences disallow it" do
         @user.email_preference = 0
         
-        stub_run_all_tests_to_fail
+        stub_execute_test_groups_to_fail
         
         # Check that the call isn't made to the mailer
         UserMailer.any_instance.should_not_receive(:test_notification)
@@ -69,14 +69,14 @@ describe TestRunner do
         before(:each) do
           @user.email_preference = 1
         end
-      
+        
         it "should not send success messages if the last TestRun was successful" do
           # Tests Fail...
-          stub_run_all_tests_to_fail          
+          stub_execute_test_groups_to_fail          
           TestRunner.run_all_tests
           
           # ...then succeed...
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           
           # Should be able to use this line but doesn't work - complains that the second call to run_all_tests is also made...
           # UserMailer.any_instance.should_receive(:test_notification)  
@@ -88,7 +88,7 @@ describe TestRunner do
         end
       
         it "should not send a success message on the first test run" do
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           
           UserMailer.any_instance.should_not_receive(:test_notification)
           TestRunner.run_all_tests
@@ -97,48 +97,65 @@ describe TestRunner do
         it "should send success messages if the last TestRun was a failure (1)" do
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
 
         it "should send success messages if the last TestRun was a failure (2)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (1)" do
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (2)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (3)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
+        end
+        
+        context "when UserMailer throws an error" do
+          before(:each) do
+            stub_execute_test_groups_to_fail
+            UserMailer.should_receive(:test_notification).and_raise("foo")
+          end
+        
+          it "should capture any error message thrown by the UserMailer and return it in a new error" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/foo/)
+          end
+          it "should rescue any error thrown by the UserMailer and add the user id" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/id: #{@user.id}/)
+          end
+          it "should rescue any error thrown by the UserMailer and add the user's email" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/#{@user.email}/)
+          end
         end
       end
     end
