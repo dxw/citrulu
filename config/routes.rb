@@ -13,8 +13,9 @@ SimpleFrontEndTesting::Application.routes.draw do
   
   match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
 
-  # Assume everything else is a page on the website:
-  match ':action' => 'website', :as => "page"
+  # Website pages routes:
+  match 'alpha' => "website#alpha"
+  match 'features' => "website#features"
   
   authenticated :user do
     root :to => 'test_files#index'
