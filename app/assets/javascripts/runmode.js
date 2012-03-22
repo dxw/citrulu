@@ -2,6 +2,7 @@ CodeMirror.runMode = function(string, modespec, callback, options) {
   var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
   var isNode = callback.nodeType == 1;
   var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;
+  var escapeHtml = (options && options.escapeHtml) || true;
   if (isNode) {
     var node = callback, accum = [], col = 0;
     callback = function(text, style) {
@@ -15,12 +16,20 @@ CodeMirror.runMode = function(string, modespec, callback, options) {
       for (var pos = 0;;) {
         var idx = text.indexOf("\t", pos);
         if (idx == -1) {
-          escaped += CodeMirror.htmlEscape(text.slice(pos));
+          if (escapeHtml) {
+            escaped += CodeMirror.htmlEscape(text.slice(pos));
+          } else {
+            escaped += text.slice(pos);
+          }
           col += text.length - pos;
           break;
         } else {
           col += idx - pos;
-          escaped += CodeMirror.htmlEscape(text.slice(pos, idx));
+          if (escapeHtml) {
+            escaped += CodeMirror.htmlEscape(text.slice(pos, idx));
+          } else {
+            escaped += text.slice(pos, idx);
+          }
           var size = tabSize - col % tabSize;
           col += size;
           for (var i = 0; i < size; ++i) escaped += " ";
