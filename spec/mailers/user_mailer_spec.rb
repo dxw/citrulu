@@ -35,7 +35,7 @@ describe UserMailer do
 
     def both_parts email
       yield email.text_part.body
-      yield email.html_part.body
+      yield Nokogiri::HTML.parse(email.html_part.body.to_s).inner_text
     end
 
     it 'composes an email for a single failure' do
@@ -44,8 +44,8 @@ describe UserMailer do
       email.subject.should include('1 of your tests just failed')
       email.to.should == ['tom+tester@dxw.com']
 
-      email.body.should include('<span class="test_value">blah</span><strong> (failed)</strong>')
-      email.body.should include('On http://dxw.com')
+      both_parts(email) {|body| body.should include('blah (failed)') }
+      both_parts(email) {|body| body.should include('On http://dxw.com') }
     end
 
     it 'composes an email for multiple failures' do
@@ -53,11 +53,11 @@ describe UserMailer do
 
       email.subject.should include('3 of your tests just failed')
 
-      email.body.should include('<span class="test_value">a cat</span><strong> (failed)</strong>')
-      email.body.should include('<span class="test_value">blah</span><strong> (failed)</strong>')
-      email.body.should include('<span class="test_value">your face</span><strong> (failed)</strong>')
-      email.body.should include('On http://example.org')
-      email.body.should include('On http://example.org/test')
+      both_parts(email) {|body| body.should include('a cat (failed)') }
+      both_parts(email) {|body| body.should include('blah (failed)') }
+      both_parts(email) {|body| body.should include('your face (failed)') }
+      both_parts(email) {|body| body.should include('On http://example.org') }
+      both_parts(email) {|body| body.should include('On http://example.org/test') }
     end
 
     it 'composes an email for success' do
@@ -65,7 +65,7 @@ describe UserMailer do
 
       email.subject.should include('All of your tests are passing')
 
-      email.body.should_not include('(failed)')
+      both_parts(email) {|body| body.should_not include('(failed)') }
     end
   end
   
