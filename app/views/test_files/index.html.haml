@@ -31,13 +31,7 @@
               .span4
                 %span.last_updated="Last updated at #{file.updated_at}"
               .span3
-                %span.stats 
-                  %strong
-                    =file.number_of_tests
-                  tests on 
-                  %strong
-                    =file.number_of_pages
-                  pages
+                %span.stats="#{pluralize(file.number_of_tests, 'test')} on #{pluralize(file.number_of_pages, 'page')}"
 
       
   #sidebar.span4
