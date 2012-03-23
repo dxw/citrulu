@@ -44,6 +44,12 @@ class User < ActiveRecord::Base
     q[:test_file_count] = [test_files.count, inf(plan.test_file_count)]
     q
   end
+
+  def subscribe_to_default_plan
+    if self.plan.nil?
+      self.plan = Plan.default
+    end
+  end
   
   private
 
@@ -70,11 +76,5 @@ class User < ActiveRecord::Base
         :name => "My first test file",
         :test_file_text => DEFAULT_TEST_FILE
       )
-  end
-
-  def subscribe_to_default_plan
-    if self.plan.nil?
-      self.plan = Plan.default
-    end
   end
 end
