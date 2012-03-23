@@ -11,24 +11,30 @@ class TestRunner
     return "Nothing to run" if TestFile.compiled_files.empty?
     
     TestFile.compiled_files.each do |file|
-      test_run = TestRun.new
-      test_run.time_run = Time.zone.now
-      test_run.test_file_id = file.id
-      test_run.save!
+      if file.user.nil?
+        raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
+      end
+      
+      test_run = TestRun.create(
+        :time_run => Time.zone.now,
+        :test_file => file
+      )
       
       execute_test_groups(file, test_run)
       
       if file.user.email_preference == 1
-        #TODO: will this always work?
-        previous_run = file.test_runs.select{|run|run.id < test_run.id}.first
+        previous_run = file.last_run
         
         # Send email if:
         # 1. It's not the first run
         # 2. The current run has failures OR the previous run had failures
         if test_run.has_failures? || (previous_run && previous_run.has_failures?)
-          mail = UserMailer.test_notification(test_run)
-          mail.deliver
-        else
+          begin
+            mail = UserMailer.test_notification(test_run)
+            mail.deliver
+          rescue Exception => e
+            raise "UserMailer raised an error while attempting to send a test notification email to #{file.user.email} (id: #{file.user.id}): #{e}"
+          end
         end
       end
     end
@@ -41,9 +47,10 @@ class TestRunner
     rescue CitruluParser::TestCompileError => e
       raise TestCompileError.new("Compile error on trying to execute test_groups in test file with id #{file.id}: #{e}")
     else
+      
       # run the tests...
       test_run_params = execute_tests(compiled_tests)
-
+      
       # create the objects in the database
       test_run_params.each do |test_group_params|
         test_group_params.merge! :test_run => test_run
@@ -56,16 +63,17 @@ class TestRunner
   def self.execute_tests(test_groups)
     test_groups.collect do |group|
       group_params = {}
-      group_params[:test_url] = group[:test_url]
-      
-      agent = Mechanize.new
-
-      agent.get(group[:first]) unless group[:first].blank?
-
-      group_params[:time_run] = Time.now
       
       begin
+        group_params[:test_url] = group[:test_url]
+        
+        agent = Mechanize.new
+        
+        agent.get(group[:first]) unless group[:first].blank?
+        
+        group_params[:time_run] = Time.now
         page = agent.get(group[:test_url])
+        
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
@@ -74,10 +82,16 @@ class TestRunner
       else
         group_params[:response_time] = (Time.now - group_params[:time_run])*1000
         group_params[:response_code] = page.code
-    
-        agent.get(group[:finally]) unless group[:finally].blank?
-    
-        group_params[:test_results_attributes] = get_test_results(page, group[:tests])
+        
+        begin
+          agent.get(group[:finally]) unless group[:finally].blank?
+
+          group_params[:test_results_attributes] = get_test_results(page, group[:tests])
+          
+        rescue Exception => e
+          group_params[:message] = e.to_s
+        end
+          
         group_params
       end
     end

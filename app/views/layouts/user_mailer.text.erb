@@ -1,0 +1,7 @@
+<%# Must unescape everything manually: https://rails.lighthouseapp.com/projects/8994/tickets/4858-actionmailer-is-html-escaping-ampersand-in-urls-in-plain-text-messages %>
+== <%=raw @title %> ==
+
+<%= content_for?(:content) ? yield(:content) : yield %>
+------------------------------------------------------------------------------
+
+<%= content_for(:footer) %>

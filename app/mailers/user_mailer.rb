@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: "Citrulu <contact@citrulu.com>"
+  default "Message-ID"=>"#{Digest::SHA2.hexdigest(Time.now.to_s)}@citrulu.com"
 
   def test_notification(test_run)
     @test_run = test_run
@@ -16,13 +17,11 @@ class UserMailer < ActionMailer::Base
     to = test_run.test_file.user.email
     headers("Auto-Submitted" => "auto-generated", "List-Unsubscribe" => "<#{url_for(:controller => "registrations", :action => "edit", :only_path => false) }>")
 
-    mail(to: to, subject: subject, template: 'test_notification') do |format|
-      format.html
-    end
+    mail(to: to, subject: subject)
   end
 
   def welcome_email(user)
     @title = "Welcome to Citrulu"
-    mail(to: user.email, subject: "Welcome to Citrulu", template: 'welcome_email')
+    mail(to: user.email, subject: "Welcome to Citrulu")
   end
 end

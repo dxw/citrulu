@@ -1,0 +1,17 @@
+<% content_for :content do %>
+Thanks for joining us for the Alpha!
+
+To get started, log in here:
+  <%=raw url_for new_user_session_url %>
+
+Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
+send us an email <contact@citrulu.com> - or post something using the feedback form.
+
+We hope you like it!
+<% end %>
+
+<% content_for :footer do %>
+You're receiving this because you signed up at Citrulu.com
+
+Edit your subscription: <%=raw url_for edit_user_registration_url %>
+<% end %>

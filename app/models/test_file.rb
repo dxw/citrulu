@@ -8,7 +8,7 @@ class TestFile < ActiveRecord::Base
   validates_presence_of :name
   
   def last_run
-    TestRun.where(:test_file_id => id).first
+    test_runs.sort{|r,u| u.time_run <=> r.time_run }.first
   end
 
   def owner

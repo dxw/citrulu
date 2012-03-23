@@ -4,18 +4,24 @@ require 'testrunner'
 describe TestRunner do
   describe "run_all_tests" do
     
-    def stub_run_all_tests_to_succeed
+    def stub_execute_test_groups_to_succeed
       TestRunner.stub(:execute_test_groups) do |file,test_run_id|
         FactoryGirl.create(:test_group_no_failures, :test_run_id => test_run_id)
       end
     end
     
-    def stub_run_all_tests_to_fail
+    def stub_execute_test_groups_to_fail
       TestRunner.stub(:execute_test_groups) do |file,test_run_id|
         FactoryGirl.create(:test_group_with_failures, :test_run_id => test_run_id)
       end
     end
     
+    it "should raise an exception if a test file is orphaned" do
+      FactoryGirl.create(:compiled_test_file)
+      FactoryGirl.create(:compiled_test_file, :user => nil)
+      FactoryGirl.create(:compiled_test_file)
+      expect { TestRunner.run_all_tests }.to raise_error(RuntimeError)
+    end
 
     it "should not try and run tests where the compiled test file text is nil" do
       FactoryGirl.create(:test_file, :compiled_test_file_text => nil)
@@ -42,7 +48,7 @@ describe TestRunner do
       it "should send an email if the mailing preferences allow it" do
         @user.email_preference = 1
         
-        stub_run_all_tests_to_fail
+        stub_execute_test_groups_to_fail
         
         # Check that the call is made to the mailer
         UserMailer.any_instance.should_receive(:test_notification)
@@ -52,7 +58,7 @@ describe TestRunner do
       it "should not send an email if the mailing preferences disallow it" do
         @user.email_preference = 0
         
-        stub_run_all_tests_to_fail
+        stub_execute_test_groups_to_fail
         
         # Check that the call isn't made to the mailer
         UserMailer.any_instance.should_not_receive(:test_notification)
@@ -63,14 +69,14 @@ describe TestRunner do
         before(:each) do
           @user.email_preference = 1
         end
-      
+        
         it "should not send success messages if the last TestRun was successful" do
           # Tests Fail...
-          stub_run_all_tests_to_fail          
+          stub_execute_test_groups_to_fail          
           TestRunner.run_all_tests
           
           # ...then succeed...
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           
           # Should be able to use this line but doesn't work - complains that the second call to run_all_tests is also made...
           # UserMailer.any_instance.should_receive(:test_notification)  
@@ -82,7 +88,7 @@ describe TestRunner do
         end
       
         it "should not send a success message on the first test run" do
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           
           UserMailer.any_instance.should_not_receive(:test_notification)
           TestRunner.run_all_tests
@@ -91,58 +97,78 @@ describe TestRunner do
         it "should send success messages if the last TestRun was a failure (1)" do
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
 
         it "should send success messages if the last TestRun was a failure (2)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (1)" do
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (2)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (3)" do
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
-          stub_run_all_tests_to_succeed
+          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
 
           UserMailer.any_instance.should_receive(:test_notification)
 
-          stub_run_all_tests_to_fail
+          stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
+        end
+        
+        context "when UserMailer throws an error" do
+          before(:each) do
+            stub_execute_test_groups_to_fail
+            UserMailer.should_receive(:test_notification).and_raise("foo")
+          end
+        
+          it "should capture any error message thrown by the UserMailer and return it in a new error" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/foo/)
+          end
+          it "should rescue any error thrown by the UserMailer and add the user id" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/id: #{@user.id}/)
+          end
+          it "should rescue any error thrown by the UserMailer and add the user's email" do
+            expect{ TestRunner.run_all_tests }.to raise_error(/#{@user.email}/)
+          end
         end
       end
     end
   end
   
-  describe "execute_tests" do
+  describe ".execute_tests" do
     before(:each) do  
-      TestRunner.stub(:get_test_results)
-      
-      Mechanize::HTTP::Agent.any_instance.stub(:fetch).and_return(Mechanize::Page.new)
+      @dummy_page = FactoryGirl.build(:mechanize_page)
+    end
+    
+    def stub_mechanize(dummy_page=nil)
+      dummy_page ||= @dummy_page
+      Mechanize.any_instance.stub(:get).and_return(dummy_page)
     end
     
     it "should inherit values from the compiled object" do  
@@ -156,7 +182,17 @@ describe TestRunner do
       test_group_params[0][:test_url].should == url
     end
     
-    it "should fetch the 'first' URL"
+    it "should fetch the 'first' URL" do
+      test_groups = [
+        {:test_url => "foo", :first => "bar"}
+      ]
+      # Get first:
+      Mechanize.any_instance.should_receive(:get).with("bar")
+      # Get the page:
+      Mechanize.any_instance.should_receive(:get).with("foo").and_return(@dummy_page) 
+      
+      TestRunner.execute_tests(test_groups)
+    end
     
     it "should set time_run to the current time" do
       pending("There's a railscast on how to freeze time...")
@@ -171,7 +207,6 @@ describe TestRunner do
       end
     
       it "should set a message on the group when the Mechanize object page could not be retrived" do
-        test_group_params = TestRunner.execute_tests(@test_groups)
         TestRunner.execute_tests(@test_groups)[0][:message].should_not be_blank
       end
       
@@ -196,14 +231,55 @@ describe TestRunner do
     end
     
     context "when the 'page' object is successfully retrived" do
+      before(:each) do
+        @test_groups = [
+          {:test_url => "foo"}
+        ]
+      end
       
-      it "should fetch the 'finally' URL"
+      it "should fetch the 'finally' URL" do
+        test_groups = [
+          {:test_url => "foo", :finally => "bar"}
+        ]
+        # Get the page:
+        Mechanize.any_instance.should_receive(:get).with("foo").and_return(@dummy_page) 
+        # Get finally:
+        Mechanize.any_instance.should_receive(:get).with("bar")
+        
+        TestRunner.execute_tests(test_groups)
+      end  
+        
+        
+      it "should set the response time" do
+        pending("There's a railscast on how to freeze time...")
+        stub_mechanize
+        TestRunner.execute_tests(test_groups)[0][:response_code].should == "X"
+      end
       
-      it "should set the response time"
-      it "should set the response code"
+      it "should set the response code" do
+        dummy_page = FactoryGirl.build(:mechanize_page, :code => 404)
+        stub_mechanize(dummy_page)
+        
+        TestRunner.execute_tests(@test_groups)[0][:response_code].should == 404
+      end
       
-      it "should generate the test results"
-        #check that get_test_results is called
+      it "should generate the test results" do
+        stub_mechanize(@dummy_page)
+        test_groups = [
+          {:test_url => "foo", :tests => "bar"}
+        ]
+      
+        TestRunner.should_receive(:get_test_results).with(@dummy_page,"bar")
+        
+        TestRunner.execute_tests(test_groups)
+      end
+        
+      it "should set a message on the group when it can't retrieve one of the test_results" do
+        stub_mechanize
+        TestRunner.stub(:get_test_results).and_raise(RuntimeError.new("faz"))
+        
+        TestRunner.execute_tests(@test_groups)[0][:message].should == "faz"
+      end
     end  
   end
 
