@@ -28,8 +28,24 @@ class User < ActiveRecord::Base
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
   end
+
+  def over_quota?
+    quota.values.map do |q|
+      q[0] > q[1]
+    end.any?
+  end
+
+  def quota
+    q = {}
+    q[:url_count] = [url_count, plan.url_count]
+    q
+  end
   
   private
+
+  def url_count
+    test_files.map{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text).length }.sum
+  end
   
   def set_email_preference
     # When creating a new user, we want their email preference set to receive test run emails
