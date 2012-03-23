@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :lockable, :timeoutable and :omniauthable
@@ -19,16 +21,39 @@ class User < ActiveRecord::Base
   
   has_many :test_files
   belongs_to :invitation
+  belongs_to :plan
   
   after_create :create_default_test_file 
+  after_create :subscribe_to_default_plan
   before_save :add_invitation
   before_save :set_email_preference
   
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
   end
+
+  def over_quota?
+    quota.values.map do |q|
+      q[1] != '∞' && q[0] > q[1]
+    end.any?
+  end
+
+  def quota
+    q = {}
+    q[:url_count] = [url_count, inf(plan.url_count)]
+    q[:test_file_count] = [test_files.count, inf(plan.test_file_count)]
+    q
+  end
   
   private
+
+  def inf val
+    val != -1 ? val : '∞'
+  end
+
+  def url_count
+    test_files.map{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text).length }.sum
+  end
   
   def set_email_preference
     # When creating a new user, we want their email preference set to receive test run emails
@@ -45,5 +70,11 @@ class User < ActiveRecord::Base
         :name => "My first test file",
         :test_file_text => DEFAULT_TEST_FILE
       )
+  end
+
+  def subscribe_to_default_plan
+    if self.plan.nil?
+      self.plan = Plan.default
+    end
   end
 end
