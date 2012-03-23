@@ -49,4 +49,13 @@ describe Plan do
     @user3.quota[:test_file_count].should == [2, '∞']
     @user3.over_quota?.should == false
   end
+
+  it "should provide a default plan" do
+    FactoryGirl.create(:plan, default: true, name_en: 'Default Plan')
+    user = User.new(email: 'tom@dxw.com', password: 'foobar', invitation_code: FactoryGirl.create(:invitation).code)
+    user.save!
+
+    user.plan.should_not be_nil
+    user.plan.name_en.should == 'Default Plan'
+  end
 end

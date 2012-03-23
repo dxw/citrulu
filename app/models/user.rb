@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   belongs_to :plan
   
   after_create :create_default_test_file 
+  after_create :subscribe_to_default_plan
   before_save :add_invitation
   before_save :set_email_preference
   
@@ -69,5 +70,11 @@ class User < ActiveRecord::Base
         :name => "My first test file",
         :test_file_text => DEFAULT_TEST_FILE
       )
+  end
+
+  def subscribe_to_default_plan
+    if self.plan.nil?
+      self.plan = Plan.default
+    end
   end
 end

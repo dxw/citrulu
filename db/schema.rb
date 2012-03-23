@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120323175206) do
+ActiveRecord::Schema.define(:version => 20120323190327) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(:version => 20120323175206) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
     t.integer  "test_file_count"
+    t.string   "name_en"
+    t.boolean  "default"
   end
 
   create_table "test_files", :force => true do |t|
