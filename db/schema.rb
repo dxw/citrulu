@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120323145410) do
+ActiveRecord::Schema.define(:version => 20120323175206) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -25,8 +25,9 @@ ActiveRecord::Schema.define(:version => 20120323145410) do
     t.integer  "cost_gbp"
     t.integer  "url_count"
     t.integer  "test_frequency"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "test_file_count"
   end
 
   create_table "test_files", :force => true do |t|

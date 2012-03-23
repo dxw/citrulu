@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   def quota
     q = {}
     q[:url_count] = [url_count, plan.url_count]
+    q[:test_file_count] = [test_files.count, plan.test_file_count]
     q
   end
   
