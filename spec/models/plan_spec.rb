@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe Plan do
@@ -30,9 +31,22 @@ describe Plan do
   end
 
   it "should limit number of test files" do
-    @user1.quota[:test_file_count].should == [1,2]
+    @user1.quota[:test_file_count].should == [1, 2]
     @user1.over_quota?.should == false
-    @user3.quota[:test_file_count].should == [2,1]
+    @user3.quota[:test_file_count].should == [2, 1]
     @user3.over_quota?.should == true
+  end
+
+  it "should allow unlimited plans" do
+    @user2.plan.url_count = -1
+    @user2.plan.save!
+    @user3.plan.test_file_count = -1
+    @user3.plan.save!
+
+    @user2.quota[:url_count].should == [3, '∞']
+    @user2.over_quota?.should == false
+
+    @user3.quota[:test_file_count].should == [2, '∞']
+    @user3.over_quota?.should == false
   end
 end

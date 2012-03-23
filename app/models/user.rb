@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :lockable, :timeoutable and :omniauthable
@@ -31,18 +33,22 @@ class User < ActiveRecord::Base
 
   def over_quota?
     quota.values.map do |q|
-      q[0] > q[1]
+      q[1] != '∞' && q[0] > q[1]
     end.any?
   end
 
   def quota
     q = {}
-    q[:url_count] = [url_count, plan.url_count]
-    q[:test_file_count] = [test_files.count, plan.test_file_count]
+    q[:url_count] = [url_count, inf(plan.url_count)]
+    q[:test_file_count] = [test_files.count, inf(plan.test_file_count)]
     q
   end
   
   private
+
+  def inf val
+    val != -1 ? val : '∞'
+  end
 
   def url_count
     test_files.map{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text).length }.sum
