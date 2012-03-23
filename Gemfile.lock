@@ -1,5 +1,6 @@
 GEM
   remote: http://rubygems.org/
+  remote: http://gems.github.com/
   specs:
     actionmailer (3.2.0)
       actionpack (= 3.2.0)
@@ -30,6 +31,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.2.7)
     arel (3.0.2)
+    awesome_print (1.0.2)
     bcrypt-ruby (3.0.1)
     bootstrap-sass (2.0.1)
     builder (3.0.0)
@@ -92,6 +94,7 @@ GEM
     hike (1.2.1)
     i18n (0.6.0)
     jeditable-rails (0.1.1)
+    jnunemaker-crack (0.1.4)
     journey (1.0.3)
     jquery-rails (2.0.1)
       railties (>= 3.2.0, < 5.0)
@@ -203,6 +206,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   bootstrap-sass (~> 2.0.1)
   capybara
   codemirror-rails
@@ -217,6 +221,7 @@ DEPENDENCIES
   haml
   haml_rails
   jeditable-rails
+  jnunemaker-crack
   jquery-rails
   mechanize
   mysql2 (= 0.3.10)

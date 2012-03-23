@@ -1,5 +1,4 @@
 grammar TesterGrammar
-
   rule test_file
     comment* space test_group+ space {
       def process
@@ -9,10 +8,10 @@ grammar TesterGrammar
   end
 
   rule test_group
-    comment* on_clause comment* first_clause? comment* finally_clause? comment* test_line+ comment* {
+    comment* page_clause comment* first_clause? comment* finally_clause? comment* test_line+ comment* {
       def process
         results = {
-          :test_url => on_clause.url.text_value.strip,
+          :test_page => page_clause.process,
           :tests => elements[7].elements.collect{|e| e.process}
         }
 
@@ -25,11 +24,39 @@ grammar TesterGrammar
   end
 
   rule on_clause
-    space "On " url comment* newline 
+    "On" space url {
+      def process
+      {
+        :method => :get,
+        :data => '',
+        :url => url.text_value.strip
+      }
+      end
+    }
+  end
+
+  rule when_clause
+    "When I post" space data space "to" space url {
+      def process
+      {
+        :method => :post,
+        :data => data.process,
+        :url => url.text_value.strip
+      }
+      end
+    }
+  end
+
+  rule page_clause
+    space (on_clause / when_clause) comment* newline {
+      def process
+        elements[1].process
+      end
+    }
   end
 
   rule first_clause
-    space "First, fetch " url comment* newline
+    space "First, fetch " url 
   end
 
   rule finally_clause
@@ -45,21 +72,21 @@ grammar TesterGrammar
   end
  
   rule test
-    assertion space (escaped_value / name / value) {
+    assertion space parameter {
       def process
         hash = {
-          :assertion => assertion.text_value.to_test_sym,
+          :assertion => assertion.process,
           :original_line => text_value
         }
 
-        if elements[2].text_value.match(/^:/)
-          if elements[2].text_value.match(/^::/)
-            hash[:value] = elements[2].text_value.gsub(/^::/, ':').strip
+        if parameter.text_value.match(/^:/)
+          if parameter.text_value.match(/^::/)
+            hash[:value] = parameter.text_value.gsub(/^::/, ':').strip
           else
-            hash[:name] = elements[2].text_value.strip
+            hash[:name] = parameter.text_value.strip
           end
         else
-          hash[:value] = elements[2].text_value.strip
+          hash[:value] = parameter.text_value.strip
         end
 
         hash
@@ -68,9 +95,38 @@ grammar TesterGrammar
   end
 
   rule assertion
-    "Source should contain" / "Source should not contain" / 
+    (complex_assertion / simple_assertion) {
+      def process
+        puts inspect
+        puts (public_methods - Object.public_methods).inspect
+        elements[0].process
+      end
+    }
+  end
+
+  rule simple_assertion
+    ("Source should contain" / "Source should not contain" / 
     "I should see" / "I should not see" / 
-    "Headers should include" / "Headers should not include"
+    "Headers should include" / "Headers should not include") {
+      def process
+        text_value.to_test_sym
+      end
+    }
+  end
+
+  rule complex_assertion
+    ("Header" space identifier space ("should contain" / "should not contain")) {
+      def process 
+        {
+          :header => identifier.text_value.strip,
+          :assertion => elements[2].text_value.to_test_sym
+        }
+      end
+    }
+  end
+
+  rule parameter
+    (escaped_value / name / regex / value)
   end
 
   rule newline
@@ -79,6 +135,18 @@ grammar TesterGrammar
   
   rule value
     [^\n]*
+  end
+
+  rule data
+    '"' [^"]+ '"' {
+      def process
+        elements[1].text_value
+      end
+    }
+  end
+
+  rule regex
+    '/' [^\/]+ '/'
   end
 
   rule comment
@@ -90,7 +158,11 @@ grammar TesterGrammar
   end
 
   rule name
-    ':' [a-zA-Z0-9_]*
+    ':' identifier
+  end
+
+  rule identifier
+    [a-zA-Z0-9_-]+
   end
 
   rule url
