@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   
   has_many :test_files
   belongs_to :invitation
+  belongs_to :plan
   
   after_create :create_default_test_file 
   before_save :add_invitation
