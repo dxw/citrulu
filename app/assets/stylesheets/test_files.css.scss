@@ -125,6 +125,11 @@ body.test_files {
         font-weight: bold;
         border: solid black;
         border-width: 0 0 1px 0;
+        /* force the text to wrap */
+        word-break: break-all;
+        word-wrap: break-word;
+        /* fallback for browsers which don't support word-break and word-wrap: */
+        overflow: hidden;
 
         &.working {
           background: transparent url("loader.gif") no-repeat right;
