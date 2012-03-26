@@ -10,6 +10,12 @@ describe TestRunsController do
     {}
   end
   
+  before(:each) do
+    # For ownership checks: create another user with their own test run
+    other_user = FactoryGirl.create(:user)
+    @other_test_run = FactoryGirl.create(:test_run, :test_file => other_user.test_files.first)
+  end
+  
   describe "GET index" do
     # it "assigns all test_runs as @test_runs" do
     it "should define @test_files" do
@@ -46,32 +52,18 @@ describe TestRunsController do
 
   describe "GET show" do
     it "assigns the requested test_run as @test_run" do
-      TestRunsController.skip_before_filter :check_ownership!
+      controller.stub(:check_ownership!)
       test_run = FactoryGirl.create(:test_run)
       get :show, {:id => test_run.id}
       # get :show, {:id => test_run.to_param}
       assigns(:test_run).should eq(test_run)
     end
-  end
-
-  describe "check_ownership!" do
-    before(:each) do
-      TestRunsController.send(:public, *TestRunsController.protected_instance_methods)  
-    end
-
-    it "should raise an exception if the test run is not owned by the current user" do
     
-      # This borks and I don't undestand why
-      pending
+    it "should redirect to the index if the test run is not owned by the current user" do
+      # Test the Outcome, not the implementation:
+      get :show, {:id => @other_test_run.to_param}
 
-      # Create another user with their own test run
-      user = FactoryGirl.create(:user)
-      test_run = FactoryGirl.create(:test_run, :test_file => user.test_files.first)
-
-      # Try to get the controller to retrieve this user's test file
-      controller.params[:id] = test_run.id
-
-      controller.check_ownership!.should redirect_to(test_runs_path)
+      response.should redirect_to(:controller => "test_runs", :action => "index")
     end
   end
 end

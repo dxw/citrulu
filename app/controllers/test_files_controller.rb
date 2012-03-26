@@ -145,7 +145,7 @@ class TestFilesController < ApplicationController
         rescue => e
           @console_msg_hash = {
             :text1 => "Something has gone wrong: ",
-            :exception_text => e,
+            :exception_text => e.to_s,
             :text2 => " Sorry! This is a bug. Please let us know."
           }
           succeeded = false
@@ -169,7 +169,11 @@ class TestFilesController < ApplicationController
     
       rescue => e
         # catch-all, including CitruluParser::TestCompileUnknownError
-        @console_msg_hash = { :text0 => e.to_s }
+        @console_msg_hash = {
+          :text1 => "Something has gone wrong: ",
+          :exception_text => e.to_s,
+          :text2 => " Sorry! This is a bug. Please let us know."
+        }
         succeeded = false
       
       else
