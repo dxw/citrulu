@@ -1,6 +1,6 @@
 class TestGroup < ActiveRecord::Base
   belongs_to :test_run
-  has_many :test_results
+  has_many :test_results, :dependent => :destroy
   accepts_nested_attributes_for :test_results
   
   def number_of_failures

@@ -10,6 +10,11 @@ require 'spork'
 #require 'spork/ext/ruby-debug'
 
 Spork.prefork do
+  require "rails/application"
+  # Prevent Devise from loading the User model super early with it's route hacks for Rails 3.1 rc4
+  # see also: https://github.com/timcharper/spork/wiki/Spork.trap_method-Jujutsu
+  Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
+  
   # This file is copied to spec/ when you run 'rails generate rspec:install'
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)

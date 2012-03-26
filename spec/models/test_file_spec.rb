@@ -13,10 +13,18 @@ describe TestFile do
     
     @test_run3 = FactoryGirl.create(:test_run, :test_file => @test_file_compiled_nil, :time_run => Time.now)
     FactoryGirl.create(:test_run, :test_file => @test_file_compiled_nil, :time_run => Time.now-1)
-    
-    
   end
-
+  
+  it "should delete dependent test runs when it is deleted" do
+    test_file = FactoryGirl.create(:test_file)
+    test_run = FactoryGirl.create(:test_run, :test_file => test_file)
+    test_run_id = test_run.id
+   
+    test_file.destroy
+    
+    expect{ TestRun.find(test_run_id) }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+  
   describe "owner" do
     it "should return the user that owns the file" do
       user = FactoryGirl.create(:user)

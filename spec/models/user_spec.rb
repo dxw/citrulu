@@ -22,4 +22,13 @@ describe User do
       @user.send_welcome_email
     end
   end
+  
+  it "should delete dependent test files when it is deleted" do
+    #OK, so this is kind of testing ActiveRecord, but this is a fairly critical thing to happen:
+    test_file_id = FactoryGirl.create(:test_file, :user => @user).id
+    
+    TestFile.find(test_file_id).user.should === @user
+    @user.destroy
+    expect{ TestFile.find(test_file_id) }.to raise_error(ActiveRecord::RecordNotFound)
+  end
 end

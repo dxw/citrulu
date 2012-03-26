@@ -3,7 +3,7 @@ require 'symbolizer'
 
 class TestFile < ActiveRecord::Base
   belongs_to :user 
-  has_many :test_runs
+  has_many :test_runs, :dependent => :destroy
   
   validates_presence_of :name
   

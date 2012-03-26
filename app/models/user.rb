@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
       value && Invitation.exists?(:code => value) && Invitation.find_by_code(value).enabled
   end
   
-  has_many :test_files
+  has_many :test_files, :dependent => :destroy
   belongs_to :invitation
   belongs_to :plan
   

@@ -4,8 +4,16 @@ describe TestRun do
   before(:each) do    
     # Create a test run with a mixture of failures and successes
     @test_run = FactoryGirl.create(:test_run)
-    test_group_1 = FactoryGirl.create(:test_group, :successful_results => 0, :failed_results => 1, :test_run => @test_run)
+    @test_group_1 = FactoryGirl.create(:test_group, :successful_results => 0, :failed_results => 1, :test_run => @test_run)
     test_group_2 = FactoryGirl.create(:test_group, :successful_results => 1, :failed_results => 1, :test_run => @test_run)
+  end
+  
+  it "should delete dependent test groups when it is deleted" do
+    test_group_1_id = @test_group_1.id
+    
+    @test_run.destroy
+    
+    expect{ TestGroup.find(test_group_1_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   describe "number_of_pages" do

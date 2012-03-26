@@ -2,7 +2,7 @@ class TestRun < ActiveRecord::Base
   require 'symbolizer' 
   
   belongs_to :test_file
-  has_many :test_groups
+  has_many :test_groups, :dependent => :destroy
 
   default_scope :order => 'time_run DESC'
   

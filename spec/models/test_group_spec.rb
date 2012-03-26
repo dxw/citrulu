@@ -6,6 +6,15 @@ describe TestGroup do
     @test_group_2_failures = FactoryGirl.create(:test_group, :successful_results => 1, :failed_results => 2)
   end
   
+  it "should delete dependent test results when it is deleted" do
+    # Approach: Pick the first test result and check that it gets deleted
+    test_result_id = @test_group_no_failures.test_results.first
+    
+    @test_group_no_failures.destroy
+    
+    expect{ TestResult.find(test_result_id) }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+  
   describe "number_of_failures" do
     it "should return 0 if there are no failures" do
       @test_group_no_failures.number_of_failures.should == 0
