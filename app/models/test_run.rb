@@ -9,24 +9,32 @@ class TestRun < ActiveRecord::Base
   def groups_with_failures
     test_groups.select{|g| g.failed? || g.has_failed_tests?}
   end
+    
+  def number_of_failing_groups
+    number_of_failed_groups + number_of_failed_tests
+  end
   
   def has_failures?
     has_failed_groups? || has_groups_with_failed_tests?
   end
   
-  def number_of_failing_groups
-    groups_with_failures.count
+  
+  def failed_groups 
+    test_groups.select{|g| g.failed? }
   end
   
-  
   def number_of_failed_groups
-    test_groups.select{|g| g.failed? }.count
+    failed_groups.count
   end
   
   def has_failed_groups?
     number_of_failed_groups > 0
   end
   
+  
+  def groups_with_failed_tests
+    test_groups.select{|g| g.has_failed_tests?}
+  end
   
   def number_of_failed_tests 
     # Not accounting for whole groups which failed.

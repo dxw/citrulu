@@ -56,6 +56,12 @@ describe TestRun do
       end
     end
     
+    describe "failed_groups" do
+      it "should return the empty array" do
+        @test_run_success.failed_groups.should == []
+      end
+    end
+    
     describe "number_of_failed_tests" do
       it "should be 0" do
         @test_run_success.number_of_failed_tests.should== 0
@@ -65,6 +71,12 @@ describe TestRun do
     describe "has_groups_with_failed_tests?" do
       it "should return false" do
         @test_run_success.has_groups_with_failed_tests?.should be_false
+      end
+    end
+    
+    describe "groups_with_failed_tests" do
+      it "should return the empty array" do
+        @test_run_success.groups_with_failed_tests.should == []
       end
     end
     
@@ -101,6 +113,10 @@ describe TestRun do
       end
     end
     
+    describe "failed_groups" do
+      it "should return one test group"
+    end
+    
     describe "number_of_failed_tests" do
       it "should be 0" do
         @test_run2.number_of_failed_tests.should== 0
@@ -113,6 +129,12 @@ describe TestRun do
       end
     end
     
+    describe "groups_with_failed_tests" do
+      it "should return the empty array" do
+        @test_run2.groups_with_failed_tests.should == []
+      end
+    end
+    
     describe "number_of_failing_groups" do
       it "should return 1" do
         @test_run2.number_of_failing_groups.should == 1
@@ -120,7 +142,7 @@ describe TestRun do
     end
     
     describe "groups_with_failures" do
-      it "should return one elements"
+      it "should return one test group"
     end
     
   end
@@ -138,6 +160,12 @@ describe TestRun do
       end
     end
     
+    describe "failed_groups" do
+      it "should return the empty array" do
+        @test_run.failed_groups.should == []
+      end
+    end
+    
     describe "number_of_failed_tests" do
       it "should be 2" do
         @test_run.number_of_failed_tests.should== 2
@@ -150,6 +178,10 @@ describe TestRun do
       end
     end
     
+    describe "groups_with_failed_tests" do
+      it "should return an array of two test groups"
+    end
+    
     describe "number_of_failing_groups" do
       it "should return 2" do
         @test_run.number_of_failing_groups.should == 2
@@ -157,7 +189,7 @@ describe TestRun do
     end
     
     describe "groups_with_failures" do
-      it "should return two elements"
+      it "should return two test_groups"
     end
   end
 

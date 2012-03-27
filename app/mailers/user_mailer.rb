@@ -4,11 +4,14 @@ class UserMailer < ActionMailer::Base
 
   def test_notification(test_run)
     @test_run = test_run
-    @failures = test_run.test_groups.sum{|x|x.test_results.select{|result| !result.result}.count}
-
-    if @failures > 0
+    
+    if @test_run.has_groups_with_failed_tests?
       @status = :fail
-      @title = subject = "#{@failures} of your tests just failed"
+      @title = subject = "#{@test_run.number_of_failed_tests} of your tests just failed"
+      # There may *also* be a number of pages which could not be retrieved, but we'll leave this out of the subject line.
+    elsif @test_run.has_failed_groups?
+      @status = :fail
+      @title = subject = "#{@test_run.number_of_failed_groups} pages could not be retrieved"
     else
       @status = :pass
       @title = subject = 'All of your tests are passing'

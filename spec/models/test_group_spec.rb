@@ -15,6 +15,17 @@ describe TestGroup do
     expect{ TestResult.find(test_result_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe "failed_tests" do
+    it "should return the empty array if there are no failures" do
+      @test_group_no_failures.failed_tests.should be_empty
+    end
+    
+    it "should contain 2 elements if there are 2 failures and 1 success" do
+      @test_group_2_failures.failed_tests.length.should == 2
+    end
+  end
+  
+  
   describe "number_of_failed_tests" do
     it "should return 0 if there are no failures" do
       @test_group_no_failures.number_of_failed_tests.should == 0

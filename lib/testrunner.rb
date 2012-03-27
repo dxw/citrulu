@@ -33,7 +33,7 @@ class TestRunner
             mail = UserMailer.test_notification(test_run)
             mail.deliver
           rescue Exception => e
-            raise "UserMailer raised an error while attempting to send a test notification email to #{file.user.email} (id: #{file.user.id}): #{e}"
+            raise "UserMailer raised an error while attempting to send a test notification email to #{file.user.email} (id: #{file.user.id}): #{e.to_s}"
           end
         end
       end

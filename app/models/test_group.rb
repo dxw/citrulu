@@ -3,9 +3,13 @@ class TestGroup < ActiveRecord::Base
   has_many :test_results, :dependent => :destroy
   accepts_nested_attributes_for :test_results
   
+  def failed_tests
+    test_results.select{|t| t.failed?}
+  end
+  
   def number_of_failed_tests
     # Will be 0 if the whole group failed since test_results will be []
-    test_results.select{|t| t.failed?}.count
+    failed_tests.count
   end
   
   def failed?
