@@ -32,25 +32,77 @@ describe TestRun do
     end
   end
 
-  describe "number_of_checks" do
+  describe "number_of_tests" do
     it "should return the total number of checks in all its groups" do
-      @test_run.number_of_checks.should== 3
+      @test_run.number_of_tests.should== 3
     end
   end
 
-  describe "number_of_failures" do
+  describe "number_of_failed_tests" do
     it "should return the total failures in all its groups" do
-      @test_run.number_of_failures.should== 2
+      @test_run.number_of_failed_tests.should== 2
     end
   end
   
   describe "has_failures?" do
-    it "should return false if there are no failures" do
-      FactoryGirl.create(:test_run_no_failures).has_failures?.should == false
+    it "should return false if there are no failed tests" do
+      FactoryGirl.create(:test_run_no_failures).has_failures?.should be_false
     end
     
-    it "should return true if there are failures" do
-      @test_run.has_failures?.should == true
+    it "should return true if there are failed tests" do
+      @test_run.has_failures?.should be_true
+    end
+    
+    it "should return true if there are failed test groups"
+  end
+  
+  describe "groups_with_failures" do
+    it "should return the empty array if there are no failing groups"
+    it "should return two elements if there are two failing groups"
+  end
+  
+  describe "number_of_failing_groups" do
+    it "should return 0 if there are no failing groups" do
+      FactoryGirl.create(:test_run_no_failures).number_of_failing_groups.should == 0
+    end
+    
+    it "should return 2 if there are two failing tests and no failing groups" do
+      @test_run.number_of_failing_groups.should == 2
+    end
+    
+    it "should return 1 if there is one failing group and no failing tests" do
+      @clean_test_run = FactoryGirl.create(:test_run)
+      test_group = FactoryGirl.create(:test_group_no_failures, :message => "I failed innit", :test_run => @clean_test_run)
+      @clean_test_run.number_of_failing_groups.should == 1
+    end
+  end
+  
+  describe "has_failed_groups?" do
+    before(:each) do
+      @clean_test_run = FactoryGirl.create(:test_run)
+    end
+    
+    it "should return false if there are groups with failed tests but no failed groups" do
+      @test_run.has_failed_groups?.should be_false
+    end 
+      
+    it "should return true if there are failed groups but no failed tests" do
+      test_group = FactoryGirl.create(:test_group_no_failures, :message => "I failed innit", :test_run => @clean_test_run)
+      @clean_test_run.has_failed_groups?.should be_true
+    end
+  end
+  
+  describe "has_groups_with_failed_tests?" do
+    before(:each) do
+      @clean_test_run = FactoryGirl.create(:test_run)
+    end
+    it "should return true if there are groups with failed tests but no failed groups" do
+      @test_run.has_groups_with_failed_tests?.should be_true
+    end
+    
+    it "should return false if there are failed groups but no failed test" do
+      test_group = FactoryGirl.create(:test_group_no_failures, :message => "I failed innit", :test_run => @clean_test_run)
+      @clean_test_run.has_groups_with_failed_tests?.should be_false
     end
   end
 end

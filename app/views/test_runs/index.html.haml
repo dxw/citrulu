@@ -41,7 +41,7 @@
               %p
                 %span.date=test_run.time_run.to_s(:test_run_time)
                 %span.file=test_run.test_file.name
-              %p.summary=ran_checks(test_run)
+              %p.summary=ran_tests(test_run)
 
   .sidebar.span4
     %h2 Test files status

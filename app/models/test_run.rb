@@ -6,36 +6,47 @@ class TestRun < ActiveRecord::Base
 
   default_scope :order => 'time_run DESC'
   
-  def has_failures?
-    test_groups.collect{|g| g.has_failures?}.uniq.include?(true) || number_of_failures != 0
+  def groups_with_failures
+    test_groups.select{|g| g.failed? || g.has_failed_tests?}
   end
   
-  def groups_with_failures
-    # Speed things up if there haven't been any failures:
-    return [] unless has_failures?
-    
-    test_groups.select{|g| g.has_failures? }
+  def has_failures?
+    has_failed_groups? || has_groups_with_failed_tests?
   end
-
+  
   def number_of_failing_groups
     groups_with_failures.count
   end
+  
+  
+  def number_of_failed_groups
+    test_groups.select{|g| g.failed? }.count
+  end
+  
+  def has_failed_groups?
+    number_of_failed_groups > 0
+  end
+  
+  
+  def number_of_failed_tests 
+    # Not accounting for whole groups which failed.
+    test_groups.collect{|g| g.number_of_failed_tests}.sum
+  end
+
+  def has_groups_with_failed_tests?
+    number_of_failed_tests > 0
+  end
+  
   
   def number_of_pages
     test_groups.length
   end
   
-  def number_of_checks
-    count = 0
-    test_groups.each do | test_group |
-      count += test_group.test_results.length
-    end
-    return count
+  def number_of_tests
+    test_groups.collect{|g| g.test_results.length }.sum
   end
   
-  def number_of_failures  
-    test_groups.collect{|g| g.number_of_failures}.sum
-  end
+  
 
   def owner
     test_file.user
