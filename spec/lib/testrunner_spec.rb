@@ -81,6 +81,7 @@ describe TestRunner do
           
           # ...still succeeding - shouldn't get mail...
           UserMailer.should_not_receive(:test_notification)      
+          #UserMailer.should_not_receive(:test_notification_success)      
           TestRunner.run_all_tests
         end
       
@@ -88,21 +89,16 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           
           UserMailer.should_not_receive(:test_notification)
+          #UserMailer.should_not_receive(:test_notification_success)
           TestRunner.run_all_tests
         end
 
-        it "should send success messages if the last TestRun was a failure (1)" do
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-
-          stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
-        end
-
-        it "should send success messages if the last TestRun was a failure (2)" do
+        it "should send success messages if the last TestRun was a failure" do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
           UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          #UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
@@ -110,22 +106,34 @@ describe TestRunner do
 
         it "should always send failure messages (1)" do
           UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
-
+        
         it "should always send failure messages (2)" do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
-
+          
           UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          # UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
-          stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
-        it "should always send failure messages (3)" do
+        it "should send a failure message if the tests were succeeding but are now failing (1)" do
+          stub_execute_test_groups_to_succeed
+          TestRunner.run_all_tests
+          
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+
+          stub_execute_test_groups_to_fail
+          TestRunner.run_all_tests
+        end
+
+        it "should send a failure message if the tests were succeeding but are now failing (2)" do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
@@ -133,27 +141,41 @@ describe TestRunner do
           TestRunner.run_all_tests
 
           UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
         end
         
-        context "when UserMailer throws an error" do
-          before(:each) do
-            stub_execute_test_groups_to_fail
-            UserMailer.should_receive(:test_notification).and_raise("foo")
-          end
         
-          it "should capture any error message thrown by the UserMailer and return it in a new error" do
-            expect{ TestRunner.run_all_tests }.to raise_error(/foo/)
+        it "should send a failure message when groups have failed but no tests have failed" do
+          # "group has failed" == "page could not be retrieved" == "message is not nil"          
+          TestFile.stub(:execute_test_groups) do |file,test_run|
+            FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
-          it "should rescue any error thrown by the UserMailer and add the user id" do
-            expect{ TestRunner.run_all_tests }.to raise_error(/id: #{@user.id}/)
-          end
-          it "should rescue any error thrown by the UserMailer and add the user's email" do
-            expect{ TestRunner.run_all_tests }.to raise_error(/#{@user.email}/)
-          end
+          
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
+          # UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          
+          TestRunner.run_all_tests
         end
+        
+        # context "when UserMailer throws an error" do
+        #   before(:each) do
+        #     stub_execute_test_groups_to_fail
+        #     UserMailer.should_receive(:test_notification_failure).and_raise("foo")
+        #   end
+        # 
+        #   it "should capture any error message thrown by the UserMailer and return it in a new error" do
+        #     expect{ TestRunner.run_all_tests }.to raise_error(/foo/)
+        #   end
+        #   it "should rescue any error thrown by the UserMailer and add the user id" do
+        #     expect{ TestRunner.run_all_tests }.to raise_error(/id: #{@user.id}/)
+        #   end
+        #   it "should rescue any error thrown by the UserMailer and add the user's email" do
+        #     expect{ TestRunner.run_all_tests }.to raise_error(/#{@user.email}/)
+        #   end
+        # end
       end
     end
   end
