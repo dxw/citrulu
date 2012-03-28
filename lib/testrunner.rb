@@ -27,17 +27,13 @@ class TestRunner
         # 1. It's not the first run
         # 2. The current run has failures OR the previous run had failures
         if test_run.has_failures? || (test_run.previous_run && test_run.previous_run.has_failures?)
-          begin
-            # if test_run.has_failures?
-            #   mail = UserMailer.test_notification_failure(test_run)
-            # else # no failures this run, but the previous run exists and had failures
-            #   mail = UserMailer.test_notification_success(test_run)
-            # end
-            mail = UserMailer.test_notification(test_run)
-            mail.deliver
-          rescue Exception => e
-            raise "UserMailer raised an error while attempting to send a test notification email to #{file.user.email} (id: #{file.user.id}): #{e}"
-          end
+          # if test_run.has_failures?
+          #   mail = UserMailer.test_notification_failure(test_run)
+          # else # no failures this run, but the previous run exists and had failures
+          #   mail = UserMailer.test_notification_success(test_run)
+          # end
+          mail = UserMailer.test_notification(test_run)
+          mail.deliver
         end
       end
     end

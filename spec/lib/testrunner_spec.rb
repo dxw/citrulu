@@ -159,23 +159,6 @@ describe TestRunner do
           
           TestRunner.run_all_tests
         end
-        
-        # context "when UserMailer throws an error" do
-        #   before(:each) do
-        #     stub_execute_test_groups_to_fail
-        #     UserMailer.should_receive(:test_notification_failure).and_raise("foo")
-        #   end
-        # 
-        #   it "should capture any error message thrown by the UserMailer and return it in a new error" do
-        #     expect{ TestRunner.run_all_tests }.to raise_error(/foo/)
-        #   end
-        #   it "should rescue any error thrown by the UserMailer and add the user id" do
-        #     expect{ TestRunner.run_all_tests }.to raise_error(/id: #{@user.id}/)
-        #   end
-        #   it "should rescue any error thrown by the UserMailer and add the user's email" do
-        #     expect{ TestRunner.run_all_tests }.to raise_error(/#{@user.email}/)
-        #   end
-        # end
       end
     end
   end
