@@ -40,8 +40,7 @@ describe UserMailer do
     
     context "when generating a failure email" do
       before(:each) do
-        @email = UserMailer.test_notification(@test_run1)
-        # @email = UserMailer.test_notification_failure(@test_run1)
+        @email = UserMailer.test_notification_failure(@test_run1)
       end
     
       it 'has content in the text part' do
@@ -55,8 +54,7 @@ describe UserMailer do
     
     context "when generating a success email" do
       before(:each) do
-        @email = UserMailer.test_notification(@test_run3)
-        # @email = UserMailer.test_notification_success(@test_run3)
+        @email = UserMailer.test_notification_success(@test_run3)
       end
       
       it 'has content in the text part' do
@@ -69,8 +67,7 @@ describe UserMailer do
     end
     
     it 'composes an email for a single failure' do
-      email = UserMailer.test_notification(@test_run1)
-      # email = UserMailer.test_notification_failure(@test_run1)
+      email = UserMailer.test_notification_failure(@test_run1)
 
       email.subject.should include('1 of your tests just failed')
       email.to.should == ['tom+tester@dxw.com']
@@ -80,8 +77,7 @@ describe UserMailer do
     end
 
     it 'composes an email for multiple failures' do
-      email = UserMailer.test_notification(@test_run2)
-      # email = UserMailer.test_notification_failure(@test_run2)
+      email = UserMailer.test_notification_failure(@test_run2)
 
       email.subject.should include('3 of your tests just failed')
 
@@ -93,8 +89,7 @@ describe UserMailer do
     end
 
     it 'composes an email for success' do
-      email = UserMailer.test_notification(@test_run3)
-      # email = UserMailer.test_notification_success(@test_run3)
+      email = UserMailer.test_notification_success(@test_run3)
 
       email.subject.should include('All of your tests are passing')
 

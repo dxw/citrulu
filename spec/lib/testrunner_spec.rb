@@ -80,16 +80,14 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           
           # ...still succeeding - shouldn't get mail...
-          UserMailer.should_not_receive(:test_notification)      
-          #UserMailer.should_not_receive(:test_notification_success)      
+          UserMailer.should_not_receive(:test_notification_success)      
           TestRunner.run_all_tests
         end
       
         it "should not send a success message on the first test run" do
           stub_execute_test_groups_to_succeed
           
-          UserMailer.should_not_receive(:test_notification)
-          #UserMailer.should_not_receive(:test_notification_success)
+          UserMailer.should_not_receive(:test_notification_success)
           TestRunner.run_all_tests
         end
 
@@ -97,16 +95,14 @@ describe TestRunner do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          #UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (1)" do
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -116,8 +112,7 @@ describe TestRunner do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
           
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          # UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           TestRunner.run_all_tests
         end
@@ -126,8 +121,7 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
           
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -140,8 +134,7 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
 
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          #UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -154,8 +147,7 @@ describe TestRunner do
             FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
           
-          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
-          # UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
           
           TestRunner.run_all_tests
         end

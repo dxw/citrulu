@@ -27,12 +27,11 @@ class TestRunner
         # 1. It's not the first run
         # 2. The current run has failures OR the previous run had failures
         if test_run.has_failures? || (test_run.previous_run && test_run.previous_run.has_failures?)
-          # if test_run.has_failures?
-          #   mail = UserMailer.test_notification_failure(test_run)
-          # else # no failures this run, but the previous run exists and had failures
-          #   mail = UserMailer.test_notification_success(test_run)
-          # end
-          mail = UserMailer.test_notification(test_run)
+          if test_run.has_failures?
+            mail = UserMailer.test_notification_failure(test_run)
+          else # no failures this run, but the previous run exists and had failures
+            mail = UserMailer.test_notification_success(test_run)
+          end
           mail.deliver
         end
       end
