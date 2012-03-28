@@ -1,14 +1,18 @@
 - content_for :content do
-  %p{:style => content_p_styles} Thanks for joining us for the Alpha!
-  %p{:style => content_p_styles} To get started, log in here:
-  %p{:style => content_p_styles + "padding-left: 20px;"}
-    =link_to new_user_session_url
+  %p{:style => content_p_styles} Thanks for joining us for the Citrulu Alpha!
+  %p{:style => content_p_styles} We're delighted that you've signed up to test your live websites. To get you started we've created an example test file which you can quickly modify to point at the sites you want to test.
+  %table{:style => "text-align: center; margin-bottom:10px;"} 
+    %tr
+      %td{:style => "width:220px"}
+      %td{:style => content_button_td_styles + "width:198px;"} 
+        =link_to "Let's get started!", test_files_url, :style => content_button_a_styles
+      %td{:style => "width:220px"}
+  %p{:style => content_p_styles} Citrulu is free during the Alpha, so please feel free to add as many tests as you like.
   %p{:style => content_p_styles} 
     Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
-    = mail_to 'contact@citrulu.com', "send us an email"
-    &ndash; or post something using the feedback form.
-  %p{:style => content_p_styles}
-    We hope you like it!
+    = mail_to 'contact@citrulu.com', "send us an email", :style => content_a_styles
+    &ndash; or post something using the feedback form on the site. 
+  %p{:style => content_p_styles} We'd also love to hear from you if you've got any suggestions for how we can make Citrulu even better.
 - content_for :footer_text do
   %span
     You're receiving this because you signed up at
