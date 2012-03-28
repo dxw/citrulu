@@ -2,6 +2,7 @@ class UserMailer < ActionMailer::Base
   default from: "Citrulu <contact@citrulu.com>"
   default "Message-ID"=>"#{Digest::SHA2.hexdigest(Time.now.to_s)}@citrulu.com"
 
+
   def welcome_email(user)
     @title = "Welcome to Citrulu"
     mail(to: user.email, subject: "Welcome to Citrulu")

@@ -5,23 +5,29 @@
       If you'd like, you can 
       =link_to("review recent test results", test_runs_url) + "."
   - elsif @status == :fail
-
+    - if @test_run.has_failed_groups?
+      %p= failed_groups_header 
+      %div{:style => "padding-bottom: 15px;"}
+        - @test_run.failed_groups.each do |group|
+          %p
+            =group.test_url
+          %pre{:style =>"font-size:0.9em; margin-left:15px; padding: 2px 5px; background: #fff; border:1px solid #000; -webkit-border-radius: 3px; -moz-border-radius-topright: 3px; border-radius: 3px;"}
+            =group.message
+    
+    - if @test_run.has_groups_with_failed_tests? 
+      %p= "Failed tests (#{@test_run.number_of_failed_tests}):"
+      %div{:style => "padding-bottom: 15px;"}
+        - @test_run.groups_with_failed_tests.each do |group|
+          %p= "On #{group.test_url}"
+          %ul
+            - group.failed_tests.each do |result|
+              %li
+                = "#{result.assertion} " 
+                != value_or_name(result)
+                      
     %p 
       To view your full test results, visit
       =link_to("your test results page", test_run_url(@test_run)) + "."
-      
-    %p= "Failed tests (#{@failures}):"
-
-    %div{:style => "padding-bottom: 15px;"}
-      - @test_run.test_groups.each do |group|
-        - next if !group.has_failures?
-        %p= "On #{group.test_url}"
-        %ul
-          - group.test_results.each do |result|
-            - next if !result.failed?
-            %li
-              = "#{result.assertion} " 
-              != value_or_name(result)
               
 - content_for :footer_text do
   %span You're receiving this because you enabled alerts for your tests at Citrulu.com

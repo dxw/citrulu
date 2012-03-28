@@ -55,25 +55,165 @@ describe TestRun do
     end
   end
 
-  describe "number_of_checks" do
+  describe "number_of_tests" do
     it "should return the total number of checks in all its groups" do
-      @test_run.number_of_checks.should== 3
+      @test_run.number_of_tests.should== 3
     end
   end
 
-  describe "number_of_failures" do
-    it "should return the total failures in all its groups" do
-      @test_run.number_of_failures.should== 2
-    end
-  end
-  
-  describe "has_failures?" do
-    it "should return false if there are no failures" do
-      FactoryGirl.create(:test_run_no_failures).has_failures?.should == false
+
+  context "when there are no failed groups and no failed tests" do
+    before(:each) do
+      @test_run_success = FactoryGirl.create(:test_run_no_failures)
     end
     
-    it "should return true if there are failures" do
-      @test_run.has_failures?.should == true
+    describe "has_failures?" do
+      it "should return false" do
+        @test_run_success.has_failures?.should be_false
+      end
+    end
+    
+    describe "has_failed_groups?" do
+      it "should return true" do
+        @test_run_success.has_failed_groups?.should be_false
+      end
+    end
+    
+    describe "failed_groups" do
+      it "should return the empty array" do
+        @test_run_success.failed_groups.should == []
+      end
+    end
+    
+    describe "number_of_failed_tests" do
+      it "should be 0" do
+        @test_run_success.number_of_failed_tests.should== 0
+      end
+    end
+    
+    describe "has_groups_with_failed_tests?" do
+      it "should return false" do
+        @test_run_success.has_groups_with_failed_tests?.should be_false
+      end
+    end
+    
+    describe "groups_with_failed_tests" do
+      it "should return the empty array" do
+        @test_run_success.groups_with_failed_tests.should == []
+      end
+    end
+    
+    describe "number_of_failing_groups" do
+      it "should return 0" do
+        @test_run_success.number_of_failing_groups.should == 0
+      end
+    end
+    
+    describe "groups_with_failures" do
+      it "should return the empty array" do
+        @test_run_success.groups_with_failures.should == []
+      end
+    end
+    
+  end
+  
+  
+  context "when there is 1 failed group and no failed tests" do
+    before(:each) do
+      @test_run2 = FactoryGirl.create(:test_run_no_failures) # creates 2 test groups
+      @test_group = FactoryGirl.create(:test_group_no_failures, :message => "I failed innit", :test_run => @test_run2) 
+    end
+    
+    describe "has_failures?" do
+      it "should return true" do
+        @test_run2.has_failures?.should be_true
+      end
+    end
+    
+    describe "has_failed_groups?" do
+      it "should return true" do
+        @test_run2.has_failed_groups?.should be_true
+      end
+    end
+    
+    describe "failed_groups" do
+      it "should return one test group"
+    end
+    
+    describe "number_of_failed_tests" do
+      it "should be 0" do
+        @test_run2.number_of_failed_tests.should== 0
+      end
+    end 
+    
+    describe "has_groups_with_failed_tests?" do
+      it "should return false" do
+        @test_run2.has_groups_with_failed_tests?.should be_false
+      end
+    end
+    
+    describe "groups_with_failed_tests" do
+      it "should return the empty array" do
+        @test_run2.groups_with_failed_tests.should == []
+      end
+    end
+    
+    describe "number_of_failing_groups" do
+      it "should return 1" do
+        @test_run2.number_of_failing_groups.should == 1
+      end
+    end
+    
+    describe "groups_with_failures" do
+      it "should return one test group"
+    end
+    
+  end
+  
+  context "when there are no failed groups and 2 failed tests" do
+    describe "has_failures?" do
+      it "should return true" do
+        @test_run.has_failures?.should be_true
+      end
+    end
+    
+    describe "has_failed_groups?" do
+      it "should return true" do
+        @test_run.has_failed_groups?.should be_false
+      end
+    end
+    
+    describe "failed_groups" do
+      it "should return the empty array" do
+        @test_run.failed_groups.should == []
+      end
+    end
+    
+    describe "number_of_failed_tests" do
+      it "should be 2" do
+        @test_run.number_of_failed_tests.should== 2
+      end
+    end 
+    
+    describe "has_groups_with_failed_tests?" do
+      it "should return true" do
+        @test_run.has_groups_with_failed_tests?.should be_true
+      end
+    end
+    
+    describe "groups_with_failed_tests" do
+      it "should return an array of two test groups"
+    end
+    
+    describe "number_of_failing_groups" do
+      it "should return 2" do
+        @test_run.number_of_failing_groups.should == 2
+      end
+    end
+    
+    describe "groups_with_failures" do
+      it "should return two test_groups"
     end
   end
+
 end

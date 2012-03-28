@@ -5,7 +5,7 @@ describe UserMailer do
     @user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
   end
   
-  describe 'test notifications' do
+  describe 'test notification' do
     before(:each) do
       test_file = FactoryGirl.create(:test_file, :user => @user)
       
@@ -95,6 +95,17 @@ describe UserMailer do
 
       both_parts(email) {|body| body.should_not include('(failed)') }
     end
+    
+    it '<<Acts like a success??>> if there are no failed groups and no groups with failed tests' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+    it '<<Acts like a success??>> if there are groups with failed tests' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+    it '<<Acts like a success??>> if there are failed groups' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+
   end
   
   describe "welcome_email" do
