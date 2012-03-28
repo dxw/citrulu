@@ -23,12 +23,10 @@ class TestRunner
       execute_test_groups(file, test_run)
       
       if file.user.email_preference == 1
-        previous_run = file.last_run
-        
         # Send email if:
         # 1. It's not the first run
         # 2. The current run has failures OR the previous run had failures
-        if test_run.has_failures? || (previous_run && previous_run.has_failures?)
+        if test_run.has_failures? || (test_run.previous_run && test_run.previous_run.has_failures?)
           begin
             mail = UserMailer.test_notification(test_run)
             mail.deliver

@@ -40,4 +40,12 @@ class TestRun < ActiveRecord::Base
   def owner
     test_file.user
   end
+  
+  def previous_run
+    # The ID comparison shouldn't be nescessary, but apparently Is
+    test_file.test_runs.select{|run| (run.id != id) && (run.time_run < time_run) }.max{|a,b|a.time_run <=> b.time_run}
+    
+    # Definition by ID is cleaner but probably not what we should be doing...
+    # test_file.test_runs.select{|run|run.id < id}.max{|a,b|a.id <=> b.id}
+  end
 end

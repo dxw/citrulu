@@ -15,6 +15,29 @@ describe TestRun do
     
     expect{ TestGroup.find(test_group_1_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
+  
+  describe "previous_run" do
+    before(:each) do
+      @test_file = FactoryGirl.create(:test_file)
+      @test_run0 = FactoryGirl.create(:test_run, :time_run => (Time.now - 10), :test_file => @test_file)
+      @test_run1 = FactoryGirl.create(:test_run, :time_run => (Time.now - 5), :test_file => @test_file)
+      @test_run2 = FactoryGirl.create(:test_run, :time_run => Time.now, :test_file => @test_file)
+    end
+    
+    it "should return nil if there are no previous test runs" do
+      @test_run0.previous_run.should be_nil
+    end
+  
+    it "should return the previous test run if the test run is the latest" do
+      @test_run2.previous_run.should === @test_run1
+    end
+
+    it "should return the previous test run if the test run is not the latest" do
+      @test_run1.previous_run.should === @test_run0
+    end
+  end
+  
+  
 
   describe "number_of_pages" do
     it "should return the number of test groups in the run" do

@@ -38,9 +38,7 @@ describe TestFile do
     it "should return the most recent test run for the file" do
       @test_file_compiled_text.last_run.should== @test_run2
     end
-  end
   
-  describe "last_run" do
     it "should return the most recent test run for the if IDs are out of order" do
       @test_file_compiled_nil.last_run.should== @test_run3
     end

@@ -8,7 +8,7 @@ class TestFile < ActiveRecord::Base
   validates_presence_of :name
   
   def last_run
-    test_runs.sort{|r,u| u.time_run <=> r.time_run }.first
+    test_runs.max{|r,u| r.time_run <=> u.time_run }
   end
 
   def owner

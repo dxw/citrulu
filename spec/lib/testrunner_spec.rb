@@ -5,14 +5,14 @@ describe TestRunner do
   describe "run_all_tests" do
     
     def stub_execute_test_groups_to_succeed
-      TestRunner.stub(:execute_test_groups) do |file,test_run_id|
-        FactoryGirl.create(:test_group_no_failures, :test_run_id => test_run_id)
+      TestRunner.stub(:execute_test_groups) do |file,test_run|
+        FactoryGirl.create(:test_group_no_failures, :test_run => test_run)
       end
     end
     
     def stub_execute_test_groups_to_fail
-      TestRunner.stub(:execute_test_groups) do |file,test_run_id|
-        FactoryGirl.create(:test_group_with_failures, :test_run_id => test_run_id)
+      TestRunner.stub(:execute_test_groups) do |file,test_run|
+        FactoryGirl.create(:test_group_with_failures, :test_run => test_run)
       end
     end
     
@@ -37,37 +37,32 @@ describe TestRunner do
 
     describe "(sending email)" do
       before(:each) do
-        @user = FactoryGirl.create(:user)
-        @test_file = FactoryGirl.create(:test_file, :user => @user)
-        # Make sure there's something to run tests on:
-        TestFile.stub(:compiled_files).and_return([@test_file])
         # Don't actually send any email!
         Mail::Message.any_instance.stub(:deliver)
       end
+      
+      context "when emails are disabled" do
+        before(:each) do
+          @user = FactoryGirl.create(:user, :email_preference => 0)
+          @test_file = FactoryGirl.create(:test_file, :user => @user)
+          # Make sure there's something to run tests on:
+          # TestFile.stub(:compiled_files).and_return([@test_file])
+        end
+        
+        it "should not send an email" do  
+          stub_execute_test_groups_to_fail
 
-      it "should send an email if the mailing preferences allow it" do
-        @user.email_preference = 1
-        
-        stub_execute_test_groups_to_fail
-        
-        # Check that the call is made to the mailer
-        UserMailer.any_instance.should_receive(:test_notification)
-        TestRunner.run_all_tests
-      end
-
-      it "should not send an email if the mailing preferences disallow it" do
-        @user.email_preference = 0
-        
-        stub_execute_test_groups_to_fail
-        
-        # Check that the call isn't made to the mailer
-        UserMailer.any_instance.should_not_receive(:test_notification)
-        TestRunner.run_all_tests
+          # Check that the call isn't made to the mailer
+          UserMailer.should_not_receive(:test_notification)
+          TestRunner.run_all_tests
+        end
       end
       
-      context "emails enabled" do
+      
+      context "when emails are enabled" do
         before(:each) do
-          @user.email_preference = 1
+          @user = FactoryGirl.create(:user, :email_preference => 1)
+          @test_file = FactoryGirl.create(:test_file, :user => @user)
         end
         
         it "should not send success messages if the last TestRun was successful" do
@@ -79,23 +74,25 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           
           # Should be able to use this line but doesn't work - complains that the second call to run_all_tests is also made...
-          # UserMailer.any_instance.should_receive(:test_notification)  
+          # UserMailer.should_receive(:test_notification)  
           TestRunner.run_all_tests        
           
+          stub_execute_test_groups_to_succeed
+          
           # ...still succeeding - shouldn't get mail...
-          UserMailer.any_instance.should_not_receive(:test_notification)      
+          UserMailer.should_not_receive(:test_notification)      
           TestRunner.run_all_tests
         end
       
         it "should not send a success message on the first test run" do
           stub_execute_test_groups_to_succeed
           
-          UserMailer.any_instance.should_not_receive(:test_notification)
+          UserMailer.should_not_receive(:test_notification)
           TestRunner.run_all_tests
         end
 
         it "should send success messages if the last TestRun was a failure (1)" do
-          UserMailer.any_instance.should_receive(:test_notification)
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -105,14 +102,14 @@ describe TestRunner do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
-          UserMailer.any_instance.should_receive(:test_notification)
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
         end
 
         it "should always send failure messages (1)" do
-          UserMailer.any_instance.should_receive(:test_notification)
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -122,7 +119,7 @@ describe TestRunner do
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
 
-          UserMailer.any_instance.should_receive(:test_notification)
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
@@ -135,7 +132,7 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           TestRunner.run_all_tests
 
-          UserMailer.any_instance.should_receive(:test_notification)
+          UserMailer.should_receive(:test_notification).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
