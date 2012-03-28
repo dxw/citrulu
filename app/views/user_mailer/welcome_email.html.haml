@@ -1,17 +1,20 @@
 - content_for :content do
-  %p Thanks for joining us for the Alpha!
-  %p To get started, log in here:
-  %p{:style => "padding-left: 20px;"}
+  %p{:style => content_p_styles} Thanks for joining us for the Alpha!
+  %p{:style => content_p_styles} To get started, log in here:
+  %p{:style => content_p_styles + "padding-left: 20px;"}
     =link_to new_user_session_url
-  %p 
+  %p{:style => content_p_styles} 
     Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
     = mail_to 'contact@citrulu.com', "send us an email"
     &ndash; or post something using the feedback form.
-  %p We hope you like it!
+  %p{:style => content_p_styles}
+    We hope you like it!
 - content_for :footer_text do
-  %span You're receiving this because you signed up at Citrulu.com
+  %span
+    You're receiving this because you signed up at
+    =link_to "Citrulu.com", "http://www.citrulu.com", :style => footer_a_styles
 - content_for :footer_links do
-  =link_to "Edit your subscription", edit_user_registration_url
+  =link_to "Edit your subscription", edit_user_registration_url, :style => footer_a_styles
 
 
 
