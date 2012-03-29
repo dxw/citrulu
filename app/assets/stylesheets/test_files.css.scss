@@ -24,18 +24,22 @@ body.test_files {
 	    margin-bottom: 0px;
 	    h1 {
     		margin-bottom: 19px;
-    		
-    		input {
-          //Styles for when the field becomes editable:
-          font: inherit;
-          width: 100%;
-          height: auto;
-          //compensating so that the box doesn't move around
-          margin: -16px 0 -9px -4px;        
-    		}
-    		button{
-          //should just be "@extend .btn.btn-mini.btn-primary, but can't get @extend to work, so have added in classes with Jquery.   
-          margin: 0.5em 0.5em 0 0 
+    		.editable {
+    		  form {
+      		  //Styles for when the field becomes editable:
+      		  input{
+              font: inherit;
+              width: 100%;
+              height: auto;
+              //compensating so that the box doesn't move around
+              margin: -16px 0 -9px -4px;        
+        		}
+        	}
+        }
+        i {
+          margin-left: 10px;
+          //FRAGILE:
+          margin-top: 10px;
         }
     	}
 	  }

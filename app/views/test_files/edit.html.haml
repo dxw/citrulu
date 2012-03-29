@@ -5,7 +5,8 @@
       .row 
         %legend.span4
           %h1
-            = editable_field @test_file, :name
+            %span.editable{"data-id" => @test_file.id}><
+              =@test_file.name
         #save_btn.span4
           %span#editor_status=@status_msg
           = f.submit "Save now", :class => "btn btn-primary"

@@ -22,8 +22,6 @@ gem 'haml'
 gem 'haml_rails'
 gem 'jquery-rails'
 
-# To allow the test-file filename to be editable in place
-gem 'jeditable-rails'
 
 # Gems used only for assets and not required
 # in production environments by default.
