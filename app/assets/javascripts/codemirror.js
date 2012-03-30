@@ -557,6 +557,10 @@ var CodeMirror = (function() {
     function onKeyUp(e) {
       if (options.onKeyEvent && options.onKeyEvent(instance, addStop(e))) return;
       if (e_prop(e, "keyCode") == 16) shiftSelecting = null;
+      if (typeof document.forms[0].submit === 'object') {
+        // Hello IE
+        window.editor.save();
+      }
     }
 
     function onFocus() {
