@@ -15,6 +15,23 @@ module ApplicationHelper
       end
     end
   end
+
+  def truncated_test_url(url)
+    text = url.gsub('http://', '').gsub('https://', '')
+
+    if text.length > 32
+      text = text[0..7] + "\u22EF" + text[((text.length/2)-4),8] + "\u22EF" + text[-8,7]
+    end
+
+    link_to(text, url, :target => '_blank')
+  end
+
+  def unimplemented_popover
+    {
+      "data-content" => "Sorry, this isn't implemented yet. We'll get to it when we can. If you have a burning need for it, please let us know using the feedback tab!",
+      "data-original-title" => "Not implemented yet"
+    }
+  end
   
   def flash_message(name, message)
     cl = 'alert'

@@ -23,6 +23,9 @@ body.test_runs {
   h2 {
     padding-bottom: 10px;
   }
+  h3 a {
+    color: inherit;
+  }
 
   div.recentfails, div.bigmsg {
     padding-bottom: 30px;

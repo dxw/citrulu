@@ -8,4 +8,6 @@
 //= require jquery_ujs
 //= require codemirror
 //= require bootstrap-collapse
+//= require bootstrap-tooltip
+//= require bootstrap-popover
 //= require_tree .

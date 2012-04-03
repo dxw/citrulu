@@ -19,7 +19,7 @@
   #test_list.span8
     .title
       %h2 Your tests
-      %a.btn{:onclick => "alert('Implement meeee')"} 
+      %a.btn{unimplemented_popover.merge({})}
         %i.icon-plus-sign
         Create a new test file
     %ul.unstyled
@@ -27,7 +27,6 @@
         %li.test_file
           %a.btn{:href => edit_test_file_path(file)}
             %span.name=file.name
-            %i.icon-pencil
             .row
               .span4
                 %span.last_updated="Last updated at #{file.updated_at}"
