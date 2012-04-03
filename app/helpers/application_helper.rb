@@ -25,6 +25,13 @@ module ApplicationHelper
 
     link_to(text, url, :target => '_blank')
   end
+
+  def unimplemented_popover
+    {
+      "data-content" => "Sorry, this isn't implemented yet. We'll get to it when we can. If you have a burning need for it, please let us know using the feedback tab!",
+      "data-original-title" => "Not implemented yet"
+    }
+  end
   
   def flash_message(name, message)
     cl = 'alert'
