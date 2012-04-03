@@ -73,7 +73,7 @@ describe UserMailer do
       email.to.should == ['tom+tester@dxw.com']
 
       both_parts(email) {|body| body.should include('blah (failed)') }
-      both_parts(email) {|body| body.should include('On http://dxw.com') }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/dxw.com/) }
     end
 
     it 'composes an email for multiple failures' do
@@ -84,8 +84,8 @@ describe UserMailer do
       both_parts(email) {|body| body.should include('a cat (failed)') }
       both_parts(email) {|body| body.should include('blah (failed)') }
       both_parts(email) {|body| body.should include('your face (failed)') }
-      both_parts(email) {|body| body.should include('On http://example.org') }
-      both_parts(email) {|body| body.should include('On http://example.org/test') }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org/) }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org\/test/) }
     end
 
     it 'composes an email for success' do
