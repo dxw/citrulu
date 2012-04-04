@@ -106,6 +106,10 @@ div.banner {
   }
 }
 
+.accordion-toggle {
+  cursor: pointer;
+}
+
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
 
