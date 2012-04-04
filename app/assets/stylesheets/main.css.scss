@@ -78,6 +78,36 @@ div.banner {
   }
 }
 
+footer {
+  background: #f8f8f8;
+  border-top: 1px solid #ddd;
+  margin-top:40px;
+  
+  .logo {
+    text-align: right;
+    
+    img {
+      padding-right: 20px;
+    }
+  }
+
+  .citrulu {
+    padding-top: 3px;
+
+    a {
+      color: #555;
+      font-size: 15px;
+      &:hover { 
+        text-decoration: none;
+      }
+    }
+  }
+
+  .content {
+    padding: 10px;
+  }
+}
+
 #error_explanation {
   padding: 15px;
   margin: 0 0 20px;

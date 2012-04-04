@@ -22,4 +22,16 @@
     - flash.each do |name, message|
       = flash_message(name, message)
     = yield
+    %footer
+      .row
+        .citrulu.span8
+          .content
+            %a.brand{:href => '/'} Citrulu
+            %br
+            Built with love by dxw
+        .logo.span4
+          .content
+            %a{:href => "http://dxw.com"}
+              = image_tag("DXW-logo-small.png")
+
 = render :template => 'layouts/application'
