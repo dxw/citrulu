@@ -19,22 +19,19 @@ body.test_files {
   
   #test_suite{
     margin-top: 1em;
-    legend {
-      border: none;
-      margin-bottom: 0px;
-      h1 {
-        margin-bottom: 19px;
+    h1 {
+      margin-bottom: 19px;
 
-        .editable {
-          form {
-            //Styles for when the field becomes editable:
-            input {
-              font: inherit;
-              width: 100%;
-              height: auto;
-              //compensating so that the box doesn't move around
-              margin: -16px 0 -9px -4px;        
-            }
+      .editable {
+        form {
+          //Styles for when the field becomes editable:
+          margin: 0;
+          input {
+            font: inherit;
+            width: 100%;
+            height: auto;
+            //compensating so that the text doesn't move around
+            margin: -22px 0 -16px -6px;  
           }
         }
 
