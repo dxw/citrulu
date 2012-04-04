@@ -22,7 +22,7 @@
       %div{:style => "padding-bottom: 15px;"}
         - @test_run.groups_with_failed_tests.each do |group|
           %p{:style => content_p_styles}
-            "On"
+            On
             =link_to group.test_url, group.test_url, :style => content_a_styles
           %ul
             - group.failed_tests.each do |result|

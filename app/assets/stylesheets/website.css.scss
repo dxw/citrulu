@@ -106,7 +106,7 @@ body.website.index, body.website.alpha {
     background-color: #D9EDF7;
     border-color: #BCE8F1;
     
-    legend {
+    legend, .legend {
       border: 0;
       width: 230px;
       padding-right: 15px;
@@ -114,6 +114,7 @@ body.website.index, body.website.alpha {
       float: left;
       font-size: 20px;
       line-height: 28px;
+      font-weight: normal;
     }
     ul{
       width: 220px;
