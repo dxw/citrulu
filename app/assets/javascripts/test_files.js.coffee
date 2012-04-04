@@ -135,11 +135,14 @@ update_liveview = ->
 #
 update_selected_test = (current_group) ->
 
+  console.log('in update')
+
   selected_test = current_group.group.split("\n")[current_group.current_line].trim()
+
+  $("#liveview div.group div").removeClass("current")
 
   return if selected_test == '' 
 
-  $("#liveview div.group div").removeClass("current")
   $("#liveview div.group div:contains('" + selected_test + "')").addClass('current')
 
 

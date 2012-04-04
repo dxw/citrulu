@@ -66,8 +66,8 @@ class TestRunner
         group_params[:test_url] = group[:test_url]
         
         agent = Mechanize.new
-        agent.open_timeout = 3
-        agent.read_timeout = 3
+        agent.open_timeout = 5
+        agent.read_timeout = 5
         
         agent.get(group[:first]) unless group[:first].blank?
         
