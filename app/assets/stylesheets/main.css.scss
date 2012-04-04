@@ -53,11 +53,10 @@
 }
 
 ul.devise_links {
-  li {
-    &:last-child {
+  li:last-child, li.last {
       border-right: 0;
     }
-
+  li {
     border-right: 1px solid black;
     padding: 0 10px 0 5px;
     display: inline-block;
