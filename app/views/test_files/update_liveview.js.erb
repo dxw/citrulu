@@ -12,3 +12,4 @@ $('#liveview div.group').append('<div class="on">On <%= truncated_test_url(@test
     $('#liveview div.group').append("<div class='<%= (test[:result] ? 'pass' : 'fail')%>'><%= test[:original_line].strip %></div>");
   <% end %>
 <% end %>
+

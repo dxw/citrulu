@@ -70,10 +70,11 @@ body.test_runs {
 
     span.file {
       font-size: 15px; 
+      font-style: italic;
+      padding-left: 10px;
     }
 
     p.summary {
-      font-size: 14px;
       padding: 5px 0 0 0;
     }
 

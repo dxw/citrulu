@@ -121,7 +121,7 @@ body.test_files {
 
   #liveview {
     div.group {
-      border: 1px solid #000;
+      border: 1px solid #e5e5e5;
       padding: 3px;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -130,7 +130,7 @@ body.test_files {
       div.on {
         font-size: 13px;
         font-weight: bold;
-        border: solid black;
+        border: solid #e5e5e5;
         border-width: 0 0 1px 0;
         /* force the text to wrap */
         word-break: break-all;
@@ -156,7 +156,7 @@ body.test_files {
         border-radius: 0px;
 
         &.current {
-          border-color: #666;
+          border-color: #aaa;
           -webkit-border-radius: 2px;
           -moz-border-radius: 2px;
           border-radius: 2px;

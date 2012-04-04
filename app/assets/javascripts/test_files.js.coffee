@@ -64,7 +64,7 @@ setup_title = ->
   test_file_id = $(".editable").attr("data-id")
   $(".editable").editable("/test_files/"+test_file_id, args)
   
-  $(".editable").click( -> 
+  $(".editable").click( (e) -> 
     $("#edit_icon").remove()
     $(".editable input").css("width","100%")
   )
@@ -128,15 +128,14 @@ update_liveview = ->
   window.lastGroup = get_current_group()
 
   $("#liveview div.on").addClass("working");
-  jQuery.ajax(url: '/test_files/update_liveview', data: get_current_group(), type: 'POST', dataType: 'script')
+  jQuery.ajax(url: '/test_files/update_liveview', data: get_current_group(), type: 'POST', dataType: 'script', complete: (xhr, status) -> 
+    update_selected_test(get_current_group())
+  )
 
 ##
 # Moves the .current style in the live view to the currently selected group
 #
 update_selected_test = (current_group) ->
-
-  console.log('in update')
-
   selected_test = current_group.group.split("\n")[current_group.current_line].trim()
 
   $("#liveview div.group div").removeClass("current")
@@ -201,8 +200,7 @@ setup_editor = ->
   });
 
   setTimeout("window.check_liveview()", 150);
-  
-  $(window.editor.getWrapperElement()).click (event) ->
+  $('.CodeMirror').click (event) ->
     window.keyPressHasHappened = false
     update_liveview()
 
