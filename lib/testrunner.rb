@@ -69,6 +69,7 @@ class TestRunner
         agent.open_timeout = 5
         agent.read_timeout = 5
         agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        agent.user_agent = "CitruluBot/1.0"
         
         agent.get(group[:first]) unless group[:first].blank?
         
