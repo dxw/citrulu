@@ -61,18 +61,24 @@ class TestRunner
   def self.execute_tests(test_groups)
     test_groups.collect do |group|
       group_params = {}
-      
+
       begin
         group_params[:test_url] = group[:test_url]
         
         agent = Mechanize.new
         agent.open_timeout = 5
         agent.read_timeout = 5
+        agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         
         agent.get(group[:first]) unless group[:first].blank?
         
         group_params[:time_run] = Time.now
-        page = agent.get(group[:test_url])
+
+        url = URI.parse(group[:test_url])
+
+        agent.auth(url.user, url.password) if url.user
+
+        page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
         
       rescue Exception => e
         group_params[:message] = e.to_s
