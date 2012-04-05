@@ -59,20 +59,4 @@ describe User do
     end
     
   end
-  
-  context "when interacting with Spreedly" do
-    before(:each) do
-      @subscriber = mock(RSpreedly::Subscriber)
-      @subscriber.stub(:save)
-      RSpreedly::Subscriber.stub!(:new).and_return(subscriber)
-    end
-    describe "subscribe" do
-      it "should create a subscriber record on spreedly" do
-        RSpreedly::Subscriber.should_receive(:new)
-        RSpreedly::Subscriber.any_instance.should_receive(:save)
-        @user.subscribe
-      end
-  
-    end
-  end
 end
