@@ -80,14 +80,14 @@ class TestRunner
         agent.auth(url.user, url.password) if url.user
 
         page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
-        
+
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
         # ends up returning e.to_s instead...
         group_params
       else
-        group_params[:response_time] = (Time.now - group_params[:time_run])*1000
+        group_params[:response_time] = agent.agent.http.last_response_time
         group_params[:response_code] = page.code
         
         begin
