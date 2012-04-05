@@ -67,7 +67,6 @@ class User < ActiveRecord::Base
   end
 
   def add_invitation
-    puts self.invitation_code
     self.invitation = Invitation.find_by_code(self.invitation_code)
     save!
   end

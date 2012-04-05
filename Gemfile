@@ -17,6 +17,9 @@ gem 'therubyracer'
 # For to run the tests
 gem 'mechanize'
 
+# Spreedly for payments
+gem 'rspreedly'
+
 # Gems used in all environments
 gem 'haml'
 gem 'haml_rails'
