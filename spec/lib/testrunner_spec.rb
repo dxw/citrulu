@@ -178,12 +178,12 @@ describe TestRunner do
     
     it "should fetch the 'first' URL" do
       test_groups = [
-        {:test_url => "foo", :first => "bar"}
+        {:test_url => "http://example.com/", :first => "http://example.com/first"}
       ]
       # Get first:
-      Mechanize.any_instance.should_receive(:get).with("bar")
+      Mechanize.any_instance.should_receive(:get).with("http://example.com/first")
       # Get the page:
-      Mechanize.any_instance.should_receive(:get).with("foo").and_return(@dummy_page) 
+      Mechanize.any_instance.should_receive(:get).with("http://example.com/").and_return(@dummy_page) 
       
       TestRunner.execute_tests(test_groups)
     end
@@ -206,9 +206,9 @@ describe TestRunner do
       
       it "should not fetch the 'finally' URL" do
         @test_groups = [
-          {:test_url => "foo", :finally => "bar"}
+          {:test_url => "foo", :finally => "http://example.com/finally"}
         ]
-        Mechanize.any_instance.should_not_receive(:get).with('bar')
+        Mechanize.any_instance.should_not_receive(:get).with('http://example.com/finally')
       end
       
       it "should not set the response time" do
@@ -227,18 +227,18 @@ describe TestRunner do
     context "when the 'page' object is successfully retrived" do
       before(:each) do
         @test_groups = [
-          {:test_url => "foo"}
+          {:test_url => "http://example.com/"}
         ]
       end
       
       it "should fetch the 'finally' URL" do
         test_groups = [
-          {:test_url => "foo", :finally => "bar"}
+          {:test_url => "http://example.com/", :finally => "http://example.com/finally"}
         ]
         # Get the page:
-        Mechanize.any_instance.should_receive(:get).with("foo").and_return(@dummy_page) 
+        Mechanize.any_instance.should_receive(:get).with("http://example.com/").and_return(@dummy_page) 
         # Get finally:
-        Mechanize.any_instance.should_receive(:get).with("bar")
+        Mechanize.any_instance.should_receive(:get).with("http://example.com/finally")
         
         TestRunner.execute_tests(test_groups)
       end  
@@ -260,7 +260,7 @@ describe TestRunner do
       it "should generate the test results" do
         stub_mechanize(@dummy_page)
         test_groups = [
-          {:test_url => "foo", :tests => "bar"}
+          {:test_url => "http://example.com/", :tests => "bar"}
         ]
       
         TestRunner.should_receive(:get_test_results).with(@dummy_page,"bar")
