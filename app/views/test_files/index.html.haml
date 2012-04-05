@@ -59,26 +59,27 @@
               %p Your tests all pass. Huzzah!
           %a.btn{:href => test_runs_path} You can see results, but nowt's going on
 
-    -# #sexy_stats
+    #sexy_stats
       %h3 Stats, for your reading pleasure
       .stat
         %img{:src => "http://placehold.it/45x50"}
-        %p <strong>X</strong> test files  
-      .stat
-        %img{:src => "http://placehold.it/45x50"}
-        %p Testing <strong>X</strong> pages
-      .stat
-        %img{:src => "http://placehold.it/45x50"}
-        %p Checking <strong>X</strong> conditions
-      .stat
-        %img{:src => "http://placehold.it/45x50"}
-        %p On average, checking <strong>X</strong> conditions per page
-      .stat
-        %img{:src => "http://placehold.it/45x50"}
-        %p In a typical test run, <strong>X</strong> pages produce failures
-      .stat
-        %img{:src => "http://placehold.it/45x50"}
-        %p On average, failing pages are fixed within <strong>X hours</strong>
+        %p You've got <br><strong>#{current_user.test_files.count}</strong> test #{"file".pluralize(current_user.test_files.count)}
+      - if current_user.test_files.first.compiled?
+        .stat
+          %img{:src => "http://placehold.it/45x50"}
+          %p Testing <br><strong>#{pluralize(current_user.test_files.first.number_of_pages, 'page')}</strong>
+        .stat
+          %img{:src => "http://placehold.it/45x50"}
+          %p Checking <strong>#{pluralize(current_user.test_files.first.number_of_tests, 'condition')}</strong>
+        .stat
+          %img{:src => "http://placehold.it/45x50"}
+          %p On average, checking <strong>#{pluralize(current_user.test_files.first.number_of_tests/current_user.test_files.first.number_of_pages, 'condition')}</strong> per page
+        .stat
+          %img{:src => "http://placehold.it/45x50"}
+          %p In a typical test run, <strong>#{pluralize(current_user.test_files.first.average_failures_per_run, 'page')}</strong>  fail
+        .stat
+          %img{:src => "http://placehold.it/45x50"}
+          %p On average, failing pages are fixed within <strong>#{distance_of_time_in_words(Time.now, Time.now + current_user.test_files.first.average_fix_speed.seconds)}</strong>
 
 
 
