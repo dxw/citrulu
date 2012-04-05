@@ -9,9 +9,9 @@ CodeMirror.defineMode('Citrulu', function(conf) {
     var firstfinally   = wordRegexp(['First, fetch', 'Finally, fetch']);
     var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include"]);
 
-    var name           = new RegExp(":[a-zA-Z0-9_]*");
-    var value          = new RegExp("(::[^\n]*)|([^\n]*)");
-    var url            = new RegExp("((http:\/\/)|('https:\/\/'))[^\n]+");
+    var name           = new RegExp(":([a-zA-Z0-9_]+)");
+    var value          = new RegExp("^([^:]+[^\n]*)|(::[^\n]*)");
+    var url            = new RegExp("((http:\/\/)|(https:\/\/))[^\n]+");
 
     // Tokenizers
     function tokenBase(stream, state) {
@@ -43,12 +43,12 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return 'link';
         }
 
-        if (stream.match(name)) {
-            return 'variable-2';
-        }
-
         if (stream.match(value)) {
             return 'text';
+        }
+
+        if (stream.match(name)) {
+            return 'variable-2';
         }
 
         // Handle non-detected items
