@@ -110,7 +110,6 @@ describe UserMailer do
   
   describe "welcome_email" do
     it "should create an email with the user's email as the subject" do
-      puts @user.inspect
       UserMailer.welcome_email(@user).to.should == [@user.email]
     end
   end
