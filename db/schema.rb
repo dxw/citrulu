@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120323194421) do
+ActiveRecord::Schema.define(:version => 20120405132350) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20120323194421) do
     t.integer  "test_file_count"
     t.string   "name_en"
     t.boolean  "default"
+    t.integer  "spreedly_id"
   end
 
   create_table "test_files", :force => true do |t|

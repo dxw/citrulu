@@ -6,5 +6,10 @@ FactoryGirl.define do
     test_file_count 1
     test_frequency 86400
     default false
+    sequence(:spreedly_id) { |m| m }
+    
+    factory :default_plan do
+      default true
+    end
   end
 end

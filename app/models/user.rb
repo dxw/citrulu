@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
   belongs_to :plan
   
   after_create :create_default_test_file 
-  after_create :subscribe_to_default_plan
   after_create :add_invitation
   before_save :set_email_preference
   
@@ -45,11 +44,26 @@ class User < ActiveRecord::Base
     q
   end
 
+  # TODO - This method is probably redundant
   def subscribe_to_default_plan
-    if self.plan.nil?
-      self.plan = Plan.default
-    end
+    subscribe(Plan.default)
   end
+  
+  def subscribe(subscription_plan)
+    #TODO - plan should be part of the initial user attributes, and subscription_plan should be replaced by plan (i.e the plan of the current user)
+    plan = subscription_plan
+    subscriber = RSpreedly::Subscriber.new(
+      :customer_id => id,
+      :email => email,
+      :screen_name => email, #screen_name gets put in the "User Name" field on spreedly
+      :subscription_plan_id => subscription_plan.spreedly_id
+    )
+    #TODO: Handle creating new subscribers vs updating subscriptions
+    
+    subscriber.save!
+  end
+  
+  
   
   private
 

@@ -3,6 +3,9 @@ require 'spec_helper'
 describe User do
   before(:each) do
     @user = FactoryGirl.create(:user)
+    
+    @subscriber = double(RSpreedly::Subscriber)
+    RSpreedly::Subscriber.stub(:new).and_return(@subscriber)
   end
   
   
@@ -57,21 +60,15 @@ describe User do
       
       @user1.invitation_id.should == @invitation.id
     end
-    
   end
   
-  context "when interacting with Spreedly" do
-    before(:each) do
-      subscriber = mock(RSpreedly::Subscriber)
-      subscriber.stub!(:save)
-      RSpreedly::Subscriber.stub!(:new).and_return(subscriber)
-    end
-    describe "create_subscription" do
-      it "should create a subscriber record on spreedly" do
-        RSpreedly::Subscriber.should_receive(:new)
-        @user.create_subscription
-      end
-  
+  describe "subscribe" do
+    it "should create a subscriber record on spreedly" do
+      RSpreedly::Subscriber.should_receive(:new)
+      @subscriber.should_receive(:save!)
+      
+      @plan = FactoryGirl.create(:plan)
+      @user.subscribe(@plan)
     end
   end
 end
