@@ -80,6 +80,8 @@ class TestRunner
         agent.auth(url.user, url.password) if url.user
 
         page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
+        puts group.inspect
+        puts page.content
 
       rescue Exception => e
         group_params[:message] = e.to_s
@@ -155,11 +157,11 @@ class TestRunner
   end
   
   def self.text_is_in_page?(page, text)
-    page.root.inner_text.match(text) != nil 
+    page.root.inner_text.include?(text) != nil 
   end
   
   def self.source_is_in_page?(page, source_fragment)
-    page.content.match(source_fragment) != nil
+    page.content.include?(source_fragment) != nil
   end
   
   def self.header_is_in_page?(page, header)
