@@ -137,6 +137,7 @@ GEM
       activesupport (= 3.2.0)
       bundler (~> 1.0)
       railties (= 3.2.0)
+    rails_exception_handler (1.4.0)
     railties (3.2.0)
       actionpack (= 3.2.0)
       activesupport (= 3.2.0)
@@ -225,6 +226,7 @@ DEPENDENCIES
   mechanize
   mysql2 (= 0.3.10)
   rails (= 3.2.0)
+  rails_exception_handler
   rake
   rb-fsevent
   rspec-rails
