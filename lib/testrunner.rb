@@ -157,11 +157,11 @@ class TestRunner
   end
   
   def self.text_is_in_page?(page, text)
-    page.root.inner_text.include?(text) != nil 
+    page.root.inner_text.include?(text)
   end
   
   def self.source_is_in_page?(page, source_fragment)
-    page.content.include?(source_fragment) != nil
+    page.content.include?(source_fragment)
   end
   
   def self.header_is_in_page?(page, header)
