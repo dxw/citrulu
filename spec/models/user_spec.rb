@@ -6,6 +6,9 @@ describe User do
     
     @subscriber = double(RSpreedly::Subscriber)
     RSpreedly::Subscriber.stub(:new).and_return(@subscriber)
+    RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
+    RSpreedly::Subscriber.any_instance.stub(:update)
+    RSpreedly::Subscriber.any_instance.stub(:destroy)
   end
   
   
@@ -31,6 +34,8 @@ describe User do
     test_file_id = FactoryGirl.create(:test_file, :user => @user).id
     
     TestFile.find(test_file_id).user.should === @user
+    
+    @subscriber.stub(:destroy)
     @user.destroy
     expect{ TestFile.find(test_file_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
@@ -62,13 +67,34 @@ describe User do
     end
   end
   
-  describe "subscribe" do
+  describe "create_subscription" do
     it "should create a subscriber record on spreedly" do
       RSpreedly::Subscriber.should_receive(:new)
       @subscriber.should_receive(:save!)
       
       @plan = FactoryGirl.create(:plan)
-      @user.subscribe(@plan)
+      @user.plan = @plan
+      @user.create_subscription
     end
   end
+  
+  describe "update_subscription_details" do
+    it "should raise an error if the hash included :update_subscription_plan" do
+      @plan = FactoryGirl.create(:plan)
+      expect{ @user.update_subscription_details(:update_subscription_plan => @plan) }.to raise_error(ArgumentError)
+    end
+  end
+  
+  describe "callbacks" do
+    it "should destroy the subscription when the model is destroyed" do
+      @user.plan = FactoryGirl.create(:plan)
+      @subscriber.stub(:save!)
+      @user.create_subscription
+      @subscriber.should_receive(:destroy)
+      @user.destroy
+    end
+  end
+  
+  
+  
 end

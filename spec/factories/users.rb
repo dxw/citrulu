@@ -6,6 +6,7 @@ FactoryGirl.define do
         
     after_build do |user|
       user.invitation_code = user.invitation.code
+      user.class.skip_callback(:save, :after, :update_subscription)
     end
   end
 

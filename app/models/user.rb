@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
   after_create :create_default_test_file 
   after_create :add_invitation
   before_save :set_email_preference
+  after_save :update_subscription
+  after_destroy :destroy_subscription
   
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
@@ -49,23 +51,63 @@ class User < ActiveRecord::Base
     subscribe(Plan.default)
   end
   
-  def subscribe(subscription_plan)
-    #TODO - plan should be part of the initial user attributes, and subscription_plan should be replaced by plan (i.e the plan of the current user)
-    plan = subscription_plan
-    subscriber = RSpreedly::Subscriber.new(
+  # Create a subscriber record on Spreedly
+  def create_subscription
+    new_subscriber = RSpreedly::Subscriber.new(
       :customer_id => id,
       :email => email,
       :screen_name => email, #screen_name gets put in the "User Name" field on spreedly
-      :subscription_plan_id => subscription_plan.spreedly_id
+      :subscription_plan_id => plan.spreedly_id
     )
-    #TODO: Handle creating new subscribers vs updating subscriptions
+    new_subscriber.save!
+  end
+  
+  def subscriber
+    RSpreedly::Subscriber.find(id)
+  end
+  
+  # Update the user's details on Spreedly
+  def update_subscription_details(args)
+    # TODO: Raise an exception if args is empty or invalid?    
+    if args.has_key? :update_subscription_plan
+      raise ArgumentError.new("You can't update the subscription plan with 'update subscription details'. Use 'update_subscription_plan' instead")
+    end
     
-    subscriber.save!
+    args.each do |key, value|
+      if subscriber.respond_to?("#{key}=")
+        subscriber.send("#{key}=", value)
+      else
+        raise(NoMethodError, "unknown attribute: #{key} for #{subscriber.inspect}")
+      end
+    end
+    subscriber.update!
+  end  
+  
+  def update_subscription_plan
+    # TODO: probably need to do some work here? e.g. pro-rating?
+    if plan.id != subscriber.subscription_plan_id
+      subscriber.subscription_plan_id = plan.spreedly_id
+      subscriber.update!
+    end
   end
   
   
-  
   private
+  
+  # Update details on Spreedly
+  def update_subscription
+    update_subscription_details(
+      :email => email,
+      :screen_name => email
+    )
+    
+    update_subscription_plan
+  end
+  
+  def destroy_subscription
+    RSpreedly::Subscriber.find(id).destroy
+  end
+  
 
   def inf val
     val != -1 ? val : '∞'
