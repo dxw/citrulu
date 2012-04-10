@@ -91,6 +91,32 @@ class User < ActiveRecord::Base
     end
   end
   
+  # Create an invoice on Spreedly so that we can set up the repeating payment.
+  def create_invoice
+    invoice = RSpreedly::Invoice.new(
+      :subscription_plan_id => plan.spreedly_id,
+      :subscriber => subscriber
+    )
+    
+    invoice.save
+    return invoice
+  end
+  
+  #TODO: this doesn't nescessarily belong in the User model: it doesn't actually touch anything from it.
+  def pay_invoice(invoice, payment_details)
+    payment = RSpreedly::PaymentMethod::CreditCard.new(payment_details)
+    invoice.pay(payment)
+    return invoice
+  end
+  
+  def raise_and_pay_invoice(payment_details)
+    invoice = create_invoice
+    if invoice.errors.blank?
+      pay_invoice(invoice, payment_details)
+    end
+    return invoice
+  end
+  
   
   private
   

@@ -67,32 +67,52 @@ describe User do
     end
   end
   
-  describe "create_subscription" do
-    it "should create a subscriber record on spreedly" do
-      RSpreedly::Subscriber.should_receive(:new)
-      @subscriber.should_receive(:save!)
-      
+  context "when dealing with Spreedly" do
+    before(:each) do
       @plan = FactoryGirl.create(:plan)
       @user.plan = @plan
-      @user.create_subscription
     end
-  end
+    
+    describe "create_subscription" do
+      it "should create a subscriber record on spreedly" do
+        RSpreedly::Subscriber.should_receive(:new)
+        @subscriber.should_receive(:save!)
+        @user.create_subscription
+      end
+    end
   
-  describe "update_subscription_details" do
-    it "should raise an error if the hash included :update_subscription_plan" do
-      @plan = FactoryGirl.create(:plan)
-      expect{ @user.update_subscription_details(:update_subscription_plan => @plan) }.to raise_error(ArgumentError)
+    describe "update_subscription_details" do
+      it "should raise an error if the hash included :update_subscription_plan" do
+        @plan2 = FactoryGirl.create(:plan, name_en: 'Another Plan')
+        expect{ @user.update_subscription_details(:update_subscription_plan => @plan) }.to raise_error(ArgumentError)
+      end
     end
-  end
   
-  describe "callbacks" do
-    it "should destroy the subscription when the model is destroyed" do
-      @user.plan = FactoryGirl.create(:plan)
-      @subscriber.stub(:save!)
-      @user.create_subscription
-      @subscriber.should_receive(:destroy)
-      @user.destroy
+    describe "callbacks" do
+      it "should destroy the subscription when the model is destroyed" do
+        @subscriber.stub(:save!)
+        @user.create_subscription
+        @subscriber.should_receive(:destroy)
+        @user.destroy
+      end
     end
+  
+    context "when handling payments" do
+      before(:each) do
+        @invoice = double(RSpreedly::Invoice)
+        RSpreedly::Invoice.stub(:new).and_return(@invoice)
+      end
+    
+      describe "create invoice" do
+        it "should create an invoice for the user's plan" do
+          @invoice.should_receive(:save).and_return(:true)
+          @user.create_invoice
+        end
+    
+        it "should raise an error if the user is already active"
+      end
+    end
+  
   end
   
 end
