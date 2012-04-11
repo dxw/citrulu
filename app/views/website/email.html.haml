@@ -1,0 +1,37 @@
+%h2 Your weekly summary
+%p{:style => content_p_styles} Citrulu ran #{pluralize(@pages, 'test')} this week, and nothing failed. Nice.
+%p{:style => content_p_styles} Citrulu ran #{pluralize(@pages, 'test')} this week, and detected #{pluralize(@failures, 'failure')}:
+%ul
+  %li{:style => content_p_styles} On http://flabberjabber.com, there were X failures
+  %li{:style => content_p_styles} On http://google.com, there were X failures
+  %li{:style => content_p_styles} On http://harry.com, there were X failures
+
+%p{:style => content_p_styles} Your average response times for the week are:
+%ul
+  %li{:style => content_p_styles} 132ms: http://flabberjabber.com
+  %li{:style => content_p_styles} 232ms: http://google.com 
+  %li{:style => content_p_styles} 432ms: http://pigglewabble.com 
+
+%p{:style => content_p_styles} This week, on average, it took you X days to fix your failing tests
+
+%table
+  %tr
+    %td{:width => "33%", :valign=> "top"}
+      %h3 Up to date?
+      %p{:style => content_p_styles} Is there more stuff you should be testing?
+      %p{:style => content_p_styles} 
+        %a{:href => ''} Edit your tests
+    %td{:width => "33%", :valign=> "top"}
+      %h3 Full results
+      %p{:style => content_p_styles} Want all the gory details?
+      %br
+      %p{:style => content_p_styles} 
+        %a{:href => ''} Browse full results
+    %td{:width => "33%", :valign=> "top"}
+      %h3 Plan
+      %p{:style => content_p_styles} Your current plan: <em>Cornichon</em>
+      %br
+      %p{:style => content_p_styles} 
+        %a{:href => ''} Upgrade 
+
+
