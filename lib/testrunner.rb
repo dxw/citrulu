@@ -155,15 +155,15 @@ class TestRunner
   end
   
   def self.text_is_in_page?(page, text)
-    page.root.inner_text.include?(text)
+    page.root.inner_text.downcase.include?(text.downcase)
   end
   
   def self.source_is_in_page?(page, source_fragment)
-    page.content.include?(source_fragment)
+    page.content.downcase.include?(source_fragment.downcase)
   end
   
   def self.header_is_in_page?(page, header)
-    page.header.include?(header)
+    page.header.downcase.include?(header.downcase)
   end
   
   private 
