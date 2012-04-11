@@ -50,7 +50,8 @@ describe TestFilesController do
     it "should create @recent_failed_groups" do
       get :index
 
-      assigns(:recent_failed_groups).should be_a(Array)
+      assigns(:recent_failed_pages).should be_an(Integer)
+      assigns(:recent_failed_assertions).should be_an(Integer)
     end
   end
 
