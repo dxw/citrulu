@@ -33,7 +33,7 @@
               .span3
                 %span.file_info
                   -if file.compiled?
-                    =pluralize(file.number_of_tests, 'test')
+                    =pluralize(file.number_of_tests, 'assertion')
                     on 
                     =pluralize(file.number_of_pages, 'page')
                   -else
@@ -42,11 +42,12 @@
       
   #sidebar.span4
     #recent_results
-      - if !@recent_failed_groups.empty?
+      - if @recent_failed_groups != 0
         .fail
           %div
             %img{:src => "http://placehold.it/60x66"}
-            %p= "#{pluralize(@recent_failed_groups.count, 'test is')} failing!"
+            %p= "#{pluralize(@recent_failed_assertions, 'assertion is')} failing"
+            %p= "#{pluralize(@recent_failed_pages, 'page is')} failing"
             -# N.B. this pluralization is (nescessarily) achieved with a custom inflector in /config/initializers/inflectins.rb
           %a.btn{:href => test_runs_path} View full results
       - else
