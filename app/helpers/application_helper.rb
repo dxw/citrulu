@@ -16,11 +16,11 @@ module ApplicationHelper
     end
   end
 
-  def truncated_test_url(url)
+  def truncated_test_url(url, chunk=7)
     text = url.gsub('http://', '').gsub('https://', '')
 
     if text.length > 32
-      text = text[0..7] + "\u22EF" + text[((text.length/2)-4),8] + "\u22EF" + text[-8,7]
+      text = text[0..chunk] + "\u22EF" + text[((text.length/2)-4),chunk+1] + "\u22EF" + text[-8,chunk]
     end
 
     link_to(text, url, :target => '_blank')
