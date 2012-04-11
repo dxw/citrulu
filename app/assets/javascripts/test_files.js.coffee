@@ -127,9 +127,14 @@ get_current_group = ->
 update_liveview = -> 
   window.lastGroup = get_current_group()
 
+  group_data = get_current_group()
+
+  return if group_data.group == ''
+
   $("#liveview div.on").addClass("working");
-  jQuery.ajax(url: '/test_files/update_liveview', data: get_current_group(), type: 'POST', dataType: 'script', complete: (xhr, status) -> 
+  jQuery.ajax(url: '/test_files/update_liveview', data: group_data, type: 'POST', dataType: 'script', complete: (xhr, status) -> 
     update_selected_test(get_current_group())
+    $('#liveview div.on').removeClass('working');
   )
 
 ##

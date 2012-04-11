@@ -70,6 +70,12 @@ class TestFilesController < ApplicationController
 #  end
 
   def update_liveview
+
+    if params[:group].blank?
+      render :text => ''
+      return
+    end
+
     begin
       @test_url = params[:group].split("\n").first.gsub(/On |on /, '')
       @current_line = params[:current_line]
