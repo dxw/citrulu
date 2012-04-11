@@ -29,16 +29,16 @@
           Overview
         =accordion_body do
           %p Citrulu's syntax is very simple. 
-          %p First, decide which URLs you would like to test. Then, add each URL with at least one test:
+          %p First, decide which pages you would like to test. Then, add each page with at least one assertion:
           %pre.editor-code="On http://example.com\n  I should see Welcome to this site"
-          %p You can add as many URLs as you like, and as many tests as you like under each URL. 
-          %p For more information on specific tests, expand the section below.
+          %p You can add as many pages as you like, and as many tests as you like under each assertion. 
+          %p For more information on specific assertions, expand the section below.
       
       =accordion_group("i_should_see") do
         =accordion_heading do
           I should see
         =accordion_body do
-          %p This check retrieves a page and looks for text without looking at HTML tags. So, the following check:
+          %p This assertion retrieves a page and looks for text without looking at HTML tags. So, the following assertion:
           %pre.editor-code="  I should see Hello, world!"
           %p Would match all of:
           %pre="Hello, world!"
@@ -49,7 +49,7 @@
         =accordion_heading do
           Source should [not] contain
         =accordion_body do
-          %p This check retrieves a page and looks for text in its source code. So, the following check:
+          %p This assertion retrieves a page and looks for text in its source code. So, the following assertion:
           %pre.editor-code="  Source should contain <strong>Hello</strong>, world!"
           %p Would match:
           %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
@@ -58,22 +58,22 @@
         =accordion_heading do
           Headers should [not] include
         =accordion_body do
-          %p This check retrieves the headers of a page and looks for a header with the name you specify. So, the following check:
+          %p This assertion retrieves the headers of a page and looks for a header with the name you specify. So, the following assertion:
           %pre.editor-code="  Headers should include X-Varnish"
           %p Would match:
           %pre="X-Varnish: 128371292"
           %p But would not match:
-          %pre="X-Varnish-Check: miss"
-          %p At the moment, you can only check for the presence or absence of headers. We might add the ability to check header values in a future release.
+          %pre="X-Varnish-assertion: miss"
+          %p At the moment, you can only assert that headers are present or absent. We might add the ability to check header values in a future release.
 
       =accordion_group("predefines") do
         =accordion_heading do
           Predefines
         =accordion_body do
-          %p Predefines give you quick access to commonly-used lists of strings. For example, many people add a test to check that no erroneous PHP output is present in their code.
-          %p You can use predefines by using the an equals sign followed by the name of the predefine as your value:
+          %p Predefines give you quick access to commonly-used lists of strings. For example, many people add a test to assert that no erroneous PHP output is present in their code.
+          %p You can use predefines by using a colon followed by the name of the predefine as your value:
           %pre.editor-code="  I should not see :php_errors"
-          %p See a bit further down this page for a list of the predefines you can use
+          %p See a bit further down this page for a list of the predefines you can use.
     
       =accordion_group("first_finally") do
         =accordion_heading do
@@ -89,8 +89,7 @@
         =accordion_heading do
           General tips
         =accordion_body do
-          %ul
-            %li Citrulu is case sensitive! So make sure your lines are capitalised.
+          %p We haven't written any tips yet.
     %header.section_title
       %h2 Predefines
     =accordion("predefines", :h3) do
