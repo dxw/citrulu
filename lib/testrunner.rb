@@ -80,8 +80,6 @@ class TestRunner
         agent.auth(url.user, url.password) if url.user
 
         page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
-        puts group.inspect
-        puts page.content
 
       rescue Exception => e
         group_params[:message] = e.to_s
