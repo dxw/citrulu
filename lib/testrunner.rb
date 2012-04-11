@@ -163,7 +163,7 @@ class TestRunner
   end
   
   def self.header_is_in_page?(page, header)
-    page.header.downcase.include?(header.downcase)
+    page.header.collect{|h| h.downcase}.include?(header.downcase)
   end
   
   private 
