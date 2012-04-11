@@ -50,12 +50,15 @@ class TestFile < ActiveRecord::Base
   end
    
   def average_failures_per_run
-     fails = test_runs.collect{|r| r.number_of_failing_groups}
+    return 0 if test_runs.size == 0
 
-     (fails.inject(0.0) {|sum, n| sum + n} / fails.size).to_i
+    fails = test_runs.collect{|r| r.number_of_failing_groups}
+    (fails.inject(0.0) {|sum, n| sum + n} / fails.size).to_i
   end
 
   def average_fix_speed
+    return 0 if test_runs.size == 0
+
     in_fail_spree = false
     fail_sprees = []
     start_fail = nil
@@ -74,8 +77,4 @@ class TestFile < ActiveRecord::Base
 
     fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
   end
-
-  def average_fix_time
-  end
-
 end
