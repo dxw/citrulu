@@ -2,7 +2,7 @@
   <% if @status == :pass %>
 Your failing tests are now passing. Everything's looking good! 
 
-If you'd like, you can review recent test results
+If you'd like, you can review recent results
   <%=raw url_for test_runs_url %>
   <% elsif @status == :fail %>
     
@@ -15,7 +15,7 @@ If you'd like, you can review recent test results
     <% end %>
   
     <% if @test_run.has_groups_with_failed_tests? %>
-Failed tests (<%= @test_run.number_of_failed_tests %>):
+Failed <%= pluralize(@test_run.number_of_failed_tests, 'assertion'); %>:
       <% @test_run.groups_with_failed_tests.each do |group| %>
 
 On <%=raw group.test_url %>
@@ -25,13 +25,13 @@ On <%=raw group.test_url %>
       <% end %>
     <% end %>
     
-To view your full test results, visit your test results page:
+To view your full results, visit your results page:
   <%=raw url_for test_run_url(@test_run) %>
   <% end %>
 <% end %>
               
 <% content_for :footer do %>
-You're receiving this because you enabled alerts for your tests at Citrulu.com
+You're receiving this because you enabled alerts at Citrulu.com
 
 Edit your subscription: <%=raw url_for edit_user_registration_url %>
 <% end %>
