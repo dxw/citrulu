@@ -1,0 +1,41 @@
+%table.table-striped.span12
+  %thead
+    %tr
+      %td.span5
+      %td.span2=@names[:silver]
+      %td.span2=@names[:gold]
+      %td.span1
+      %td.span2
+
+  %tbody
+    %tr.costs
+      %td.feature
+        %p=@costs[:name]
+        %small=@costs[:description]
+      %td.silver
+        =choose_plan_link(:silver, "btn btn-large btn-primary")
+      %td.gold
+        =choose_plan_link(:gold,"btn btn-large btn-primary")
+      %td
+    
+    - @limits.each do |limit|
+      %tr
+        %td.feature
+          %p=limit[:name]
+          %small=limit[:description]
+        %td.silver=limit[:silver]
+        %td.gold=limit[:gold]
+        %td
+
+    - @features.each do |feature|
+      %tr
+        %td.feature
+          %p=feature[:name]
+          %small=feature[:description]
+        %td.silver
+          %i{:class => feature[:silver] ? 'icon-ok' : 'icon-remove'}
+        %td.gold
+          %i{:class => feature[:gold] ? 'icon-ok' : 'icon-remove'}
+        %td.comingsoon
+          - if feature[:comingsoon]
+            %p Coming soon!

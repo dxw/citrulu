@@ -1,0 +1,43 @@
+%header.page-header  
+  %h1 Payment Details
+
+%p Cool! Now we just need to get your payment details and you can continue as a fully-fledged Citrulu user!
+
+- unless @errors.blank?
+  #error_explanation
+    %h2
+      =pluralize(@errors.length, "error") 
+      prevented your payment from being processed:
+    %ul
+      - @errors.each do |error|
+        %li=error
+    
+
+= form_for :credit_card, :url => {:action => "create", :plan_id => @plan_id }, :method => :put, :html => { :class => "form-horizontal" } do |f|
+  %ul.unstyled
+    %li.control-group
+      = f.label :name, :class => 'control-label'
+      .controls
+        = f.text_field :first_name, :placeholder => "First Name"
+        = f.text_field :last_name, :placeholder => "Last Name"
+    %li.control-group
+      = f.label :card_type, :class => 'control-label'
+      .controls 
+        = f.select :card_type, options_for_select(CARD_TYPES), :include_blank => true
+    %li.control-group
+      = f.label :number, :class => 'control-label'
+      .controls 
+        = f.text_field :number
+    %li.control-group
+      = f.label :security_code, :class => 'control-label'
+      .controls 
+        = f.text_field :verification_value
+        %p.help-block
+          Enter the security code from the back of your card (or the front if you're paying with American Express)
+    %li.control-group
+      = f.label :expiry_date, :class => 'control-label'
+      .controls 
+        = f.select :month, options_for_select(MONTHS), :include_blank => true
+        = f.select :year, NEXT_TEN_YEARS
+    .form-actions
+      = f.submit "Submit", :class => "btn btn-primary"

@@ -26,8 +26,8 @@ class User < ActiveRecord::Base
   after_create :create_default_test_file 
   after_create :add_invitation
   before_save :set_email_preference
-  after_save :update_subscription
-  after_destroy :destroy_subscription
+  after_save :update_subscriber
+  after_destroy :destroy_subscriber
   
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
@@ -46,28 +46,45 @@ class User < ActiveRecord::Base
     q
   end
 
-  # TODO - This method is probably redundant
-  def subscribe_to_default_plan
-    subscribe(Plan.default)
-  end
+  ###################
+  # SUBSCRIBER CRUD #
+  ###################
   
   # Create a subscriber record on Spreedly
-  def create_subscription
+  def create_subscriber
+    # If you try and subscribe twice, you get: 
+    #   MultiXml::ParseError: Start tag expected, '<' not found
+    if subscribed?
+      raise "A subscriber record has already been created for that user"
+    end
+    
     new_subscriber = RSpreedly::Subscriber.new(
       :customer_id => id,
       :email => email,
       :screen_name => email, #screen_name gets put in the "User Name" field on spreedly
-      :subscription_plan_id => plan.spreedly_id
     )
     new_subscriber.save!
+  end
+  
+  def create_or_update_subscriber
+    if subscribed?
+      update_subscriber
+    else
+      create_subscriber
+    end
   end
   
   def subscriber
     RSpreedly::Subscriber.find(id)
   end
   
+  def subscribed?
+    !subscriber.nil?
+  end
+  
   # Update the user's details on Spreedly
   def update_subscription_details(args)
+    # TODO: What should we do if the user has no subscription?
     # TODO: Raise an exception if args is empty or invalid?    
     if args.has_key? :update_subscription_plan
       raise ArgumentError.new("You can't update the subscription plan with 'update subscription details'. Use 'update_subscription_plan' instead")
@@ -91,50 +108,24 @@ class User < ActiveRecord::Base
     end
   end
   
-  # Create an invoice on Spreedly so that we can set up the repeating payment.
-  def create_invoice
-    invoice = RSpreedly::Invoice.new(
-      :subscription_plan_id => plan.spreedly_id,
-      :subscriber => subscriber
-    )
-    
-    invoice.save
-    return invoice
-  end
-  
-  #TODO: this doesn't nescessarily belong in the User model: it doesn't actually touch anything from it.
-  def pay_invoice(invoice, payment_details)
-    payment = RSpreedly::PaymentMethod::CreditCard.new(payment_details)
-    invoice.pay(payment)
-    return invoice
-  end
-  
-  def raise_and_pay_invoice(payment_details)
-    invoice = create_invoice
-    if invoice.errors.blank?
-      pay_invoice(invoice, payment_details)
-    end
-    return invoice
+  def destroy_subscriber
+    RSpreedly::Subscriber.find(id).destroy
   end
   
   
   private
   
   # Update details on Spreedly
-  def update_subscription
+  def update_subscriber
+    # TODO: later on, we should maybe assume that every user has a subscription and so raise an error if they dont 
+    return if subscriber.nil?
+    
     update_subscription_details(
       :email => email,
       :screen_name => email
     )
-    
-    update_subscription_plan
   end
   
-  def destroy_subscription
-    RSpreedly::Subscriber.find(id).destroy
-  end
-  
-
   def inf val
     val != -1 ? val : '∞'
   end

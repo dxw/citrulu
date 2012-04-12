@@ -141,6 +141,48 @@ footer {
   }
 }
 
+//For the Features/Choose plan tables
+table {
+  p {
+      margin: 0;
+  }
+
+  small {
+    font-size: 90%;
+  }
+
+  thead td {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 20px;
+  }
+
+  td {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  td.feature {
+    text-align: left;
+    padding: 10px 10px 10px 0;
+
+    p {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  td.comingsoon {
+    font-style: italic;
+  }
+  
+  td .btn { 
+    margin: 1em;
+    padding: 1em;
+    line-height: 1.6;
+  }
+}
+
 
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";

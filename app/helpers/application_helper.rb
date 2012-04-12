@@ -45,6 +45,15 @@ module ApplicationHelper
     content_tag :div, message, :class => cl
   end
   
+  def choose_plan_link(plan_level, btn_class)
+    plan_text_span = content_tag :span, "Sign up now for", :class => "plan_text"
+    plan_cost_span = content_tag :span, @costs[plan_level], :class => "plan_cost"
+    
+    link_to (plan_text_span << " " << plan_cost_span), {:controller => "payments", :action => "set_plan", :plan_level => plan_level}, :class => btn_class    
+  end
+  
+  
+  
   # See here: https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name
     :user
