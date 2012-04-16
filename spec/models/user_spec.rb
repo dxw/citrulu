@@ -6,12 +6,10 @@ describe User do
     
     @subscriber = double(RSpreedly::Subscriber)
     RSpreedly::Subscriber.stub(:new).and_return(@subscriber)
-    RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
+    RSpreedly::Subscriber.stub(:find) # By default, return nil (not found)
     RSpreedly::Subscriber.any_instance.stub(:update)
-    RSpreedly::Subscriber.any_instance.stub(:destroy)
   end
-  
-  
+    
   it "should add the default test file when it's created" do
     @user.test_files.first.test_file_text.should == DEFAULT_TEST_FILE
   end
@@ -35,7 +33,9 @@ describe User do
     
     TestFile.find(test_file_id).user.should === @user
     
+    RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
     @subscriber.stub(:destroy)
+    
     @user.destroy
     expect{ TestFile.find(test_file_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
@@ -73,11 +73,11 @@ describe User do
       @user.plan = @plan
     end
     
-    describe "create_subscription" do
+    describe "create_subscriber" do
       it "should create a subscriber record on spreedly" do
         RSpreedly::Subscriber.should_receive(:new)
         @subscriber.should_receive(:save!)
-        @user.create_subscription
+        @user.create_subscriber
       end
     end
   
@@ -90,29 +90,11 @@ describe User do
   
     describe "callbacks" do
       it "should destroy the subscription when the model is destroyed" do
-        @subscriber.stub(:save!)
-        @user.create_subscription
+        RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
         @subscriber.should_receive(:destroy)
         @user.destroy
       end
     end
-  
-    context "when handling payments" do
-      before(:each) do
-        @invoice = double(RSpreedly::Invoice)
-        RSpreedly::Invoice.stub(:new).and_return(@invoice)
-      end
-    
-      describe "create invoice" do
-        it "should create an invoice for the user's plan" do
-          @invoice.should_receive(:save).and_return(:true)
-          @user.create_invoice
-        end
-    
-        it "should raise an error if the user is already active"
-      end
-    end
-  
   end
   
 end

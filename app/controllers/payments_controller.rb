@@ -21,7 +21,7 @@ class PaymentsController < ApplicationController
   def new
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
     if params[:plan_id].nil?
-      redirect_to action: choose_plan
+      redirect_to action: "choose_plan"
       return
     end
     
@@ -41,20 +41,16 @@ class PaymentsController < ApplicationController
     current_user.create_or_update_subscriber
     
     # Raise the invoice agaist that subscriber
+pp "INTERACTING WITH SPREEDLY: new invoice"
     invoice = RSpreedly::Invoice.new(
       :subscription_plan_id => plan.spreedly_id,
       :subscriber => current_user.subscriber
     )
-pp invoice
-pp    
+
     invoice.save! # Will go BOOM if there was a problem saving the invoice
-
-pp invoice
-pp
+pp "INTERACTING WITH SPREEDLY: credit card"
     payment = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
-
-pp payment
-
+pp "INTERACTING WITH SPREEDLY: pay invoice"
     if invoice.pay(payment)
       current_user.plan = plan
       current_user.save
