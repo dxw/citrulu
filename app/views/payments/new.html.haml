@@ -13,7 +13,7 @@
         %li=error
     
 
-= form_for :credit_card, :url => {:action => "create", :plan_id => @plan_id }, :method => :put, :html => { :class => "form-horizontal" } do |f|
+= form_for :credit_card, :url => {:action => "create", :plan_id => @plan_id }, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
   %ul.unstyled
     %li.control-group
       = f.label :name, :class => 'control-label'
@@ -40,4 +40,4 @@
         = f.select :month, options_for_select(MONTHS), :include_blank => true
         = f.select :year, NEXT_TEN_YEARS
     .form-actions
-      = f.submit "Submit", :class => "btn btn-primary"
+      = f.submit "Submit", :class => "btn btn-primary btn-large"

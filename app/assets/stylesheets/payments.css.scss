@@ -19,3 +19,14 @@ body.payments.confirmation {
     }
   }
 }
+
+body.payments { 
+  .working {
+    background: transparent url("loader.gif") no-repeat right;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: transparent;
+    padding: 5px 0 0 10px;
+  }
+}

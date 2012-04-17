@@ -1,3 +1,8 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+$(window).load ->
+  if($('body').hasClass('payments') && ( $('body').hasClass('new') || $('body').hasClass('create') ))
+    
+    # When the form gets submitted, replace the submit button with a styled div:
+    $('#credit_card_form').submit -> 
+      classes = $('input[type=submit]').attr('class') 
+      $('#credit_card_form input[type=submit]').replaceWith("<div id='submit' class='disabled " + classes + "'>Submitting...</div>")
+      $('#submit').append("<span class='working'/>")
