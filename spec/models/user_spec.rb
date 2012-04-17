@@ -70,7 +70,9 @@ describe User do
   context "when dealing with Spreedly" do
     before(:each) do
       @plan = FactoryGirl.create(:plan)
-      @user.plan = @plan
+      @user.confirm!
+      @user.plan = @plan  
+      @user.save!
     end
     
     describe "create_subscriber" do
@@ -87,11 +89,42 @@ describe User do
         expect{ @user.update_subscription_details(:update_subscription_plan => @plan) }.to raise_error(ArgumentError)
       end
     end
+    
+    describe "update_subscriber" do
+      before(:each) do
+        RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
+        
+      end
+      
+      context "when there have been changes to the user" do
+        it "should update the Spreedly subscriber" do
+          @subscriber.should_receive(:update!)
+          
+          @subscriber.stub(:respond_to?).and_return(true)
+          @subscriber.stub(:send)
+          
+          @user.email = "faz@baz.com"
+          @user.send(:update_subscriber)
+        end
+      end
+      context "when there have NOT been changes to the user" do
+        it "should not update the Spreedly subscriber" do
+          @subscriber.should_not_receive(:update!)
+          @user.send(:update_subscriber)
+        end
+      end
+    end
   
     describe "callbacks" do
       it "should destroy the subscription when the model is destroyed" do
         RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
         @subscriber.should_receive(:destroy)
+        @user.destroy
+      end
+      
+      it "should do nothing if the model was destroyed but there is no subscriber" do
+        RSpreedly::Subscriber.stub(:find).and_return(nil)
+        RSpreedly::Subscriber.any_instance.should_not_receive(:destroy)
         @user.destroy
       end
     end

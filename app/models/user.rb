@@ -23,9 +23,9 @@ class User < ActiveRecord::Base
   belongs_to :invitation
   belongs_to :plan
   
+  before_create :set_email_preference
   after_create :create_default_test_file 
   after_create :add_invitation
-  before_save :set_email_preference
   after_save :update_subscriber
   after_destroy :destroy_subscriber
   
@@ -109,7 +109,9 @@ class User < ActiveRecord::Base
   end
   
   def destroy_subscriber
-    RSpreedly::Subscriber.find(id).destroy
+    if subscribed?
+      subscriber.destroy
+    end
   end
   
   
@@ -120,10 +122,12 @@ class User < ActiveRecord::Base
     # TODO: later on, we should maybe assume that every user has a subscription and so raise an error if they dont 
     return if subscriber.nil?
     
-    update_subscription_details(
-      :email => email,
-      :screen_name => email
-    )
+    if changed.include?("email")
+      update_subscription_details(
+        :email => email,
+        :screen_name => email
+      )
+    end
   end
   
   def inf val
