@@ -23,22 +23,8 @@
         %i.icon-plus-sign
         Create a new test file
     %ul.unstyled
-      - @test_files.each do |file|
-        %li.test_file
-          %a.btn{:href => edit_test_file_path(file)}
-            %span.name=file.name
-            .row
-              .span4
-                %span.last_updated="Last updated at #{file.updated_at}"
-              .span3
-                %span.file_info
-                  -if file.compiled?
-                    =pluralize(file.number_of_tests, 'assertion')
-                    on 
-                    =pluralize(file.number_of_pages, 'page')
-                  -else
-                    Your file hasn't been compiled yet.
-                    Click to edit it and kick it off.
+      =render partial: @test_files
+        
       
   #sidebar.span4
     #recent_results

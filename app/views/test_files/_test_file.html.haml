@@ -1,0 +1,15 @@
+%li.test_file
+  %a.btn{:href => edit_test_file_path(test_file)}
+    %span.name=test_file.name
+    .row
+      .span4
+        %span.last_updated="Last updated at #{test_file.updated_at}"
+      .span3
+        %span.file_info
+          -if test_file.compiled?
+            =pluralize(test_file.number_of_tests, 'assertion')
+            on 
+            =pluralize(test_file.number_of_pages, 'page')
+          -else
+            Your file hasn't been compiled yet.
+            Click to edit it and kick it off.

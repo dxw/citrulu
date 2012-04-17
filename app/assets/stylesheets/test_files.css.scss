@@ -202,43 +202,6 @@ body.test_files.index {
     }
   }
 
-  #test_list {
-    .title {
-      a.btn {
-        float: right;
-        margin-top: -40px;
-      }
-    } 
-
-    ul {
-      padding-top: 10px;
-      
-      li.test_file {
-        a {
-          display: block;
-          color: inherit;
-          text-align: left;
-          padding: 15px 10px;
-
-          &:hover {
-            text-decoration: none;
-            border-color: rgba(0,0,0,0.3);
-          }
-
-          span.name {
-            font-size: 16px;
-            font-weight: bold;
-            padding-right: 1em
-          }
-
-          span.last_updated {
-            font-style: italic;
-          }
-        }
-      }
-    }
-  }
-
   #sidebar {
     #recent_results {
       .fail, .pass {
@@ -281,6 +244,44 @@ body.test_files.index {
         vertical-align: middle;
         line-height: 24px;
         color: #999;
+      }
+    }
+  }
+}
+
+// Used on Confirmations screen as well
+#test_list {
+  .title {
+    a.btn {
+      float: right;
+      margin-top: -40px;
+    }
+  } 
+
+  ul {
+    padding-top: 10px;
+    
+    li.test_file {
+      a {
+        display: block;
+        color: inherit;
+        text-align: left;
+        padding: 15px 10px;
+
+        &:hover {
+          text-decoration: none;
+          border-color: rgba(0,0,0,0.3);
+        }
+
+        span.name {
+          font-size: 16px;
+          font-weight: bold;
+          padding-right: 1em
+        }
+
+        span.last_updated {
+          font-style: italic;
+        }
       }
     }
   }

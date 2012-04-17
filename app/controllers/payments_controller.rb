@@ -20,21 +20,14 @@ class PaymentsController < ApplicationController
 
   def new
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    if params[:plan_id].nil?
-      redirect_to action: "choose_plan"
-      return
-    end
+    reroute_if_accessed_directly
     
     @plan_id = params[:plan_id]
   end
   
   def create
-    # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    if params[:plan_id].nil?
-      redirect_to action: choose_plan
-      return
-    end
-
+    reroute_if_accessed_directly
+    
     plan = Plan.find(params[:plan_id])
     
     # Create the subscriber on Spreedly:
@@ -62,7 +55,32 @@ class PaymentsController < ApplicationController
   end
 
   def confirmation
+    # Redirect the user to the home page if they tried to access this page directly
+    if params[:plan_id].nil?
+      redirect_to '/'
+      return
+    end
     
+    @test_files = current_user.test_files
+    
+    subscriber = current_user.subscriber
+    invoices = subscriber.invoices
+    raise "Wrong number of invoices: #{invoices}" unless invoices.length == 1
+    invoice = invoices.first
+    raise "Wrong number of line items: #{line_items}" unless invoice.line_items.length == 1
+    
+    @line_item = invoice.line_items.first
+    @subscription_plan_name = subscriber.subscription_plan_name
+  end
+  
+  protected
+  
+  def reroute_if_accessed_directly
+   # Redirect the user to the beginning of the payment flow if they tried to access this page directly
+    if params[:plan_id].nil?
+      redirect_to action: "choose_plan"
+      return
+    end
   end
   
 end
