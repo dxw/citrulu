@@ -41,16 +41,15 @@ class PaymentsController < ApplicationController
     current_user.create_or_update_subscriber
     
     # Raise the invoice agaist that subscriber
-pp "INTERACTING WITH SPREEDLY: new invoice"
     invoice = RSpreedly::Invoice.new(
       :subscription_plan_id => plan.spreedly_id,
       :subscriber => current_user.subscriber
     )
 
     invoice.save! # Will go BOOM if there was a problem saving the invoice
-pp "INTERACTING WITH SPREEDLY: credit card"
+    
     payment = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
-pp "INTERACTING WITH SPREEDLY: pay invoice"
+
     if invoice.pay(payment)
       current_user.plan = plan
       current_user.save
