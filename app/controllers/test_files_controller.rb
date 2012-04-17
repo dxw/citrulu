@@ -10,7 +10,8 @@ class TestFilesController < ApplicationController
   # GET /test_files.json
   def index
     @test_files = current_user.test_files.sort{ |a,b| a.updated_at > b.updated_at }
-    @recent_failed_groups = @test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
+    @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
+    @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
 
     respond_to do |format|
       format.html 
@@ -70,6 +71,12 @@ class TestFilesController < ApplicationController
 #  end
 
   def update_liveview
+
+    if params[:group].blank?
+      render :text => ''
+      return
+    end
+
     begin
       @test_url = params[:group].split("\n").first.gsub(/On |on /, '')
       @current_line = params[:current_line]

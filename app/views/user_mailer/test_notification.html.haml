@@ -4,7 +4,7 @@
       Your failing tests are now passing. Everything's looking good! 
     %p{:style => content_p_styles}
       If you'd like, you can 
-      =link_to("review recent test results", test_runs_url) + "."
+      =link_to("review recent results", test_runs_url) + "."
   - elsif @status == :fail
     - if @test_run.has_failed_groups?
       %p{:style => content_p_styles}
@@ -18,7 +18,7 @@
     
     - if @test_run.has_groups_with_failed_tests? 
       %p{:style => content_p_styles}
-        = "Failed tests (#{@test_run.number_of_failed_tests}):"
+        = "Failed #{pluralize(@test_run.number_of_failed_tests, 'assertion')}:"
       %div{:style => "padding-bottom: 15px;"}
         - @test_run.groups_with_failed_tests.each do |group|
           %p{:style => content_p_styles}
@@ -31,12 +31,12 @@
                 != value_or_name(result)
                       
     %p{:style => content_p_styles} 
-      To view your full test results, visit
-      =link_to("your test results page", test_run_url(@test_run), :style => content_a_styles) + "."
+      To view your full results, visit
+      =link_to("your results page", test_run_url(@test_run), :style => content_a_styles) + "."
               
 - content_for :footer_text do
   %span 
-    You're receiving this because you enabled alerts for your tests at 
+    You're receiving this because you enabled alerts at 
     =link_to "Citrulu.com", "http://www.citrulu.com", :style => footer_a_styles
 - content_for :footer_links do
   =link_to "Edit your subscription", edit_user_registration_url, :style => footer_a_styles

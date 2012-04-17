@@ -946,10 +946,9 @@ module TesterGrammar
   end
 
   module Url0
-    def authority
-      elements[1]
-    end
+  end
 
+  module Url1
   end
 
   def _nt_url
@@ -991,21 +990,72 @@ module TesterGrammar
     end
     s0 << r1
     if r1
-      r4 = _nt_authority
+      r5 = _nt_basic_auth
+      if r5
+        r4 = r5
+      else
+        r4 = instantiate_node(SyntaxNode,input, index...index)
+      end
       s0 << r4
       if r4
-        r6 = _nt_path
-        if r6
-          r5 = r6
-        else
-          r5 = instantiate_node(SyntaxNode,input, index...index)
+        i6, s6 = index, []
+        s7, i7 = [], index
+        loop do
+          if has_terminal?('\G[a-zA-Z0-9]', true, index)
+            r8 = true
+            @index += 1
+          else
+            r8 = nil
+          end
+          if r8
+            s7 << r8
+          else
+            break
+          end
         end
-        s0 << r5
+        if s7.empty?
+          @index = i7
+          r7 = nil
+        else
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+        end
+        s6 << r7
+        if r7
+          s9, i9 = [], index
+          loop do
+            if has_terminal?('\G[^\\n\\s]', true, index)
+              r10 = true
+              @index += 1
+            else
+              r10 = nil
+            end
+            if r10
+              s9 << r10
+            else
+              break
+            end
+          end
+          if s9.empty?
+            @index = i9
+            r9 = nil
+          else
+            r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+          end
+          s6 << r9
+        end
+        if s6.last
+          r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
+          r6.extend(Url0)
+        else
+          @index = i6
+          r6 = nil
+        end
+        s0 << r6
       end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Url0)
+      r0.extend(Url1)
     else
       @index = i0
       r0 = nil
@@ -1016,86 +1066,13 @@ module TesterGrammar
     r0
   end
 
-  module Authority0
-    def host
-      elements[0]
-    end
-
+  module BasicAuth0
   end
 
-  def _nt_authority
+  def _nt_basic_auth
     start_index = index
-    if node_cache[:authority].has_key?(index)
-      cached = node_cache[:authority][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    r1 = _nt_host
-    s0 << r1
-    if r1
-      r3 = _nt_port
-      if r3
-        r2 = r3
-      else
-        r2 = instantiate_node(SyntaxNode,input, index...index)
-      end
-      s0 << r2
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Authority0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:authority][start_index] = r0
-
-    r0
-  end
-
-  def _nt_host
-    start_index = index
-    if node_cache[:host].has_key?(index)
-      cached = node_cache[:host][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0 = index
-    r1 = _nt_ipv4
-    if r1
-      r0 = r1
-    else
-      r2 = _nt_regname
-      if r2
-        r0 = r2
-      else
-        @index = i0
-        r0 = nil
-      end
-    end
-
-    node_cache[:host][start_index] = r0
-
-    r0
-  end
-
-  module Ipv40
-  end
-
-  def _nt_ipv4
-    start_index = index
-    if node_cache[:ipv4].has_key?(index)
-      cached = node_cache[:ipv4][index]
+    if node_cache[:basic_auth].has_key?(index)
+      cached = node_cache[:basic_auth][index]
       if cached
         cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
@@ -1106,10 +1083,11 @@ module TesterGrammar
     i0, s0 = index, []
     s1, i1 = [], index
     loop do
-      if has_terminal?('\G[0-9]', true, index)
-        r2 = true
+      if index < input_length
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
+        terminal_parse_failure("any character")
         r2 = nil
       end
       if r2
@@ -1118,29 +1096,25 @@ module TesterGrammar
         break
       end
     end
-    if s1.empty?
-      @index = i1
-      r1 = nil
-    else
-      r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
     s0 << r1
     if r1
-      if has_terminal?('.', false, index)
+      if has_terminal?(':', false, index)
         r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
-        terminal_parse_failure('.')
+        terminal_parse_failure(':')
         r3 = nil
       end
       s0 << r3
       if r3
         s4, i4 = [], index
         loop do
-          if has_terminal?('\G[0-9]', true, index)
-            r5 = true
+          if index < input_length
+            r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
+            terminal_parse_failure("any character")
             r5 = nil
           end
           if r5
@@ -1149,253 +1123,29 @@ module TesterGrammar
             break
           end
         end
-        if s4.empty?
-          @index = i4
-          r4 = nil
-        else
-          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
-        end
+        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
         s0 << r4
         if r4
-          if has_terminal?('.', false, index)
+          if has_terminal?('@', false, index)
             r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
-            terminal_parse_failure('.')
+            terminal_parse_failure('@')
             r6 = nil
           end
           s0 << r6
-          if r6
-            s7, i7 = [], index
-            loop do
-              if has_terminal?('\G[0-9]', true, index)
-                r8 = true
-                @index += 1
-              else
-                r8 = nil
-              end
-              if r8
-                s7 << r8
-              else
-                break
-              end
-            end
-            if s7.empty?
-              @index = i7
-              r7 = nil
-            else
-              r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-            end
-            s0 << r7
-            if r7
-              if has_terminal?('.', false, index)
-                r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
-                @index += 1
-              else
-                terminal_parse_failure('.')
-                r9 = nil
-              end
-              s0 << r9
-              if r9
-                s10, i10 = [], index
-                loop do
-                  if has_terminal?('\G[0-9]', true, index)
-                    r11 = true
-                    @index += 1
-                  else
-                    r11 = nil
-                  end
-                  if r11
-                    s10 << r11
-                  else
-                    break
-                  end
-                end
-                if s10.empty?
-                  @index = i10
-                  r10 = nil
-                else
-                  r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
-                end
-                s0 << r10
-              end
-            end
-          end
         end
       end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Ipv40)
+      r0.extend(BasicAuth0)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:ipv4][start_index] = r0
-
-    r0
-  end
-
-  def _nt_regname
-    start_index = index
-    if node_cache[:regname].has_key?(index)
-      cached = node_cache[:regname][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    r0 = _nt_regname_part
-
-    node_cache[:regname][start_index] = r0
-
-    r0
-  end
-
-  def _nt_regname_part
-    start_index = index
-    if node_cache[:regname_part].has_key?(index)
-      cached = node_cache[:regname_part][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    s0, i0 = [], index
-    loop do
-      if has_terminal?('\G[a-zA-Z0-9.-]', true, index)
-        r1 = true
-        @index += 1
-      else
-        r1 = nil
-      end
-      if r1
-        s0 << r1
-      else
-        break
-      end
-    end
-    r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-
-    node_cache[:regname_part][start_index] = r0
-
-    r0
-  end
-
-  module Port0
-  end
-
-  def _nt_port
-    start_index = index
-    if node_cache[:port].has_key?(index)
-      cached = node_cache[:port][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    if has_terminal?(':', false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
-      @index += 1
-    else
-      terminal_parse_failure(':')
-      r1 = nil
-    end
-    s0 << r1
-    if r1
-      s2, i2 = [], index
-      loop do
-        if has_terminal?('\G[0-9]', true, index)
-          r3 = true
-          @index += 1
-        else
-          r3 = nil
-        end
-        if r3
-          s2 << r3
-        else
-          break
-        end
-      end
-      if s2.empty?
-        @index = i2
-        r2 = nil
-      else
-        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-      end
-      s0 << r2
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Port0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:port][start_index] = r0
-
-    r0
-  end
-
-  module Path0
-  end
-
-  def _nt_path
-    start_index = index
-    if node_cache[:path].has_key?(index)
-      cached = node_cache[:path][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    if has_terminal?('/', false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
-      @index += 1
-    else
-      terminal_parse_failure('/')
-      r1 = nil
-    end
-    s0 << r1
-    if r1
-      s2, i2 = [], index
-      loop do
-        if has_terminal?('\G[^\\n]', true, index)
-          r3 = true
-          @index += 1
-        else
-          r3 = nil
-        end
-        if r3
-          s2 << r3
-        else
-          break
-        end
-      end
-      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
-      s0 << r2
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Path0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:path][start_index] = r0
+    node_cache[:basic_auth][start_index] = r0
 
     r0
   end

@@ -15,7 +15,7 @@
             %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
             - if !group.message.blank?
               %div
-                %p Uh-oh! We couldn't fetch this page because of an error:
+                %p We couldn't retrieve this page:
                 %pre=group.message
             -else
               %ul.recentfails

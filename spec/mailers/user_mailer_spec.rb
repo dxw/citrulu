@@ -3,6 +3,7 @@ require "spec_helper"
 describe UserMailer do
   before(:each) do
     @user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
+    @user.confirm!
   end
   
   describe 'test notification' do
@@ -70,7 +71,6 @@ describe UserMailer do
       email = UserMailer.test_notification_failure(@test_run1)
 
       email.subject.should include('1 of your tests just failed')
-      email.to.should == ['tom+tester@dxw.com']
 
       both_parts(email) {|body| body.should include('blah (failed)') }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/dxw.com/) }
