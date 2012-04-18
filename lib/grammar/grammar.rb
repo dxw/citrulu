@@ -113,7 +113,6 @@ module TesterGrammar
       # TODO: only add if there isn't one
 
       assertions = results[:tests].collect{|x| x[:assertion]}.uniq
-puts assertions.inspect
       if !assertions.include?(:response_code_be) && !assertions.include?(:response_code_not_be)
         results[:tests].insert(0, {
           :assertion => :response_code_be,
