@@ -8,19 +8,54 @@ grammar TesterGrammar
   end
 
   rule test_group
-    comment* page_clause comment* first_clause? comment* finally_clause? comment* test_line+ comment* {
+    comment* page_clause comment* single_assertion comment* test_line* comment* {
       def process
         results = {
-          :test_page => page_clause.process,
-          :tests => elements[7].elements.collect{|e| e.process}
+          :page => page_clause.process,
+          :tests => elements[5].elements.collect{|e| e.process}
         }
 
-        results[:first] = elements[3].url.text_value.strip if !elements[3].empty?
-        results[:finally] = elements[5].url.text_value.strip if !elements[5].empty?
+        single_assertions = single_assertion.process
+
+        results[:page][:first] = single_assertions[:first]
+        results[:page][:finally] = single_assertions[:finally]
+
+        single_assertions[:response_code] ||= '200'
+        single_assertions[:original_line] ||= 'Response code should be 200'
+
+        results[:tests].insert(0, {
+          :assertion => :response_code,
+          :value => single_assertions[:response_code],
+          :original_line => single_assertions[:original_line]
+        })
 
         results
       end
     }
+  end
+
+  rule single_assertion
+    first_clause? comment* finally_clause? comment* response_code? {
+      def process
+        if elements
+          results = {}
+
+          results[:first] = elements[0].url.text_value.strip if !elements[0].empty?
+          results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
+
+          if !elements[4].empty?
+            results[:response_code] = elements[4].value.text_value.strip
+            results[:original_line] = elements[4].text_value.strip
+          end
+
+          results
+        end
+      end
+    }
+  end
+
+  rule response_code
+    space "Response code should be" space value
   end
 
   rule on_clause
@@ -91,8 +126,8 @@ grammar TesterGrammar
         else
           hash[:value] = parameter.text_value.strip
 
-          if matches = hash[:value].match(/"([^"]+)"/)
-            hash[:value] = matches[1]
+          if matches = hash[:value][0] == '"' && hash[:value][-1] == '"'
+            hash[:value] = hash[:value][1..-2]
           end
 
           if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'

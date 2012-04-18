@@ -92,17 +92,32 @@ module TesterGrammar
       elements[1]
     end
 
+    def single_assertion
+      elements[3]
+    end
+
   end
 
   module TestGroup1
     def process
       results = {
-        :test_page => page_clause.process,
-        :tests => elements[7].elements.collect{|e| e.process}
+        :page => page_clause.process,
+        :tests => elements[5].elements.collect{|e| e.process}
       }
 
-      results[:first] = elements[3].url.text_value.strip if !elements[3].empty?
-      results[:finally] = elements[5].url.text_value.strip if !elements[5].empty?
+      single_assertions = single_assertion.process
+
+      results[:page][:first] = single_assertions[:first]
+      results[:page][:finally] = single_assertions[:finally]
+
+      single_assertions[:response_code] ||= '200'
+      single_assertions[:original_line] ||= 'Response code should be 200'
+
+      results[:tests].insert(0, {
+        :assertion => :response_code,
+        :value => single_assertions[:response_code],
+        :original_line => single_assertions[:original_line]
+      })
 
       results
     end
@@ -147,76 +162,44 @@ module TesterGrammar
         r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
         s0 << r4
         if r4
-          r7 = _nt_first_clause
-          if r7
-            r6 = r7
-          else
-            r6 = instantiate_node(SyntaxNode,input, index...index)
-          end
+          r6 = _nt_single_assertion
           s0 << r6
           if r6
-            s8, i8 = [], index
+            s7, i7 = [], index
             loop do
-              r9 = _nt_comment
-              if r9
-                s8 << r9
+              r8 = _nt_comment
+              if r8
+                s7 << r8
               else
                 break
               end
             end
-            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
-            s0 << r8
-            if r8
-              r11 = _nt_finally_clause
-              if r11
-                r10 = r11
-              else
-                r10 = instantiate_node(SyntaxNode,input, index...index)
+            r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+            s0 << r7
+            if r7
+              s9, i9 = [], index
+              loop do
+                r10 = _nt_test_line
+                if r10
+                  s9 << r10
+                else
+                  break
+                end
               end
-              s0 << r10
-              if r10
-                s12, i12 = [], index
+              r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+              s0 << r9
+              if r9
+                s11, i11 = [], index
                 loop do
-                  r13 = _nt_comment
-                  if r13
-                    s12 << r13
+                  r12 = _nt_comment
+                  if r12
+                    s11 << r12
                   else
                     break
                   end
                 end
-                r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
-                s0 << r12
-                if r12
-                  s14, i14 = [], index
-                  loop do
-                    r15 = _nt_test_line
-                    if r15
-                      s14 << r15
-                    else
-                      break
-                    end
-                  end
-                  if s14.empty?
-                    @index = i14
-                    r14 = nil
-                  else
-                    r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
-                  end
-                  s0 << r14
-                  if r14
-                    s16, i16 = [], index
-                    loop do
-                      r17 = _nt_comment
-                      if r17
-                        s16 << r17
-                      else
-                        break
-                      end
-                    end
-                    r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
-                    s0 << r16
-                  end
-                end
+                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
+                s0 << r11
               end
             end
           end
@@ -233,6 +216,163 @@ module TesterGrammar
     end
 
     node_cache[:test_group][start_index] = r0
+
+    r0
+  end
+
+  module SingleAssertion0
+  end
+
+  module SingleAssertion1
+    def process
+      if elements
+        results = {}
+
+        results[:first] = elements[0].url.text_value.strip if !elements[0].empty?
+        results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
+
+        if !elements[4].empty?
+          results[:response_code] = elements[4].value.text_value.strip
+          results[:original_line] = elements[4].text_value.strip
+        end
+
+        results
+      end
+    end
+  end
+
+  def _nt_single_assertion
+    start_index = index
+    if node_cache[:single_assertion].has_key?(index)
+      cached = node_cache[:single_assertion][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r2 = _nt_first_clause
+    if r2
+      r1 = r2
+    else
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
+    s0 << r1
+    if r1
+      s3, i3 = [], index
+      loop do
+        r4 = _nt_comment
+        if r4
+          s3 << r4
+        else
+          break
+        end
+      end
+      r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      s0 << r3
+      if r3
+        r6 = _nt_finally_clause
+        if r6
+          r5 = r6
+        else
+          r5 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s0 << r5
+        if r5
+          s7, i7 = [], index
+          loop do
+            r8 = _nt_comment
+            if r8
+              s7 << r8
+            else
+              break
+            end
+          end
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+          s0 << r7
+          if r7
+            r10 = _nt_response_code
+            if r10
+              r9 = r10
+            else
+              r9 = instantiate_node(SyntaxNode,input, index...index)
+            end
+            s0 << r9
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(SingleAssertion0)
+      r0.extend(SingleAssertion1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:single_assertion][start_index] = r0
+
+    r0
+  end
+
+  module ResponseCode0
+    def space1
+      elements[0]
+    end
+
+    def space2
+      elements[2]
+    end
+
+    def value
+      elements[3]
+    end
+  end
+
+  def _nt_response_code
+    start_index = index
+    if node_cache[:response_code].has_key?(index)
+      cached = node_cache[:response_code][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      if has_terminal?("Response code should be", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 23))
+        @index += 23
+      else
+        terminal_parse_failure("Response code should be")
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        r3 = _nt_space
+        s0 << r3
+        if r3
+          r4 = _nt_value
+          s0 << r4
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(ResponseCode0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:response_code][start_index] = r0
 
     r0
   end
@@ -762,8 +902,8 @@ module TesterGrammar
       else
         hash[:value] = parameter.text_value.strip
 
-        if matches = hash[:value].match(/"([^"]+)"/)
-          hash[:value] = matches[1]
+        if matches = hash[:value][0] == '"' && hash[:value][-1] == '"'
+          hash[:value] = hash[:value][1..-2]
         end
 
         if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'

@@ -3,7 +3,6 @@ require 'grammar/predefs'
 require 'mechanize'
 
 class TestRunner
-
   class TestCompileError < Exception
   end
 
@@ -63,7 +62,8 @@ class TestRunner
       group_params = {}
 
       begin
-        group_params[:test_url] = group[:test_url]
+        group_params[:test_url] = group[:page][:url]
+#group_params[:so] = group[:page][:so]
         
         agent = Mechanize.new
         agent.open_timeout = 5
@@ -75,11 +75,11 @@ class TestRunner
         
         group_params[:time_run] = Time.now
 
-        url = URI.parse(group[:test_url])
+        url = URI.parse(group[:page][:url])
 
         agent.auth(url.user, url.password) if url.user
 
-        page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
+        page = agent.send(group[:page][:method], url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
 
       rescue Exception => e
         group_params[:message] = e.to_s
@@ -138,12 +138,22 @@ class TestRunner
 
       when :headers_include
         test_result_params[:result] = do_test(testvalues) do |value|
-          header_is_in_page?(page, value)
+          header_exists?(page, value)
         end
 
       when :headers_not_include
         test_result_params[:result] = do_test(testvalues) do |value|
-          !header_is_in_page?(page, value)
+          !header_exists?(page, value)
+        end
+
+      when :contain
+        test_result_params[:result] = do_test(testvalues) do |value|
+          header_equals?(page, test[:header], value)
+        end
+
+      when :not_contain
+        test_result_params[:result] = do_test(testvalues) do |value|
+          !header_equals?(page, test[:header], value)
         end
 
       else
@@ -154,18 +164,39 @@ class TestRunner
     end
   end
   
+  def self.match_or_include(string, value)
+    if value.class == Regexp
+      string.match(value)
+    else
+      string.downcase.include?(value.downcase)
+    end
+  end
+
   def self.text_is_in_page?(page, text)
-    page.root.inner_text.downcase.include?(text.downcase)
+    match_or_include(page.root.inner_text, text)
   end
   
   def self.source_is_in_page?(page, source_fragment)
-    page.content.downcase.include?(source_fragment.downcase)
+    match_or_include(page.content, source_fragment)
   end
   
-  def self.header_is_in_page?(page, header)
-    page.header.collect{|h| h[0].downcase}.include?(header.downcase)
+  def self.header_exists?(page, header)
+    found = false
+
+    page.header.keys.each do |key|
+      if match_or_include(key, header)
+        found = true
+        break
+      end
+    end
+
+    found
   end
   
+  def self.header_equals?(page, header, value)
+    header_exists?(page, header) && match_or_include(page.header[header.downcase], value)
+  end
+
   private 
   
   def self.get_test_values(test)
@@ -184,6 +215,8 @@ class TestRunner
     passed = false
 
     testvalues.each do |value|
+      value.downcase! unless value.class == Regexp
+
       passed = yield(value)
 
       return passed if !passed

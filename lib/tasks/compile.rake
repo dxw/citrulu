@@ -77,6 +77,10 @@ On http://example.com/14
 So that I know santa-clause is a pixie
 On http://example.com/14
   Header X-Varnish should contain /abc/
+
+# Response codes
+On http://example.com/15
+  Response code should be 200
 }
 
 
@@ -95,10 +99,13 @@ task(:compile, [:testfile]) do |t, args|
     puts "#{"%03d" % index} | #{line}"
   end
 
+  x = CitruluParser.new
   puts "\n\nParser says:"
   begin
-    ap CitruluParser.new.compile_tests(source)
+    ap x.compile_tests(source)
   rescue Exception => e
     puts "#{e}"
+    puts e.backtrace.join("\n")
   end
+
 end

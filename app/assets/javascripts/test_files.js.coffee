@@ -102,21 +102,24 @@ get_current_group = ->
   cur_line = line = window.editor.getCursor().line
 
   # Find the start of the group
-  while line > 0 && !window.editor.getLine(line).match(/^\s*On/)
+  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When)/)
     line--
-  start = line
 
+  if line > 0 &&  window.editor.getLine(line-1).match(/^\s*On/)
+    line--
+
+  start = line
 
   # Find the end of the group
   line++
-  while line < window.editor.lineCount() && !window.editor.getLine(line).match(/^\s*On/)
+  while line < window.editor.lineCount() && !window.editor.getLine(line).match(/^\s*(So|On|When)/)
     line++
 
   end = line
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
-  return {group: '', current_line: 0} if !content.match(/^\s*On/)
+  return {group: '', current_line: 0} if !content.match(/^\s*(On|When|So)/)
   
  
   {group: content, current_line: cur_line - start }
