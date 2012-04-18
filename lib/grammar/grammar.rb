@@ -749,10 +749,9 @@ module TesterGrammar
 
   module Test1
     def process
-      hash = {
-        :assertion => elements[0].process,
-        :original_line => text_value
-      }
+      hash = elements[0].process
+
+      hash[:original_line] = text_value
 
       if parameter.text_value.match(/^:/)
         if parameter.text_value.match(/^::/)
@@ -765,6 +764,10 @@ module TesterGrammar
 
         if matches = hash[:value].match(/"([^"]+)"/)
           hash[:value] = matches[1]
+        end
+
+        if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'
+          hash[:value] = Regexp.new(hash[:value][1..-2])
         end
       end
 
@@ -822,7 +825,7 @@ module TesterGrammar
 
   module SimpleAssertion0
     def process
-      text_value.to_test_sym
+    {:assertion => text_value.to_test_sym}
     end
   end
 

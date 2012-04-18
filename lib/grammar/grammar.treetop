@@ -78,10 +78,9 @@ grammar TesterGrammar
   rule test
     (complex_assertion / simple_assertion) space parameter {
       def process
-        hash = {
-          :assertion => elements[0].process,
-          :original_line => text_value
-        }
+        hash = elements[0].process
+
+        hash[:original_line] = text_value
 
         if parameter.text_value.match(/^:/)
           if parameter.text_value.match(/^::/)
@@ -95,6 +94,10 @@ grammar TesterGrammar
           if matches = hash[:value].match(/"([^"]+)"/)
             hash[:value] = matches[1]
           end
+
+          if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'
+            hash[:value] = Regexp.new(hash[:value][1..-2])
+          end
         end
 
         hash
@@ -105,7 +108,7 @@ grammar TesterGrammar
   rule simple_assertion
     ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include") {
       def process
-        text_value.to_test_sym
+      {:assertion => text_value.to_test_sym}
       end
     }
   end
