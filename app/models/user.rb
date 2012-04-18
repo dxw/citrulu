@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   
   after_create :create_default_test_file 
   after_create :subscribe_to_default_plan
-  after_create :add_invitation
+  before_create :add_invitation
   before_save :set_email_preference
   
   def send_welcome_email
@@ -68,7 +68,6 @@ class User < ActiveRecord::Base
 
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
-    save!
   end
   
   def create_default_test_file
