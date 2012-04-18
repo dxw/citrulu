@@ -1,31 +1,46 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+# Make ONE call to Spreedly:
+spreedly_plans = Plan.spreedly_plans
+
+cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon")
+cornichon_price = cornichon_spreedly.price.to_f unless cornichon_spreedly.nil?
+
+gherkin_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Gherkin")
+gherkin_price = gherkin_spreedly.price.to_f unless gherkin_spreedly.nil?
+
 Plan.create([
   {
-    default: true,
     name_en: 'Cornichon',
-    cost_gbp: 0,
-    url_count: 10,
-    test_file_count: 1,
-    test_frequency: 86400
+    default: true,
+    cost_usd: cornichon_spreedly.price.to_f, # $14.95 to start with?
+    spreedly_id: cornichon_spreedly.id,
+    active: !cornichon_spreedly.nil?,
+    
+    # Limits:
+    test_frequency: 21600, # 4 times a day = every 6 hours = 21600
+    number_of_sites: 3,
+    mobile_alerts_allowance: "12 per month",
+    
+    # Features:
+    allows_custom_predefines: false,
+    allows_retrieved_pages: false,
+    allows_git_support: false,
+    allows_tests_on_demand: false
   },
   {
     name_en: 'Gherkin',
-    cost_gbp: 1000,
-    url_count: 500,
-    test_file_count: -1,
-    test_frequency: 43200
-  },
-  {
-    name_en: 'Cucumber',
-    cost_gbp: 50,
-    url_count: -1,
-    test_file_count: -1,
-    test_frequency: 3600
+    cost_usd: gherkin_spreedly.price.to_f, # $49.95 to start with?
+    spreedly_id: gherkin_spreedly.id,
+    active: !gherkin_spreedly.nil?,
+    
+    # Limits:
+    test_frequency: 900, # 4 times an hour = every 15 mins = 900
+    number_of_sites: 30,
+    mobile_alerts_allowance: "120 per month",
+    
+    # Features:
+    allows_custom_predefines: true,
+    allows_retrieved_pages: true,
+    allows_git_support: true,
+    allows_tests_on_demand: true
   }
 ])

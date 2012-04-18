@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120405132350) do
+ActiveRecord::Schema.define(:version => 20120418181312) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -22,16 +22,24 @@ ActiveRecord::Schema.define(:version => 20120405132350) do
   end
 
   create_table "plans", :force => true do |t|
-    t.integer  "cost_gbp"
-    t.integer  "url_count"
     t.integer  "test_frequency"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-    t.integer  "test_file_count"
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
     t.string   "name_en"
     t.boolean  "default"
     t.integer  "spreedly_id"
+    t.boolean  "active"
+    t.string   "number_of_sites"
+    t.string   "mobile_alerts_allowance"
+    t.boolean  "allows_custom_predefines"
+    t.boolean  "allows_retrieved_pages"
+    t.boolean  "allows_git_support"
+    t.boolean  "allows_tests_on_demand"
+    t.decimal  "cost_usd",                 :precision => 6, :scale => 2
   end
+
+  add_index "plans", ["active", "name_en"], :name => "index_plans_on_active_and_name_en"
+  add_index "plans", ["active", "spreedly_id"], :name => "index_plans_on_active_and_spreedly_id"
 
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"

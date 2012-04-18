@@ -1,13 +1,12 @@
 class Plan < ActiveRecord::Base
   has_many :users
   
-  validates_uniqueness_of :spreedly_id
-  validates_presence_of :spreedly_id
+  # We should create the plan in Spreedly before adding it to this table
+  validates_presence_of :spreedly_id 
   
-  def self.default
+  def self.default?
     Plan.all.select{|p|p.default}.first
   end
-  
   
   private
   
@@ -22,8 +21,17 @@ class Plan < ActiveRecord::Base
   end
 
   public
+  
 
-  #TODO: should these be in a seperate file in config/initializers
+  def self.cornichon
+    self.where(:name => "Cornichon", :active => true)
+  end
+  
+  def self.gherkin
+    self.where(:name => "Gherkin", :active => true)
+  end
+  
+  
   NAMES = {
     :silver => "Cornichon",
     :gold => "Gherkin",
@@ -32,6 +40,16 @@ class Plan < ActiveRecord::Base
   def self.get_name_from_plan_level(plan_level)
     Plan::NAMES[plan_level.to_sym]
   end
+  
+  def self.get_spreedly_plan(plans, name)
+    # There should only be one enabled plan per name...
+    plans.select{|p| p.name == name && p.enabled = true }.first
+  end
+
+  def self.spreedly_plans
+    RSpreedly::SubscriptionPlan.all
+  end
+  
   
   COSTS = 
     add('$14.95/month', '$49.95/month', 'Cost', 'Monthly cost')
