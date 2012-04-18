@@ -58,6 +58,22 @@ class TestRunner
   
 
   def self.execute_tests(test_groups)
+    def self.handle_retrieved_page(agent, page, group_params, group)
+      group_params[:response_time] = agent.agent.http.last_response_time
+      group_params[:response_code] = page.code
+      
+      begin
+        agent.get(group[:finally]) unless group[:finally].blank?
+
+        group_params[:test_results_attributes] = get_test_results(page, group[:tests])
+        
+      rescue Exception => e
+        group_params[:message] = e.to_s
+      end
+        
+      group_params
+    end
+
     test_groups.collect do |group|
       group_params = {}
 
@@ -79,27 +95,17 @@ class TestRunner
 
         agent.auth(url.user, url.password) if url.user
 
-        page = agent.send(group[:page][:method], url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
+        page = agent.send(group[:page][:method], url.scheme + '://' + url.host + (url.port == 80 ? '' : ":#{url.port}") + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
 
+      rescue Mechanize::ResponseCodeError => e
+        handle_retrieved_page(agent, e.page, group_params, group)
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
         # ends up returning e.to_s instead...
         group_params
       else
-        group_params[:response_time] = agent.agent.http.last_response_time
-        group_params[:response_code] = page.code
-        
-        begin
-          agent.get(group[:finally]) unless group[:finally].blank?
-
-          group_params[:test_results_attributes] = get_test_results(page, group[:tests])
-          
-        rescue Exception => e
-          group_params[:message] = e.to_s
-        end
-          
-        group_params
+        handle_retrieved_page(agent, page, group_params, group)
       end
     end
   end
@@ -116,6 +122,16 @@ class TestRunner
       testvalues = get_test_values(test)
 
       case test[:assertion]
+      when :response_code_be
+        test_result_params[:result] = do_test(testvalues) do |value|
+          match_or_include(page.code.to_s, value)
+        end
+
+      when :response_code_not_be
+        test_result_params[:result] = do_test(testvalues) do |value|
+          !match_or_include(page.code.to_s, value)
+        end
+
       when :i_see
         test_result_params[:result] = do_test(testvalues) do |value|
           text_is_in_page?(page, value)
