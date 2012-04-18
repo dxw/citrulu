@@ -22,4 +22,41 @@ describe User do
       @user.send_welcome_email
     end
   end
+  
+  it "should delete dependent test files when it is deleted" do
+    #OK, so this is kind of testing ActiveRecord, but this is a fairly critical thing to happen:
+    test_file_id = FactoryGirl.create(:test_file, :user => @user).id
+    
+    TestFile.find(test_file_id).user.should === @user
+    @user.destroy
+    expect{ TestFile.find(test_file_id) }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+  
+  
+  describe ".save" do
+    before(:each) do 
+      @code = "foo"
+      @invitation = FactoryGirl.create(:invitation, :code => @code)
+      @user1= FactoryGirl.build(:user)
+    end
+    
+    it "should set an invitation id when the user is saved for the first time" do
+      @user1.invitation_code = @code
+      @user1.save
+      @user1.invitation_id.should == @invitation.id
+    end
+    
+    it "should retain the invitation id when the user is saved for the second time" do
+      @user1.invitation_code = @code
+      @user1.save
+      
+      @user1.invitation_code = nil
+      #Change something:
+      @user1.password = "somethingdifferent"
+      @user1.save
+      
+      @user1.invitation_id.should == @invitation.id
+    end
+    
+  end
 end

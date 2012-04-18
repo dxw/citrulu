@@ -20,6 +20,8 @@ $(window).load ->
   if($('body').hasClass('test_files') && $('body').hasClass('edit'))
     setup_editor()
     
+    setup_title()
+    
     highlight_help_text_code()
     
     # create a placeholder to store a hash of the text:
@@ -35,6 +37,55 @@ $(window).load ->
 
     # save the file for the first time: 
     window.save_file()
+    
+
+setup_title = ->
+  insert_edit_icon()
+  
+  # Config for jeditable:
+  args = {    
+    data: (value, settings) ->
+      # Unescape HTML
+      retval = value
+        .replace(/&amp;/gi, '&')
+        .replace(/&gt;/gi, '>')
+        .replace(/&lt;/gi, '<')
+        .replace(/&quot;/gi, "\"");
+      return retval
+   
+    method:"PUT", 
+    name:"test_file[name]",
+    
+    # When the form is reset or submitted, show the icon again
+    "onreset": -> insert_edit_icon()
+    "onsubmit": -> insert_edit_icon()
+  }
+    
+  test_file_id = $(".editable").attr("data-id")
+  $(".editable").editable("/test_files/"+test_file_id, args)
+  
+  $(".editable").click( (e) -> 
+    $("#edit_icon").remove()
+    $(".editable input").css("width","100%")
+  )
+
+insert_edit_icon = ->
+  # Insert an icon after the field
+  $(".editable").after("<i id='edit_icon' class='icon-pencil'/>")
+  # Clicking on the icon acts like clicking on the field
+  $("#edit_icon").click( -> $(".editable").click() )
+  
+  # # Check to see if there is enough room to fit the icon on the same line as the content:  
+  # icon_width = 
+  #   $("#edit_icon").width() + 
+  #   parseInt($("#edit_icon").css('marginLeft')) + 
+  #   parseInt($("#edit_icon").css('marginRight'))
+  # 
+  # # HACK?: if there isn't enough room for the icon, put some padding on the parent to force the line to wrap
+  # if $(".editable").parent().width() - $(".editable").width()  < icon_width
+  #   $(".editable").parent().css('margin-right',icon_width + 10)
+  # else
+  #   $(".editable").parent().css('margin-right','0')
 
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed
@@ -76,19 +127,26 @@ get_current_group = ->
 update_liveview = -> 
   window.lastGroup = get_current_group()
 
+  group_data = get_current_group()
+
+  return if group_data.group == ''
+
   $("#liveview div.on").addClass("working");
-  jQuery.ajax(url: '/test_files/update_liveview', data: get_current_group(), type: 'POST', dataType: 'script')
+  jQuery.ajax(url: '/test_files/update_liveview', data: group_data, type: 'POST', dataType: 'script', complete: (xhr, status) -> 
+    update_selected_test(get_current_group())
+    $('#liveview div.on').removeClass('working');
+  )
 
 ##
 # Moves the .current style in the live view to the currently selected group
 #
 update_selected_test = (current_group) ->
-
   selected_test = current_group.group.split("\n")[current_group.current_line].trim()
+
+  $("#liveview div.group div").removeClass("current")
 
   return if selected_test == '' 
 
-  $("#liveview div.group div").removeClass("current")
   $("#liveview div.group div:contains('" + selected_test + "')").addClass('current')
 
 
@@ -147,8 +205,7 @@ setup_editor = ->
   });
 
   setTimeout("window.check_liveview()", 150);
-  
-  $(window.editor.getWrapperElement()).click (event) ->
+  $('.CodeMirror').click (event) ->
     window.keyPressHasHappened = false
     update_liveview()
 

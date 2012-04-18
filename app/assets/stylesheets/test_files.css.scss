@@ -1,44 +1,48 @@
 body.test_files {
-	#help {
-		header.section_title {
-			//FRAGILE, but matches the padding applied to the accordion
-			padding: 0 15px;  
-		}
-		
-		#help_sections {
-		  
+  #help {
+    header.section_title {
+      //FRAGILE, but matches the padding applied to the accordion
+      padding: 0 15px;  
+    }
+    
+    #help_sections {
+      
       // Allow a pre with particularly long lines to wrap and have a scrollbar
-		  pre.scrolling {
+      pre.scrolling {
         word-break: normal;
         word-wrap: normal;
         overflow: scroll;
         white-space: pre;
-		  }
-		}
-	}
-	
-	#test_suite{
-	  margin-top: 1em;
-	  legend {
-	    border: none;
-	    margin-bottom: 0px;
-	    h1 {
-    		margin-bottom: 19px;
-    		
-    		input {
+      }
+    }
+  }
+  
+  #test_suite{
+    margin-top: 1em;
+    h1 {
+      margin-bottom: 19px;
+
+      .editable {
+        form {
           //Styles for when the field becomes editable:
-          font: inherit;
-          width: 100%;
-          height: auto;
-          //compensating so that the box doesn't move around
-          margin: -16px 0 -9px -4px;        
-    		}
-    		button{
-          //should just be "@extend .btn.btn-mini.btn-primary, but can't get @extend to work, so have added in classes with Jquery.   
-          margin: 0.5em 0.5em 0 0 
+          margin: 0;
+          input {
+            font: inherit;
+            width: 100%;
+            height: auto;
+            //compensating so that the text doesn't move around
+            margin: -22px 0 -16px -6px;  
+          }
         }
-    	}
-	  }
+
+        i {
+          margin-left: 5px;
+          //FRAGILE:
+          margin-top: -0px;
+        }
+      }
+    }
+
     #save_btn {
       text-align: right;
       overflow: auto;
@@ -51,70 +55,73 @@ body.test_files {
     }
 
     #editor_status{
-            color: gray;
-            font-size: 1.5em;
-            text-align: right;
-            padding: 0 20px 0 0;
-            //FRAGILE: to match the bootstrap styling on Legend
-            line-height: 36px;
+      color: gray;
+      font-size: 1.5em;
+      text-align: right;
+      padding: 0 20px 0 0;
+      //FRAGILE: to match the bootstrap styling on Legend
+      line-height: 36px;
     }
+
     #editor_status.working{
-            padding-right: 25px;
-            background: transparent url("loader.gif") no-repeat right;
+      padding-right: 25px;
+      background: transparent url("loader.gif") no-repeat right;
     }
-		#editor_content {
+
+    #editor_content {
       //FRAGILE = .span8 (620px) - padding (4px) - border (1px)
-	    width: 610px;
-	  }
-	  .CodeMirror-scroll {
+      width: 610px;
+    }
+
+    .CodeMirror-scroll {
       height: 400px;
-	  }
+    }
+
+
     // Other CodeMirror styles are in codemirror.css
-		
-		#console {
-		  div.output {	
-                    height: 200px;
-                    padding: 0;
-                    background-color: #ccc;
-                    overflow: auto;
+    #console {
+      div.output {  
+        height: 200px;
+        padding: 0;
+        background-color: #ccc;
+        overflow: auto;
 
-                    .success {
-                            color: green;
-                    }
-                    .error {
-                            color: red;
-                    }
+        .success {
+          color: green;
+        }
+        .error {
+          color: red;
+        }
 
-                    p {
-                      margin: 0;
-                      display: block;
-                      float: left;
-                    }
-                    
-                    p.timestamp {
-                      padding-right: 10px;
-                    }
+        p {
+          margin: 0;
+          display: block;
+          float: left;
+        }
+        
+        p.timestamp {
+          padding-right: 10px;
+        }
 
-                    p.error, p.neutral, p.success {
-                      width: 70%;
-                    }
-                    
-                    div {
-                      margin: 0;
-                      padding: 3px;
-                      overflow: auto;
-                    }
+        p.error, p.neutral, p.success {
+          width: 70%;
+        }
+        
+        div {
+          margin: 0;
+          padding: 3px;
+          overflow: auto;
+        }
 
-                    div:nth-child(odd)    { background-color:#ddd; }
-                    div:nth-child(even)    { background-color:#eee; }
-                  }
-			
-		}
-	}	
+        div:nth-child(odd)    { background-color:#ddd; }
+        div:nth-child(even)    { background-color:#eee; }
+      }
+    }
+  }  
 
   #liveview {
     div.group {
-      border: 1px solid #000;
+      border: 1px solid #e5e5e5;
       padding: 3px;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -123,8 +130,13 @@ body.test_files {
       div.on {
         font-size: 13px;
         font-weight: bold;
-        border: solid black;
+        border: solid #e5e5e5;
         border-width: 0 0 1px 0;
+        /* force the text to wrap */
+        word-break: break-all;
+        word-wrap: break-word;
+        /* fallback for browsers which don't support word-break and word-wrap: */
+        overflow: hidden;
 
         &.working {
           background: transparent url("loader.gif") no-repeat right;
@@ -144,7 +156,7 @@ body.test_files {
         border-radius: 0px;
 
         &.current {
-          border-color: #666;
+          border-color: #aaa;
           -webkit-border-radius: 2px;
           -moz-border-radius: 2px;
           border-radius: 2px;
@@ -216,6 +228,7 @@ body.test_files.index {
           span.name {
             font-size: 16px;
             font-weight: bold;
+            padding-right: 1em
           }
 
           span.last_updated {
@@ -258,10 +271,11 @@ body.test_files.index {
       padding: 3px 20px 0 0;
     }
 
-    .stat {
-      clear: both;
-      padding: 15px;
+    h3 {
+      padding: 0 0 20px 0;
+    }
 
+    .stat {
       p {
         font-size: 22px;
         vertical-align: middle;

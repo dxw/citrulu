@@ -166,7 +166,7 @@ grammar TesterGrammar
   end
 
   rule url
-    ('http://' / 'https://') [^\n]+
+    ('http://' / 'https://') ([a-zA-Z0-9]+ [^\n\s]+)
   end
 
   rule space

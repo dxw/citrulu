@@ -1,3 +1,7 @@
+input[type="text"], input[type="email"], input[type="password"], textarea {
+  background-color: #fff;
+}
+
 .navbar {
 	.brand a {
 		color: #fff;
@@ -53,6 +57,9 @@
 }
 
 ul.devise_links {
+  li.last {
+    border-right: 0;
+  }
   li {
     &:last-child {
       border-right: 0;
@@ -99,9 +106,41 @@ div.banner {
   }
 }
 
+.accordion-toggle {
+  cursor: pointer;
+}
+
+
+footer {
+  background: #f8f8f8;
+  border-top: 1px solid #ddd;
+  margin-top:40px;
+
+  .logo {
+    text-align: right;
+  
+    img {
+      padding-right: 20px;
+    }
+  }
+
+  .citrulu {
+    padding-top: 3px;
+  
+    a {
+      color: #555;
+      font-size: 15px;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .content {
+    padding: 10px;
+  }
+}
+
+
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
-
-p {
-  font-size: 15px;
-}

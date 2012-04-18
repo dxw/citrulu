@@ -6,17 +6,24 @@
   %div.bigmsg.all_pass All your tests are passing. Hooray!
 - else
   .recentfails
-    %h2="#{pluralize(@recent_failed_groups.count, 'test')} on #{pluralize(@recent_failed_groups.collect{|g| g.test_url}.uniq.count, 'page')} failed"
+    %h2
+      - if @recent_failed_assertions
+        #{pluralize(@recent_failed_assertions, 'assertion')} failed
+      - if @recent_failed_assertions && @recent_failed_pages
+        and 
+      - if @recent_failed_pages
+        #{pluralize(@recent_failed_pages, 'page')} could not be retrieved
+
     - @recent_failed_groups.each_slice(3).each do |fail_batch|
       .row
         - fail_batch.each do |group|
           .span4
             .recent.fail
-              %h3=group.test_url
+              %h3=truncated_test_url(group.test_url)
               %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
               - if !group.message.blank?
                 %div
-                  %p Uh-oh! We couldn't fetch this page because of an error:
+                  %p We couldn't retrieve this page:
                   %pre=group.message
               -else
                 %ul.recentfails
@@ -41,7 +48,7 @@
               %p
                 %span.date=test_run.time_run.to_s(:test_run_time)
                 %span.file=test_run.test_file.name
-              %p.summary=ran_checks(test_run)
+              %p.summary=ran_tests(test_run)
 
   .sidebar.span4
     %h2 Test files status

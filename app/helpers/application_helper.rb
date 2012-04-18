@@ -1,6 +1,6 @@
 module ApplicationHelper
   def controller_name
-    params[:controller].split("/").join(" ")
+    params[:controller].split("/").join(" ") if params[:controller]
   end
   
   def nav_link(text, path)
@@ -14,6 +14,23 @@ module ApplicationHelper
         link_to text, path
       end
     end
+  end
+
+  def truncated_test_url(url, chunk=7)
+    text = url.gsub('http://', '').gsub('https://', '')
+
+    if text.length > 32
+      text = text[0..chunk] + "\u22EF" + text[((text.length/2)-4),chunk+1] + "\u22EF" + text[-8,chunk]
+    end
+
+    link_to(text, url, :target => '_blank')
+  end
+
+  def unimplemented_popover
+    {
+      "data-content" => "Sorry, this isn't implemented yet. We'll get to it when we can. If you have a burning need for it, please let us know using the feedback tab!",
+      "data-original-title" => "Not implemented yet"
+    }
   end
   
   def flash_message(name, message)

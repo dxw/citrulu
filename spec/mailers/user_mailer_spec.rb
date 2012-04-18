@@ -3,9 +3,10 @@ require "spec_helper"
 describe UserMailer do
   before(:each) do
     @user = FactoryGirl.create(:user, :email => 'tom+tester@dxw.com')
+    @user.confirm!
   end
   
-  describe 'test notifications' do
+  describe 'test notification' do
     before(:each) do
       test_file = FactoryGirl.create(:test_file, :user => @user)
       
@@ -37,36 +38,74 @@ describe UserMailer do
       yield email.text_part.body
       yield Nokogiri::HTML.parse(email.html_part.body.to_s).inner_text
     end
-
+    
+    context "when generating a failure email" do
+      before(:each) do
+        @email = UserMailer.test_notification_failure(@test_run1)
+      end
+    
+      it 'has content in the text part' do
+        @email.text_part.body.should_not be_blank
+      end
+      
+      it 'has content in the html part' do
+        @email.html_part.body.should_not be_blank
+      end
+    end
+    
+    context "when generating a success email" do
+      before(:each) do
+        @email = UserMailer.test_notification_success(@test_run3)
+      end
+      
+      it 'has content in the text part' do
+        @email.text_part.body.should_not be_blank
+      end
+      
+      it 'has content in the html part' do
+        @email.html_part.body.should_not be_blank
+      end
+    end
+    
     it 'composes an email for a single failure' do
-      email = UserMailer.test_notification(@test_run1)
+      email = UserMailer.test_notification_failure(@test_run1)
 
       email.subject.should include('1 of your tests just failed')
-      email.to.should == ['tom+tester@dxw.com']
 
       both_parts(email) {|body| body.should include('blah (failed)') }
-      both_parts(email) {|body| body.should include('On http://dxw.com') }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/dxw.com/) }
     end
 
     it 'composes an email for multiple failures' do
-      email = UserMailer.test_notification(@test_run2)
+      email = UserMailer.test_notification_failure(@test_run2)
 
       email.subject.should include('3 of your tests just failed')
 
       both_parts(email) {|body| body.should include('a cat (failed)') }
       both_parts(email) {|body| body.should include('blah (failed)') }
       both_parts(email) {|body| body.should include('your face (failed)') }
-      both_parts(email) {|body| body.should include('On http://example.org') }
-      both_parts(email) {|body| body.should include('On http://example.org/test') }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org/) }
+      both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org\/test/) }
     end
 
     it 'composes an email for success' do
-      email = UserMailer.test_notification(@test_run3)
+      email = UserMailer.test_notification_success(@test_run3)
 
       email.subject.should include('All of your tests are passing')
 
       both_parts(email) {|body| body.should_not include('(failed)') }
     end
+    
+    it '<<Acts like a success??>> if there are no failed groups and no groups with failed tests' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+    it '<<Acts like a success??>> if there are groups with failed tests' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+    it '<<Acts like a success??>> if there are failed groups' do
+      pending("Need to define what 'Acts like a success' looks like")
+    end
+
   end
   
   describe "welcome_email" do

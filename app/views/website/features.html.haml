@@ -12,8 +12,8 @@
         %td.span5
         %td.span2 Cornichon
         %td.span2 Gherkin
-        %td.span2 Cucumber
         %td.span1
+        %td.span2
 
     %tbody
       - @limits.each do |limit|
@@ -21,7 +21,6 @@
           %td.feature
             %p=limit[:name]
             %small=limit[:description]
-          %td.bronze=limit[:bronze]
           %td.silver=limit[:silver]
           %td.gold=limit[:gold]
           %td
@@ -31,8 +30,6 @@
           %td.feature
             %p=feature[:name]
             %small=feature[:description]
-          %td.bronze
-            %i{:class => feature[:bronze] ? 'icon-ok' : 'icon-remove'}
           %td.silver
             %i{:class => feature[:silver] ? 'icon-ok' : 'icon-remove'}
           %td.gold

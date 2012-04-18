@@ -16,6 +16,10 @@ FactoryGirl.define do
     factory :test_group_no_results do
       successful_results 0
       failed_results 0
+      
+      factory :failed_test_group do
+        message "Failed to retrieve page"
+      end
     end
     
     factory :test_group_no_failures do

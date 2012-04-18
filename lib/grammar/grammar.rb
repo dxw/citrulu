@@ -1436,6 +1436,9 @@ module TesterGrammar
   module Url0
   end
 
+  module Url1
+  end
+
   def _nt_url
     start_index = index
     if node_cache[:url].has_key?(index)
@@ -1475,37 +1478,162 @@ module TesterGrammar
     end
     s0 << r1
     if r1
-      s4, i4 = [], index
-      loop do
-        if has_terminal?('\G[^\\n]', true, index)
-          r5 = true
-          @index += 1
-        else
-          r5 = nil
-        end
-        if r5
-          s4 << r5
-        else
-          break
-        end
-      end
-      if s4.empty?
-        @index = i4
-        r4 = nil
+      r5 = _nt_basic_auth
+      if r5
+        r4 = r5
       else
-        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        r4 = instantiate_node(SyntaxNode,input, index...index)
       end
       s0 << r4
+      if r4
+        i6, s6 = index, []
+        s7, i7 = [], index
+        loop do
+          if has_terminal?('\G[a-zA-Z0-9]', true, index)
+            r8 = true
+            @index += 1
+          else
+            r8 = nil
+          end
+          if r8
+            s7 << r8
+          else
+            break
+          end
+        end
+        if s7.empty?
+          @index = i7
+          r7 = nil
+        else
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+        end
+        s6 << r7
+        if r7
+          s9, i9 = [], index
+          loop do
+            if has_terminal?('\G[^\\n\\s]', true, index)
+              r10 = true
+              @index += 1
+            else
+              r10 = nil
+            end
+            if r10
+              s9 << r10
+            else
+              break
+            end
+          end
+          if s9.empty?
+            @index = i9
+            r9 = nil
+          else
+            r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+          end
+          s6 << r9
+        end
+        if s6.last
+          r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
+          r6.extend(Url0)
+        else
+          @index = i6
+          r6 = nil
+        end
+        s0 << r6
+      end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Url0)
+      r0.extend(Url1)
     else
       @index = i0
       r0 = nil
     end
 
     node_cache[:url][start_index] = r0
+
+    r0
+  end
+
+  module BasicAuth0
+  end
+
+  def _nt_basic_auth
+    start_index = index
+    if node_cache[:basic_auth].has_key?(index)
+      cached = node_cache[:basic_auth][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    s1, i1 = [], index
+    loop do
+      if index < input_length
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure("any character")
+        r2 = nil
+      end
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    s0 << r1
+    if r1
+      if has_terminal?(':', false, index)
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
+        @index += 1
+      else
+        terminal_parse_failure(':')
+        r3 = nil
+      end
+      s0 << r3
+      if r3
+        s4, i4 = [], index
+        loop do
+          if index < input_length
+            r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure("any character")
+            r5 = nil
+          end
+          if r5
+            s4 << r5
+          else
+            break
+          end
+        end
+        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        s0 << r4
+        if r4
+          if has_terminal?('@', false, index)
+            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
+            @index += 1
+          else
+            terminal_parse_failure('@')
+            r6 = nil
+          end
+          s0 << r6
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(BasicAuth0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:basic_auth][start_index] = r0
 
     r0
   end

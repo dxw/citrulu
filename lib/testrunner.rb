@@ -23,18 +23,16 @@ class TestRunner
       execute_test_groups(file, test_run)
       
       if file.user.email_preference == 1
-        previous_run = file.last_run
-        
         # Send email if:
         # 1. It's not the first run
         # 2. The current run has failures OR the previous run had failures
-        if test_run.has_failures? || (previous_run && previous_run.has_failures?)
-          begin
-            mail = UserMailer.test_notification(test_run)
-            mail.deliver
-          rescue Exception => e
-            raise "UserMailer raised an error while attempting to send a test notification email to #{file.user.email} (id: #{file.user.id}): #{e}"
+        if test_run.has_failures? || (test_run.previous_run && test_run.previous_run.has_failures?)
+          if test_run.has_failures?
+            mail = UserMailer.test_notification_failure(test_run)
+          else # no failures this run, but the previous run exists and had failures
+            mail = UserMailer.test_notification_success(test_run)
           end
+          mail.deliver
         end
       end
     end
@@ -63,24 +61,33 @@ class TestRunner
   def self.execute_tests(test_groups)
     test_groups.collect do |group|
       group_params = {}
-      
+
       begin
         group_params[:test_url] = group[:test_url]
         
         agent = Mechanize.new
+        agent.open_timeout = 5
+        agent.read_timeout = 5
+        agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        agent.user_agent = "CitruluBot/1.0"
         
         agent.get(group[:first]) unless group[:first].blank?
         
         group_params[:time_run] = Time.now
-        page = agent.get(group[:test_url])
-        
+
+        url = URI.parse(group[:test_url])
+
+        agent.auth(url.user, url.password) if url.user
+
+        page = agent.get(url.scheme + '://' + url.host + url.path + (url.query.blank? ? '' : '?' + url.query))
+
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
         # ends up returning e.to_s instead...
         group_params
       else
-        group_params[:response_time] = (Time.now - group_params[:time_run])*1000
+        group_params[:response_time] = agent.agent.http.last_response_time
         group_params[:response_code] = page.code
         
         begin
@@ -148,15 +155,15 @@ class TestRunner
   end
   
   def self.text_is_in_page?(page, text)
-    page.root.inner_text.match(text) != nil 
+    page.root.inner_text.downcase.include?(text.downcase)
   end
   
   def self.source_is_in_page?(page, source_fragment)
-    page.content.match(source_fragment) != nil
+    page.content.downcase.include?(source_fragment.downcase)
   end
   
   def self.header_is_in_page?(page, header)
-    page.header.include?(header)
+    page.header.collect{|h| h[0].downcase}.include?(header.downcase)
   end
   
   private 

@@ -1,7 +1,6 @@
 $('#liveview div.group').empty();
-$('#liveview div.on').removeClass('working');
 
-$('#liveview div.group').append("<div class='on'><%= @test_url %></div>");
+$('#liveview div.group').append('<div class="on">On <%= truncated_test_url(@test_url) %></div>');
 
 <% if !@error.blank? %>
   $('#liveview div.group').append('<div class="fail error"><h3>Compilation Error</h3><p><%=j console_line(@error, "neutral", false) %></p></div>');
@@ -12,3 +11,4 @@ $('#liveview div.group').append("<div class='on'><%= @test_url %></div>");
     $('#liveview div.group').append("<div class='<%= (test[:result] ? 'pass' : 'fail')%>'><%= test[:original_line].strip %></div>");
   <% end %>
 <% end %>
+

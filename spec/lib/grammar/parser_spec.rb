@@ -103,5 +103,13 @@ describe CitruluParser do
      expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see :      ") }.to raise_error(CitruluParser::TestCompileError)
    end
 
+   it "should not allow something that doesn't look vaguely like an IPv4 address/non-IDN domain name" do
+     pending "Get somebody who knows how to use treetop to do this"
+     expect { CitruluParser.new.compile_tests("On http://  \n  I should see x") }.to raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://\n  I should see x") }.to raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://127.0.0.1:80\n  I should see x") }.to_not raise_error(CitruluParser::TestCompileError)
+     expect { CitruluParser.new.compile_tests("On http://example.com\n  I should see x") }.to_not raise_error(CitruluParser::TestCompileError)
+   end
+
   end
 end

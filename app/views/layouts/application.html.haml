@@ -16,6 +16,7 @@
           %p!="<strong>Citrulu is now in Alpha!</strong> Already got an account, or an invitation? If so, you can <a href='#{new_registration_path(:user)}'>sign up</a>, or <a href='#{new_session_path(:user)}'>log in</a>. If you'd like to get an invitation, <a href='/'>sign up here</a>!"
 
     = content_for?(:content) ? yield(:content) : yield
+
     :javascript
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-29765005-1']);
