@@ -11,8 +11,7 @@ class PaymentsController < ApplicationController
   end
   
   def set_plan
-    # plan_name = Plan::NAMES(params[:plan_level].to_sym)
-    plan_name = "Cornichon"
+    plan_name = Plan.get_name_from_plan_level(params["plan_level"])
     plan = Plan.find_by_name_en(plan_name)
    
     redirect_to action: "new", plan_id: plan.id

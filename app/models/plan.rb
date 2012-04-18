@@ -29,6 +29,10 @@ class Plan < ActiveRecord::Base
     :gold => "Gherkin",
   }
   
+  def self.get_name_from_plan_level(plan_level)
+    Plan::NAMES[plan_level.to_sym]
+  end
+  
   COSTS = 
     add('$14.95/month', '$49.95/month', 'Cost', 'Monthly cost')
   

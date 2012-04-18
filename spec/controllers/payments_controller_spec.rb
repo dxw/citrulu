@@ -26,10 +26,19 @@ describe PaymentsController do
     end
   end
 
-  describe "GET 'confirmation'" do    
-    it "returns http success" do
-      get 'confirmation'
-      response.should be_success
+  describe "GET 'confirmation'" do
+    context "with no plan ID" do
+      it "should redirect to the homepage" do
+        get 'confirmation'
+        response.should redirect_to('/')
+      end
+    end
+    context "with a plan ID" do
+      pending
+      it "returns http success" do
+        get 'confirmation', :plan_id => 1
+        response.should be_success
+      end
     end
   end
 
