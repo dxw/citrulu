@@ -20,14 +20,16 @@ grammar TesterGrammar
         results[:page][:first] = single_assertions[:first]
         results[:page][:finally] = single_assertions[:finally]
 
-        single_assertions[:response_code] ||= '200'
-        single_assertions[:original_line] ||= 'Response code should be 200'
+        # TODO: only add if there isn't one
 
-        results[:tests].insert(0, {
-          :assertion => :response_code,
-          :value => single_assertions[:response_code],
-          :original_line => single_assertions[:original_line]
-        })
+        assertions = results[:tests].collect{|x| x[:assertion]}.uniq
+        if !assertions.include?(:response_code_be) && !assertions.include?(:response_code_not_be)
+          results[:tests].insert(0, {
+            :assertion => :response_code_be,
+            :value => '200',
+            :original_line => 'Response code should be 200'
+          })
+        end
 
         results
       end
@@ -35,7 +37,7 @@ grammar TesterGrammar
   end
 
   rule single_assertion
-    first_clause? comment* finally_clause? comment* response_code? {
+    first_clause? comment* finally_clause? comment* {
       def process
         if elements
           results = {}
@@ -43,19 +45,10 @@ grammar TesterGrammar
           results[:first] = elements[0].url.text_value.strip if !elements[0].empty?
           results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
 
-          if !elements[4].empty?
-            results[:response_code] = elements[4].value.text_value.strip
-            results[:original_line] = elements[4].text_value.strip
-          end
-
           results
         end
       end
     }
-  end
-
-  rule response_code
-    space "Response code should be" space value
   end
 
   rule on_clause
@@ -141,7 +134,7 @@ grammar TesterGrammar
   end
 
   rule simple_assertion
-    ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include") {
+    ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include" / "Response code should be" / "Response code should not be" ) {
       def process
       {:assertion => text_value.to_test_sym}
       end

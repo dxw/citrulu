@@ -110,14 +110,17 @@ module TesterGrammar
       results[:page][:first] = single_assertions[:first]
       results[:page][:finally] = single_assertions[:finally]
 
-      single_assertions[:response_code] ||= '200'
-      single_assertions[:original_line] ||= 'Response code should be 200'
+      # TODO: only add if there isn't one
 
-      results[:tests].insert(0, {
-        :assertion => :response_code,
-        :value => single_assertions[:response_code],
-        :original_line => single_assertions[:original_line]
-      })
+      assertions = results[:tests].collect{|x| x[:assertion]}.uniq
+puts assertions.inspect
+      if !assertions.include?(:response_code_be) && !assertions.include?(:response_code_not_be)
+        results[:tests].insert(0, {
+          :assertion => :response_code_be,
+          :value => '200',
+          :original_line => 'Response code should be 200'
+        })
+      end
 
       results
     end
@@ -231,11 +234,6 @@ module TesterGrammar
         results[:first] = elements[0].url.text_value.strip if !elements[0].empty?
         results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
 
-        if !elements[4].empty?
-          results[:response_code] = elements[4].value.text_value.strip
-          results[:original_line] = elements[4].text_value.strip
-        end
-
         results
       end
     end
@@ -292,15 +290,6 @@ module TesterGrammar
           end
           r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
           s0 << r7
-          if r7
-            r10 = _nt_response_code
-            if r10
-              r9 = r10
-            else
-              r9 = instantiate_node(SyntaxNode,input, index...index)
-            end
-            s0 << r9
-          end
         end
       end
     end
@@ -314,65 +303,6 @@ module TesterGrammar
     end
 
     node_cache[:single_assertion][start_index] = r0
-
-    r0
-  end
-
-  module ResponseCode0
-    def space1
-      elements[0]
-    end
-
-    def space2
-      elements[2]
-    end
-
-    def value
-      elements[3]
-    end
-  end
-
-  def _nt_response_code
-    start_index = index
-    if node_cache[:response_code].has_key?(index)
-      cached = node_cache[:response_code][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    r1 = _nt_space
-    s0 << r1
-    if r1
-      if has_terminal?("Response code should be", false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 23))
-        @index += 23
-      else
-        terminal_parse_failure("Response code should be")
-        r2 = nil
-      end
-      s0 << r2
-      if r2
-        r3 = _nt_space
-        s0 << r3
-        if r3
-          r4 = _nt_value
-          s0 << r4
-        end
-      end
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(ResponseCode0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:response_code][start_index] = r0
 
     r0
   end
@@ -1047,8 +977,32 @@ module TesterGrammar
                 r0 = r6
                 r0.extend(SimpleAssertion0)
               else
-                @index = i0
-                r0 = nil
+                if has_terminal?("Response code should be", false, index)
+                  r7 = instantiate_node(SyntaxNode,input, index...(index + 23))
+                  @index += 23
+                else
+                  terminal_parse_failure("Response code should be")
+                  r7 = nil
+                end
+                if r7
+                  r0 = r7
+                  r0.extend(SimpleAssertion0)
+                else
+                  if has_terminal?("Response code should not be", false, index)
+                    r8 = instantiate_node(SyntaxNode,input, index...(index + 27))
+                    @index += 27
+                  else
+                    terminal_parse_failure("Response code should not be")
+                    r8 = nil
+                  end
+                  if r8
+                    r0 = r8
+                    r0.extend(SimpleAssertion0)
+                  else
+                    @index = i0
+                    r0 = nil
+                  end
+                end
               end
             end
           end
