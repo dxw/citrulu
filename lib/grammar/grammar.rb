@@ -678,10 +678,6 @@ module TesterGrammar
   end
 
   module Test0
-    def assertion
-      elements[0]
-    end
-
     def space
       elements[1]
     end
@@ -694,7 +690,7 @@ module TesterGrammar
   module Test1
     def process
       hash = {
-        :assertion => assertion.process,
+        :assertion => elements[0].process,
         :original_line => text_value
       }
 
@@ -706,6 +702,10 @@ module TesterGrammar
         end
       else
         hash[:value] = parameter.text_value.strip
+
+        if matches = hash[:value].match(/"([^"]+)"/)
+          hash[:value] = matches[1]
+        end
       end
 
       hash
@@ -724,14 +724,26 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    r1 = _nt_assertion
+    i1 = index
+    r2 = _nt_complex_assertion
+    if r2
+      r1 = r2
+    else
+      r3 = _nt_simple_assertion
+      if r3
+        r1 = r3
+      else
+        @index = i1
+        r1 = nil
+      end
+    end
     s0 << r1
     if r1
-      r2 = _nt_space
-      s0 << r2
-      if r2
-        r3 = _nt_parameter
-        s0 << r3
+      r4 = _nt_space
+      s0 << r4
+      if r4
+        r5 = _nt_parameter
+        s0 << r5
       end
     end
     if s0.last
@@ -744,46 +756,6 @@ module TesterGrammar
     end
 
     node_cache[:test][start_index] = r0
-
-    r0
-  end
-
-  module Assertion0
-    def process
-      puts inspect
-      puts (public_methods - Object.public_methods).inspect
-      elements[0].process
-    end
-  end
-
-  def _nt_assertion
-    start_index = index
-    if node_cache[:assertion].has_key?(index)
-      cached = node_cache[:assertion][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0 = index
-    r1 = _nt_complex_assertion
-    if r1
-      r0 = r1
-      r0.extend(Assertion0)
-    else
-      r2 = _nt_simple_assertion
-      if r2
-        r0 = r2
-        r0.extend(Assertion0)
-      else
-        @index = i0
-        r0 = nil
-      end
-    end
-
-    node_cache[:assertion][start_index] = r0
 
     r0
   end
@@ -905,7 +877,7 @@ module TesterGrammar
     def process 
       {
         :header => identifier.text_value.strip,
-        :assertion => elements[2].text_value.to_test_sym
+        :assertion => elements[4].text_value.to_test_sym
       }
     end
   end
@@ -973,6 +945,7 @@ module TesterGrammar
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
       r0.extend(ComplexAssertion0)
+      r0.extend(ComplexAssertion1)
     else
       @index = i0
       r0 = nil
@@ -1478,18 +1451,32 @@ module TesterGrammar
     end
     s0 << r1
     if r1
-      r5 = _nt_basic_auth
-      if r5
-        r4 = r5
-      else
-        r4 = instantiate_node(SyntaxNode,input, index...index)
+      i4, s4 = index, []
+      s5, i5 = [], index
+      loop do
+        if has_terminal?('\G[a-zA-Z0-9]', true, index)
+          r6 = true
+          @index += 1
+        else
+          r6 = nil
+        end
+        if r6
+          s5 << r6
+        else
+          break
+        end
       end
-      s0 << r4
-      if r4
-        i6, s6 = index, []
+      if s5.empty?
+        @index = i5
+        r5 = nil
+      else
+        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+      end
+      s4 << r5
+      if r5
         s7, i7 = [], index
         loop do
-          if has_terminal?('\G[a-zA-Z0-9]', true, index)
+          if has_terminal?('\G[^\\n\\s]', true, index)
             r8 = true
             @index += 1
           else
@@ -1507,39 +1494,16 @@ module TesterGrammar
         else
           r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
         end
-        s6 << r7
-        if r7
-          s9, i9 = [], index
-          loop do
-            if has_terminal?('\G[^\\n\\s]', true, index)
-              r10 = true
-              @index += 1
-            else
-              r10 = nil
-            end
-            if r10
-              s9 << r10
-            else
-              break
-            end
-          end
-          if s9.empty?
-            @index = i9
-            r9 = nil
-          else
-            r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
-          end
-          s6 << r9
-        end
-        if s6.last
-          r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
-          r6.extend(Url0)
-        else
-          @index = i6
-          r6 = nil
-        end
-        s0 << r6
+        s4 << r7
       end
+      if s4.last
+        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        r4.extend(Url0)
+      else
+        @index = i4
+        r4 = nil
+      end
+      s0 << r4
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
@@ -1550,90 +1514,6 @@ module TesterGrammar
     end
 
     node_cache[:url][start_index] = r0
-
-    r0
-  end
-
-  module BasicAuth0
-  end
-
-  def _nt_basic_auth
-    start_index = index
-    if node_cache[:basic_auth].has_key?(index)
-      cached = node_cache[:basic_auth][index]
-      if cached
-        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    s1, i1 = [], index
-    loop do
-      if index < input_length
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
-        @index += 1
-      else
-        terminal_parse_failure("any character")
-        r2 = nil
-      end
-      if r2
-        s1 << r2
-      else
-        break
-      end
-    end
-    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
-    s0 << r1
-    if r1
-      if has_terminal?(':', false, index)
-        r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
-        @index += 1
-      else
-        terminal_parse_failure(':')
-        r3 = nil
-      end
-      s0 << r3
-      if r3
-        s4, i4 = [], index
-        loop do
-          if index < input_length
-            r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
-            @index += 1
-          else
-            terminal_parse_failure("any character")
-            r5 = nil
-          end
-          if r5
-            s4 << r5
-          else
-            break
-          end
-        end
-        r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
-        s0 << r4
-        if r4
-          if has_terminal?('@', false, index)
-            r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
-            @index += 1
-          else
-            terminal_parse_failure('@')
-            r6 = nil
-          end
-          s0 << r6
-        end
-      end
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(BasicAuth0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:basic_auth][start_index] = r0
 
     r0
   end

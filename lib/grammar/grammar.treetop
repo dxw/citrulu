@@ -72,10 +72,10 @@ grammar TesterGrammar
   end
  
   rule test
-    assertion space parameter {
+    (complex_assertion / simple_assertion) space parameter {
       def process
         hash = {
-          :assertion => assertion.process,
+          :assertion => elements[0].process,
           :original_line => text_value
         }
 
@@ -87,6 +87,10 @@ grammar TesterGrammar
           end
         else
           hash[:value] = parameter.text_value.strip
+
+          if matches = hash[:value].match(/"([^"]+)"/)
+            hash[:value] = matches[1]
+          end
         end
 
         hash
@@ -94,20 +98,8 @@ grammar TesterGrammar
     }
   end
 
-  rule assertion
-    (complex_assertion / simple_assertion) {
-      def process
-        puts inspect
-        puts (public_methods - Object.public_methods).inspect
-        elements[0].process
-      end
-    }
-  end
-
   rule simple_assertion
-    ("Source should contain" / "Source should not contain" / 
-    "I should see" / "I should not see" / 
-    "Headers should include" / "Headers should not include") {
+    ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include") {
       def process
         text_value.to_test_sym
       end
@@ -115,11 +107,11 @@ grammar TesterGrammar
   end
 
   rule complex_assertion
-    ("Header" space identifier space ("should contain" / "should not contain")) {
+    "Header" space identifier space ("should contain" / "should not contain") {
       def process 
         {
           :header => identifier.text_value.strip,
-          :assertion => elements[2].text_value.to_test_sym
+          :assertion => elements[4].text_value.to_test_sym
         }
       end
     }
