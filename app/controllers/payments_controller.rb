@@ -50,6 +50,7 @@ class PaymentsController < ApplicationController
       redirect_to action: "confirmation"
     else
       @errors = invoice.errors
+      @plan_id = params[:plan_id]
       render action: "new"
     end
   end
