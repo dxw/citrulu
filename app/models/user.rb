@@ -24,8 +24,8 @@ class User < ActiveRecord::Base
   belongs_to :plan
   
   before_create :set_email_preference
+  before_create :add_invitation
   after_create :create_default_test_file 
-  after_create :add_invitation
   after_save :update_subscriber
   after_destroy :destroy_subscriber
   
@@ -145,7 +145,6 @@ class User < ActiveRecord::Base
 
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
-    save!
   end
   
   def create_default_test_file
