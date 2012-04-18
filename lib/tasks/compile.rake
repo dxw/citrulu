@@ -27,6 +27,10 @@ On http://example.com/5
 On http://example.com/6
   Headers should not include x
 
+# Values with quotes
+On http://example.com/6
+  Headers should not include "x"
+
 # First, fetch
 On http://example.com/7
   First, fetch http://example.com/
@@ -39,7 +43,7 @@ On http://example.com/8
 
 # Names
 On http://example.com/8
-  I should see :x
+  I should see :php_errors
 
 # Header should contain
 On http://example.com/9
@@ -73,7 +77,7 @@ On http://example.com/14
 
 
 desc "Compile a test file"
-task(:compile, [:testfile] => :environment) do |t, args|
+task(:compile, [:testfile]) do |t, args|
   args.with_defaults(:testfile => nil)
 
   if args.testfile.nil?
@@ -90,7 +94,7 @@ task(:compile, [:testfile] => :environment) do |t, args|
   puts "\n\nParser says:"
   begin
     ap CitruluParser.new.compile_tests(source)
-  catch CitruluParser::CitruluError => e
+  rescue Exception => e
     puts "#{e}"
   end
 end
