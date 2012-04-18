@@ -28,7 +28,7 @@ On http://example.com/6
   Headers should not include x
 
 # Values with quotes
-On http://example.com/6
+On http://example.com/6a
   Headers should not include "x"
 
 # First, fetch
@@ -50,7 +50,7 @@ On http://example.com/9
   Header X-Varnish should contain foo
   
 # Header should not contain
-On http://example.com/9
+On http://example.com/9a
   Header X-Varnish should not contain foo
 
 # POST to
@@ -73,6 +73,10 @@ On http://example.com/13
 On http://example.com/14
   Header X-Varnish should contain /abc/
 
+# So clauses work
+So that I know santa-clause is a pixie
+On http://example.com/14
+  Header X-Varnish should contain /abc/
 }
 
 

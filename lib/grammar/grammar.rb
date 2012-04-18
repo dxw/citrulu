@@ -401,13 +401,13 @@ module TesterGrammar
     end
 
     def newline
-      elements[3]
+      elements[4]
     end
   end
 
   module PageClause1
     def process
-      elements[1].process
+      elements[2].process.merge({:so => elements[1].text_value.strip})
     end
   end
 
@@ -426,35 +426,44 @@ module TesterGrammar
     r1 = _nt_space
     s0 << r1
     if r1
-      i2 = index
-      r3 = _nt_on_clause
+      r3 = _nt_so_clause
       if r3
         r2 = r3
       else
-        r4 = _nt_when_clause
-        if r4
-          r2 = r4
-        else
-          @index = i2
-          r2 = nil
-        end
+        r2 = instantiate_node(SyntaxNode,input, index...index)
       end
       s0 << r2
       if r2
-        s5, i5 = [], index
-        loop do
-          r6 = _nt_comment
+        i4 = index
+        r5 = _nt_on_clause
+        if r5
+          r4 = r5
+        else
+          r6 = _nt_when_clause
           if r6
-            s5 << r6
+            r4 = r6
           else
-            break
+            @index = i4
+            r4 = nil
           end
         end
-        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
-        s0 << r5
-        if r5
-          r7 = _nt_newline
+        s0 << r4
+        if r4
+          s7, i7 = [], index
+          loop do
+            r8 = _nt_comment
+            if r8
+              s7 << r8
+            else
+              break
+            end
+          end
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
           s0 << r7
+          if r7
+            r9 = _nt_newline
+            s0 << r9
+          end
         end
       end
     end
@@ -468,6 +477,57 @@ module TesterGrammar
     end
 
     node_cache[:page_clause][start_index] = r0
+
+    r0
+  end
+
+  module SoClause0
+    def value
+      elements[1]
+    end
+
+    def newline
+      elements[2]
+    end
+  end
+
+  def _nt_so_clause
+    start_index = index
+    if node_cache[:so_clause].has_key?(index)
+      cached = node_cache[:so_clause][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    if has_terminal?("So", false, index)
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 2))
+      @index += 2
+    else
+      terminal_parse_failure("So")
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      r2 = _nt_value
+      s0 << r2
+      if r2
+        r3 = _nt_newline
+        s0 << r3
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(SoClause0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:so_clause][start_index] = r0
 
     r0
   end

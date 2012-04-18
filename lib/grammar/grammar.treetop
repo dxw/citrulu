@@ -48,11 +48,15 @@ grammar TesterGrammar
   end
 
   rule page_clause
-    space (on_clause / when_clause) comment* newline {
+    space so_clause? (on_clause / when_clause) comment* newline {
       def process
-        elements[1].process
+        elements[2].process.merge({:so => elements[1].text_value.strip})
       end
     }
+  end
+
+  rule so_clause
+    "So" value newline
   end
 
   rule first_clause
