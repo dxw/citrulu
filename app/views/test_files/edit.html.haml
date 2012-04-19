@@ -36,8 +36,11 @@
       
       =accordion_group("i_should_see") do
         =accordion_heading do
-          I should see
+          Assertions
         =accordion_body do
+          %p Assertions allow you to specify conditions that must be true in order for your test to pass.
+
+          %h4 I should see
           %p This assertion retrieves a page and looks for text without looking at HTML tags. So, the following assertion:
           %pre.editor-code="  I should see Hello, world!"
           %p Would match all of:
@@ -45,28 +48,21 @@
           %pre="<strong>Hello</strong> world!"
           %pre="Hello,<br>world!"
 
-      =accordion_group("source_should_contain") do  
-        =accordion_heading do
-          Source should [not] contain
-        =accordion_body do
+          %h4 Source should contain
           %p This assertion retrieves a page and looks for text in its source code. So, the following assertion:
           %pre.editor-code="  Source should contain <strong>Hello</strong>, world!"
           %p Would match:
           %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
       
-      =accordion_group("headers_should_include") do  
-        =accordion_heading do
-          Headers should [not] include
-        =accordion_body do
+          %h4 Header should contain
           %p This assertion retrieves the headers of a page and looks for a header with the name you specify. So, the following assertion:
           %pre.editor-code="  Headers should include X-Varnish"
           %p Would match:
           %pre="X-Varnish: 128371292"
           %p But would not match:
           %pre="X-Varnish-assertion: miss"
-          %p At the moment, you can only assert that headers are present or absent. We might add the ability to check header values in a future release.
 
-      =accordion_group("predefines") do
+      -#=accordion_group("predefines") do
         =accordion_heading do
           Predefines
         =accordion_body do
