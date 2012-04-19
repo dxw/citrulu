@@ -78,7 +78,7 @@ class TestFilesController < ApplicationController
     end
 
     begin
-      @test_url = params[:group].split("\n").first.gsub(/On |on /, '')
+      @test_url = params[:group].split("\n").first.gsub(/On |on /, '').gsub(/ #[^\n]*/, '')
       @current_line = params[:current_line]
 
       if params[:group].blank?
