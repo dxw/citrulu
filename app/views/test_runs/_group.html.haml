@@ -1,3 +1,4 @@
+- only_fails ||= false
 %div{:class => group.failed? || group.has_failed_tests? ? "fail" : "pass"}
   %h3=truncated_test_url(group.test_url)
   %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
