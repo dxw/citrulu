@@ -1224,7 +1224,7 @@ module TesterGrammar
     def process 
       {
         :header => identifier.text_value.strip,
-        :assertion => elements[4].text_value.to_test_sym
+        :assertion => elements[3].text_value.to_test_sym
       }
     end
   end
