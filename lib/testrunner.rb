@@ -86,6 +86,7 @@ class TestRunner
         agent = Mechanize.new
         agent.open_timeout = 5
         agent.read_timeout = 5
+        agent.redirect_ok = false
         agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         agent.user_agent = "CitruluBot/1.0"
         
@@ -187,7 +188,8 @@ class TestRunner
   end
 
   def self.text_is_in_page?(page, text)
-    match_or_include(page.root.inner_text, text)
+    
+    page.respond_to?(:root) && match_or_include(page.root.inner_text, text)
   end
   
   def self.source_is_in_page?(page, source_fragment)
