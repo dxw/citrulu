@@ -1015,7 +1015,7 @@ module TesterGrammar
     def process
       hash = elements[0].process
 
-      hash[:original_line] = text_value
+      hash[:original_line] = text_value.strip
 
       if parameter.text_value.match(/^:/)
         if parameter.text_value.match(/^::/)
