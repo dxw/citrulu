@@ -27,8 +27,9 @@
           %ul
             - group.failed_tests.each do |result|
               %li
-                = "#{result.assertion} " 
-                != value_or_name(result)
+                = result.original_line 
+                - if result.failed?
+                  = content_tag(:strong, "(failed)")
                       
     %p{:style => content_p_styles} 
       To view your full results, visit
