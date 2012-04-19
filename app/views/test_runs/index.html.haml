@@ -31,9 +31,7 @@
                     - next if !result.failed?
                     %li 
                       %i.icon-remove
-                      %span.assertion
-                        = result.assertion
-                      = value_or_name(result)
+                      =result.original_line
 
 .row
   .testruns.span8
