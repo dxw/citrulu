@@ -5,13 +5,14 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         return new RegExp("^((" + words.join(")|(") + "))\\b");
     }
 
-    var onclause       = wordRegexp(['On']);
+    var onclause       = wordRegexp(['On', 'When I post', 'to', 'So']);
     var firstfinally   = wordRegexp(['First, fetch', 'Finally, fetch']);
-    var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include"]);
+    var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include", "Header", "should contain", "should not contain", "Response code should be", "Response code should not be"]);
 
-    var name           = new RegExp(":([a-zA-Z0-9_]+)");
+    var name           = new RegExp("^:([a-zA-Z0-9_]+)");
+    var http_header    = new RegExp("^[a-z-A-Z0-9-]+");
     var value          = new RegExp("^([^:]+[^\n]*)|(::[^\n]*)");
-    var url            = new RegExp("((http:\/\/)|(https:\/\/))[^\n]+");
+    var url            = new RegExp("^((http:\/\/)|(https:\/\/))[^\n]+");
 
     // Tokenizers
     function tokenBase(stream, state) {
@@ -25,6 +26,23 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         if (ch === '#') {
             stream.skipToEnd();
             return 'comment';
+        }
+
+        if (ch == '"') {
+          var eaten = 0;
+          var prev_ch = stream.next();
+          while((ch = stream.next()) && ch != "\n") {
+            if (ch == '"' && prev_ch != '\\') {
+              return 'text'
+            }
+
+            prev_ch = ch;
+            eaten++;
+          }
+
+          if (ch != '"') {
+            stream.backUp(eaten)
+          }
         }
 
         if (stream.match(onclause)) {
@@ -43,7 +61,15 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return 'link';
         }
 
+        if (stream.string.match(/^\s+Header /) && stream.match(http_header)) {
+            return 'text';
+        }
+
         if (stream.match(value)) {
+            if (stream.string.match(/^So /)) {
+              return 'number';
+            }
+
             return 'text';
         }
 
