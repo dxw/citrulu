@@ -51,6 +51,7 @@ class TestRunner
       # create the objects in the database
       test_run_params.each do |test_group_params|
         test_group_params.merge! :test_run => test_run
+        puts test_group_params.inspect
         test_group = TestGroup.create(test_group_params)
       end
     end
@@ -115,11 +116,7 @@ class TestRunner
   
   def self.get_test_results(page, tests)
     tests.collect do |test|
-      test_result_params = {}
-      test_result_params[:assertion] = test[:assertion]
-      test_result_params[:value] = test[:value]
-      test_result_params[:name] = test[:name]
-      test_result_params[:original_line] = test[:original_line]
+      test_result_params = { :original_line => test[:original_line] }
 
       testvalues = get_test_values(test)
 
