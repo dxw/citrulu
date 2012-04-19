@@ -25,7 +25,8 @@ body.test_runs {
   }
 
   .group {
-    overflow: auto;
+    position: relative;
+    padding-bottom: 20px;
 
     h3 a {
       color: inherit;
@@ -46,6 +47,8 @@ body.test_runs {
     p.last-updated {
       font-style: italic;
       font-size: 12px;
+      position: absolute;
+      bottom: 0;
     }
 
     pre {
@@ -54,6 +57,9 @@ body.test_runs {
 
     ul.recentfails {
       clear: both;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
       li {
         list-style-type: none;
 
