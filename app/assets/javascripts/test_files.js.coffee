@@ -101,40 +101,38 @@ make_hash = (input_text) ->
 get_current_group = ->
   cur_line = line = window.editor.getCursor().line
 
+# console.log "Started on #{cur_line}"
+
   # Find the start of the group
   while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
     line--
 
-  start = line
+#  console.log "First thing is at line #{line}"
 
-  # Find the end of the group
+  # We've found a starting thing. Now make sure we're on the first one
+  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+    line--
+
   line++
-  had_one_on_clause = false
-  while line < window.editor.lineCount()
-    if window.editor.getLine(line).match(/^\s*(So|On|When)\s/)
-      if had_one_on_clause
-        break
-      else
-        had_one_on_clause = true
 
+  start = line
+#  console.log "Found the start at #{start}"
+
+  # Now move out of the starting lines for this group
+  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
     line++
+
+#  console.log "Moved back out of starting lines, now at #{line}"
+
+  # Now find the start of the next group
+  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+    line++
+
+#  console.log "Found the next group at #{line}"
 
   end = line-1
 
-  # Make sure the start of the group really is the start of the group
-  check_line = start
-  while check_line > 0 
-    check_line--
-    line = window.editor.getLine(check_line)
-
-    if line.strip == '' || line.match(/\s*#/)
-      continue
-
-    if line.match(/^\s*So\s/)
-      start = check_line
-
-    break
-
+#  console.log "This group: #{start} .. #{end}\n\n"
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
