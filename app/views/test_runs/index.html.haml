@@ -19,20 +19,6 @@
         - fail_batch.each do |group|
           .span4
             = render :partial => "group", :locals => {:group => group, :only_fails => true}
-            -#.recent.fail
-              %h3=truncated_test_url(group.test_url)
-              %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
-              - if !group.message.blank?
-                %div
-                  %p We couldn't retrieve this page:
-                  %pre=group.message
-              -else
-                %ul.recentfails
-                  -group.test_results.each do |result|
-                    - next if !result.failed?
-                    %li 
-                      %i.icon-remove
-                      =result.original_line
 
 .row
   .testruns.span8

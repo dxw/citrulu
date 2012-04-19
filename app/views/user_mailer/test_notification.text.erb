@@ -20,7 +20,7 @@ Failed <%= pluralize(@test_run.number_of_failed_tests, 'assertion'); %>:
 
 On <%=raw group.test_url %>
         <% group.failed_tests.each do |result| %>
-- <%=raw result.assertion %> <%=raw value_or_name(result, true) %>
+- <%=raw result.original_line + (" (failed)" if result.failed?) %>
         <% end %>
       <% end %>
     <% end %>
