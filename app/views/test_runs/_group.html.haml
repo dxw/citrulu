@@ -20,4 +20,5 @@
         %li 
           %i{:class => !result.result ? "icon-remove" : "icon-ok"}
           = result.original_line
-  %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
+  %p.last-updateded
+    =group.updated_at 
