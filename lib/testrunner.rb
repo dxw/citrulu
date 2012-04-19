@@ -47,7 +47,7 @@ class TestRunner
       
       # run the tests...
       test_run_params = execute_tests(compiled_tests)
-      
+
       # create the objects in the database
       test_run_params.each do |test_group_params|
         test_group_params.merge! :test_run => test_run
@@ -100,15 +100,15 @@ class TestRunner
         page = agent.send(group[:page][:method], url.scheme + '://' + url.host + (url.port == 80 ? '' : ":#{url.port}") + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
 
       rescue Mechanize::ResponseCodeError => e
-        return handle_retrieved_page(agent, e.page, group_params, group)
+        handle_retrieved_page(agent, e.page, group_params, group)
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
         # ends up returning e.to_s instead...
-        return group_params
+        group_params
+      else
+        handle_retrieved_page(agent, page, group_params, group)
       end
-
-      return handle_retrieved_page(agent, page, group_params, group)
     end
   end
   
