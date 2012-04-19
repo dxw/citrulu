@@ -23,9 +23,47 @@ body.test_runs {
   h2 {
     padding-bottom: 10px;
   }
-  h3 a {
-    color: inherit;
+
+  .group {
+    overflow: auto;
+
+    h3 a {
+      color: inherit;
+      float: left;
+    }
+
+    .method {
+      float: right;
+      color: #555;
+    }
+
+    .so {
+      font-size: 14px;
+      font-weight: bold;
+      clear: both;
+    }
+
+    p.last-updated {
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    pre {
+      word-break: normal;
+    }
+
+    ul.recentfails {
+      clear: both;
+      li {
+        list-style-type: none;
+
+        i {
+          margin-left: -19px;
+        }
+      }
+    }
   }
+
 
   div.recentfails, div.bigmsg {
     padding-bottom: 30px;
@@ -37,25 +75,6 @@ body.test_runs {
 
   div.all_pass {
     color:  #468847;
-  }
-
-  ul.recentfails {
-    li {
-      list-style-type: none;
-
-      i {
-        margin-left: -19px;
-      }
-    }
-  }
-
-  p.last-updated {
-    font-style: italic;
-    font-size: 12px;
-  }
-
-  pre {
-    word-break: normal;
   }
 
   div.testruns {
