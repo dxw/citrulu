@@ -109,10 +109,17 @@ get_current_group = ->
 
   # Find the end of the group
   line++
-  while line < window.editor.lineCount() && !window.editor.getLine(line).match(/^\s*(So|On|When)\s/)
+  had_one_on_clause = false
+  while line < window.editor.lineCount()
+    if window.editor.getLine(line).match(/^\s*(So|On|When)\s/)
+      if had_one_on_clause
+        break
+      else
+        had_one_on_clause = true
+
     line++
 
-  end = line
+  end = line-1
 
   # Make sure the start of the group really is the start of the group
   check_line = start
