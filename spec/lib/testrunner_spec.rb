@@ -299,7 +299,7 @@ describe TestRunner do
           [
             :time_run => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
             :test_results_attributes => [
-              { :assertion => :i_see, :value => 'foo', :name => nil, :result => true, :original_line => "I should see foo" }
+              { :result => true, :original_line => "I should see foo" }
             ]
           ]
         )
@@ -318,10 +318,8 @@ describe TestRunner do
         TestRunner.execute_test_groups(@test_file, @test_run)
         
         @test_run.test_groups[0].test_results.length.should  == 1
-        @test_run.test_groups[0].test_results[0].assertion.should == 'I should see'
-        @test_run.test_groups[0].test_results[0].value.should == 'foo'
-        @test_run.test_groups[0].test_results[0].name.should == nil
         @test_run.test_groups[0].test_results[0].result.should == true
+        @test_run.test_groups[0].test_results[0].original_line.should == "I should see foo"
       end
     end
   end
@@ -349,10 +347,7 @@ describe TestRunner do
       ]
       
       test_result_params = TestRunner.get_test_results(nil,test_results)
-      test_result_params[0][:assertion].should == assertion
       test_result_params[0][:original_line].should == original_line
-      test_result_params[0][:value].should == value
-      test_result_params[0][:name].should == name
     end
     
     
@@ -511,7 +506,7 @@ describe TestRunner do
     end  
 
     it "should return the value returned by the block" do
-      TestRunner.do_test([:foo]) { true }.should be_true
+      TestRunner.do_test(["foo"]) { true }.should be_true
     end
   end
   

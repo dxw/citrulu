@@ -1,2 +1,2 @@
 $(document).ready ->
-  $(".recent.fail").equalHeights()
+  $("body.test_runs .group").equalHeights()

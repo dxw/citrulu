@@ -27,9 +27,10 @@
           %ul
             - group.failed_tests.each do |result|
               %li
-                = "#{result.assertion} " 
-                != value_or_name(result)
-                      
+                = result.original_line 
+                - if result.failed?
+                  %strong.result(failed)
+                  
     %p{:style => content_p_styles} 
       To view your full results, visit
       =link_to("your results page", test_run_url(@test_run), :style => content_a_styles) + "."
