@@ -10,7 +10,7 @@
   - if !group.so.blank?
     .so=group.so + ':'
   - if !group.message.blank?
-    %div
+    %div.group_error
       %p We couldn't retrieve this page:
       %pre=group.message
   -else
@@ -20,5 +20,5 @@
         %li 
           %i{:class => !result.result ? "icon-remove" : "icon-ok"}
           = result.original_line
-  %p.last-updateded
+  %p.last-updated
     =group.updated_at 
