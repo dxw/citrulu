@@ -52,7 +52,7 @@ grammar TesterGrammar
   end
 
   rule on_clause
-    "On" space url {
+    space "On" space url {
       def process
       {
         :method => :get,
@@ -64,27 +64,44 @@ grammar TesterGrammar
   end
 
   rule when_clause
-    "When I post" space data space "to" space url {
+    space "When I" (method_data / method) space url {
       def process
-      {
-        :method => :post,
-        :data => data.process,
-        :url => url.text_value.strip
-      }
+        elements[2].process.merge({
+          :url => url.text_value.strip
+        })
       end
     }
   end
 
+  rule method_data
+     space ("put" / "post") space data space "to" {
+       def process
+         {
+           :method => elements[1].text_value.strip.to_sym,
+           :data => data.process
+         }
+       end
+     }
+  end
+
+  rule method
+     space ("head" / "get" / "delete") {
+       def process
+         {:method => text_value.strip.to_sym}
+       end
+     }
+  end
+
   rule page_clause
-    space so_clause? (on_clause / when_clause) comment* newline {
+    so_clause? comment* (on_clause / when_clause) comment* newline {
       def process
-        elements[2].process.merge({:so => elements[1].text_value.strip})
+        elements[2].process.merge({:so => elements[0].text_value.strip})
       end
     }
   end
 
   rule so_clause
-    "So" value newline
+    space "So" value newline
   end
 
   rule first_clause
@@ -167,7 +184,7 @@ grammar TesterGrammar
   rule data
     '"' [^"]+ '"' {
       def process
-        elements[1].text_value
+        text_value[1..-2]
       end
     }
   end

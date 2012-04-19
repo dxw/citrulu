@@ -307,12 +307,16 @@ module TesterGrammar
   end
 
   module OnClause0
-    def space
-      elements[1]
+    def space1
+      elements[0]
+    end
+
+    def space2
+      elements[2]
     end
 
     def url
-      elements[2]
+      elements[3]
     end
   end
 
@@ -338,20 +342,24 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    if has_terminal?("On", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 2))
-      @index += 2
-    else
-      terminal_parse_failure("On")
-      r1 = nil
-    end
+    r1 = _nt_space
     s0 << r1
     if r1
-      r2 = _nt_space
+      if has_terminal?("On", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 2))
+        @index += 2
+      else
+        terminal_parse_failure("On")
+        r2 = nil
+      end
       s0 << r2
       if r2
-        r3 = _nt_url
+        r3 = _nt_space
         s0 << r3
+        if r3
+          r4 = _nt_url
+          s0 << r4
+        end
       end
     end
     if s0.last
@@ -370,33 +378,23 @@ module TesterGrammar
 
   module WhenClause0
     def space1
-      elements[1]
-    end
-
-    def data
-      elements[2]
+      elements[0]
     end
 
     def space2
       elements[3]
     end
 
-    def space3
-      elements[5]
-    end
-
     def url
-      elements[6]
+      elements[4]
     end
   end
 
   module WhenClause1
     def process
-    {
-      :method => :post,
-      :data => data.process,
-      :url => url.text_value.strip
-    }
+      elements[2].process.merge({
+        :url => url.text_value.strip
+      })
     end
   end
 
@@ -412,40 +410,38 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    if has_terminal?("When I post", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 11))
-      @index += 11
-    else
-      terminal_parse_failure("When I post")
-      r1 = nil
-    end
+    r1 = _nt_space
     s0 << r1
     if r1
-      r2 = _nt_space
+      if has_terminal?("When I", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 6))
+        @index += 6
+      else
+        terminal_parse_failure("When I")
+        r2 = nil
+      end
       s0 << r2
       if r2
-        r3 = _nt_data
+        i3 = index
+        r4 = _nt_method_data
+        if r4
+          r3 = r4
+        else
+          r5 = _nt_method
+          if r5
+            r3 = r5
+          else
+            @index = i3
+            r3 = nil
+          end
+        end
         s0 << r3
         if r3
-          r4 = _nt_space
-          s0 << r4
-          if r4
-            if has_terminal?("to", false, index)
-              r5 = instantiate_node(SyntaxNode,input, index...(index + 2))
-              @index += 2
-            else
-              terminal_parse_failure("to")
-              r5 = nil
-            end
-            s0 << r5
-            if r5
-              r6 = _nt_space
-              s0 << r6
-              if r6
-                r7 = _nt_url
-                s0 << r7
-              end
-            end
+          r6 = _nt_space
+          s0 << r6
+          if r6
+            r7 = _nt_url
+            s0 << r7
           end
         end
       end
@@ -464,11 +460,193 @@ module TesterGrammar
     r0
   end
 
-  module PageClause0
+  module MethodData0
+    def space1
+      elements[0]
+    end
+
+    def space2
+      elements[2]
+    end
+
+    def data
+      elements[3]
+    end
+
+    def space3
+      elements[4]
+    end
+
+  end
+
+  module MethodData1
+    def process
+      {
+        :method => elements[1].text_value.strip.to_sym,
+        :data => data.process
+      }
+    end
+  end
+
+  def _nt_method_data
+    start_index = index
+    if node_cache[:method_data].has_key?(index)
+      cached = node_cache[:method_data][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      i2 = index
+      if has_terminal?("put", false, index)
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 3))
+        @index += 3
+      else
+        terminal_parse_failure("put")
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        if has_terminal?("post", false, index)
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 4))
+          @index += 4
+        else
+          terminal_parse_failure("post")
+          r4 = nil
+        end
+        if r4
+          r2 = r4
+        else
+          @index = i2
+          r2 = nil
+        end
+      end
+      s0 << r2
+      if r2
+        r5 = _nt_space
+        s0 << r5
+        if r5
+          r6 = _nt_data
+          s0 << r6
+          if r6
+            r7 = _nt_space
+            s0 << r7
+            if r7
+              if has_terminal?("to", false, index)
+                r8 = instantiate_node(SyntaxNode,input, index...(index + 2))
+                @index += 2
+              else
+                terminal_parse_failure("to")
+                r8 = nil
+              end
+              s0 << r8
+            end
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(MethodData0)
+      r0.extend(MethodData1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:method_data][start_index] = r0
+
+    r0
+  end
+
+  module Method0
     def space
       elements[0]
     end
 
+  end
+
+  module Method1
+    def process
+      {:method => text_value.strip.to_sym}
+    end
+  end
+
+  def _nt_method
+    start_index = index
+    if node_cache[:method].has_key?(index)
+      cached = node_cache[:method][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_space
+    s0 << r1
+    if r1
+      i2 = index
+      if has_terminal?("head", false, index)
+        r3 = instantiate_node(SyntaxNode,input, index...(index + 4))
+        @index += 4
+      else
+        terminal_parse_failure("head")
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        if has_terminal?("get", false, index)
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 3))
+          @index += 3
+        else
+          terminal_parse_failure("get")
+          r4 = nil
+        end
+        if r4
+          r2 = r4
+        else
+          if has_terminal?("delete", false, index)
+            r5 = instantiate_node(SyntaxNode,input, index...(index + 6))
+            @index += 6
+          else
+            terminal_parse_failure("delete")
+            r5 = nil
+          end
+          if r5
+            r2 = r5
+          else
+            @index = i2
+            r2 = nil
+          end
+        end
+      end
+      s0 << r2
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Method0)
+      r0.extend(Method1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:method][start_index] = r0
+
+    r0
+  end
+
+  module PageClause0
     def newline
       elements[4]
     end
@@ -476,7 +654,7 @@ module TesterGrammar
 
   module PageClause1
     def process
-      elements[2].process.merge({:so => elements[1].text_value.strip})
+      elements[2].process.merge({:so => elements[0].text_value.strip})
     end
   end
 
@@ -492,46 +670,55 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    r1 = _nt_space
+    r2 = _nt_so_clause
+    if r2
+      r1 = r2
+    else
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
     s0 << r1
     if r1
-      r3 = _nt_so_clause
-      if r3
-        r2 = r3
-      else
-        r2 = instantiate_node(SyntaxNode,input, index...index)
-      end
-      s0 << r2
-      if r2
-        i4 = index
-        r5 = _nt_on_clause
-        if r5
-          r4 = r5
+      s3, i3 = [], index
+      loop do
+        r4 = _nt_comment
+        if r4
+          s3 << r4
         else
-          r6 = _nt_when_clause
-          if r6
-            r4 = r6
+          break
+        end
+      end
+      r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      s0 << r3
+      if r3
+        i5 = index
+        r6 = _nt_on_clause
+        if r6
+          r5 = r6
+        else
+          r7 = _nt_when_clause
+          if r7
+            r5 = r7
           else
-            @index = i4
-            r4 = nil
+            @index = i5
+            r5 = nil
           end
         end
-        s0 << r4
-        if r4
-          s7, i7 = [], index
+        s0 << r5
+        if r5
+          s8, i8 = [], index
           loop do
-            r8 = _nt_comment
-            if r8
-              s7 << r8
+            r9 = _nt_comment
+            if r9
+              s8 << r9
             else
               break
             end
           end
-          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-          s0 << r7
-          if r7
-            r9 = _nt_newline
-            s0 << r9
+          r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+          s0 << r8
+          if r8
+            r10 = _nt_newline
+            s0 << r10
           end
         end
       end
@@ -551,12 +738,16 @@ module TesterGrammar
   end
 
   module SoClause0
+    def space
+      elements[0]
+    end
+
     def value
-      elements[1]
+      elements[2]
     end
 
     def newline
-      elements[2]
+      elements[3]
     end
   end
 
@@ -572,20 +763,24 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    if has_terminal?("So", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 2))
-      @index += 2
-    else
-      terminal_parse_failure("So")
-      r1 = nil
-    end
+    r1 = _nt_space
     s0 << r1
     if r1
-      r2 = _nt_value
+      if has_terminal?("So", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 2))
+        @index += 2
+      else
+        terminal_parse_failure("So")
+        r2 = nil
+      end
       s0 << r2
       if r2
-        r3 = _nt_newline
+        r3 = _nt_value
         s0 << r3
+        if r3
+          r4 = _nt_newline
+          s0 << r4
+        end
       end
     end
     if s0.last
@@ -1226,7 +1421,7 @@ module TesterGrammar
 
   module Data1
     def process
-      elements[1].text_value
+      text_value[1..-2]
     end
   end
 
