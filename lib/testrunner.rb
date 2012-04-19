@@ -51,7 +51,6 @@ class TestRunner
       # create the objects in the database
       test_run_params.each do |test_group_params|
         test_group_params.merge! :test_run => test_run
-        puts test_group_params.inspect
         test_group = TestGroup.create(test_group_params)
       end
     end
