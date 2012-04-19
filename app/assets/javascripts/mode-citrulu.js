@@ -5,7 +5,8 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         return new RegExp("^((" + words.join(")|(") + "))\\b");
     }
 
-    var onclause       = wordRegexp(['On', 'When I post', 'to', 'So']);
+    var onclause       = wordRegexp(['On', 'When I', 'to', 'So']);
+    var methodclause   = wordRegexp(['get', 'post', 'put', 'head', 'delete']);
     var firstfinally   = wordRegexp(['First, fetch', 'Finally, fetch']);
     var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include", "Header", "should contain", "should not contain", "Response code should be", "Response code should not be"]);
 
@@ -59,6 +60,10 @@ CodeMirror.defineMode('Citrulu', function(conf) {
 
         if (stream.match(url)) {
             return 'link';
+        }
+
+        if (stream.match(methodclause)) {
+            return "variable-2"
         }
 
         if (stream.string.match(/^\s*Header /) && stream.match(http_header)) {
