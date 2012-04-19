@@ -53,10 +53,6 @@ On http://example.com/9
 On http://example.com/9a
   Header X-Varnish should not contain foo
 
-# POST to
-When I post "a=b&c=d" to http://example.com/10
-  I should see x
-
 # Match page to regex
 On http://example.com/11
   I should see /abc/
@@ -81,6 +77,46 @@ On http://example.com/14
 # Response codes
 On http://example.com/15
   Response code should be 200
+
+# Space doesn't matter
+     So I know foo
+  On http://example.com/16
+       I should see x
+
+     So I know foo
+  When I post "a=b" to http://example.com/16
+       I should see x
+
+# Comments don't matter
+# Comment
+So I know foo
+# Comment
+When I post "a=b" to http://example.com/17
+# Comment
+I should see X
+# Comment
+I should not see Y
+
+# When I head
+When I head http://example.com/10
+  I should see x
+
+# When I get
+When I get http://example.com/10
+  I should see x
+
+# When I delete
+When I delete http://example.com/10
+  I should see x
+
+# When I put
+When I post "a=b&c=d" to http://example.com/10
+  I should see x
+
+# When I put
+When I put "a=b&c=d" to http://example.com/10
+  I should see x
+
 }
 
 
