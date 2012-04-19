@@ -80,7 +80,7 @@ class TestFilesController < ApplicationController
       end
 
       group = CitruluParser.new.compile_tests(params[:group])
-      @results = TestRunner.execute_tests(group)
+      @results = TestRunner.execute_tests(group)[0]
 
     rescue CitruluParser::TestCompileError => e
       error = CitruluParser.format_error(e)
