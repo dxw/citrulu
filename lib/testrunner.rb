@@ -79,7 +79,9 @@ class TestRunner
 
       begin
         group_params[:test_url] = group[:page][:url]
-#group_params[:so] = group[:page][:so]
+        group_params[:so] = group[:page][:so]
+        group_params[:method] = group[:page][:method]
+        group_params[:data] = group[:page][:data]
         
         agent = Mechanize.new
         agent.open_timeout = 5

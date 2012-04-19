@@ -1,6 +1,14 @@
 $('#liveview div.group').empty();
 
-$('#liveview div.group').append('<div class="on">On <%= truncated_test_url(@test_url) %></div>');
+<% if @results[:data] %>
+  $('#liveview div.group').append('<div class="url"><%= truncated_test_url(@results[:test_url]) %><div class="method"><abbr title="<%= @results[:data] %>"><%= @results[:method] %></abbr></div></div>');
+<% else %>
+  $('#liveview div.group').append('<div class="url"><%= truncated_test_url(@results[:test_url]) %><div class="method"><%= @results[:method] %></div></div>');
+<% end %>
+
+<% if @results[:so] %>
+  $('#liveview div.group').append('<div class="so"><%= @results[:so] %></div>');
+<% end %>
 
 <% if !@error.blank? %>
   $('#liveview div.group').append('<div class="fail error"><h3>Compilation Error</h3><p><%=j console_line(@error, "neutral", false) %></p></div>');
