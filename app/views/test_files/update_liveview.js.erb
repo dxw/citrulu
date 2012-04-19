@@ -1,12 +1,12 @@
 $('#liveview div.group').empty();
 
-<% if @results[:data] %>
+<% if !@results[:data].blank? %>
   $('#liveview div.group').append('<div class="url"><%= truncated_test_url(@results[:test_url]) %><div class="method"><abbr title="<%= @results[:data] %>"><%= @results[:method] %></abbr></div></div>');
 <% else %>
   $('#liveview div.group').append('<div class="url"><%= truncated_test_url(@results[:test_url]) %><div class="method"><%= @results[:method] %></div></div>');
 <% end %>
 
-<% if @results[:so] %>
+<% if !@results[:so].blank? %>
   $('#liveview div.group').append('<div class="so"><%= @results[:so] %></div>');
 <% end %>
 
