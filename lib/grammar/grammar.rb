@@ -1210,16 +1210,12 @@ module TesterGrammar
   end
 
   module ComplexAssertion0
-    def space1
+    def identifier
       elements[1]
     end
 
-    def identifier
+    def space
       elements[2]
-    end
-
-    def space2
-      elements[3]
     end
 
   end
@@ -1245,51 +1241,47 @@ module TesterGrammar
     end
 
     i0, s0 = index, []
-    if has_terminal?("Header", false, index)
-      r1 = instantiate_node(SyntaxNode,input, index...(index + 6))
-      @index += 6
+    if has_terminal?("Header ", false, index)
+      r1 = instantiate_node(SyntaxNode,input, index...(index + 7))
+      @index += 7
     else
-      terminal_parse_failure("Header")
+      terminal_parse_failure("Header ")
       r1 = nil
     end
     s0 << r1
     if r1
-      r2 = _nt_space
+      r2 = _nt_identifier
       s0 << r2
       if r2
-        r3 = _nt_identifier
+        r3 = _nt_space
         s0 << r3
         if r3
-          r4 = _nt_space
-          s0 << r4
-          if r4
-            i5 = index
-            if has_terminal?("should contain", false, index)
-              r6 = instantiate_node(SyntaxNode,input, index...(index + 14))
-              @index += 14
+          i4 = index
+          if has_terminal?("should contain", false, index)
+            r5 = instantiate_node(SyntaxNode,input, index...(index + 14))
+            @index += 14
+          else
+            terminal_parse_failure("should contain")
+            r5 = nil
+          end
+          if r5
+            r4 = r5
+          else
+            if has_terminal?("should not contain", false, index)
+              r6 = instantiate_node(SyntaxNode,input, index...(index + 18))
+              @index += 18
             else
-              terminal_parse_failure("should contain")
+              terminal_parse_failure("should not contain")
               r6 = nil
             end
             if r6
-              r5 = r6
+              r4 = r6
             else
-              if has_terminal?("should not contain", false, index)
-                r7 = instantiate_node(SyntaxNode,input, index...(index + 18))
-                @index += 18
-              else
-                terminal_parse_failure("should not contain")
-                r7 = nil
-              end
-              if r7
-                r5 = r7
-              else
-                @index = i5
-                r5 = nil
-              end
+              @index = i4
+              r4 = nil
             end
-            s0 << r5
           end
+          s0 << r4
         end
       end
     end

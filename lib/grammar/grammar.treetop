@@ -159,7 +159,7 @@ grammar TesterGrammar
   end
 
   rule complex_assertion
-    "Header" space identifier space ("should contain" / "should not contain") {
+    "Header " identifier space ("should contain" / "should not contain") {
       def process 
         {
           :header => identifier.text_value.strip,
