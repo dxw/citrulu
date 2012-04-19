@@ -1,7 +1,14 @@
 - only_fails ||= false
-%div{:class => group.failed? || group.has_failed_tests? ? "fail" : "pass"}
-  %h3=truncated_test_url(group.test_url)
-  %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
+%div{:class => group.failed? || group.has_failed_tests? ? "group fail" : "group pass"}
+  %h3
+    =truncated_test_url(group.test_url)
+    .method
+      - if group.data
+        %abbr{:title => group.data}=group.method
+      - else
+        =result.method
+  - if !group.so.blank?
+    .so=group.so + ':'
   - if !group.message.blank?
     %div
       %p We couldn't retrieve this page:
@@ -13,3 +20,4 @@
         %li 
           %i{:class => !result.result ? "icon-remove" : "icon-ok"}
           = result.original_line
+  %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
