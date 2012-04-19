@@ -742,7 +742,7 @@ module TesterGrammar
       elements[0]
     end
 
-    def value
+    def required_value
       elements[2]
     end
 
@@ -775,7 +775,7 @@ module TesterGrammar
       end
       s0 << r2
       if r2
-        r3 = _nt_value
+        r3 = _nt_required_value
         s0 << r3
         if r3
           r4 = _nt_newline
@@ -1412,6 +1412,43 @@ module TesterGrammar
     r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
 
     node_cache[:value][start_index] = r0
+
+    r0
+  end
+
+  def _nt_required_value
+    start_index = index
+    if node_cache[:required_value].has_key?(index)
+      cached = node_cache[:required_value][index]
+      if cached
+        cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    s0, i0 = [], index
+    loop do
+      if has_terminal?('\G[^\\n]', true, index)
+        r1 = true
+        @index += 1
+      else
+        r1 = nil
+      end
+      if r1
+        s0 << r1
+      else
+        break
+      end
+    end
+    if s0.empty?
+      @index = i0
+      r0 = nil
+    else
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+    end
+
+    node_cache[:required_value][start_index] = r0
 
     r0
   end

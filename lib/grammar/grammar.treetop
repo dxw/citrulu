@@ -101,7 +101,7 @@ grammar TesterGrammar
   end
 
   rule so_clause
-    space "So" value newline
+    space "So" required_value newline
   end
 
   rule first_clause
@@ -179,6 +179,10 @@ grammar TesterGrammar
   
   rule value
     [^\n]*
+  end
+
+  rule required_value
+    [^\n]+
   end
 
   rule data
