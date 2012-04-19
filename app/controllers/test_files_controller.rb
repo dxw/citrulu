@@ -110,7 +110,8 @@ class TestFilesController < ApplicationController
         @error[:after] = error[:after]
       end
     rescue Exception => e
-      @error = e.to_s
+      @error = {}
+      @error[:text0] = e.to_s
     end
 
     respond_to do |format|
