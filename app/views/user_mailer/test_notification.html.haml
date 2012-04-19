@@ -29,8 +29,8 @@
               %li
                 = result.original_line 
                 - if result.failed?
-                  = content_tag(:strong, "(failed)")
-                      
+                  %strong.result(failed)
+                  
     %p{:style => content_p_styles} 
       To view your full results, visit
       =link_to("your results page", test_run_url(@test_run), :style => content_a_styles) + "."
