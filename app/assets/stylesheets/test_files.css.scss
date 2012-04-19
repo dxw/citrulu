@@ -137,6 +137,7 @@ body.test_files {
         word-wrap: break-word;
         /* fallback for browsers which don't support word-break and word-wrap: */
         overflow: hidden;
+        padding-bottom: 3px;
 
         &.working {
           background: transparent url("loader.gif") no-repeat right;
