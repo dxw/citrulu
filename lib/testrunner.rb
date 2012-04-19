@@ -71,7 +71,7 @@ class TestRunner
       rescue Exception => e
         group_params[:message] = e.to_s
       end
-        
+ 
       group_params
     end
 
@@ -101,15 +101,15 @@ class TestRunner
         page = agent.send(group[:page][:method], url.scheme + '://' + url.host + (url.port == 80 ? '' : ":#{url.port}") + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
 
       rescue Mechanize::ResponseCodeError => e
-        handle_retrieved_page(agent, e.page, group_params, group)
+        return handle_retrieved_page(agent, e.page, group_params, group)
       rescue Exception => e
         group_params[:message] = e.to_s
         # TODO Should be able to use "ensure" to make sure group_params is called, but that doesn't get called correctly for some reason -
         # ends up returning e.to_s instead...
-        group_params
-      else
-        handle_retrieved_page(agent, page, group_params, group)
+        return group_params
       end
+
+      return handle_retrieved_page(agent, page, group_params, group)
     end
   end
   

@@ -71,12 +71,6 @@ class TestFilesController < ApplicationController
 #  end
 
   def update_liveview
-
-    if params[:group].blank?
-      render :text => ''
-      return
-    end
-
     begin
       @current_line = params[:current_line]
 
@@ -86,11 +80,10 @@ class TestFilesController < ApplicationController
       end
 
       group = CitruluParser.new.compile_tests(params[:group])
+      @results = TestRunner.execute_tests(group)
 
-      @results = TestRunner.execute_tests(group)[0]
     rescue CitruluParser::TestCompileError => e
       error = CitruluParser.format_error(e)
-
       
       @error = {}
 
