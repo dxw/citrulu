@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(:version => 20120419134033) do
     t.integer  "test_file_count"
     t.string   "name_en"
     t.boolean  "default"
-    t.integer  "spreedly_id"
   end
 
   create_table "test_files", :force => true do |t|
@@ -68,8 +67,8 @@ ActiveRecord::Schema.define(:version => 20120419134033) do
   create_table "test_runs", :force => true do |t|
     t.integer  "test_file_id"
     t.datetime "time_run"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "users", :force => true do |t|
