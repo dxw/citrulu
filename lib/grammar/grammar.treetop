@@ -194,7 +194,7 @@ grammar TesterGrammar
   end
 
   rule regex
-    '/' [^\/]+ '/'
+    '/' [^\/\n]+ '/'
   end
 
   rule comment

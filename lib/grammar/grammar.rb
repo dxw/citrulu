@@ -1547,7 +1547,7 @@ module TesterGrammar
     if r1
       s2, i2 = [], index
       loop do
-        if has_terminal?('\G[^\\/]', true, index)
+        if has_terminal?('\G[^\\/\\n]', true, index)
           r3 = true
           @index += 1
         else
