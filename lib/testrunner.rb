@@ -77,6 +77,7 @@ class TestRunner
     test_groups.collect do |group|
       group_params = {}
 
+
       begin
         group_params[:test_url] = group[:page][:url]
         group_params[:so] = group[:page][:so]
@@ -181,11 +182,12 @@ class TestRunner
   
   def self.match_or_include(string, value)
     if value.class == Regexp
-      string.match(value)
+      !string.match(value).nil?
     else
-      string.downcase.include?(value.downcase)
+     string.downcase.include?(value.downcase)
     end
   end
+
 
   def self.text_is_in_page?(page, text)
     
