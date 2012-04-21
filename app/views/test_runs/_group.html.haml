@@ -6,7 +6,8 @@
       - if group.data
         %abbr{:title => group.data}=group.method
       - else
-        =result.method
+        =group.method
+      .response="#{group.response_time}ms"
   - if !group.so.blank?
     .so=group.so + ':'
   - if !group.message.blank?

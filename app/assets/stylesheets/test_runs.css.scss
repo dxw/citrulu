@@ -36,6 +36,13 @@ body.test_runs {
     .method {
       float: right;
       color: #555;
+
+      .response {
+        font-size: 11px;
+        font-weight: normal;
+        line-height: 13px;
+
+      }
     }
 
     .so {
