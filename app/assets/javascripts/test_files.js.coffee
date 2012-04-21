@@ -113,7 +113,8 @@ get_current_group = ->
   while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
     line--
 
-  line++
+  if line != 0 
+    line++
 
   start = line
 #  console.log "Found the start at #{start}"
@@ -132,7 +133,7 @@ get_current_group = ->
 
   end = line-1
 
-#  console.log "This group: #{start} .. #{end}\n\n"
+  console.log "This group: #{start} .. #{end}\n\n"
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
@@ -160,6 +161,7 @@ update_liveview = ->
 # Moves the .current style in the live view to the currently selected group
 #
 update_selected_test = (current_group) ->
+
   selected_test = current_group.group.split("\n")[current_group.current_line].trim()
 
   $("#liveview div.group div").removeClass("current")
