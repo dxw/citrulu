@@ -1,8 +1,7 @@
 class WebsiteController < ApplicationController
   
   def features
-    @names = Plan::NAMES
-    @costs = Plan::COSTS
+    @names = Plan::LEVELS
     @limits = Plan::LIMITS
     @features = Plan::FEATURES
 

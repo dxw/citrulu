@@ -4,17 +4,13 @@ class PaymentsController < ApplicationController
   layout "logged_in"
   
   def choose_plan
-    @names = Plan::NAMES
-    @costs = Plan::COSTS
+    @names = Plan::LEVELS
     @limits = Plan::LIMITS
     @features = Plan::FEATURES
   end
   
-  def set_plan
-    plan_name = Plan.get_name_from_plan_level(params["plan_level"])
-    plan = Plan.find_by_name_en(plan_name)
-   
-    redirect_to action: "new", plan_id: plan.id
+  def set_plan   
+    redirect_to action: "new", plan_id: params["plan_id"]
   end
 
   def new

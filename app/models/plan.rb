@@ -35,21 +35,19 @@ class Plan < ActiveRecord::Base
   
 
   def self.cornichon
-    self.where(:name => "Cornichon", :active => true)
+    self.where(:name_en => "Cornichon", :active => true).first
   end
   
   def self.gherkin
-    self.where(:name => "Gherkin", :active => true)
+    self.where(:name_en => "Gherkin", :active => true).first
   end
   
+  def self.get_plan_name_from_plan_level(plan_level)
+    LEVELS[plan_level.to_sym]
+  end
   
-  NAMES = {
-    :silver => "Cornichon",
-    :gold => "Gherkin",
-  }
-  
-  def self.get_name_from_plan_level(plan_level)
-    Plan::NAMES[plan_level.to_sym]
+  def self.get_plan_from_level(plan_level)
+    Plan.where(:name_en => get_plan_name_from_plan_level(plan_level), :active => true).first
   end
   
   def self.get_spreedly_plan(plans, name)
@@ -61,9 +59,10 @@ class Plan < ActiveRecord::Base
     RSpreedly::SubscriptionPlan.all
   end
   
-  
-  COSTS = 
-    add('$14.95/month', '$49.95/month', 'Cost', 'Monthly cost')
+  LEVELS = {
+    :silver => "Cornichon",
+    :gold => "Gherkin"
+  }
   
   LIMITS = [
     add('3', '30', 'Number of sites', 'The maximum number of domains you can runs tests on'),

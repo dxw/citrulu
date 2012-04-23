@@ -47,10 +47,12 @@ module ApplicationHelper
   end
   
   def choose_plan_link(plan_level, btn_class)
-    plan_text_span = content_tag :span, "Sign up now for", :class => "plan_text"
-    plan_cost_span = content_tag :span, @costs[plan_level], :class => "plan_cost"
+    plan = Plan.get_plan_from_level(plan_level)
     
-    link_to (plan_text_span << " " << plan_cost_span), {:controller => "payments", :action => "set_plan", :plan_level => plan_level}, :class => btn_class    
+    plan_text_span = content_tag :span, "Sign up now for", :class => "plan_text"
+    plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
+    
+    link_to (plan_text_span << " " << plan_cost_span), {:controller => "payments", :action => "set_plan", :plan_id => plan.id}, :class => btn_class    
   end
   
   
