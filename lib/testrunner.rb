@@ -59,7 +59,7 @@ class TestRunner
 
   def self.execute_tests(test_groups)
     def self.handle_retrieved_page(agent, page, group_params, group)
-      group_params[:response_time] = agent.agent.http.last_response_time
+      group_params[:response_time] = (agent.agent.http.last_response_time*1000).to_i
       group_params[:response_code] = page.code
       
       begin
@@ -184,7 +184,7 @@ class TestRunner
     if value.class == Regexp
       !string.match(value).nil?
     else
-     string.downcase.include?(value.downcase)
+      string.downcase.include?(value.downcase)
     end
   end
 
