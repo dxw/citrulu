@@ -8,8 +8,6 @@ $(document).ready ->
     id = $('div.welcome').attr('id')
     window.createCookie("hide_#{id}", 'true', 999)
 
-
-
 #
 # Setup the test file editor page:
 #
