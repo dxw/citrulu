@@ -1,22 +1,26 @@
 $('#liveview div.group').empty();
 
 <% if !@error.blank? %>
-  $('#liveview div.group').append('<div class="fail error"><h3>Compilation Error</h3><p><%=j console_line(@error, "neutral", false) %></p></div>');
+  $('#liveview div.group').append('<div class="liveview-row fail error"><h3>Compilation Error</h3><p><%=j console_line(@error, "neutral", false) %></p></div>');
 <% elsif !@results[:message].blank? %>
-  $('#liveview div.group').append("<div class='fail error'><h3>Runtime Error</h3><p><%=j @results[:message] %></p></div>");
+  $('#liveview div.group').append("<div class='liveview-row fail error'><h3>Runtime Error</h3><p><%=j @results[:message] %></p></div>");
 <% else %>
   <% if !@results[:data].blank? %>
     $('#liveview div.group').append('<div class="url"><%=j truncated_test_url(@results[:test_url]) %><div class="method"><abbr title="<%=j @results[:data] %>"><%= @results[:method] %></abbr></div></div>');
   <% else %>
     $('#liveview div.group').append('<div class="url"><%=j truncated_test_url(@results[:test_url]) %><div class="method"><%=j @results[:method].to_s %></div></div>');
   <% end %>
+  
+  <% if @results[:response_code] != "200" %>
+    $('#liveview div.group').append('<div class="liveview-row so"> Response code is <%=j @results[:response_code] %></div>');
+  <% end %>
 
   <% if !@results[:so].blank? %>
-    $('#liveview div.group').append('<div class="so"><%=j @results[:so] %></div>');
+    $('#liveview div.group').append('<div class="liveview-row so"><%=j @results[:so] %></div>');
   <% end %>
 
   <% @results[:test_results_attributes].each do |test| %>
-    $('#liveview div.group').append("<div class='<%=j (test[:result] ? 'pass' : 'fail')%>'><%=j test[:original_line].strip %></div>");
+    $('#liveview div.group').append("<div class='liveview-row <%=j (test[:result] ? 'pass' : 'fail')%>'><%=j test[:original_line].strip %></div>");
   <% end %>
 <% end %>
 

@@ -59,7 +59,7 @@ class TestRunner
 
   def self.execute_tests(test_groups)
     def self.handle_retrieved_page(agent, page, group_params, group)
-      group_params[:response_time] = agent.agent.http.last_response_time
+      group_params[:response_time] = (agent.agent.http.last_response_time*1000).to_i
       group_params[:response_code] = page.code
       
       begin
@@ -76,6 +76,7 @@ class TestRunner
 
     test_groups.collect do |group|
       group_params = {}
+
 
       begin
         group_params[:test_url] = group[:page][:url]
@@ -181,11 +182,12 @@ class TestRunner
   
   def self.match_or_include(string, value)
     if value.class == Regexp
-      string.match(value)
+      !string.match(value).nil?
     else
       string.downcase.include?(value.downcase)
     end
   end
+
 
   def self.text_is_in_page?(page, text)
     
