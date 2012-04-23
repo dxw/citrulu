@@ -101,7 +101,7 @@ grammar TesterGrammar
   end
 
   rule so_clause
-    space "So" required_value newline
+    space "So I know that" required_value newline
   end
 
   rule first_clause
@@ -192,10 +192,6 @@ grammar TesterGrammar
       end
     }
   end
-
-#  rule regex
-#    '/' [^\/\n]+ '/'
-#  end
 
   rule regex
     '/' ('\/' / [^/] )+ '/'

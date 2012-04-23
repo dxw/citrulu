@@ -766,11 +766,11 @@ module TesterGrammar
     r1 = _nt_space
     s0 << r1
     if r1
-      if has_terminal?("So", false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 2))
-        @index += 2
+      if has_terminal?("So I know that", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 14))
+        @index += 14
       else
-        terminal_parse_failure("So")
+        terminal_parse_failure("So I know that")
         r2 = nil
       end
       s0 << r2
