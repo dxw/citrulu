@@ -1,20 +1,17 @@
-- if cookies[:hide_welcome].blank?
-  .welcome.hero-unit
+- if cookies["hide_welcome_#{current_user.id}".to_sym].blank?
+  .welcome.hero-unit{:id => "welcome_#{current_user.id}"}
     %h1 Welcome to Citrulu
     %a.dismiss{:href => '#'} Hide this message
     .row
       .dismiss
       .span5
-        %p Citrulu is currently in Alpha! So please don't depend on it just yet. But please do use it, and let us know what you think, and what we could improve.
-        %p Until we release, all the features of Citrulu will be available to everyone. After we release, some features will only be available to users with premium accounts. 
-        %p To see how we currently think the features will break down, visit the frequently updated and changed <a href="/features">features page</a>.
+        %p Citrulu is a new tool to help you keep your websites running, and to respond quickly when they break.
+        %p Citrulu lets you write tests for your websites using simple, natural language.
+        %p After you've written your tests, we'll run them every hour and let you know if anything fails.
       .span4.offset1
         %p Want to get straight to the tests? Your default test file has some examples to help you get started.
         %p 
           %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Edit your first test file
-        %p Once your tests are up &amp; running, you'll want to see some results.
-        %p
-          %a.btn.btn-primary.get-resulting{:href => test_runs_path} View your results
 .row
   #test_list.span8
     .title

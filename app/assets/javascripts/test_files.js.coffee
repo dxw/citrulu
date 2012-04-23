@@ -5,7 +5,8 @@
 $(document).ready ->
   $("div.welcome a.dismiss").click ->
     $("div.welcome").fadeOut('fast')
-    window.createCookie('hide_welcome', 'true', 999)
+    id = $('div.welcome').attr('id')
+    window.createCookie("hide_#{id}", 'true', 999)
 
 
 
