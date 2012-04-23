@@ -1,4 +1,6 @@
 source 'http://rubygems.org'
+source 'http://gems.github.com'
+
 gem 'rake'
 gem 'rails', '3.2.0'
 
@@ -42,6 +44,8 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-spork'
   gem 'guard-livereload'
+  gem 'awesome_print'
+  gem 'jnunemaker-crack'
 end
 
 group :test do

@@ -127,8 +127,8 @@ body.test_files {
       -moz-border-radius: 4px;
       border-radius: 4px;
 
-      div.on {
-        font-size: 13px;
+      div.url {
+        font-size: 16px;
         font-weight: bold;
         border: solid #e5e5e5;
         border-width: 0 0 1px 0;
@@ -137,17 +137,35 @@ body.test_files {
         word-wrap: break-word;
         /* fallback for browsers which don't support word-break and word-wrap: */
         overflow: hidden;
+        padding-bottom: 3px;
 
         &.working {
           background: transparent url("loader.gif") no-repeat right;
         }
+
+        a {
+          float: left;
+        }
+      }
+
+      div.method {
+        text-transform: uppercase;
+        float: right;
+        font-size: 14px;
+        color: #777;
+      }
+
+      div.so {
+        background: #e8f0f0;
+        clear: both;
+        padding: 3px;
       }
 
       div.pending {
         background-color: #EEF27E;
       }
 
-      div.fail, div.pass, div.pending, div.error {
+      div.liveview-row {
         padding: 3px 5px 3px 15px;
         margin: 5px 0;
 

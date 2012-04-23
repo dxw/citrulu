@@ -10,17 +10,4 @@
     .row
       - group_batch.each do |group|
         .span4
-          %div{:class => group.failed? || group.has_failed_tests? ? "fail" : "pass"}
-            %h3=truncated_test_url(group.test_url)
-            %p.last-updated="#{group.updated_at} from #{group.test_run.test_file.name}"
-            - if !group.message.blank?
-              %div
-                %p We couldn't retrieve this page:
-                %pre=group.message
-            -else
-              %ul.recentfails
-                -group.test_results.each do |result|
-                  %li 
-                    %i{:class => !result.result ? "icon-remove" : "icon-ok"}
-                    %span.assertion=result.assertion
-                    = value_or_name(result)
+          = render :partial => "group", :locals => {:group => group}

@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   
   before_create :set_email_preference
   before_create :add_invitation
+  before_create :set_default_plan
   after_create :create_default_test_file 
   after_save :update_subscriber
   after_destroy :destroy_subscriber
@@ -44,6 +45,10 @@ class User < ActiveRecord::Base
     q[:url_count] = [url_count, inf(plan.url_count)]
     q[:test_file_count] = [test_files.count, inf(plan.test_file_count)]
     q
+  end
+  
+  def set_default_plan
+    plan = Plan.default
   end
 
   ###################

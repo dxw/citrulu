@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120418181312) do
+ActiveRecord::Schema.define(:version => 20120419134033) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -60,16 +60,17 @@ ActiveRecord::Schema.define(:version => 20120418181312) do
     t.text     "response_code"
     t.string   "test_url"
     t.text     "message"
+    t.string   "method"
+    t.string   "so"
+    t.text     "data"
   end
 
   create_table "test_results", :force => true do |t|
     t.integer  "test_group_id"
-    t.string   "assertion"
-    t.string   "value"
-    t.string   "name"
     t.boolean  "result"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.string   "original_line"
   end
 
   create_table "test_runs", :force => true do |t|

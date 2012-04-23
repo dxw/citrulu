@@ -2,13 +2,17 @@ require 'treetop'
 require 'grammar/grammar'
 
 class CitruluParser < TesterGrammarParser
-  class TestCompileError < StandardError
+ 
+  class CitruluError < StandardError
   end
 
-  class TestPredefError < StandardError
+  class TestCompileError < CitruluError
   end
 
-  class TestCompileUnknownError < StandardError
+  class TestPredefError < CitruluError
+  end
+
+  class TestCompileUnknownError < CitruluError
   end
 
   def self.format_error(error)

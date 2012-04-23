@@ -4,8 +4,19 @@ class Plan < ActiveRecord::Base
   # We should create the plan in Spreedly before adding it to this table
   validates_presence_of :spreedly_id 
   
-  def self.default?
-    Plan.all.select{|p|p.default}.first
+  def self.default
+    default_plan = where(:default => true).first
+    if default_plan && default_plan.active?
+      return default_plan
+    else
+      # Something's gone FOOBAR:
+      cheapest_active_plan = Plan.where(:active => true).order('cost_usd asc').first
+      if cheapest_active_plan.nil?
+        raise "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, or indeed any active plans at all!"
+      else
+        logger.error "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, so returned the cheapest active plan (ID#{cheapest_active_plan.id}) instead. NOT IDEAL!"
+      end
+    end
   end
   
   private

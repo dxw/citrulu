@@ -5,13 +5,15 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         return new RegExp("^((" + words.join(")|(") + "))\\b");
     }
 
-    var onclause       = wordRegexp(['On']);
+    var onclause       = wordRegexp(['On', 'When I', 'to', 'So']);
+    var methodclause   = wordRegexp(['get', 'post', 'put', 'head', 'delete']);
     var firstfinally   = wordRegexp(['First, fetch', 'Finally, fetch']);
-    var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include"]);
+    var assertion      = wordRegexp(["Source should contain", "Source should not contain", "I should see", "I should not see", "Headers should include", "Headers should not include", "Header", "should contain", "should not contain", "Response code should be", "Response code should not be"]);
 
-    var name           = new RegExp(":([a-zA-Z0-9_]+)");
-    var value          = new RegExp("^([^:]+[^\n]*)|(::[^\n]*)");
-    var url            = new RegExp("((http:\/\/)|(https:\/\/))[^\n]+");
+    var name           = new RegExp('^:([a-zA-Z0-9_]+)');
+    var http_header    = new RegExp('^[a-z-A-Z0-9-]+');
+    var value          = new RegExp('^([^:]+[^\\n]*)|(::[^\\n]*)');
+    var url            = new RegExp('^((http:\/\/)|(https:\/\/))[a-zA-Z-0-9]+[^\\s\\n]+');
 
     // Tokenizers
     function tokenBase(stream, state) {
@@ -25,6 +27,23 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         if (ch === '#') {
             stream.skipToEnd();
             return 'comment';
+        }
+
+        if (ch == '"') {
+          var eaten = 0;
+          var prev_ch = stream.next();
+          while((ch = stream.next()) && ch != "\n") {
+            if (ch == '"' && prev_ch != '\\') {
+              return 'text'
+            }
+
+            prev_ch = ch;
+            eaten++;
+          }
+
+          if (ch != '"') {
+            stream.backUp(eaten)
+          }
         }
 
         if (stream.match(onclause)) {
@@ -43,7 +62,19 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return 'link';
         }
 
+        if (stream.match(methodclause)) {
+            return "variable-2"
+        }
+
+        if (stream.string.match(/^\s*Header /) && stream.match(http_header)) {
+            return 'text';
+        }
+
         if (stream.match(value)) {
+            if (stream.string.match(/^\s*So /)) {
+              return 'number';
+            }
+
             return 'text';
         }
 

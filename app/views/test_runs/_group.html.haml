@@ -1,0 +1,25 @@
+- only_fails ||= false
+%div{:class => group.failed? || group.has_failed_tests? ? "group fail" : "group pass"}
+  %h3
+    =truncated_test_url(group.test_url)
+    .method
+      - if group.data
+        %abbr{:title => group.data}=group.method
+      - else
+        =group.method
+      .response="#{group.response_time}ms"
+  - if !group.so.blank?
+    .so=group.so + ':'
+  - if !group.message.blank?
+    %div.group_error
+      %p We couldn't retrieve this page:
+      %pre=group.message
+  -else
+    %ul.recentfails
+      -group.test_results.each do |result|
+        - next if result.result && only_fails
+        %li 
+          %i{:class => !result.result ? "icon-remove" : "icon-ok"}
+          = result.original_line
+  %p.last-updated
+    =group.updated_at 

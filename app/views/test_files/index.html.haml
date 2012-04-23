@@ -33,8 +33,8 @@
           %div
             %img{:src => "http://placehold.it/60x66"}
             %p= "#{pluralize(@recent_failed_assertions, 'assertion is')} failing"
-            %p= "#{pluralize(@recent_failed_pages, 'page')} could not be retrieved"
             -# N.B. this pluralization is (nescessarily) achieved with a custom inflector in /config/initializers/inflectins.rb
+            %p= "#{pluralize(@recent_failed_pages, 'page')} could not be retrieved"
           %a.btn{:href => test_runs_path} View full results
       - else
         .pass

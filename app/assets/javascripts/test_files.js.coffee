@@ -101,23 +101,43 @@ make_hash = (input_text) ->
 get_current_group = ->
   cur_line = line = window.editor.getCursor().line
 
+# console.log "Started on #{cur_line}"
+
   # Find the start of the group
-  while line > 0 && !window.editor.getLine(line).match(/^\s*On/)
+  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
     line--
-  start = line
 
+#  console.log "First thing is at line #{line}"
 
-  # Find the end of the group
-  line++
-  while line < window.editor.lineCount() && !window.editor.getLine(line).match(/^\s*On/)
+  # We've found a starting thing. Now make sure we're on the first one
+  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+    line--
+
+  if line != 0 
     line++
 
-  end = line
+  start = line
+#  console.log "Found the start at #{start}"
+
+  # Now move out of the starting lines for this group
+  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+    line++
+
+#  console.log "Moved back out of starting lines, now at #{line}"
+
+  # Now find the start of the next group
+  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+    line++
+
+#  console.log "Found the next group at #{line}"
+
+  end = line-1
+
+  console.log "This group: #{start} .. #{end}\n\n"
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
-  return {group: '', current_line: 0} if !content.match(/^\s*On/)
-  
+  return {group: '', current_line: 0} if !content.match(/^\s*(On|When|So)\s/)
  
   {group: content, current_line: cur_line - start }
   
@@ -141,6 +161,7 @@ update_liveview = ->
 # Moves the .current style in the live view to the currently selected group
 #
 update_selected_test = (current_group) ->
+
   selected_test = current_group.group.split("\n")[current_group.current_line].trim()
 
   $("#liveview div.group div").removeClass("current")

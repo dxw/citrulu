@@ -64,7 +64,6 @@ class TestFile < ActiveRecord::Base
     start_fail = nil
 
     test_runs.sort{|a,b| a <=> b}.each do |run|
-      puts run.time_run
       if !in_fail_spree && run.has_failures?
         in_fail_spree = true
         start_fail = run
