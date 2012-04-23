@@ -136,11 +136,11 @@ grammar TesterGrammar
         else
           hash[:value] = parameter.text_value.strip
 
-          if matches = hash[:value][0] == '"' && hash[:value][-1] == '"'
+          if hash[:value][0] == '"' && hash[:value][-1] == '"'
             hash[:value] = hash[:value][1..-2]
           end
 
-          if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'
+          if hash[:value][0] == '/' && hash[:value][-1] == '/'
             hash[:value] = Regexp.new(hash[:value][1..-2])
           end
         end
@@ -186,15 +186,19 @@ grammar TesterGrammar
   end
 
   rule data
-    '"' [^"]+ '"' {
+    '"' ('\"' / [^"] )+ '"' {
       def process
         text_value[1..-2]
       end
     }
   end
 
+#  rule regex
+#    '/' [^\/\n]+ '/'
+#  end
+
   rule regex
-    '/' [^\/\n]+ '/'
+    '/' ('\/' / [^/] )+ '/'
   end
 
   rule comment

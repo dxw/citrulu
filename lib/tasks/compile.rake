@@ -117,6 +117,13 @@ When I post "a=b&c=d" to http://example.com/10
 When I put "a=b&c=d" to http://example.com/10
   I should see x
 
+# Regexes with escaped slashes
+On http://example.com
+  I should see /<h3>Bloobidiblahya<\\\/h3>/
+
+# Values in quotes with escaped quotes
+On http://example.com
+  I should see "I should see \"I should see\""
 }
 
 
