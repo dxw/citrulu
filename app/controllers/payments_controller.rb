@@ -55,8 +55,16 @@ class PaymentsController < ApplicationController
   end
 
   def confirmation
-    # Redirect the user to the home page if they tried to access this page directly
-    if params[:plan_id].nil?
+    # Redirect the user to the home page if they have never subscribed
+    subscriber = current_user.subscriber
+    
+    if subscriber
+      invoices = subscriber.invoices
+      unless invoices
+        redirect_to '/'
+        return
+      end
+    else
       redirect_to '/'
       return
     end
