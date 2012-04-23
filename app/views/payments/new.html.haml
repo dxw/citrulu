@@ -24,6 +24,7 @@
       = f.label :card_type, :class => 'control-label'
       .controls 
         = f.select :card_type, options_for_select(CARD_TYPES), :include_blank => true
+        = image_tag 'credit_cards.gif' 
     %li.control-group
       = f.label :number, :class => 'control-label'
       .controls 
