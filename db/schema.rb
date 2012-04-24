@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424170521) do
+ActiveRecord::Schema.define(:version => 20120424195609) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20120424170521) do
     t.string  "content_hash"
     t.text    "headers"
     t.text    "content"
+    t.string  "code"
   end
 
   create_table "test_files", :force => true do |t|
