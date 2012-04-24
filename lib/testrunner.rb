@@ -14,6 +14,9 @@ class TestRunner
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
       end
       
+      # Only run tests for users who are paid up (or on the free trial)
+      next if !file.user.active?
+      
       test_run = TestRun.create(
         :time_run => Time.zone.now,
         :test_file => file

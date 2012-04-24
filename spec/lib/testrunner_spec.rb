@@ -34,6 +34,14 @@ describe TestRunner do
       TestRunner.should_not_receive(:execute_test_groups)
       TestRunner.run_all_tests
     end
+    
+    it "should not try and run tests where the user is inactive" do
+      user = FactoryGirl.create(:user, active: false)
+      FactoryGirl.create(:test_file, user: user)
+      
+      TestRunner.should_not_receive(:execute_test_groups)
+      TestRunner.run_all_tests
+    end
 
     describe "(sending email)" do
       before(:each) do
@@ -169,7 +177,7 @@ describe TestRunner do
       url = "http://foo.com"
 
       test_groups = [
-        {:test_url => url}
+        {:page => {:url => url, :method => "get"}}
       ]
       
       test_group_params = TestRunner.execute_tests(test_groups)
@@ -178,12 +186,12 @@ describe TestRunner do
     
     it "should fetch the 'first' URL" do
       test_groups = [
-        {:test_url => "http://example.com/", :first => "http://example.com/first"}
+        {:page => {:url => "http://example.com/", :method => "get"}, :first => "http://example.com/first"}
       ]
       # Get first:
       Mechanize.any_instance.should_receive(:get).with("http://example.com/first")
       # Get the page:
-      Mechanize.any_instance.should_receive(:get).with("http://example.com/").and_return(@dummy_page) 
+      Mechanize.any_instance.should_receive(:get).with("http://example.com/",nil).and_return(@dummy_page) 
       
       TestRunner.execute_tests(test_groups)
     end
@@ -196,7 +204,7 @@ describe TestRunner do
     context "when the 'page' object could not be retrived" do
       before(:each) do
         @test_groups = [
-          {:test_url => "foo"} # get will always fail, since this is not a valid URL
+          {:page => {:url => "foo", :method => "get"}} # get will always fail, since this is not a valid URL
         ]
       end
     
@@ -206,7 +214,7 @@ describe TestRunner do
       
       it "should not fetch the 'finally' URL" do
         @test_groups = [
-          {:test_url => "foo", :finally => "http://example.com/finally"}
+          {:page => {:url => "foo", :method => "get"}, :finally => "http://example.com/finally"}
         ]
         Mechanize.any_instance.should_not_receive(:get).with('http://example.com/finally')
       end
@@ -227,16 +235,16 @@ describe TestRunner do
     context "when the 'page' object is successfully retrived" do
       before(:each) do
         @test_groups = [
-          {:test_url => "http://example.com/"}
+          {:page => {:url => "http://example.com/", :method => "get"}}
         ]
       end
       
       it "should fetch the 'finally' URL" do
         test_groups = [
-          {:test_url => "http://example.com/", :finally => "http://example.com/finally"}
+          {:page => {:url => "http://example.com/", :method => "get"}, :finally => "http://example.com/finally"}
         ]
         # Get the page:
-        Mechanize.any_instance.should_receive(:get).with("http://example.com/").and_return(@dummy_page) 
+        Mechanize.any_instance.should_receive(:get).with("http://example.com/",nil).and_return(@dummy_page) 
         # Get finally:
         Mechanize.any_instance.should_receive(:get).with("http://example.com/finally")
         
@@ -260,7 +268,7 @@ describe TestRunner do
       it "should generate the test results" do
         stub_mechanize(@dummy_page)
         test_groups = [
-          {:test_url => "http://example.com/", :tests => "bar"}
+          {:page => {:url => "http://example.com/", :method => "get"}, :tests => "bar"}
         ]
       
         TestRunner.should_receive(:get_test_results).with(@dummy_page,"bar")
@@ -353,6 +361,13 @@ describe TestRunner do
     
     
     shared_examples_for "an assertion" do
+      # Approach: all the assertions follow the same pattern, so we define
+      # a couple of steps to check that the truth of the assertion works correctly
+      # i.e. if the check in the page is true then
+      #    a "should" assertion should evaluate to true
+      #    a "should not" assertion should evaluate to false
+      # The actual checks themselves are tested seperately.
+
       it "returns the correct result" do
         TestRunner.should_receive(page_check).twice.and_return(matches)
       
@@ -427,7 +442,7 @@ describe TestRunner do
     end
     
     context "when checking for headers in the page" do
-      let(:page_check) { :header_is_in_page? }
+      let(:page_check) { :header_exists? }
       
       context "using headers_include" do
         let(:assertion) { :headers_include }
@@ -484,7 +499,7 @@ describe TestRunner do
     end
   end
   
-  describe "header_is_in_page?" do
+  describe "header_exists?" do
     it "should return true when the header is in the page" do
       pending("Testing this requires stubbing out Mechanize...")
     end
