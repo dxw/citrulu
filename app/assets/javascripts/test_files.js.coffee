@@ -150,10 +150,11 @@ update_liveview = ->
 
   return if group_data.group == ''
 
-  $("#liveview div.on").addClass("working");
+  $("#liveview h2").addClass("working");
   jQuery.ajax(url: '/test_files/update_liveview', data: group_data, type: 'POST', dataType: 'script', complete: (xhr, status) -> 
     update_selected_test(get_current_group())
-    $('#liveview div.on').removeClass('working');
+    $('#liveview h2').removeClass('working');
+    $('#liveview .group').effect('highlight', {color: '#8f8'}, 1000)
   )
 
 ##

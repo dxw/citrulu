@@ -122,6 +122,10 @@ body.test_files {
   #liveview {
     margin-top: 11px;
 
+    h2.working {
+      background: transparent url("loader.gif") no-repeat right;
+    }
+
     div.group {
       border: 1px solid #e5e5e5;
       padding: 3px;
@@ -140,10 +144,6 @@ body.test_files {
         /* fallback for browsers which don't support word-break and word-wrap: */
         overflow: hidden;
         padding-bottom: 3px;
-
-        &.working {
-          background: transparent url("loader.gif") no-repeat right;
-        }
 
         a {
           float: left;
