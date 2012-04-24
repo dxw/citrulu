@@ -56,15 +56,15 @@ body.test_runs {
     }
 
 
-    p.last-updated {
+    p.meta {
       font-style: italic;
       font-size: 12px;
       position: absolute;
       bottom: 0;
 
-      a.edit {
-        margin-left: 45px;
+      a {
         color: #049;
+        margin-left: 12px;
       }
     }
 

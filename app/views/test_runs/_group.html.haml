@@ -21,6 +21,7 @@
         %li 
           %i{:class => !result.result ? "icon-remove" : "icon-ok"}
           = result.original_line
-  %p.last-updated
+  %p.meta
     =group.updated_at 
-    %a.edit{:href => edit_test_file_path(group.test_run.test_file)} Edit this test file
+    %a{:href => response_path(group.response)} View page
+    %a{:href => edit_test_file_path(group.test_run.test_file)} Edit file

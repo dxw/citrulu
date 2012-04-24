@@ -64,6 +64,7 @@ class TestRunner
       group_params[:response_attributes][:content] = page.content.encode
       group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
       group_params[:response_attributes][:headers] = page.header.collect{|header| "#{header[0]}: #{header[1]}"}.join("\n")
+      group_params[:response_attributes][:code] = page.code
 
       begin
         agent.get(group[:finally]) unless group[:finally].blank?
