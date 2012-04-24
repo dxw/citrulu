@@ -61,6 +61,11 @@ body.test_runs {
       font-size: 12px;
       position: absolute;
       bottom: 0;
+
+      a.edit {
+        margin-left: 45px;
+        color: #049;
+      }
     }
 
     pre {
