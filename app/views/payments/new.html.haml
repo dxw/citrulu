@@ -1,7 +1,17 @@
 %header.page-header  
   %h1 Payment Details
 
-%p Cool! Now we just need to get your payment details and you can continue as a fully-fledged Citrulu user!
+.hero-unit
+  %h1 Great! 
+  %p 
+    You're buying the
+    %span{:class => "plan_name"}=@plan.name_en
+    plan.
+    
+    You'll be billed $#{@plan.cost_usd} every month
+    
+  %p Now we just need to get your payment details and you can continue as a fully-fledged Citrulu user.
+
 
 - unless @errors.blank?
   #error_explanation
@@ -13,7 +23,7 @@
         %li=error
     
 
-= form_for :credit_card, :url => {:action => "create", :plan_id => @plan_id }, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
+= form_for :credit_card, :url => {:action => "create", :plan_id => @plan.id }, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
   %ul.unstyled
     %li.control-group
       = f.label :name, :class => 'control-label'

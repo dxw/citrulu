@@ -15,13 +15,13 @@ class PaymentsController < ApplicationController
 
   def new
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    reroute_if_accessed_directly
-    
-    @plan_id = params[:plan_id]
+    return if reroute_if_accessed_directly
+
+    @plan = Plan.find(params[:plan_id])    
   end
   
   def create
-    reroute_if_accessed_directly
+    return if reroute_if_accessed_directly
     
     plan = Plan.find(params[:plan_id])
     
@@ -83,8 +83,9 @@ class PaymentsController < ApplicationController
    # Redirect the user to the beginning of the payment flow if they tried to access this page directly
     if params[:plan_id].nil?
       redirect_to action: "choose_plan"
-      return
+      return true
     end
+    return false
   end
   
 end

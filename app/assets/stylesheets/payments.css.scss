@@ -1,12 +1,4 @@
 body.payments.confirmation {
-  .hero-unit {  
-    h1 {
-      margin-bottom: 20px;
-    }
-    .plan_name {
-      font-weight: bold;
-    }
-  }
   #what_next { 
     p {
       font-size: 1.2em;
@@ -21,6 +13,12 @@ body.payments.confirmation {
 }
 
 body.payments { 
+  .hero-unit {  
+    .plan_name {
+      font-weight: bold;
+    }
+  }
+  
   .working {
     background: transparent url("loader.gif") no-repeat right;
     display: inline-block;
