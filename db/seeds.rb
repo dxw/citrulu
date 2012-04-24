@@ -18,7 +18,7 @@ Plan.create([
     # Limits:
     test_frequency: 21600, # 4 times a day = every 6 hours = 21600
     number_of_sites: 3,
-    mobile_alerts_allowance: "12 per month",
+    mobile_alerts_allowance: 12,
     
     # Features:
     allows_custom_predefines: false,
@@ -35,7 +35,7 @@ Plan.create([
     # Limits:
     test_frequency: 900, # 4 times an hour = every 15 mins = 900
     number_of_sites: 30,
-    mobile_alerts_allowance: "120 per month",
+    mobile_alerts_allowance: 120,
     
     # Features:
     allows_custom_predefines: true,
