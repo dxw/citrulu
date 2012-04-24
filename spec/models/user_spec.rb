@@ -129,4 +129,32 @@ describe User do
       end
     end
   end
+  
+  
+  context "when calculating free trial periods" do
+    describe ".is_within_free_trial" do
+      before(:all) do
+        @free_trial_days = 30 #doesn't seem to get pulled from config...
+      end
+      before(:each) do
+        @user.confirm!
+      end
+      it "should return true if the user is active and was created less than x days ago" do
+        Timecop.travel(Time.now + (@free_trial_days -1).days)
+        @user.active = true
+        @user.is_within_free_trial?.should be_true
+      end
+    
+      it "should return false if the user is active and was created MORE than x days ago" do
+        Timecop.travel(Time.now + (@free_trial_days +1).days)
+        @user.active = true
+        @user.is_within_free_trial?.should be_false
+      end
+    
+      it "should return false if the user was created less than x days ago but is inactive" do
+        @user.active = false
+        @user.is_within_free_trial?.should be_false
+      end
+    end
+  end
 end

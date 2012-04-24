@@ -1,3 +1,5 @@
+FREE_TRIAL_DAYS = 30
+
 CARD_TYPES = [
   ['Visa', 'visa'],
   ['MasterCard', 'master']

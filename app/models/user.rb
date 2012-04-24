@@ -37,6 +37,18 @@ class User < ActiveRecord::Base
   def set_default_plan
     plan = Plan.default
   end
+  
+  
+  def days_left_of_free_trial
+    return 0 unless confirmed?
+    FREE_TRIAL_DAYS + 1 - (Date.today - confirmed_at.to_date).to_i
+  end
+  
+  def is_within_free_trial?
+    # Calculate free trial from when the user was actually confirmed
+    active && days_left_of_free_trial > 0
+  end
+    
 
   ###################
   # SUBSCRIBER CRUD #
