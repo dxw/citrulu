@@ -3,12 +3,12 @@
   %h3
     =truncated_test_url(group.test_url)
     .method
-      -# if group.data
+      - if group.data
         %abbr{:title => group.data}=group.method
-      -# else
+      - else
         =group.method
-    - if group.response
-      .response="#{group.response.response_time}ms"
+      - if group.response
+        .response="#{group.response.response_time}ms"
   - if !group.so.blank?
     .so=group.so + ':'
   - if !group.message.blank?
