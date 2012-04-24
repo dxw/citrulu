@@ -3,10 +3,11 @@
   %h3
     =truncated_test_url(group.test_url)
     .method
-      - if group.data
+      -# if group.data
         %abbr{:title => group.data}=group.method
-      - else
+      -# else
         =group.method
+    - if group.response
       .response="#{group.response.response_time}ms"
   - if !group.so.blank?
     .so=group.so + ':'
@@ -14,7 +15,7 @@
     %div.group_error
       %p We couldn't retrieve this page:
       %pre=group.message
-  -else
+  - else
     %ul.recentfails
       -group.test_results.each do |result|
         - next if result.result && only_fails
@@ -22,6 +23,7 @@
           %i{:class => !result.result ? "icon-remove" : "icon-ok"}
           = result.original_line
   %p.meta
-    =group.updated_at 
-    %a{:href => response_path(group.response)} View page
+    =group.updated_at
+    - if group.response
+      %a{:href => response_path(group.response)} View page
     %a{:href => edit_test_file_path(group.test_run.test_file)} Edit file
