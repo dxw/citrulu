@@ -1,5 +1,7 @@
 class TestGroup < ActiveRecord::Base
   belongs_to :test_run
+  belongs_to :response
+
   has_many :test_results, :dependent => :destroy
   accepts_nested_attributes_for :test_results
   
