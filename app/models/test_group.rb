@@ -4,6 +4,7 @@ class TestGroup < ActiveRecord::Base
 
   has_many :test_results, :dependent => :destroy
   accepts_nested_attributes_for :test_results
+  accepts_nested_attributes_for :response
   
   def failed_tests
     test_results.select{|t| t.failed?}

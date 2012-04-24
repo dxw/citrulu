@@ -2,7 +2,6 @@ class AddResponseTable < ActiveRecord::Migration
   def up
     create_table :responses do |t|
       t.integer :response_time
-      t.string :response_code
       t.string :content_hash
       t.text :headers
       t.text :content

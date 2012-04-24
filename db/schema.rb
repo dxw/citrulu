@@ -35,7 +35,6 @@ ActiveRecord::Schema.define(:version => 20120424170521) do
 
   create_table "responses", :force => true do |t|
     t.integer "response_time"
-    t.string  "response_code"
     t.string  "content_hash"
     t.text    "headers"
     t.text    "content"
