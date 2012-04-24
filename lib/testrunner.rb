@@ -190,8 +190,7 @@ class TestRunner
 
 
   def self.text_is_in_page?(page, text)
-    
-    page.respond_to?(:root) && match_or_include(page.root.inner_text, text)
+    page.respond_to?(:root) && match_or_include(page.root.inner_text.gsub(/[\s\n]+/, ' '), text)
   end
   
   def self.source_is_in_page?(page, source_fragment)
