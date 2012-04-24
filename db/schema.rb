@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424195609) do
+ActiveRecord::Schema.define(:version => 20120424201057) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(:version => 20120424195609) do
   create_table "test_groups", :force => true do |t|
     t.integer  "test_run_id"
     t.text     "page_content"
-    t.time     "time_run"
+    t.datetime "time_run"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.string   "test_url"
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20120424195609) do
     t.string   "method"
     t.string   "so"
     t.text     "data"
-    t.decimal  "response_id"
+    t.integer  "response_id"
   end
 
   create_table "test_results", :force => true do |t|
