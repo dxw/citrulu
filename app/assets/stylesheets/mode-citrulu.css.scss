@@ -1,0 +1,87 @@
+/* Based on Sublime Text's Monokai theme */
+
+.cm-s-monokai {
+  background: #272822;
+  color: #f8f8f2;
+
+  .CodeMirror-selected {
+    background: #49483E !important;
+  }
+  
+  .CodeMirror-gutter {
+    background: #272822; 
+    border-right: 0px;
+  }
+
+  .CodeMirror-gutter-text {
+    color: #d0d0d0;
+  }
+
+  .CodeMirror-cursor {
+    border-left: 1px solid #f8f8f0 !important;
+  }
+
+  span {
+    &.cm-comment {
+      color: #75715e;
+    }
+
+    &.cm-regex {
+
+    }
+
+    &.cm-reason {
+      color: #f92672;
+    }
+
+    &.cm-assertion, &.cm-start-group {
+      color: #a6e22e;
+    }
+
+    &.cm-firstfinally {
+      color: #e6db74;
+    }
+
+    &.cm-url {
+      color: #fd971f;
+    }
+
+    &.cm-method {
+      color: #a6e22e;
+      font-weight: bold;
+    }
+
+    &.cm-header, &.cm-value, &.cm-quoted-string {
+    }
+
+    &.cm-variable {
+      color: #9effff;
+    }
+
+    &.cm-error {
+    }
+  }
+
+}
+
+
+.cm-s-monokai span.cm-comment {color: #75715e;}
+.cm-s-monokai span.cm-atom {color: #ae81ff;}
+.cm-s-monokai span.cm-number {color: #ae81ff;}
+
+.cm-s-monokai span.cm-property, .cm-s-monokai span.cm-attribute {color: #a6e22e;}
+.cm-s-monokai span.cm-keyword {color: #f92672;}
+.cm-s-monokai span.cm-string {color: #e6db74;}
+
+.cm-s-monokai span.cm-variable {color: #a6e22e;}
+.cm-s-monokai span.cm-variable-2 {color: #9effff;}
+.cm-s-monokai span.cm-def {color: #fd971f;}
+.cm-s-monokai span.cm-error {background: #f92672; color: #f8f8f0;}
+.cm-s-monokai span.cm-bracket {color: #f8f8f2;}
+.cm-s-monokai span.cm-tag {color: #f92672;}
+.cm-s-monokai span.cm-link {color: #fd971f;}
+
+.cm-s-monokai .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: white !important;
+}
