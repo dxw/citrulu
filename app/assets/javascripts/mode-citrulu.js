@@ -115,7 +115,12 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         },
 
         indent: function(state, textAfter) {
-          if (state.lastToken.style == 'link' || state.lastToken.style == 'variable-2' || state.lastToken.style == 'text') {
+          if (
+            state.lastToken.style == 'url' || 
+            state.lastToken.style == 'value' || 
+            state.lastToken.style == 'regex' || 
+            state.lastToken.style == 'quoted-string' ||
+            state.lastToken.style == 'variable') {
             return 2;
           }
 
