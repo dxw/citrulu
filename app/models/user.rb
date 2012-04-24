@@ -33,19 +33,6 @@ class User < ActiveRecord::Base
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
   end
-
-  def over_quota?
-    quota.values.map do |q|
-      q[1] != '∞' && q[0] > q[1]
-    end.any?
-  end
-
-  def quota
-    q = {}
-    q[:url_count] = [url_count, inf(plan.url_count)]
-    q[:test_file_count] = [test_files.count, inf(plan.test_file_count)]
-    q
-  end
   
   def set_default_plan
     plan = Plan.default
@@ -137,10 +124,6 @@ class User < ActiveRecord::Base
   
   def inf val
     val != -1 ? val : '∞'
-  end
-
-  def url_count
-    test_files.map{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text).length }.sum
   end
   
   def set_email_preference
