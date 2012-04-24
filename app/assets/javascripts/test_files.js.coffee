@@ -103,13 +103,13 @@ get_current_group = ->
 # console.log "Started on #{cur_line}"
 
   # Find the start of the group
-  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line--
 
 #  console.log "First thing is at line #{line}"
 
   # We've found a starting thing. Now make sure we're on the first one
-  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line--
 
   if line != 0 
@@ -119,13 +119,13 @@ get_current_group = ->
 #  console.log "Found the start at #{start}"
 
   # Now move out of the starting lines for this group
-  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line++
 
 #  console.log "Moved back out of starting lines, now at #{line}"
 
   # Now find the start of the next group
-  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line++
 
 #  console.log "Found the next group at #{line}"
