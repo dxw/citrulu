@@ -36,6 +36,11 @@ $(window).load ->
 
     # save the file for the first time: 
     window.save_file()
+
+    # Add the update liveview button
+    $('#liveview div.buttons').append("<a class='btn' id='refresh_liveview'><i class='icon-refresh'></i> Refresh liveview</a>")
+    $('#refresh_liveview').click ->
+      update_liveview()
     
 
 setup_title = ->
@@ -132,7 +137,7 @@ get_current_group = ->
 
   end = line-1
 
-  console.log "This group: #{start} .. #{end}\n\n"
+#  console.log "This group: #{start} .. #{end}\n\n"
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
