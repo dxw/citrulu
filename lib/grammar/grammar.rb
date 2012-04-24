@@ -766,11 +766,11 @@ module TesterGrammar
     r1 = _nt_space
     s0 << r1
     if r1
-      if has_terminal?("So", false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 2))
-        @index += 2
+      if has_terminal?("So I know that", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 14))
+        @index += 14
       else
-        terminal_parse_failure("So")
+        terminal_parse_failure("So I know that")
         r2 = nil
       end
       s0 << r2
@@ -1026,11 +1026,11 @@ module TesterGrammar
       else
         hash[:value] = parameter.text_value.strip
 
-        if matches = hash[:value][0] == '"' && hash[:value][-1] == '"'
+        if hash[:value][0] == '"' && hash[:value][-1] == '"'
           hash[:value] = hash[:value][1..-2]
         end
 
-        if matches = hash[:value][0] == '/' && hash[:value][-1] == '/'
+        if hash[:value][0] == '/' && hash[:value][-1] == '/'
           hash[:value] = Regexp.new(hash[:value][1..-2])
         end
       end
@@ -1477,11 +1477,29 @@ module TesterGrammar
     if r1
       s2, i2 = [], index
       loop do
-        if has_terminal?('\G[^"]', true, index)
-          r3 = true
-          @index += 1
+        i3 = index
+        if has_terminal?('\"', false, index)
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 2))
+          @index += 2
         else
-          r3 = nil
+          terminal_parse_failure('\"')
+          r4 = nil
+        end
+        if r4
+          r3 = r4
+        else
+          if has_terminal?('\G[^"]', true, index)
+            r5 = true
+            @index += 1
+          else
+            r5 = nil
+          end
+          if r5
+            r3 = r5
+          else
+            @index = i3
+            r3 = nil
+          end
         end
         if r3
           s2 << r3
@@ -1498,13 +1516,13 @@ module TesterGrammar
       s0 << r2
       if r2
         if has_terminal?('"', false, index)
-          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
           @index += 1
         else
           terminal_parse_failure('"')
-          r4 = nil
+          r6 = nil
         end
-        s0 << r4
+        s0 << r6
       end
     end
     if s0.last
@@ -1547,11 +1565,29 @@ module TesterGrammar
     if r1
       s2, i2 = [], index
       loop do
-        if has_terminal?('\G[^\\/\\n]', true, index)
-          r3 = true
-          @index += 1
+        i3 = index
+        if has_terminal?('\/', false, index)
+          r4 = instantiate_node(SyntaxNode,input, index...(index + 2))
+          @index += 2
         else
-          r3 = nil
+          terminal_parse_failure('\/')
+          r4 = nil
+        end
+        if r4
+          r3 = r4
+        else
+          if has_terminal?('\G[^/]', true, index)
+            r5 = true
+            @index += 1
+          else
+            r5 = nil
+          end
+          if r5
+            r3 = r5
+          else
+            @index = i3
+            r3 = nil
+          end
         end
         if r3
           s2 << r3
@@ -1568,13 +1604,13 @@ module TesterGrammar
       s0 << r2
       if r2
         if has_terminal?('/', false, index)
-          r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
+          r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
           @index += 1
         else
           terminal_parse_failure('/')
-          r4 = nil
+          r6 = nil
         end
-        s0 << r4
+        s0 << r6
       end
     end
     if s0.last

@@ -70,7 +70,7 @@ On http://example.com/14
   Header X-Varnish should contain /abc/
 
 # So clauses work
-So that I know santa-clause is a pixie
+So I know that santa-clause is a pixie
 On http://example.com/14
   Header X-Varnish should contain /abc/
 
@@ -79,17 +79,17 @@ On http://example.com/15
   Response code should be 200
 
 # Space doesn't matter
-     So I know foo
+     So I know that foo
   On http://example.com/16
        I should see x
 
-     So I know foo
+     So I know that foo
   When I post "a=b" to http://example.com/16
        I should see x
 
 # Comments don't matter
 # Comment
-So I know foo
+So I know that foo
 # Comment
 When I post "a=b" to http://example.com/17
 # Comment
@@ -117,6 +117,13 @@ When I post "a=b&c=d" to http://example.com/10
 When I put "a=b&c=d" to http://example.com/10
   I should see x
 
+# Regexes with escaped slashes
+On http://example.com
+  I should see /<h3>Bloobidiblahya<\\\/h3>/
+
+# Values in quotes with escaped quotes
+On http://example.com
+  I should see "I should see \"I should see\""
 }
 
 
