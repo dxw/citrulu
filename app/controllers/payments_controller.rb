@@ -1,5 +1,6 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :redirect_if_active
   
   layout "logged_in"
   
@@ -86,6 +87,14 @@ class PaymentsController < ApplicationController
       return true
     end
     return false
+  end
+  
+  def redirect_if_active
+    # We don't want users to be able to purchase multiple subscriptions...
+    # 'Active' means 'has a current subscription 
+    if current_user.active?
+      redirect_to "/"
+    end
   end
   
 end
