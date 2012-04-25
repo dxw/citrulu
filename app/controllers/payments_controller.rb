@@ -9,20 +9,22 @@ class PaymentsController < ApplicationController
     @limits = Plan::LIMITS
     @features = Plan::FEATURES
   end
-  
-  def set_plan   
-    redirect_to action: "new", plan_id: params["plan_id"]
-  end
 
   def new
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    return if reroute_if_accessed_directly
+    if params[:plan_id].nil?
+      redirect_to action: "choose_plan"
+      return
+    end
 
     @plan = Plan.find(params[:plan_id])    
   end
   
   def create
-    return if reroute_if_accessed_directly
+    if params[:plan_id].nil?
+      redirect_to action: "choose_plan"
+      return
+    end
     
     @plan = Plan.find(params[:plan_id])
     
@@ -47,7 +49,7 @@ class PaymentsController < ApplicationController
       redirect_to action: "confirmation"
     else
       @errors = invoice.errors
-      render action: "new"
+      render action: "new", plan_id: @plan.id
     end
   end
 
@@ -69,15 +71,6 @@ class PaymentsController < ApplicationController
   end
   
   protected
-  
-  def reroute_if_accessed_directly
-   # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    if params[:plan_id].nil?
-      redirect_to action: "choose_plan"
-      return true
-    end
-    return false
-  end
   
   def redirect_if_active
     # We don't want users to be able to purchase multiple subscriptions, 

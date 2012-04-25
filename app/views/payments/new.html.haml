@@ -20,7 +20,9 @@
         %li=error
     
 
-= form_for :credit_card, :url => {:action => "create", :plan_id => @plan.id }, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
+
+= form_for :credit_card, :url => {:action => "create"}, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
+  = hidden_field_tag :plan_id, @plan.id
   %ul.unstyled
     %li.control-group
       = f.label :name, :class => 'control-label'

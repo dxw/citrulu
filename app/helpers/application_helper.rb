@@ -52,7 +52,7 @@ module ApplicationHelper
     plan_text_span = content_tag :span, "Sign up now for", :class => "plan_text"
     plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
     
-    link_to (plan_text_span << " " << plan_cost_span), {:controller => "payments", :action => "set_plan", :plan_id => plan.id}, :class => btn_class    
+    link_to (plan_text_span << " " << plan_cost_span), {controller: "payments", action: "new", :plan_id => plan.id}, :class => btn_class
   end
   
   

@@ -15,7 +15,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
 
   get "payments/choose_plan"
-  get "payments/set_plan"
   get "payments/new"  
   match "payments/new" => "payments#create", :via => :put
   get "payments/confirmation"
