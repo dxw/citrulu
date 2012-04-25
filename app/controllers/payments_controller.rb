@@ -80,9 +80,11 @@ class PaymentsController < ApplicationController
   end
   
   def redirect_if_active
-    # We don't want users to be able to purchase multiple subscriptions...
-    # 'Active' means 'has a current subscription 
-    if current_user.active?
+    # We don't want users to be able to purchase multiple subscriptions, 
+    # so if they already have an active subscription in Spreedly, redirect them
+    subscriber = current_user.subscriber
+    
+    if subscriber && subscriber.active
       redirect_to "/"
     end
   end
