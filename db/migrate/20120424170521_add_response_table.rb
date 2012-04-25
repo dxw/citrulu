@@ -7,7 +7,7 @@ class AddResponseTable < ActiveRecord::Migration
       t.text :content
     end
 
-    add_column :test_groups, :response_id, :number
+    add_column :test_groups, :response_id, :integer
 
     remove_column :test_groups, :response_code
     remove_column :test_groups, :response_time

@@ -4,6 +4,8 @@ class Plan < ActiveRecord::Base
   # We should create the plan in Spreedly before adding it to this table
   validates_presence_of :spreedly_id 
   
+  alias_attribute :name, :name_en
+
   def self.default
     default_plan = where(:default => true).first
     if default_plan && default_plan.active?

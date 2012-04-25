@@ -8,6 +8,10 @@ class TestRun < ActiveRecord::Base
 
   self.per_page = 50
   
+  def name
+    "#{test_file.name}::#{time_run}"
+  end
+
   def groups_with_failures
     test_groups.select{|g| g.failed? || g.has_failed_tests?}
   end
