@@ -43,7 +43,7 @@ class PaymentsController < ApplicationController
 
     if invoice.pay(@credit_card)
       current_user.plan = @plan
-      current_user.active = true # Paying the invoice will have set them to active in Spreedly
+      current_user.status = :paid
       current_user.save
       
       redirect_to action: "confirmation"
@@ -53,10 +53,8 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def confirmation
-    subscriber = current_user.subscriber
-    
-    if subscriber && subscriber.active
+  def confirmation 
+    if current_user.active_subscriber?
       # N.B. We DON'T check here that the specific invoice raised as part of this flow was actually paid - 
       # that's delegated to upstream actions.
       @plan = current_user.plan
@@ -74,10 +72,8 @@ class PaymentsController < ApplicationController
   
   def redirect_if_active
     # We don't want users to be able to purchase multiple subscriptions, 
-    # so if they already have an active subscription in Spreedly, redirect them
-    subscriber = current_user.subscriber
-    
-    if subscriber && subscriber.active
+    # so if they already have an active subscription in Spreedly, redirect them    
+    if current_user.active_subscriber?
       redirect_to "/"
     end
   end

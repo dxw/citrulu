@@ -3,15 +3,10 @@ require 'spec_helper'
 describe PaymentsController do
   login_user
   
-  before(:each) do
-    @subscriber = double(RSpreedly::Subscriber)
-    User.any_instance.stub(:subscriber).and_return(@subscriber)
-  end
-
   describe "GET 'choose_plan'" do
     context "when the user is active in spreedly" do
       it "should redirect to the homepage" do
-        @subscriber.stub(:active).and_return(true)
+        User.any_instance.stub(:status).and_return(:paid)
         get 'choose_plan'
         response.should redirect_to('/')
       end
@@ -19,7 +14,7 @@ describe PaymentsController do
       
     context "when the user is inactive in spreedly" do
       it "returns http success" do
-        @subscriber.stub(:active).and_return(false)
+        User.any_instance.stub(:status).and_return(:inactive)
         get 'choose_plan'
         response.should be_success
       end
@@ -29,7 +24,7 @@ describe PaymentsController do
   describe "GET 'new'" do
     context "when the user is active in spreedly" do
       it "should redirect to the homepage" do
-        @subscriber.stub(:active).and_return(true)
+        User.any_instance.stub(:status).and_return(:paid)
         get 'new'
         response.should redirect_to('/')
       end
@@ -37,7 +32,7 @@ describe PaymentsController do
       
     context "when the user is inactive in spreedly" do
       before(:each) do
-        @subscriber.stub(:active).and_return(false)
+        User.any_instance.stub(:status).and_return(:inactive)
       end
       
       context "with no plan ID" do
@@ -61,7 +56,7 @@ describe PaymentsController do
   describe "GET 'confirmation'" do 
     context "when the user is active in spreedly" do
       before(:each) do
-        @subscriber.stub(:active).and_return(true)
+        User.any_instance.stub(:status).and_return(:paid)
       end
       it "sets @plan to the user's plan" do
         plan = FactoryGirl.create(:plan)

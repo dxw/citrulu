@@ -13,7 +13,9 @@ class User < ActiveRecord::Base
   attr_accessor :invitation_code
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
+  serialize :status # 3 possible values- :free, :paid, :inactive
+  
   
   # Check that the entered invitation code matches this secret string:
   validates_each :invitation_code, :on => :create do |record, attr, value|
@@ -40,6 +42,21 @@ class User < ActiveRecord::Base
     plan = Plan.default
   end
   
+  
+  def active?
+    status == :free || status == :paid
+  end
+  
+  def active_subscriber?
+    status == :paid
+  end
+  
+  def status=(status)
+    unless [:free, :paid, :inactive].include?(status)
+      raise "Status must be one of :free, :paid, :inactive"
+    end
+    self[:status] = status
+  end
   
   def days_left_of_free_trial
     return 0 unless confirmed?
