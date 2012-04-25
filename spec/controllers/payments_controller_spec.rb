@@ -24,8 +24,6 @@ describe PaymentsController do
         response.should be_success
       end
     end
-    
-    
   end
 
   describe "GET 'new'" do

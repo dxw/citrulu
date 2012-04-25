@@ -30,7 +30,7 @@
     %li.control-group
       = f.label :card_type, :class => 'control-label'
       .controls 
-        = f.select :card_type, options_for_select(CARD_TYPES), :include_blank => true
+        = f.select :card_type, options_for_select(CARD_TYPES) # :include_blank breaks the selection when there's an error. Don't know why
         = image_tag 'credit_cards.gif' 
     %li.control-group
       = f.label :number, :class => 'control-label'
@@ -45,7 +45,7 @@
     %li.control-group
       = f.label :expiry_date, :class => 'control-label'
       .controls 
-        = f.select :month, options_for_select(MONTHS), :include_blank => true
+        = f.select :month, options_for_select(MONTHS) # :include_blank breaks the selection when there's an error. Don't know why
         = f.select :year, NEXT_TEN_YEARS
     .form-actions
       = f.submit "Submit", :class => "btn btn-primary btn-large"

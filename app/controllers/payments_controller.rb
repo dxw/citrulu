@@ -37,9 +37,9 @@ class PaymentsController < ApplicationController
 
     invoice.save! # Will go BOOM if there was a problem saving the invoice
     
-    payment = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
+    @credit_card = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
 
-    if invoice.pay(payment)
+    if invoice.pay(@credit_card)
       current_user.plan = @plan
       current_user.active = true # Paying the invoice will have set them to active in Spreedly
       current_user.save
