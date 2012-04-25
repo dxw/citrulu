@@ -1,13 +1,11 @@
 .hero-unit
   %h1 Thanks!
   %p 
-    We've processed your payment and you can now have access to the
-    %span{ :class => "plan_name"}=@subscription_plan_name 
+    We've processed your payment and you are now on the
+    %span{ :class => "plan_name"}=@plan.name_en
     plan
   %p
-    You'll be billed 
-    =@line_item.price
-    =@line_item.description.downcase
+    ="You'll be billed $#{@plan.cost_usd} every month"
     
   %p 
     You can cancel your subscription at any time by editing your 

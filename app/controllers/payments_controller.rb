@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :redirect_if_active
+  before_filter :redirect_if_active, :except => :confirmation
   
   layout "logged_in"
   
@@ -52,30 +52,20 @@ class PaymentsController < ApplicationController
   end
 
   def confirmation
-    # Redirect the user to the home page if they have never subscribed
     subscriber = current_user.subscriber
     
-    if subscriber
-      invoices = subscriber.invoices
-      unless invoices
-        redirect_to '/'
-        return
-      end
-    else
+    if subscriber && subscriber.active
+      # N.B. We DON'T check here that the specific invoice raised as part of this flow was actually paid - 
+      # that's delegated to upstream actions.
+      @plan = current_user.plan
+      @test_files = current_user.test_files
+    else 
+      # Normally this page will only be displayed when a payment has been successful and so the user will be active in Spreedly.
+      # If they're not active in Spreedly, it must mean that they've tried to access this page directly when they don't have 
+      # an active subscription, so we redirect them to the home page.
       redirect_to '/'
       return
     end
-    
-    @test_files = current_user.test_files
-    
-    subscriber = current_user.subscriber
-    invoices = subscriber.invoices
-    raise "Wrong number of invoices: #{invoices}" unless invoices.length == 1
-    invoice = invoices.first
-    raise "Wrong number of line items: #{line_items}" unless invoice.line_items.length == 1
-    
-    @line_item = invoice.line_items.first
-    @subscription_plan_name = subscriber.subscription_plan_name
   end
   
   protected
