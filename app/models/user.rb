@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :trackable, :validatable 
 
+  alias_attribute :name, :email
+
   attr_accessor :invitation_code
 
   # Setup accessible (or protected) attributes for your model
