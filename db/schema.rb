@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424150430) do
+ActiveRecord::Schema.define(:version => 20120424201057) do
 
   create_table "invitations", :force => true do |t|
     t.string   "code"
@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(:version => 20120424150430) do
   add_index "plans", ["active", "name_en"], :name => "index_plans_on_active_and_name_en"
   add_index "plans", ["active", "spreedly_id"], :name => "index_plans_on_active_and_spreedly_id"
 
+  create_table "responses", :force => true do |t|
+    t.integer "response_time"
+    t.string  "content_hash"
+    t.text    "headers"
+    t.text    "content"
+    t.string  "code"
+  end
+
   create_table "test_files", :force => true do |t|
     t.text     "test_file_text"
     t.datetime "created_at",              :null => false
@@ -53,16 +61,15 @@ ActiveRecord::Schema.define(:version => 20120424150430) do
   create_table "test_groups", :force => true do |t|
     t.integer  "test_run_id"
     t.text     "page_content"
-    t.integer  "response_time"
-    t.time     "time_run"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.text     "response_code"
+    t.datetime "time_run"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "test_url"
     t.text     "message"
     t.string   "method"
     t.string   "so"
     t.text     "data"
+    t.integer  "response_id"
   end
 
   create_table "test_results", :force => true do |t|

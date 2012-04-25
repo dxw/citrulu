@@ -4,6 +4,9 @@ source 'http://gems.github.com'
 gem 'rake'
 gem 'rails', '3.2.0'
 
+# Pagination
+gem 'bootstrap-will_paginate'
+
 # Authentication management with devise:
 gem 'devise'
 

@@ -1,0 +1,65 @@
+/* Based on Sublime Text's Monokai theme */
+
+.cm-s-monokai {
+  background: #272822;
+  color: #f8f8f2;
+
+  .CodeMirror-selected {
+    background: #49483E !important;
+  }
+  
+  .CodeMirror-gutter {
+    background: #272822; 
+    border-right: 0px;
+  }
+
+  .CodeMirror-gutter-text {
+    color: #d0d0d0;
+  }
+
+  .CodeMirror-cursor {
+    border-left: 1px solid #f8f8f0 !important;
+  }
+
+  span {
+    &.cm-comment {
+      color: #75715e;
+    }
+
+    &.cm-regex {
+
+    }
+
+    &.cm-reason {
+      color: #f92672;
+    }
+
+    &.cm-assertion, &.cm-start-group {
+      color: #a6e22e;
+    }
+
+    &.cm-firstfinally {
+      color: #e6db74;
+    }
+
+    &.cm-url {
+      color: #fd971f;
+    }
+
+    &.cm-method {
+      color: #a6e22e;
+      font-weight: bold;
+    }
+
+    &.cm-header, &.cm-value, &.cm-quoted-string {
+    }
+
+    &.cm-variable {
+      color: #9effff;
+    }
+
+    &.cm-error {
+    }
+  }
+
+}

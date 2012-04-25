@@ -10,6 +10,7 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   resources :test_files, :only => [:index, :update, :edit]
   resources :test_runs, :only => [:index, :show]
+  resources :responses, :only => [:show]
   
   match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
 

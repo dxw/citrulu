@@ -1,0 +1,6 @@
+%h2
+  #{response.code}:
+  =response.test_group.test_url 
+  %a{:href => response.test_group.test_url} (Visit)
+%p.meta Retrieved #{response.test_group.time_run} in #{response.response_time}ms
+%pre.response=response.headers+"\n\n"+response.content

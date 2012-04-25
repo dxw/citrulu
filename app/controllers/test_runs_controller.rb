@@ -9,12 +9,14 @@ class TestRunsController < ApplicationController
   # GET /test_runs.json
   def index
     @test_files = current_user.test_files
-    @test_runs = @test_files.collect{|f| f.test_runs}.flatten.sort{|a,b| b.time_run <=> a.time_run}
+    @test_runs = TestRun.joins(:test_file).where('test_files.user_id' => current_user.id)
 
     @recent_failed_groups = @test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
     
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
+
+    @paginated_test_runs = @test_runs.paginate(:page => params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -29,7 +31,6 @@ class TestRunsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @test_run }
     end
   end
   

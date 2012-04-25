@@ -1,10 +1,12 @@
 class TestRun < ActiveRecord::Base
   require 'symbolizer' 
-  
+ 
   belongs_to :test_file
   has_many :test_groups, :dependent => :destroy
 
   default_scope :order => 'time_run DESC'
+
+  self.per_page = 50
   
   def groups_with_failures
     test_groups.select{|g| g.failed? || g.has_failed_tests?}

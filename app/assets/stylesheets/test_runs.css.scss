@@ -56,11 +56,16 @@ body.test_runs {
     }
 
 
-    p.last-updated {
+    p.meta {
       font-style: italic;
       font-size: 12px;
       position: absolute;
       bottom: 0;
+
+      a {
+        color: #049;
+        margin-left: 12px;
+      }
     }
 
     pre {
@@ -125,6 +130,10 @@ body.test_runs {
         text-decoration: none;
         border-color: rgba(0, 0, 0, 0.2);
       }
+    }
+
+    .pagination a {
+      padding: 0 14px;
     }
 
   }

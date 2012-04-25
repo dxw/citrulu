@@ -29,57 +29,63 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return 'comment';
         }
 
-        if (ch == '"') {
+        var found_ch = ''
+        if (ch == '"' || ch == '/') {
+          found_ch = ch;
           var eaten = 0;
           var prev_ch = stream.next();
           while((ch = stream.next()) && ch != "\n") {
-            if (ch == '"' && prev_ch != '\\') {
-              return 'text'
+            if (ch == found_ch && prev_ch != '\\') {
+              return 'quoted-string'
+            }
+
+            if (ch == found_ch && prev_ch != '\\') {
+              return 'regex'
             }
 
             prev_ch = ch;
             eaten++;
           }
 
-          if (ch != '"') {
+          if (ch != found_ch) {
             stream.backUp(eaten)
           }
         }
 
         if (stream.match(onclause)) {
-            return 'variable';
+            return 'start-group';
         }
 
         if (stream.match(assertion)) {
-            return 'variable';
+            return 'assertion';
         }
 
         if (stream.match(firstfinally)) {
-            return 'string';
+            return 'firstfinally';
         }
 
         if (stream.match(url)) {
-            return 'link';
+            return 'url';
         }
 
         if (stream.match(methodclause)) {
-            return "variable-2"
+            return "method"
         }
 
         if (stream.string.match(/^\s*Header /) && stream.match(http_header)) {
-            return 'text';
+            return 'header';
         }
 
         if (stream.match(value)) {
-            if (stream.string.match(/^\s*So /)) {
-              return 'number';
-            }
+            if (stream.string.match(/^\s*So I know that/)) {
+                return 'reason';
+            } 
 
-            return 'text';
+            return 'value';
         }
 
         if (stream.match(name)) {
-            return 'variable-2';
+            return 'variable';
         }
 
         // Handle non-detected items
@@ -109,7 +115,12 @@ CodeMirror.defineMode('Citrulu', function(conf) {
         },
 
         indent: function(state, textAfter) {
-          if (state.lastToken.style == 'link' || state.lastToken.style == 'variable-2' || state.lastToken.style == 'text') {
+          if (
+            state.lastToken.style == 'url' || 
+            state.lastToken.style == 'value' || 
+            state.lastToken.style == 'regex' || 
+            state.lastToken.style == 'quoted-string' ||
+            state.lastToken.style == 'variable') {
             return 2;
           }
 

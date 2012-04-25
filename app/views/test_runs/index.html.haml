@@ -23,17 +23,20 @@
 .row
   .testruns.span8
     %h2 Previous test runs
-    - if @test_runs.empty?
+    - if @paginated_test_runs.empty?
       %p You don't have any test results to display yet. Please check back a little later.
     - else 
       %ul.unstyled
-        - @test_runs.each do |test_run|
+        - @paginated_test_runs.each do |test_run|
           %li
             %a{:href => test_run_path(test_run), :class => test_run.has_failures? ? 'fail' : 'pass'}
               %p
                 %span.date=test_run.time_run.to_s(:test_run_time)
                 %span.file=test_run.test_file.name
               %p.summary=ran_tests(test_run)
+      .page_links
+        = will_paginate(@paginated_test_runs)
+
 
   .sidebar.span4
     %h2 Test files status

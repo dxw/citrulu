@@ -36,6 +36,11 @@ $(window).load ->
 
     # save the file for the first time: 
     window.save_file()
+
+    # Add the update liveview button
+    $('#liveview div.buttons').append("<a class='btn' id='refresh_liveview'><i class='icon-refresh'></i> Refresh liveview</a>")
+    $('#refresh_liveview').click ->
+      update_liveview()
     
 
 setup_title = ->
@@ -103,13 +108,13 @@ get_current_group = ->
 # console.log "Started on #{cur_line}"
 
   # Find the start of the group
-  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line > 0 && !window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line--
 
 #  console.log "First thing is at line #{line}"
 
   # We've found a starting thing. Now make sure we're on the first one
-  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line > 0 && window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line--
 
   if line != 0 
@@ -119,20 +124,20 @@ get_current_group = ->
 #  console.log "Found the start at #{start}"
 
   # Now move out of the starting lines for this group
-  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line < window.editor.lineCount() && window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line++
 
 #  console.log "Moved back out of starting lines, now at #{line}"
 
   # Now find the start of the next group
-  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So)\s/)
+  while line < window.editor.lineCount()  && !window.editor.getLine(line).match(/^\s*(On|When|So I know that)\s/)
     line++
 
 #  console.log "Found the next group at #{line}"
 
   end = line-1
 
-  console.log "This group: #{start} .. #{end}\n\n"
+#  console.log "This group: #{start} .. #{end}\n\n"
 
   content = window.editor.getRange({line: start, ch: 0}, {line: end, ch: -1})
 
@@ -150,10 +155,11 @@ update_liveview = ->
 
   return if group_data.group == ''
 
-  $("#liveview div.on").addClass("working");
+  $("#liveview h2").addClass("working");
   jQuery.ajax(url: '/test_files/update_liveview', data: group_data, type: 'POST', dataType: 'script', complete: (xhr, status) -> 
     update_selected_test(get_current_group())
-    $('#liveview div.on').removeClass('working');
+    $('#liveview h2').removeClass('working');
+    $('#liveview .group').effect('highlight', {color: '#8f8'}, 1000)
   )
 
 ##
