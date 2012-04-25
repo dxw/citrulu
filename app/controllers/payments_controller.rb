@@ -24,14 +24,14 @@ class PaymentsController < ApplicationController
   def create
     return if reroute_if_accessed_directly
     
-    plan = Plan.find(params[:plan_id])
+    @plan = Plan.find(params[:plan_id])
     
     # Create the subscriber on Spreedly:
     current_user.create_or_update_subscriber
     
     # Raise the invoice agaist that subscriber
     invoice = RSpreedly::Invoice.new(
-      :subscription_plan_id => plan.spreedly_id,
+      :subscription_plan_id => @plan.spreedly_id,
       :subscriber => current_user.subscriber
     )
 
@@ -40,13 +40,13 @@ class PaymentsController < ApplicationController
     payment = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
 
     if invoice.pay(payment)
-      current_user.plan = plan
+      current_user.plan = @plan
+      current_user.active = true # Paying the invoice will have set them to active in Spreedly
       current_user.save
       
       redirect_to action: "confirmation"
     else
       @errors = invoice.errors
-      @plan_id = params[:plan_id]
       render action: "new"
     end
   end
