@@ -5,6 +5,8 @@ SimpleCov.start do
   add_filter '/vendor/'
 end
 
+require 'pry' # specs need debugging sometimes too!
+
 require 'spork'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
