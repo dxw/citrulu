@@ -38,11 +38,11 @@
     %li.control-group
       = f.label :number, :class => 'control-label'
       .controls 
-        = f.text_field :number
+        = f.text_field :number, :autocomplete => 'off'
     %li.control-group
       = f.label :security_code, :class => 'control-label'
       .controls 
-        = f.text_field :verification_value
+        = f.text_field :verification_value, :autocomplete => 'off'
         %p.help-block
           Enter the security code from the back of your card (or the front if you're paying with American Express)
     %li.control-group
