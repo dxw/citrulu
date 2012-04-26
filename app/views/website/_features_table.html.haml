@@ -13,9 +13,9 @@
         %p Cost
         %small Monthly cost
       %td.silver
-        =choose_plan_link(:silver, "btn btn-large btn-primary")
+        =choose_plan_link(current_user, :silver)
       %td.gold
-        =choose_plan_link(:gold,"btn btn-large btn-primary")
+        =choose_plan_link(current_user, :gold)
       %td
     
     - @limits.each do |limit|

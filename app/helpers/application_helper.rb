@@ -46,13 +46,34 @@ module ApplicationHelper
     content_tag :div, message, :class => cl
   end
   
-  def choose_plan_link(plan_level, btn_class)
+  
+  def choose_plan_link(user, plan_level)
     plan = Plan.get_plan_from_level(plan_level)
     
-    plan_text_span = content_tag :span, "Sign up now for", :class => "plan_text"
-    plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
+    if user.status == :paid
+      if user.plan == plan
+        text = "This is your current_plan"
+      else
+        # The user is already subscribed to a plan:
+        text = "Change to this plan for"
+        action = :change_plan
+      end
+    else
+      text = "Sign up now for"
+      action = :new
+    end
     
-    link_to (plan_text_span << " " << plan_cost_span), {controller: "payments", action: "new", :plan_id => plan.id}, :class => btn_class
+    plan_text_span = content_tag :span, text, :class => "plan_text"
+    plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
+    content = (plan_text_span << " " << plan_cost_span)
+    
+    if user.status == :paid && plan == user.plan
+      # Render a div:
+      content_tag :div, content, :class => "btn btn-large btn-warning disabled"
+    else   
+      # Render a button
+      link_to content, {controller: "payments", action: action, :plan_id => plan.id}, :class => "btn btn-large btn-primary"
+    end
   end
   
   
