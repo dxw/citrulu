@@ -50,7 +50,7 @@ group :development do
   gem 'guard-livereload'
   gem 'awesome_print'
   gem 'jnunemaker-crack'
-  gem 'pry'
+  gem 'pry_debug'
 end
 
 group :test do
