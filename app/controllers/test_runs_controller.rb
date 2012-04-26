@@ -14,7 +14,7 @@ class TestRunsController < ApplicationController
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
 
-    @test_runs = TestRun.joins(:test_file).where('test_files.user_id' => current_user.id).page(params[:page]).per(1)
+    @test_runs = TestRun.joins(:test_file).where('test_files.user_id' => current_user.id).page(params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
