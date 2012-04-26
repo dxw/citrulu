@@ -44,13 +44,13 @@ On http://example.com
   
 # It's good to write tests for specific things, so that you know what broke if 
 # the test fails. You can add "So" clauses to remind you what you're looking for:
-So that I know the page menu is being displayed
+So I know that the page menu is being displayed
 On http://www.iana.org/domains/example/
   Source should contain <div id="header-nav">
 
 # "On..." is really just a shortcut for "When I get...". This syntax lets you use
 # other HTTP methods, and also lets you add data:
-So that I know the server will respond to POSTs
+So I know that the server will respond to POSTs
 When I post "variable=value" to http://www.iana.org/domains/example/
   I should see "Example Domains"
 
@@ -65,7 +65,7 @@ When I head http://example.com
 # You can also check what response code was returned. If you don't add a
 # check like this, Citrulu will assume that you want a 200 response, and
 # will add a check for you. But you can specify them yourself:
-So that I know custom 404s work
+So I know that custom 404s work
 When I get http://www.iana.org/domains/example/this-page-no-existy
   Response code should be 404
 

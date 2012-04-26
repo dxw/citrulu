@@ -1,8 +1,10 @@
 require 'treetop'
 require 'grammar/grammar'
 
+require 'grammar/grammar_extensions.rb'
+
 class CitruluParser < TesterGrammarParser
- 
+
   class CitruluError < StandardError
   end
 
@@ -46,20 +48,20 @@ class CitruluParser < TesterGrammarParser
       raise ArgumentError.new("Something has gone wrong: we tried to compile a nonexistent Test File! Sorry! This is a bug. Please let us know")
     end
     
-    # Strip comments & ensure the file ends with a line return
-    result = parse(code + "\n")
+    # Ensure the file ends with a line return
+    result = parse(code)
 
     # Check for parser errors
     if result == nil
       if failure_reason.nil?
         raise TestCompileUnknownError.new("A strange compiler error has occurred. Sorry! This is a bug. Please let us know")
       else
-        raise TestCompileError.new(failure_reason)
+        raise TestCompileError.new("Line #{failure_line}: #{failure_reason}")
       end
     end
     
     parsed_object = result.process
-    
+
     undefined_predefs = []
     parsed_object.each do |test_group|
       test_group[:tests].each do |test_result|
