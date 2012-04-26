@@ -51,7 +51,11 @@
       font-weight: bold;
     }
 
-    &.cm-header, &.cm-value, &.cm-quoted-string {
+    &.cm-header-name, &.cm-after-redirects {
+      font-weight: bold;
+    }
+
+    &.cm-value, &.cm-quoted-string, &.cm-http-code {
     }
 
     &.cm-variable {

@@ -81,6 +81,8 @@ class TestRunner
     test_groups.collect do |group|
       group_params = {}
 
+      ap group
+
 
       begin
         group_params[:test_url] = group[:page][:url]
@@ -91,7 +93,7 @@ class TestRunner
         agent = Mechanize.new
         agent.open_timeout = 5
         agent.read_timeout = 5
-        agent.redirect_ok = false
+        agent.redirect_ok = group[:page][:redirect]
         agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         agent.user_agent = "CitruluBot/1.0"
         

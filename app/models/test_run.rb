@@ -6,8 +6,6 @@ class TestRun < ActiveRecord::Base
 
   default_scope :order => 'time_run DESC'
 
-  self.per_page = 50
-  
   def name
     "#{test_file.name}::#{time_run}"
   end
