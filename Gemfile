@@ -5,7 +5,7 @@ gem 'rake'
 gem 'rails', '3.2.0'
 
 # Pagination
-gem 'bootstrap-will_paginate'
+gem 'kaminari'
 
 # Authentication management with devise:
 gem 'devise'
