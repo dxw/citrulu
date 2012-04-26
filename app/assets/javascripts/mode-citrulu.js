@@ -52,6 +52,10 @@ CodeMirror.defineMode('Citrulu', function(conf) {
           }
         }
 
+        if (stream.match(/^\d+/)) {
+            return 'http-code';
+        }
+
         if (stream.match(onclause)) {
             return 'start-group';
         }
@@ -72,8 +76,12 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return "method"
         }
 
+        if (stream.match(/^after redirects/)) {
+            return "after-redirects"
+        }
+
         if (stream.string.match(/^\s*Header /) && stream.match(http_header)) {
-            return 'header';
+            return 'header-name';
         }
 
         if (stream.match(value)) {

@@ -1018,11 +1018,11 @@ module TesterGrammar
           r10 = _nt_space
           s0 << r10
           if r10
-            if has_terminal?("after redirect", false, index)
-              r12 = instantiate_node(SyntaxNode,input, index...(index + 14))
-              @index += 14
+            if has_terminal?("after redirects", false, index)
+              r12 = instantiate_node(SyntaxNode,input, index...(index + 15))
+              @index += 15
             else
-              terminal_parse_failure("after redirect")
+              terminal_parse_failure("after redirects")
               r12 = nil
             end
             if r12

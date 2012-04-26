@@ -79,7 +79,7 @@ On http://example.com/15
 
 # Response codes
 On http://example.com/15
-  Response code should be 200 after redirect
+  Response code should be 200 after redirects
 
 # Space doesn't matter
      So I know that foo
