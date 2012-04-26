@@ -84,9 +84,6 @@ class TestRunner
     test_groups.collect do |group|
       group_params = {}
 
-      ap group
-
-
       begin
         group_params[:test_url] = group[:page][:url]
         group_params[:so] = group[:page][:so]
