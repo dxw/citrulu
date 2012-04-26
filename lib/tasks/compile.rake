@@ -2,8 +2,7 @@ require 'grammar/symbolizer'
 require 'grammar/parser'
 require 'awesome_print'
 
-default_source = %{
-# I should see
+default_source = %{# I should see
 On http://example.com/1
   I should see x
 
@@ -78,6 +77,10 @@ On http://example.com/14
 On http://example.com/15
   Response code should be 200
 
+# Response codes
+On http://example.com/15
+  Response code should be 200 after redirect
+
 # Space doesn't matter
      So I know that foo
   On http://example.com/16
@@ -88,14 +91,18 @@ On http://example.com/15
        I should see x
 
 # Comments don't matter
-# Comment
-So I know that foo
-# Comment
-When I post "a=b" to http://example.com/17
-# Comment
-I should see X
-# Comment
-I should not see Y
+So I know that foo 
+# comment 1
+# comment 2
+When I post "a=b" to http://example.com/17 
+# comment 3
+I should see X 
+# comment 4
+# comment 5
+# comment 6 
+# comment 7
+I should not see Y 
+# comment 8
 
 # When I head
 When I head http://example.com/10
@@ -123,8 +130,7 @@ On http://example.com
 
 # Values in quotes with escaped quotes
 On http://example.com
-  I should see "I should see \"I should see\""
-}
+  I should see "I should see \\\"I should see\\\""}
 
 
 desc "Compile a test file"
@@ -150,5 +156,4 @@ task(:compile, [:testfile]) do |t, args|
     puts "#{e}"
     puts e.backtrace.join("\n")
   end
-
 end

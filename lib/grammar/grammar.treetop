@@ -1,224 +1,118 @@
 grammar TesterGrammar
   rule test_file
-    comment* space test_group+ space {
-      def process
-        elements[2].elements.collect{|e| e.process}
-      end
-    }
+     test_group+ <TestFile>
   end
 
   rule test_group
-    comment* page_clause comment* single_assertion comment* test_line* comment* {
-      def process
-        results = {
-          :page => page_clause.process,
-          :tests => elements[5].elements.collect{|e| e.process}
-        }
-
-        single_assertions = single_assertion.process
-
-        results[:page][:first] = single_assertions[:first]
-        results[:page][:finally] = single_assertions[:finally]
-
-        # TODO: only add if there isn't one
-
-        assertions = results[:tests].collect{|x| x[:assertion]}.uniq
-        if !assertions.include?(:response_code_be) && !assertions.include?(:response_code_not_be)
-          results[:tests].insert(0, {
-            :assertion => :response_code_be,
-            :value => '200',
-            :original_line => 'Response code should be 200'
-          })
-        end
-
-        results
-      end
-    }
-  end
-
-  rule single_assertion
-    first_clause? comment* finally_clause? comment* {
-      def process
-        if elements
-          results = {}
-
-          results[:first] = elements[0].url.text_value.strip if !elements[0].empty?
-          results[:finally] = elements[2].url.text_value.strip if !elements[2].empty?
-
-          results
-        end
-      end
-    }
-  end
-
-  rule on_clause
-    space "On" space url {
-      def process
-      {
-        :method => :get,
-        :data => '',
-        :url => url.text_value.strip
-      }
-      end
-    }
-  end
-
-  rule when_clause
-    space "When I" (method_data / method) space url {
-      def process
-        elements[2].process.merge({
-          :url => url.text_value.strip
-        })
-      end
-    }
-  end
-
-  rule method_data
-     space ("put" / "post") space data space "to" {
-       def process
-         {
-           :method => elements[1].text_value.strip.to_sym,
-           :data => data.process
-         }
-       end
-     }
-  end
-
-  rule method
-     space ("head" / "get" / "delete") {
-       def process
-         {:method => text_value.strip.to_sym}
-       end
-     }
+    page_clause single_assertion test_line* <TestGroup>
   end
 
   rule page_clause
-    so_clause? comment* (on_clause / when_clause) comment* newline {
-      def process
-        elements[2].process.merge({:so => elements[0].text_value.strip})
-      end
-    }
+    comment so_clause? (on_clause / when_clause)  <PageClause>
   end
 
   rule so_clause
-    space "So I know that" required_value newline
+    space "So I know that" required_value <SoClause>
+  end
+
+  rule on_clause
+    comment space "On" space url <OnClause>
+  end
+
+  rule when_clause
+    comment space "When I" (method_data / method) space url <WhenClause>
+  end
+
+  rule method_data
+    space ("put" / "post") space quoted_value space "to" <MethodData>
+  end
+
+  rule method
+    space ("head" / "get" / "delete") <Method>
+  end
+
+  rule single_assertion
+    first_clause? finally_clause? <SingleAssertion>
   end
 
   rule first_clause
-    space "First, fetch " url 
+    comment space "First, fetch " url <FirstClause>
   end
 
   rule finally_clause
-    space "Finally, fetch " url comment* newline
+    comment space "Finally, fetch " url <FinallyClause>
   end
 
-  rule test_line
-    comment* space test comment* newline {
-      def process
-        test.process
-      end
-    }
+  rule test_line 
+    test comment <TestLine>
   end
  
-  rule test
-    (complex_assertion / simple_assertion) space parameter {
-      def process
-        hash = elements[0].process
-
-        hash[:original_line] = text_value.strip
-
-        if parameter.text_value.match(/^:/)
-          if parameter.text_value.match(/^::/)
-            hash[:value] = parameter.text_value.gsub(/^::/, ':').strip
-          else
-            hash[:name] = parameter.text_value.strip
-          end
-        else
-          hash[:value] = parameter.text_value.strip
-
-          if hash[:value][0] == '"' && hash[:value][-1] == '"'
-            hash[:value] = hash[:value][1..-2]
-          end
-
-          if hash[:value][0] == '/' && hash[:value][-1] == '/'
-            hash[:value] = Regexp.new(hash[:value][1..-2])
-          end
-        end
-
-        hash
-      end
-    }
+  rule test 
+    comment space (complex_assertion / simple_assertion) <Test>
   end
 
-  rule simple_assertion
-    ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include" / "Response code should be" / "Response code should not be" ) {
-      def process
-      {:assertion => text_value.to_test_sym}
-      end
-    }
+  rule simple_assertion 
+    ("Source should contain" / "Source should not contain" / "I should see" / "I should not see" / "Headers should include" / "Headers should not include" ) space parameter <SimpleAssertion>
   end
 
   rule complex_assertion
-    "Header " identifier space ("should contain" / "should not contain") {
-      def process 
-        {
-          :header => identifier.text_value.strip,
-          :assertion => elements[3].text_value.to_test_sym
-        }
-      end
-    }
+    ( header_contents / response_code ) <ComplexAssertion>
+  end
+
+  rule response_code 
+    ("Response code should be" / "Response code should not be") space (quoted_value / regex / name / http_code) space "after redirect"? <ResponseCode>
+  end
+
+  rule header_contents 
+    "Header " identifier space ("should contain" / "should not contain") space parameter <HeaderContents>
   end
 
   rule parameter
-    (escaped_value / name / regex / value)
+    ( escaped_value / quoted_value / name / regex / value ) <Param>
   end
 
-  rule newline
-    [\r\n]+ 
-  end
-  
   rule value
-    [^\n]*
+    [^\n]* <Value>
   end
 
   rule required_value
-    [^\n]+
+    [^\n]+ <RequiredValue>
   end
 
-  rule data
-    '"' ('\"' / [^"] )+ '"' {
-      def process
-        text_value[1..-2]
-      end
-    }
+  rule quoted_value
+    '"' ('\"' / [^"] )+ '"' <QuotedValue>
+  end
+
+  rule http_code 
+    [0-9]+  <HttpCode>
   end
 
   rule regex
-    '/' ('\/' / [^/] )+ '/'
+    '/' ('\/' / [^/] )+ '/' <Regex>
   end
 
   rule comment
-    space '#' [^\n]*
+    (space '#' [^\n]*)* <Comment>
   end
 
   rule escaped_value
-    '::' [^\n]*
+    '::' [^\n]* <EscapedValue>
   end
 
   rule name
-    ':' identifier
+    ':' identifier <Name>
   end
 
   rule identifier
-    [a-zA-Z0-9_-]+
+    [a-zA-Z0-9_-]+ <Identifier>
   end
 
   rule url
-    ('http://' / 'https://') ([a-zA-Z0-9]+ [^\n\s]+)
+    ('http://' / 'https://') [a-zA-Z0-9]+ [^\n\s]+ <Url>
   end
 
   rule space
-    [\s\t]*  
+    [\s\t]* <Space>
   end
 end
 
