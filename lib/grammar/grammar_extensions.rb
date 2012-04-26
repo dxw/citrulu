@@ -16,15 +16,27 @@ module TesterGrammar
       results[:page][:first] = single_assertions[:first]
       results[:page][:finally] = single_assertions[:finally]
 
-      assertions = results[:tests].collect{|x| x[:assertion]}.uniq
+      found_response_assertion = false
 
-      if !assertions.include?(:response_code_be) && !assertions.include?(:response_code_not_be)
+      results[:tests].each do |test|
+        if test[:assertion] == :response_code_be || test[:assertion] == :response_code_not_be
+          found_response_assertion = true
+
+          results[:page][:redirect] = test[:redirect]
+          test.delete(:redirect)
+
+          break
+        end
+      end
+      
+      if !found_response_assertion
         results[:tests].insert(0, {
           :assertion => :response_code_be,
           :value => '200',
           :original_line => 'Response code should be 200 after redirects',
-          :redirect => true
         })
+        
+        results[:page][:redirect] = true
       end
 
       results
@@ -132,7 +144,7 @@ module TesterGrammar
     def process
       {
         :assertion => elements[0].text_value.to_test_sym,
-        :code => elements[2].process,
+        :value => elements[2].process,
         :redirect => !elements[4].empty?
       }
     end

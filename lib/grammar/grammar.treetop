@@ -4,7 +4,7 @@ grammar TesterGrammar
   end
 
   rule test_group
-    page_clause single_assertion test_line* <TestGroup>
+    page_clause single_assertion test_line* space <TestGroup>
   end
 
   rule page_clause

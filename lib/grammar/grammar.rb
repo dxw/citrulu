@@ -49,6 +49,9 @@ module TesterGrammar
       elements[1]
     end
 
+    def space
+      elements[3]
+    end
   end
 
   def _nt_test_group
@@ -80,6 +83,10 @@ module TesterGrammar
         end
         r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
         s0 << r3
+        if r3
+          r5 = _nt_space
+          s0 << r5
+        end
       end
     end
     if s0.last

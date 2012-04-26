@@ -130,10 +130,12 @@ On http://example.com
 
 # Values in quotes with escaped quotes
 On http://example.com
-  I should see "I should see \\\"I should see\\\""}
+  I should see "I should see \\\"I should see\\\""
+
+}
 
 
-desc "Compile a test file"
+desc "Compileae test file"
 task(:compile, [:testfile]) do |t, args|
   args.with_defaults(:testfile => nil)
 
