@@ -5,7 +5,7 @@ gem 'rake'
 gem 'rails', '3.2.0'
 
 # Pagination
-gem 'bootstrap-will_paginate'
+gem 'kaminari'
 
 # Authentication management with devise:
 gem 'devise'
@@ -53,7 +53,7 @@ group :development do
   gem 'guard-livereload'
   gem 'awesome_print'
   gem 'jnunemaker-crack'
-  gem 'pry'
+  gem 'pry_debug'
 end
 
 group :test do
