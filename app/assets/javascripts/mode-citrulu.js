@@ -76,7 +76,7 @@ CodeMirror.defineMode('Citrulu', function(conf) {
             return "method"
         }
 
-        if (stream.match(/^after redirects/)) {
+        if (stream.match(/^after (redirects|redirect)$/)) {
             return "after-redirects"
         }
 
