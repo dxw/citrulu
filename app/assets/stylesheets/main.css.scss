@@ -190,6 +190,18 @@ table {
   }
 }
 
+section {
+  margin-bottom: 18px;
+}
+
+body.registrations
+#subscription_details {
+  .row {
+    p {
+      padding: 5px 0;
+    }
+  }
+}
 
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
