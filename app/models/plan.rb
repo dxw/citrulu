@@ -17,6 +17,7 @@ class Plan < ActiveRecord::Base
         raise "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, or indeed any active plans at all!"
       else
         logger.error "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, so returned the cheapest active plan (ID#{cheapest_active_plan.id}) instead. NOT IDEAL!"
+        return cheapest_active_plan
       end
     end
   end
