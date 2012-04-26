@@ -938,6 +938,9 @@ module TesterGrammar
   end
 
   module ResponseCode0
+  end
+
+  module ResponseCode1
     def space1
       elements[1]
     end
@@ -1018,11 +1021,35 @@ module TesterGrammar
           r10 = _nt_space
           s0 << r10
           if r10
-            if has_terminal?("after redirects", false, index)
-              r12 = instantiate_node(SyntaxNode,input, index...(index + 15))
-              @index += 15
+            i12, s12 = index, []
+            if has_terminal?('after redirect', false, index)
+              r13 = instantiate_node(SyntaxNode,input, index...(index + 14))
+              @index += 14
             else
-              terminal_parse_failure("after redirects")
+              terminal_parse_failure('after redirect')
+              r13 = nil
+            end
+            s12 << r13
+            if r13
+              if has_terminal?('s', false, index)
+                r15 = instantiate_node(SyntaxNode,input, index...(index + 1))
+                @index += 1
+              else
+                terminal_parse_failure('s')
+                r15 = nil
+              end
+              if r15
+                r14 = r15
+              else
+                r14 = instantiate_node(SyntaxNode,input, index...index)
+              end
+              s12 << r14
+            end
+            if s12.last
+              r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+              r12.extend(ResponseCode0)
+            else
+              @index = i12
               r12 = nil
             end
             if r12
@@ -1037,7 +1064,7 @@ module TesterGrammar
     end
     if s0.last
       r0 = instantiate_node(ResponseCode,input, i0...index, s0)
-      r0.extend(ResponseCode0)
+      r0.extend(ResponseCode1)
     else
       @index = i0
       r0 = nil

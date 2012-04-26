@@ -60,7 +60,7 @@ grammar TesterGrammar
   end
 
   rule response_code 
-    ("Response code should be" / "Response code should not be") space (quoted_value / regex / name / http_code) space "after redirects"? <ResponseCode>
+    ("Response code should be" / "Response code should not be") space (quoted_value / regex / name / http_code) space ('after redirect' 's'?)? <ResponseCode>
   end
 
   rule header_contents 

@@ -81,6 +81,10 @@ On http://example.com/15
 On http://example.com/15
   Response code should be 200 after redirects
 
+# Response codes (no plural)
+On http://example.com/15
+  Response code should be 200 after redirect
+
 # Space doesn't matter
      So I know that foo
   On http://example.com/16
