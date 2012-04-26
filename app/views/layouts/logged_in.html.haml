@@ -18,6 +18,13 @@
               = link_to( 'Sign out', destroy_user_session_path, :method => :delete )
             - else 
               = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
+    
+    - unless params[:controller] == "payments" 
+      - if current_user.status == :inactive
+        =render partial: "inactive_banner"
+      - if current_user.status == :free
+        =render partial: "free_trial_banner"
+              
           
     #flash_messages
     - flash.each do |name, message|

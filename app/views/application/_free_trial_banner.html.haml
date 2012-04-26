@@ -1,0 +1,10 @@
+.alert.alert-warning.status_banner
+  =link_to "Sign up to one of our plans", {controller: :payments, action: :choose_plan}, :class => "btn btn-success btn-large"
+  %span.text
+    %strong 
+      You currently have
+      =current_user.days_left_of_free_trial 
+      days left of your free trial.
+    You're currently on the basic plan:
+    %strong #{Plan.default.name}.
+    To access additional features, sign up to one of our premium plans.

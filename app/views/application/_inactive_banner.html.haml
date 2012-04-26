@@ -1,0 +1,6 @@
+.alert.alert-error.status_banner
+  =link_to "Sign up to one of our plans", {controller: :payments, action: :choose_plan}, :class => "btn btn-success btn-large"
+  %span.text
+    %strong Your free trial has ended and you don't currently have an active subscription. 
+    You can still access all the features of the site, but we won't be running your tests.
+  

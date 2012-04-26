@@ -23,6 +23,14 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
 	}
 }
 
+.status_banner {
+  span.text {
+    margin-right: 200px;
+  }
+  a.btn {
+    float: right;
+  }
+}
 
 #error_explanation{
 	@extend  .alert-error;
