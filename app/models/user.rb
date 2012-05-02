@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   
   def is_within_free_trial?
     # Calculate free trial from when the user was actually confirmed
-    active && days_left_of_free_trial > 0
+    active? && days_left_of_free_trial > 0
   end
   
   # Look at Spreedly to check what the status of each user should be 
@@ -131,14 +131,15 @@ class User < ActiveRecord::Base
       raise ArgumentError.new("You can't update the subscription plan with 'update subscription details'. Use 'update_subscription_plan' instead")
     end
     
+    bob = subscriber
     args.each do |key, value|
-      if subscriber.respond_to?("#{key}=")
-        subscriber.send("#{key}=", value)
+      if bob.respond_to?("#{key}=")
+        bob.send("#{key}=", value)
       else
         raise(NoMethodError, "unknown attribute: #{key} for #{subscriber.inspect}")
       end
     end
-    subscriber.update!
+    bob.update!
   end  
   
   def update_subscription_plan
