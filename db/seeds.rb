@@ -1,6 +1,8 @@
 # Make ONE call to Spreedly:
 spreedly_plans = Plan.spreedly_plans
 
+cornichon_free_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon Free")
+
 cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon")
 cornichon_price = cornichon_spreedly.price.to_f unless cornichon_spreedly.nil?
 
@@ -9,8 +11,26 @@ gherkin_price = gherkin_spreedly.price.to_f unless gherkin_spreedly.nil?
 
 Plan.create([
   {
-    name_en: 'Cornichon',
+    name_en: 'Cornichon Free',
     default: true,
+    free_trial: true,
+    spreedly_id: cornichon_free_spreedly.id,
+    active: !cornichon_free_spreedly.nil?,
+    
+    # Limits:
+    test_frequency: 21600, # 4 times a day = every 6 hours = 21600
+    number_of_sites: 3,
+    mobile_alerts_allowance: 12,
+    
+    # Features:
+    allows_custom_predefines: false,
+    allows_retrieved_pages: false,
+    allows_git_support: false,
+    allows_tests_on_demand: false
+  },
+  {
+    name_en: 'Cornichon',
+    default: false,
     cost_usd: cornichon_spreedly.price.to_f, # $14.95 to start with?
     spreedly_id: cornichon_spreedly.id,
     active: !cornichon_spreedly.nil?,
