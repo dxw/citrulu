@@ -69,6 +69,22 @@ class User < ActiveRecord::Base
     # Calculate free trial from when the user was actually confirmed
     active && days_left_of_free_trial > 0
   end
+  
+  # Look at Spreedly to check what the status of each user should be 
+  def set_status
+    if active_subscriber?
+      status = :paid
+    elsif user.is_within_free_trial?
+      status = :free
+    else
+      status = :inactive
+    end
+    save!
+  end
+  
+  def self.set_statuses
+    all.each{|user| user.set_status}
+  end
     
 
   ###################
