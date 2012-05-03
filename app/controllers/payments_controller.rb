@@ -11,6 +11,7 @@ class PaymentsController < ApplicationController
 
   def new
     redirect_if_active
+
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
     if params[:plan_id].nil?
       redirect_to action: "choose_plan"
@@ -22,6 +23,7 @@ class PaymentsController < ApplicationController
   
   def create
     redirect_if_active
+
     if params[:plan_id].nil?
       redirect_to action: "choose_plan"
       return
@@ -39,7 +41,7 @@ class PaymentsController < ApplicationController
     )
 
     invoice.save! # Will go BOOM if there was a problem saving the invoice
-    
+
     @credit_card = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
 
     if invoice.pay(@credit_card)
@@ -51,6 +53,26 @@ class PaymentsController < ApplicationController
     else
       @errors = invoice.errors
       render action: "new", plan_id: @plan.id
+    end
+  end
+  
+  def edit
+    # Redirect if they don't have an active subscription
+    unless current_user.status == :paid
+      redirect_to "/"
+      return
+    end
+  end
+  
+  def update
+    @credit_card = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
+
+    if current_user.update_subscription_details(payment_method: @credit_card)      
+      redirect_to action: "update_confirmation"
+    else
+      # TODO: Handle error cases: http://spreedly.com/manual/integration-reference/update-subscriber
+      @errors = invoice.errors
+      render action: "edit"
     end
   end
 

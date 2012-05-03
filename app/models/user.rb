@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
   
   def set_default_plan
     plan = Plan.default
+    # Assumption: as long as we're assigning a default plan at this point, it only makes sense for it to be free.
+    status == :free 
   end
   
   # Can the user use the service?
@@ -70,6 +72,28 @@ class User < ActiveRecord::Base
   def is_within_free_trial?
     # Calculate free trial from when the user was actually confirmed
     days_left_of_free_trial > 0
+  end
+  
+  # Look at Spreedly to check what the status of each user should be 
+  def set_status
+    bob = subscriber
+    if bob && bob.active?
+      if bob.recurring
+        user.status = :paid
+      else
+        user.status = :cancelled
+      end
+    elsif user.is_within_free_trial?
+      user.status = :free
+    else
+      status = :inactive
+    end
+    save!
+  end
+  
+  
+  def self.set_statuses
+    all.each{|user| user.set_status}
   end
   
 
@@ -117,14 +141,15 @@ class User < ActiveRecord::Base
       raise ArgumentError.new("You can't update the subscription plan with 'update subscription details'. Use 'update_subscription_plan' instead")
     end
     
+    bob = subscriber
     args.each do |key, value|
-      if subscriber.respond_to?("#{key}=")
-        subscriber.send("#{key}=", value)
+      if bob.respond_to?("#{key}=")
+        bob.send("#{key}=", value)
       else
         raise(NoMethodError, "unknown attribute: #{key} for #{subscriber.inspect}")
       end
     end
-    subscriber.update!
+    bob.update!
   end  
   
   def update_subscription_plan

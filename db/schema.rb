@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120425180805) do
+ActiveRecord::Schema.define(:version => 20120502123702) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20120425180805) do
     t.boolean  "allows_git_support"
     t.boolean  "allows_tests_on_demand"
     t.decimal  "cost_usd",                                :precision => 6, :scale => 2
+    t.boolean  "free_trial"
   end
 
   add_index "plans", ["active", "name_en"], :name => "index_plans_on_active_and_name_en"
@@ -121,8 +122,8 @@ ActiveRecord::Schema.define(:version => 20120425180805) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",  :null => false
-    t.string   "encrypted_password",     :default => "",  :null => false
+    t.string   "email",                  :default => "",     :null => false
+    t.string   "encrypted_password",     :default => "",     :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -131,8 +132,8 @@ ActiveRecord::Schema.define(:version => 20120425180805) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.integer  "email_preference"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
@@ -140,7 +141,7 @@ ActiveRecord::Schema.define(:version => 20120425180805) do
     t.string   "unconfirmed_email"
     t.integer  "invitation_id"
     t.integer  "plan_id"
-    t.string   "status",                 :default => "t"
+    t.string   "status",                 :default => "free"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -61,18 +61,18 @@ class Plan < ActiveRecord::Base
   def self.spreedly_plans
     RSpreedly::SubscriptionPlan.all
   end
-  
+    
   LEVELS = {
     :silver => "Cornichon",
     :gold => "Gherkin"
   }
   
   LIMITS = [
-    add('3', '30', 'Number of sites', 'The maximum number of domains you can runs tests on'),
+    add(cornichon.number_of_sites, gherkin.number_of_sites, 'Number of sites', 'The maximum number of domains you can runs tests on'),
     add('Four times a day', 'Four times an hour', 'Test Frequency', 'How often we\'ll run all your tests'),
-    add(3, 'Unlimited' , 'Test files', 'Structure your tests into several files. For example, you might want one per site.', true),
-    add('12 per month', '120 per month', 'Mobile alerts', 'Receive SMS messages when tests fail', true),
+    add("#{cornichon.mobile_alerts_allowance} per month", "#{gherkin.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
     add('Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
+    add('Unlimited', 'Unlimited' , 'Test files', 'Structure your tests into several files. For example, you might want one per site.', true),
 #      add('?', '?', 'SLA', 'There should be different support SLAs?'),
   ]
 
@@ -80,9 +80,9 @@ class Plan < ActiveRecord::Base
     add(true,  true, 'Human-friendly tests', 'Write tests in English'),
     add(true,  true, 'Browse test results', 'Look back over all your past test results'),
     add(true,  true, 'Use predefines', 'Write tests faster by searching for predefined lists of things to check for -- like PHP errors, warnings and notices'),
-    add(false, true, 'Write custom Predefines', 'Write your own predefines, to make writing good tests for your apps quicker, tidier and easier to maintain', true),
-    add(false, true, 'View retrieved pages', 'Look at the cached page we retrieved from your site to see exactly what was returned when we tested it', true),
-    add(false, true, 'Git support', 'Edit your files locally, push them to Citrulu\'s git server, and we\'ll take them from there', true),
-    add(false, true, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
+    add(cornichon.allows_custom_predefines, gherkin.allows_custom_predefines, 'Write custom Predefines', 'Write your own predefines, to make writing good tests for your apps quicker, tidier and easier to maintain', true),
+    add(cornichon.allows_retrieved_pages, gherkin.allows_retrieved_pages, 'View retrieved pages', 'Look at the cached page we retrieved from your site to see exactly what was returned when we tested it', true),
+    add(cornichon.allows_git_support, gherkin.allows_git_support, 'Git support', 'Edit your files locally, push them to Citrulu\'s git server, and we\'ll take them from there', true),
+    add(cornichon.allows_tests_on_demand, gherkin.allows_tests_on_demand, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
   ]
 end
