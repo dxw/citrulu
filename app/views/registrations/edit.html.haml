@@ -87,7 +87,7 @@
               This will stop the next payment from being requested - you can continue using Citrulu until then.
               - if current_user.is_within_free_trial?
                 You're still within your free trial period so when your paid-for time elapses you may still be able to continue using Citrulu on the 
-                %strong=Plan.default
+                %strong=Plan.default.name
                 plan. When that expires, you'll
               -else
                 After that you'll 
