@@ -21,6 +21,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   get "payments/choose_plan"
   get "payments/new"  
   match "payments/new" => "payments#create", :via => :put
+  get "payments/confirmation"
   get "payments/edit"  
   match "payments/edit" => "payments#update", :via => :put
   get "payments/update_confirmation"

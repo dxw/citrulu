@@ -1,0 +1,12 @@
+#what_next
+  %h2 What next?
+  %p Here are the test files for your account - click to edit them:
+
+  .row
+    #test_list.span8
+      %ul.unstyled
+        =render partial: current_user.test_files
+
+    .span4.actions
+      %p If you've already got tests up and running, you can see how they're doing:
+      %a.btn.btn-large.btn-primary.get-resulting{:href => test_runs_path} View your results

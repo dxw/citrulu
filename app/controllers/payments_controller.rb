@@ -1,5 +1,8 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :redirect_if_active, only: [:new, :create]
+  before_filter :redirect_if_no_plan_selected, only: [:new, :create]
+  before_filter :redirect_if_not_active, only: [:edit, :update, :confirmation, :update_confirmation, :destroy]
   
   layout "logged_in"
   
@@ -10,25 +13,10 @@ class PaymentsController < ApplicationController
   end
 
   def new
-    redirect_if_active
-
-    # Redirect the user to the beginning of the payment flow if they tried to access this page directly
-    if params[:plan_id].nil?
-      redirect_to action: "choose_plan"
-      return
-    end
-
-    @plan = Plan.find(params[:plan_id])    
+    @plan = Plan.find(params[:plan_id])   
   end
   
   def create
-    redirect_if_active
-
-    if params[:plan_id].nil?
-      redirect_to action: "choose_plan"
-      return
-    end
-    
     @plan = Plan.find(params[:plan_id])
     
     # Create the subscriber on Spreedly:
@@ -47,7 +35,7 @@ class PaymentsController < ApplicationController
     if invoice.pay(@credit_card)
       current_user.plan = @plan
       current_user.status = :paid
-      current_user.save
+      current_user.save!
       
       redirect_to action: "confirmation"
     else
@@ -56,56 +44,58 @@ class PaymentsController < ApplicationController
     end
   end
   
-  def edit
-    # Redirect if they don't have an active subscription
-    unless current_user.status == :paid
-      redirect_to "/"
-      return
-    end
-  end
-  
   def update
     @credit_card = RSpreedly::PaymentMethod::CreditCard.new(params[:credit_card])
-
-    if current_user.update_subscription_details(payment_method: @credit_card)      
+    
+    subscriber = current_user.subscriber 
+    
+    if subscriber.update_attributes(payment_method: @credit_card)
+      if status = :inactive
+        current_user.status = :paid
+        current_user.save!
+      end
       redirect_to action: "update_confirmation"
     else
-      # TODO: Handle error cases: http://spreedly.com/manual/integration-reference/update-subscriber
-      @errors = invoice.errors
+      @errors = subscriber.errors
       render action: "edit"
-    end
-  end
-
-  def confirmation 
-    if current_user.active_subscriber?
-      # N.B. We DON'T check here that the specific invoice raised as part of this flow was actually paid - 
-      # that's delegated to upstream actions.
-      @plan = current_user.plan
-      @test_files = current_user.test_files
-    else 
-      # Normally this page will only be displayed when a payment has been successful and so the user will be active in Spreedly.
-      # If they're not active in Spreedly, it must mean that they've tried to access this page directly when they don't have 
-      # an active subscription, so we redirect them to the home page.
-      redirect_to '/'
-      return
     end
   end
   
   # Cancel the user's subscription
   def destroy
-    if current_user.cancel_subscription_plan
-      #TODO: DISPLAY SOMETHING!!!!
+    subscriber = current_user.subscriber
+    
+    if subscriber.stop_auto_renew
+      current_user.status = :cancelled
+      current_user.save!
+      redirect_to "cancel confirmation"
+    else
+      @errors = subscriber.errors
     end
   end
   
   protected
   
+  # When buying a new plan, some pages require a plan to have been selected.
+  def redirect_if_no_plan_selected
+    if params[:plan_id].nil?
+      redirect_to action: "choose_plan"
+    end
+  end
+  
+  # We don't want users to be able to purchase multiple subscriptions, 
+  # so if they already have an active subscription in Spreedly, redirect them
   def redirect_if_active
-    # We don't want users to be able to purchase multiple subscriptions, 
-    # so if they already have an active subscription in Spreedly, redirect them    
-    if current_user.active_subscriber?
+binding.pry
+    if current_user.status == :paid || current_user.status == :cancelled 
       redirect_to "/"
     end
   end
   
+  # It makes no sense for a user to try and edit a subscription which isn't active!
+  def redirect_if_not_active
+    unless current_user.status == :paid
+      redirect_to "/"
+    end
+  end
 end

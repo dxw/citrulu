@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   before_create :set_default_plan
   after_create :create_default_test_file 
   after_save :update_subscriber
-  after_destroy :destroy_subscriber
+  after_destroy :cancel_subscription
   
   def send_welcome_email
     UserMailer.welcome_email(self).deliver
@@ -49,19 +49,15 @@ class User < ActiveRecord::Base
     status != :inactive # i.e. status == :free || status == :paid || status == :cancelled 
   end
   
-  def active_subscriber?
-    subscriber.active
-  end
-  
-  def status=(status)
+  def status=(new_status)
     # :free - User is on their free trial
     # :paid - User is on a paid subscription (but has not cancelled, and may still be within the trial period)
     # :cancelled - User has cancelled their subscription but their last month hasn't expired yet
     # :inactive - User has cancelled their subscription and it has expired
-    unless [:free, :paid, :cancelled, :inactive].include?(status)
+    unless [:free, :paid, :cancelled, :inactive].include?(new_status)
       raise "Status must be one of :free, :paid, :cancelled, :inactive"
     end
-    self[:status] = status
+    self[:status] = new_status
   end
   
   def days_left_of_free_trial
@@ -76,17 +72,18 @@ class User < ActiveRecord::Base
   
   # Look at Spreedly to check what the status of each user should be 
   def set_status
+    # The "self"s seem to be required because of the "def status=" above. Not sure why...
     bob = subscriber
-    if bob && bob.active?
+    if bob && bob.active
       if bob.recurring
-        user.status = :paid
+        self.status = :paid
       else
-        user.status = :cancelled
+        self.status = :cancelled
       end
-    elsif user.is_within_free_trial?
-      user.status = :free
+    elsif is_within_free_trial?
+      self.status = :free
     else
-      status = :inactive
+      self.status = :inactive
     end
     save!
   end
@@ -133,47 +130,15 @@ class User < ActiveRecord::Base
     !subscriber.nil?
   end
   
-  # Update the user's details on Spreedly
-  def update_subscription_details(args)
-    # TODO: What should we do if the user has no subscription?
-    # TODO: Raise an exception if args is empty or invalid?    
-    if args.has_key? :update_subscription_plan
-      raise ArgumentError.new("You can't update the subscription plan with 'update subscription details'. Use 'update_subscription_plan' instead")
-    end
-    
-    bob = subscriber
-    args.each do |key, value|
-      if bob.respond_to?("#{key}=")
-        bob.send("#{key}=", value)
-      else
-        raise(NoMethodError, "unknown attribute: #{key} for #{subscriber.inspect}")
-      end
-    end
-    bob.update!
-  end  
-  
-  def update_subscription_plan
-    # TODO: probably need to do some work here? e.g. pro-rating?
-    if plan.id != subscriber.subscription_plan_id
-      subscriber.subscription_plan_id = plan.spreedly_id
-      subscriber.update!
-    end
-  end
-  
-  # Cancel the subscription without destroying the subscriber
-  def cancel_subscription_plan
-    if subscriber.stop_auto_renew
-      status = :cancelled
-      save!
-      return true
-    end
-    #else
-      # TODO: raise an error? pass error on (to the controller)?
-  end   
-  
   def destroy_subscriber
     if subscribed?
       subscriber.destroy
+      
+      if is_within_free_trial?
+        self.status = :free
+      else
+        self.status = :inactive
+      end
     end
   end
   
@@ -186,10 +151,19 @@ class User < ActiveRecord::Base
     return if subscriber.nil?
     
     if changed.include?("email")
-      update_subscription_details(
+      subscriber.update_attributes(
         :email => email,
         :screen_name => email
       )
+    end
+  end
+  
+  def cancel_subscription
+    if subscriber.stop_auto_renew
+      self.status = :cancelled
+      save!
+    #else
+      # TODO - handle errors? (set on subscriber when stop_auto_renew returns false)
     end
   end
   
