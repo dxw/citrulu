@@ -1,5 +1,5 @@
 $(window).load ->
-  if($('body').hasClass('payments') && ( $('body').hasClass('new') || $('body').hasClass('create') ))
+  if($('body').hasClass('payments') && ( $('body').hasClass('new') || $('body').hasClass('create') || $('body').hasClass('edit') || $('body').hasClass('update')))
     
     # When the form gets submitted, replace the submit button with a styled div:
     $('#credit_card_form').submit -> 
