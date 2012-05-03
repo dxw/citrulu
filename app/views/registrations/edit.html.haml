@@ -47,12 +47,21 @@
   - if current_user.status == :inactive
     %p You don't currently have an active subscription and your free trial has expired.
   
-  - if current_user.status != :paid
+  - if current_user.status != :paid && current_user.status != :cancelled
     .row
       .span3= link_to "Sign up to a plan", {controller: :payments, action: :choose_plan}, :class => "btn btn-success"
       .span9
         %p See the list of available plans and choose the one for you.
-      
+  
+  - if current_user.status == :cancelled
+    %p 
+      You've requested to cancel your subscription. You can continue using the full service on the 
+      %strong=current_user.plan.name
+      plan until #{current_user.subscriber.active_until}.
+      After that you'll still have full access to Citrulu, but your tests won't be run and you won't receive any alerts.
+    %p
+      If you change your mind and decide you'd like to reinstate your subscription before it has fully expired, please
+      #{mail_to 'contact@citrulu.com', 'send us an email'}.
 
   - if current_user.status == :paid
     %p

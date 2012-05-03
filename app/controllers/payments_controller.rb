@@ -1,6 +1,5 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :redirect_if_active, :except => :confirmation
   
   layout "logged_in"
   
@@ -11,6 +10,7 @@ class PaymentsController < ApplicationController
   end
 
   def new
+    redirect_if_active
     # Redirect the user to the beginning of the payment flow if they tried to access this page directly
     if params[:plan_id].nil?
       redirect_to action: "choose_plan"
@@ -21,6 +21,7 @@ class PaymentsController < ApplicationController
   end
   
   def create
+    redirect_if_active
     if params[:plan_id].nil?
       redirect_to action: "choose_plan"
       return
@@ -65,6 +66,13 @@ class PaymentsController < ApplicationController
       # an active subscription, so we redirect them to the home page.
       redirect_to '/'
       return
+    end
+  end
+  
+  # Cancel the user's subscription
+  def destroy
+    if current_user.cancel_subscription_plan
+      #TODO: DISPLAY SOMETHING!!!!
     end
   end
   

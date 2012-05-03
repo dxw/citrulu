@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
-  serialize :status # 3 possible values- :free, :paid, :inactive
+  serialize :status # 4 possible values- :free, :paid, :cancelled, :inactive
   
   
   # Check that the entered invitation code matches this secret string:
@@ -42,18 +42,22 @@ class User < ActiveRecord::Base
     plan = Plan.default
   end
   
-  
+  # Can the user use the service?
   def active?
-    status == :free || status == :paid
+    status != :inactive # i.e. status == :free || status == :paid || status == :cancelled 
   end
   
   def active_subscriber?
-    status == :paid
+    subscriber.active
   end
   
   def status=(status)
-    unless [:free, :paid, :inactive].include?(status)
-      raise "Status must be one of :free, :paid, :inactive"
+    # :free - User is on their free trial
+    # :paid - User is on a paid subscription (but has not cancelled, and may still be within the trial period)
+    # :cancelled - User has cancelled their subscription but their last month hasn't expired yet
+    # :inactive - User has cancelled their subscription and it has expired
+    unless [:free, :paid, :cancelled, :inactive].include?(status)
+      raise "Status must be one of :free, :paid, :cancelled, :inactive"
     end
     self[:status] = status
   end
@@ -65,9 +69,9 @@ class User < ActiveRecord::Base
   
   def is_within_free_trial?
     # Calculate free trial from when the user was actually confirmed
-    active && days_left_of_free_trial > 0
+    days_left_of_free_trial > 0
   end
-    
+  
 
   ###################
   # SUBSCRIBER CRUD #
@@ -130,6 +134,17 @@ class User < ActiveRecord::Base
       subscriber.update!
     end
   end
+  
+  # Cancel the subscription without destroying the subscriber
+  def cancel_subscription_plan
+    if subscriber.stop_auto_renew
+      status = :cancelled
+      save!
+      return true
+    end
+    #else
+      # TODO: raise an error? pass error on (to the controller)?
+  end   
   
   def destroy_subscriber
     if subscribed?
