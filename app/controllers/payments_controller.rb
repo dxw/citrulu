@@ -73,7 +73,7 @@ class PaymentsController < ApplicationController
     if subscriber.stop_auto_renew
       current_user.status = :cancelled
       current_user.save!
-      redirect_to "cancel confirmation"
+      redirect_to action: "cancel_confirmation"
     else
       @errors = subscriber.errors
     end

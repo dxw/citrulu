@@ -28,6 +28,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match "payments/edit" => "payments#update", :via => :put
   get "payments/update_confirmation"
   match "payments/destroy" => "payments#destroy", :via => :delete
+  get "payments/cancel_confirmation"
 
   # Website pages routes:
   match 'alpha' => "website#alpha"
