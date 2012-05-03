@@ -51,16 +51,18 @@ module ApplicationHelper
     plan = Plan.get_plan_from_level(plan_level)
     
     if user.status == :paid
+      method = :put
+      # We're updating:
+      url = {plan_id: plan.id}
       if user.plan == plan
         text = "This is your current_plan"
       else
-        # The user is already subscribed to a plan:
+        # The user is already subscribed to a different plan:
         text = "Change to this plan for"
-        action = :change_plan
       end
     else
       text = "Sign up now for"
-      action = :new
+      url = {action: :new, plan_id: plan.id}
     end
     
     plan_text_span = content_tag :span, text, :class => "plan_text"
@@ -70,9 +72,9 @@ module ApplicationHelper
     if user.status == :paid && plan == user.plan
       # Render a div:
       content_tag :div, content, :class => "btn btn-large btn-warning disabled"
-    else   
+    else
       # Render a button
-      link_to content, {controller: "payments", action: action, :plan_id => plan.id}, :class => "btn btn-large btn-primary"
+      link_to content, url, method: method, :class => "btn btn-large btn-primary"
     end
   end
   

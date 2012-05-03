@@ -7,8 +7,8 @@
       - @errors.each do |error|
         %li=error
 
-= form_for :credit_card, :url => {:action => action}, :method => :put, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
-  - if action == :create
+= form_for :credit_card, :method => method, :html => { :class => "form-horizontal", :id => "credit_card_form" } do |f|
+  - if method == :post # i.e. if we're creating a new payment
     = hidden_field_tag :plan_id, @plan.id
   %ul.unstyled
     %li.control-group

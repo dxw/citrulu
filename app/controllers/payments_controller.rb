@@ -1,8 +1,8 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :redirect_if_active, only: [:new, :create]
-  before_filter :redirect_if_no_plan_selected, only: [:new, :create]
-  before_filter :redirect_if_not_active, only: [:edit, :update, :confirmation, :update_confirmation, :destroy]
+  before_filter :redirect_if_no_plan_selected, only: [:new, :create, :change_plan]
+  before_filter :redirect_if_not_active, only: [:change_plan, :edit, :update, :confirmation, :update_confirmation, :destroy]
   
   layout "logged_in"
   
@@ -10,6 +10,11 @@ class PaymentsController < ApplicationController
     @names = Plan::LEVELS
     @limits = Plan::LIMITS
     @features = Plan::FEATURES
+  end
+  
+  def change_plan
+    current_user.change_plan(params[:plan_id])
+    redirect_to action: "change_plan_confirmation"
   end
 
   def new
@@ -86,7 +91,6 @@ class PaymentsController < ApplicationController
   # We don't want users to be able to purchase multiple subscriptions, 
   # so if they already have an active subscription in Spreedly, redirect them
   def redirect_if_active
-binding.pry
     if current_user.status == :paid || current_user.status == :cancelled 
       redirect_to "/"
     end

@@ -130,6 +130,17 @@ class User < ActiveRecord::Base
     !subscriber.nil?
   end
   
+  def change_plan(plan_id)
+    new_plan = Plan.find(plan_id)
+
+    if subscriber.change_subscription_plan(new_plan.spreedly_id)
+      plan = new_plan
+      save!
+    else  
+      raise "Couldn't find subscriber to update"
+    end
+  end
+  
   def destroy_subscriber
     if subscribed?
       subscriber.destroy
@@ -139,6 +150,7 @@ class User < ActiveRecord::Base
       else
         self.status = :inactive
       end
+      save!
     end
   end
   
