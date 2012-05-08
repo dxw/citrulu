@@ -124,4 +124,11 @@ describe CitruluParser do
    end
 
   end
+  
+  describe "parse_error" do
+    it "should match an error with 'Line' at the beginning" do
+      error = "Line 1: Expected one of #, So I know that, On, When I at line 1, column 1 (byte 1) after"
+      CitruluParser.parse_error(error).should_not be_blank
+    end
+  end
 end

@@ -135,18 +135,18 @@ describe TestFilesController do
     context "when a compilation error is raised" do 
       before(:each) do
         controller.stub(:check_ownership!)
+        @new_test_file_params = {:test_file_text => "foo"}
       end
       
       context "because the input was invalid" do
         it "raises an appropriate error message" do
-          @new_test_file_params = {:test_file_text => "foo"}
-          put :update, {:id => @test_file.to_param, :test_file => @new_test_file_params}
-          
+          put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "foo"}}
+
           #These should maybe be split out into seperate tests?
           assigns(:console_msg_hash)[:text1].should include "Compilation failed"
-          assigns(:console_msg_hash).should include :expected => "#, On "
-          assigns(:console_msg_hash).should include :line => "1"
-          assigns(:console_msg_hash).should include :column => "1"
+          assigns(:console_msg_hash)[:expected].should include "#"
+          assigns(:console_msg_hash)[:line].should == "1"
+          assigns(:console_msg_hash)[:column].should == "1"
         end
         
         context "and the error could not be formatted" do

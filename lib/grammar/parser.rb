@@ -18,17 +18,17 @@ class CitruluParser < TesterGrammarParser
   end
 
   def self.format_error(error)
-    matches = error.to_s.match(/^Expected( one of)? ((([^,]+,)*[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/m)
-
+    matches = parse_error(error)
+    
     raise ArgumentError.new("This error doesn't match any of the expected formats: #{error.to_s}") if !matches
 
     results = {
-      :hash => Digest::SHA1.hexdigest(matches[3]),
-      :expected => matches[3],
-      :expected_arr => matches[3].split(",").collect{|e| e.strip},
-      :line => matches[5],
-      :column => matches[6],
-      :after => matches[8],
+      :hash => Digest::SHA1.hexdigest(matches[4]),
+      :expected => matches[4],
+      :expected_arr => matches[4].split(",").collect{|e| e.strip},
+      :line => matches[6],
+      :column => matches[7],
+      :after => matches[9],
     }
 
     case results[:after] 
@@ -41,6 +41,10 @@ class CitruluParser < TesterGrammarParser
     end
 
     results
+  end
+  
+  def self.parse_error(error)
+    error.to_s.match(/^(Line \d+: )?Expected( one of)? ((([^,]+,)*[^,]+) at) line (\d+), column (\d+) \(byte (\d+)\) after(.*)$/m)
   end
 
   def compile_tests(code)
