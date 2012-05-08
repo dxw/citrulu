@@ -63,7 +63,6 @@ ActiveRecord::Schema.define(:version => 20120425165958) do
     t.integer  "test_file_count"
     t.string   "name_en"
     t.boolean  "default"
-    t.integer  "spreedly_id"
   end
 
   create_table "responses", :force => true do |t|

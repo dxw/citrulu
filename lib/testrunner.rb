@@ -66,8 +66,10 @@ class TestRunner
     def self.handle_retrieved_page(agent, page, group_params, group)
       group_params[:response_attributes] = {}
       group_params[:response_attributes][:response_time] = (agent.agent.http.last_response_time*1000).to_i
-      group_params[:response_attributes][:content] = page.content.encode
-      group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+      if page.content
+        group_params[:response_attributes][:content] = page.content.encode
+        group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+      end
       group_params[:response_attributes][:headers] = page.header.collect{|header| "#{header[0]}: #{header[1]}"}.join("\n")
       group_params[:response_attributes][:code] = page.code
 

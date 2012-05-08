@@ -247,14 +247,14 @@ describe TestRunner do
       it "should set the response time" do
         pending("There's a railscast on how to freeze time...")
         stub_mechanize
-        TestRunner.execute_tests(test_groups)[0][:response_code].should == "X"
+        TestRunner.execute_tests(test_groups)[0][:response_time].should == "X"
       end
       
       it "should set the response code" do
         dummy_page = FactoryGirl.build(:mechanize_page, :code => 404)
         stub_mechanize(dummy_page)
-        
-        TestRunner.execute_tests(@test_groups)[0][:response_code].should == 404
+
+        foo = TestRunner.execute_tests(@test_groups)[0][:response_attributes][:code].should == 404
       end
       
       it "should generate the test results" do
@@ -297,10 +297,13 @@ describe TestRunner do
       before(:each) do
         TestRunner.should_receive(:execute_tests).and_return(
           [
-            :time_run => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
+            :time_run => Time.now, :message => '', :test_url => 'http://example.com',
             :test_results_attributes => [
               { :result => true, :original_line => "I should see foo" }
-            ]
+            ],
+            :response_attributes => {
+              response_time: 200
+            }
           ]
         )
       end
@@ -309,7 +312,7 @@ describe TestRunner do
         TestRunner.execute_test_groups(@test_file, @test_run)
 
         @test_run.test_groups.length.should == 1
-        @test_run.test_groups[0].response_time.should == 200
+        @test_run.test_groups[0].response.response_time.should == 200
         @test_run.test_groups[0].message.should == ''
         @test_run.test_groups[0].test_url.should == 'http://example.com'
       end

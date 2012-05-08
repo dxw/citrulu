@@ -84,17 +84,19 @@ describe TestFile do
     end
   
     describe "number_of_tests" do
-      it "should return 3 if there are 3 checks in 3 pages" do
-        @test_file.number_of_tests.should == 3
+      it "should return 6 if there are 3 checks in 3 pages" do
+        # 3 natural checks, 3 injected checks for response code == 200
+        @test_file.number_of_tests.should == 6
       end
       
-      it "should return 5 if there are 2 checks on 1 page and 3 on another" do
+      it "should return 7 if there are 2 checks on 1 page and 3 on another" do
+        # 5 natural checks, 2 injected checks for response code == 200
         compiled_test_file_text = 
           "On http://foo.com\n  I should see foo\n  I should not see faz\n" +
           "On http://bar.com\n  Source should contain bar\n  Source should not contain baz\n  Headers should not include tizzwoz"
         test_file = FactoryGirl.create(:test_file, :compiled_test_file_text => compiled_test_file_text)
         
-        test_file.number_of_tests.should == 5
+        test_file.number_of_tests.should == 7
       end
     
       it "should raise an error if the file has never compiled" do

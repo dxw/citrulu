@@ -34,56 +34,69 @@ describe CitruluParser do
       code = "On http://www.google.com\n  I should see are you feeling lucky?\n  I should not see are you feeling Stupid?\n#   ending with a comment  " 
       CitruluParser.new.compile_tests(code).should == COMPILER_OUTPUT
     end
+    
+    it "should inject an assertion checking for a response code of 200" do
+      code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see x")
 
+      code[0][:tests][0][:assertion].should == :response_code_be
+      code[0][:tests][0][:value].should == "200"
+    end
+    
+    it "should not inject an assertion checking for a response code if there is already one there" do
+      code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see x\n  Response code should be 500")
+
+      code[0][:tests][0][:assertion].should == :i_see
+    end
+    
     it "should understand 'I should see x'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see x")
 
-      code[0][:tests][0][:assertion].should == :i_see
+      code[0][:tests][1][:assertion].should == :i_see
     end
 
     it "should understand 'I should not see x'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  I should not see x")
 
-      code[0][:tests][0][:assertion].should == :i_not_see
+      code[0][:tests][1][:assertion].should == :i_not_see
     end
 
     it "should understand 'Source should contain x'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  Source should contain x")
 
-      code[0][:tests][0][:assertion].should == :source_contain
+      code[0][:tests][1][:assertion].should == :source_contain
     end
 
     it "should understand 'Source should not contain x'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  Source should not contain x")
 
-      code[0][:tests][0][:assertion].should == :source_not_contain
+      code[0][:tests][1][:assertion].should == :source_not_contain
     end
 
     it "should understand 'Headers should include x'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  Headers should include x")
 
-      code[0][:tests][0][:assertion].should == :headers_include
+      code[0][:tests][1][:assertion].should == :headers_include
     end
 
     it "should understand 'Headers should not include'" do
       code = CitruluParser.new.compile_tests("On http://abc.com\n  Headers should not include x")
 
-      code[0][:tests][0][:assertion].should == :headers_not_include
+      code[0][:tests][1][:assertion].should == :headers_not_include
     end
 
    it "should understand values" do
      code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see x")
 
-     code[0][:tests][0][:value].should == 'x'
-     code[0][:tests][0][:name].should == nil
+     code[0][:tests][1][:value].should == 'x'
+     code[0][:tests][1][:name].should == nil
    end
    
    it "should understand names" do
      Predefs.stub(:find).and_return(["a thing", "another thing"])
      code = CitruluParser.new.compile_tests("On http://abc.com\n  I should see :x")
 
-     code[0][:tests][0][:name].should == ':x'
-     code[0][:tests][0][:value].should == nil
+     code[0][:tests][1][:name].should == ':x'
+     code[0][:tests][1][:value].should == nil
    end
 
    it "should not allow nil values" do
@@ -91,7 +104,6 @@ describe CitruluParser do
    end
    
    it "should not allow empty values" do
-     pending "This needs a fix -- the grammar should not permit whitespace to be a valid name"
      expect { CitruluParser.new.compile_tests("On http://www.abc.com\n  I should see       ") }.to raise_error(CitruluParser::TestCompileError)
    end
    
