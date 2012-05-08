@@ -13,6 +13,11 @@ require 'spork'
 
 Spork.prefork do
   require "rails/application"
+  
+  load File.expand_path("../../db/seeds.rb", __FILE__)
+  #http://stackoverflow.com/questions/1574797/how-to-load-dbseed-data-into-test-database-automatically
+  
+  
   # Prevent Devise from loading the User model super early with it's route hacks for Rails 3.1 rc4
   # see also: https://github.com/timcharper/spork/wiki/Spork.trap_method-Jujutsu
   Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
