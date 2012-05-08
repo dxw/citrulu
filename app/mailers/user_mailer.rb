@@ -39,6 +39,11 @@ class UserMailer < ActionMailer::Base
     mail(to: to, subject: @title, template_name: 'test_notification')
   end
   
+  def nudge(user)
+    @title = "Need a hand getting started with Citrulu?"
+    mail(to: user.email, subject: @title)
+  end
+  
   protected
   
   def test_notification_headers
