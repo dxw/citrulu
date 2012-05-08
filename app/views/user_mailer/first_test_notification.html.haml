@@ -1,0 +1,26 @@
+- content_for :content do
+  - if @status == :pass
+    %p{:style => content_p_styles}
+      We just ran your tests for the first time and good news: they all pass!
+    %p{:style => content_p_styles}
+      If you'd like, you can 
+      =link_to("review the tests that we ran", test_runs_url) + "."
+  
+  - elsif @status == :fail
+    %p{:style => content_p_styles}
+      We just ran your tests for the first time. Unfortunately there were a few failures. That might mean that there's something wrong with your site, but at this stage it's more likely that your tests aren't checking for the right things.
+    %p{:style => content_p_styles} 
+      You can try and make your tests pass by editing your
+      =link_to("test files", test_files_url, :style => content_a_styles) + "."
+      If you have any difficulties, please 
+      = mail_to 'contact@citrulu.com', "get in touch", :style => content_a_styles + "."
+      
+    %p{:style => content_p_styles}
+      Here are the things which failed:
+    = render partial: 'failures'
+                  
+    %p{:style => content_p_styles} 
+      To view your full results, visit
+      =link_to("your results page", test_run_url(@test_run), :style => content_a_styles) + "."
+
+= render :template => 'user_mailer/notification'

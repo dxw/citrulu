@@ -6,40 +6,13 @@
       If you'd like, you can 
       =link_to("review recent results", test_runs_url) + "."
   - elsif @status == :fail
-    - if @test_run.has_failed_groups?
-      %p{:style => content_p_styles}
-        = failed_groups_header 
-      %div{:style => "padding-bottom: 15px;"}
-        - @test_run.failed_groups.each do |group|
-          %p{:style => content_p_styles}
-            =link_to group.test_url, group.test_url, :style => content_a_styles
-          %pre{:style => content_pre_styles}
-            =group.message
-    
-    - if @test_run.has_groups_with_failed_tests? 
-      %p{:style => content_p_styles}
-        = "Failed #{pluralize(@test_run.number_of_failed_tests, 'assertion')}:"
-      %div{:style => "padding-bottom: 15px;"}
-        - @test_run.groups_with_failed_tests.each do |group|
-          %p{:style => content_p_styles}
-            On
-            =link_to group.test_url, group.test_url, :style => content_a_styles
-          %ul
-            - group.failed_tests.each do |result|
-              %li
-                = result.original_line 
-                - if result.failed?
-                  %strong.result(failed)
+    = render partial: 'failures'
                   
     %p{:style => content_p_styles} 
       To view your full results, visit
       =link_to("your results page", test_run_url(@test_run), :style => content_a_styles) + "."
-              
-- content_for :footer_text do
-  %span 
-    You're receiving this because you enabled alerts at 
-    =link_to "Citrulu.com", "http://www.citrulu.com", :style => footer_a_styles
-- content_for :footer_links do
-  =link_to "Edit your subscription", edit_user_registration_url, :style => footer_a_styles
+
+= render :template => 'user_mailer/notification'
+
 
 

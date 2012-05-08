@@ -1,0 +1,23 @@
+<% content_for :content do %>
+  <% if @status == :pass %>
+We just ran your tests for the first time and good news: they all pass!
+
+If you'd like, you can review the tests that we ran:
+  <%=raw url_for test_runs_url %>  
+
+  <% elsif @status == :fail %>
+We just ran your tests for the first time. Unfortunately there were a few failures. That might mean that there's something wrong with your site, but at this stage it's more likely that your tests aren't checking for the right things.
+
+You can try and make your tests pass by editing your test files: <%=raw url_for test_files_url %>
+
+If you have any difficulties, please get in touch <contact@citrulu.com>.
+
+Here are the things which failed:
+  <%= render partial: "failures" %>
+    
+To view your full results, visit your results page:
+  <%=raw url_for test_run_url(@test_run) %>
+  <% end %>
+<% end %>
+              
+<%= render :template => 'user_mailer/notification' %>

@@ -1,0 +1,7 @@
+<%= content_for?(:content) ? yield(:content) : yield %>
+
+<% content_for :footer do %>
+You're receiving this because you enabled alerts at Citrulu.com
+ 
+Edit your subscription: <%=raw url_for edit_user_registration_url %>
+<% end %>

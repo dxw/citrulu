@@ -7,6 +7,32 @@ class UserMailer < ActionMailer::Base
     @title = "Welcome to Citrulu"
     mail(to: user.email, subject: "Welcome to Citrulu")
   end
+  
+  def first_test_notification_success(test_run)
+    raise "Tried to create a test notification for a nil test run" if test_run.nil?
+    @status = :pass
+    @title = 'We ran your tests and they all pass!'
+    
+    # TODO - DRY These up - couldn't work out how to do it!
+    @test_run = test_run
+    to = test_run.test_file.user.email
+    headers( test_notification_headers )
+    mail(to: to, subject: @title, template_name: 'first_test_notification')
+  end
+
+  def first_test_notification_failure(test_run)
+    raise "Tried to create a test notification for a nil test run" if test_run.nil?
+    raise "Tried to create a test notification for a test test_run with no groups: id#{test_run.id}" if test_run.test_groups.nil?
+    
+    @status = :fail
+    @title = 'We ran your tests and some of them failed.'
+    
+    # TODO - DRY These up - couldn't work out how to do it!
+    @test_run = test_run
+    to = test_run.test_file.user.email
+    headers( test_notification_headers )
+    mail(to: to, subject: @title, template_name: 'first_test_notification')
+  end
 
   def test_notification_success(test_run)
     raise "Tried to create a test notification for a nil test run" if test_run.nil?
@@ -48,5 +74,5 @@ class UserMailer < ActionMailer::Base
   
   def test_notification_headers
     {"List-Unsubscribe" => "<#{url_for(:controller => "registrations", :action => "edit", :only_path => false) }>"}
-  end
+  end  
 end
