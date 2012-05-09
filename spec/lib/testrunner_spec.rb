@@ -34,6 +34,21 @@ describe TestRunner do
       TestRunner.should_not_receive(:execute_test_groups)
       TestRunner.run_all_tests
     end
+    
+    context "when a user has more than one test file" do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:compiled_test_file, user: user)
+        FactoryGirl.create(:compiled_test_file, user: user)
+        user2 = FactoryGirl.create(:user)
+        FactoryGirl.create(:compiled_test_file, user: user2)
+      end
+      it "should call execute_test_groups the right number of times" do
+        stub_execute_test_groups_to_succeed
+        TestRunner.should_receive(:execute_test_groups).exactly(3).times
+        TestRunner.run_all_tests
+      end
+    end
 
     describe "(sending email)" do
       before(:each) do

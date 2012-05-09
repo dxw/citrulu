@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe TestFile do
   before(:each) do
+    user1 = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
+    
     # Test Files:
-    @test_file_compiled_text = FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar") 
-    @test_file_compiled_nil = FactoryGirl.create(:test_file, :compiled_test_file_text => nil)
-    @test_file_compiled_empty = FactoryGirl.create(:test_file, :compiled_test_file_text => "")
+    @test_file_compiled_text = FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar", user: user1) 
+    @test_file_compiled_nil = FactoryGirl.create(:test_file, :compiled_test_file_text => nil, user: user1)
+    @test_file_compiled_empty = FactoryGirl.create(:test_file, :compiled_test_file_text => "", user: user2)
     
     # Test Runs:
     FactoryGirl.create(:test_run, :test_file => @test_file_compiled_text, :time_run => Time.now-1)
