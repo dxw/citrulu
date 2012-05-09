@@ -25,7 +25,7 @@ class TestRunner
         # 1. If it's the first test run send a special email
         # 2. If tests failed, send a failure email
         # 3. If no tests failed, but the previous run had failing tests, send a success email
-        if test_run.previous_run.blank?
+        if test_run.users_first_run?
           # This was the first test run:
           if test_run.has_failures?
             UserMailer.first_test_notification_failure(test_run).deliver

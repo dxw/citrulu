@@ -12,12 +12,13 @@ class UserMailer < ActionMailer::Base
     raise "Tried to create a test notification for a nil test run" if test_run.nil?
     @status = :pass
     @title = 'We ran your tests and they all pass!'
+    subject = "#{@title} (#{test_run.test_file.name})"
     
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'first_test_notification')
+    mail(to: to, subject: subject, template_name: 'first_test_notification')
   end
 
   def first_test_notification_failure(test_run)
@@ -26,24 +27,26 @@ class UserMailer < ActionMailer::Base
     
     @status = :fail
     @title = 'We ran your tests and some of them failed.'
+    subject = "#{@title} (#{test_run.test_file.name})"
     
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'first_test_notification')
+    mail(to: to, subject: subject, template_name: 'first_test_notification')
   end
 
   def test_notification_success(test_run)
     raise "Tried to create a test notification for a nil test run" if test_run.nil?
     @status = :pass
     @title = 'All of your tests are passing'
+    subject = "#{@title} (#{test_run.test_file.name})"
     
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'test_notification')
+    mail(to: to, subject: subject, template_name: 'test_notification')
   end
   
   def test_notification_failure(test_run)
@@ -58,11 +61,13 @@ class UserMailer < ActionMailer::Base
       @title = "#{test_run.number_of_failed_groups} pages could not be retrieved"
     end
     
+    subject = "#{@title} (#{test_run.test_file.name})"
+    
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'test_notification')
+    mail(to: to, subject: subject, template_name: 'test_notification')
   end
   
   def nudge(user)
