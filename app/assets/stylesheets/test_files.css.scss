@@ -239,10 +239,11 @@ body.test_files.index {
       }
     } 
 
-    ul {
+    ul#test_files {
       padding-top: 10px;
       
       li.test_file {
+        margin-bottom: 10px;
         a {
           display: block;
           color: inherit;
