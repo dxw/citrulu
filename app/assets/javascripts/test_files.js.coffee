@@ -135,7 +135,10 @@ get_current_group = ->
 
 #  console.log "Found the next group at #{line}"
 
-  end = line-1
+  if line == window.editor.lineCount()
+    end = line
+  else
+    end = line-1
 
 #  console.log "This group: #{start} .. #{end}\n\n"
 
