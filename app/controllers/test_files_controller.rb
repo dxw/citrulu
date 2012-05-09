@@ -33,7 +33,7 @@ class TestFilesController < ApplicationController
   def create
     @test_file = TestFile.new
     @test_file.user_id = current_user.id
-    @test_file.name = "New test File"
+    @test_file.name = current_user.new_test_file_name
     
     # If it doesn't save successfully, it should rightly raise an exception.
     @test_file.save!
@@ -49,7 +49,6 @@ class TestFilesController < ApplicationController
     @predefs = Predefs.all
 
     @console_output = "Welcome to Citrulu"
-    @test_file.name = "Unnamed file" if @test_file.name.nil?
   end
 
   def update_liveview

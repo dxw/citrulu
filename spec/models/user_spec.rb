@@ -59,4 +59,40 @@ describe User do
     end
     
   end
+  
+  describe "new_test_file_name" do
+    it "should return 'New test file' if there are no other test files" do
+      @user.new_test_file_name.should == 'New test file'
+    end
+    
+    context "if 'New test file' exists" do
+      before(:each) do
+        FactoryGirl.create(:test_file, user: @user, name: 'New test file')
+      end
+    
+      it "should return 'New test file1'" do
+        @user.new_test_file_name.should == 'New test file1'
+      end
+      
+      context "and if a test file exists with a different name" do
+        before(:each) do
+          FactoryGirl.create(:test_file, user: @user, name: 'Foo')
+        end
+      
+        it "should return 'New test file1'" do
+          @user.new_test_file_name.should == 'New test file1'
+        end
+      end
+      
+      context "and if 'New test file1' exists" do
+        before(:each) do
+          FactoryGirl.create(:test_file, user: @user, name: 'New test file1')
+        end
+      
+        it "should return 'New test file2'" do
+          @user.new_test_file_name.should == 'New test file2'
+        end
+      end
+    end
+  end
 end

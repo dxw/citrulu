@@ -6,6 +6,7 @@ class TestFile < ActiveRecord::Base
   has_many :test_runs, :dependent => :destroy
   
   validates_presence_of :name
+  validates :name, uniqueness: {scope: :user_id}
   
   def last_run
     test_runs.max{|r,u| r.time_run <=> u.time_run }
