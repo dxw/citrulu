@@ -72,7 +72,7 @@ describe UserMailer do
 
       email.subject.should include('1 of your tests just failed')
 
-      both_parts(email) {|body| body.should include('blah (failed)') }
+      both_parts(email) {|body| body.should include('blah') }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/dxw.com/) }
     end
 
@@ -81,9 +81,9 @@ describe UserMailer do
 
       email.subject.should include('3 of your tests just failed')
 
-      both_parts(email) {|body| body.should include('a cat (failed)') }
-      both_parts(email) {|body| body.should include('blah (failed)') }
-      both_parts(email) {|body| body.should include('your face (failed)') }
+      both_parts(email) {|body| body.should include('a cat') }
+      both_parts(email) {|body| body.should include('blah') }
+      both_parts(email) {|body| body.should include('your face') }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org/) }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org\/test/) }
     end
@@ -93,7 +93,7 @@ describe UserMailer do
 
       email.subject.should include('All of your tests are passing')
 
-      both_parts(email) {|body| body.should_not include('(failed)') }
+      both_parts(email) {|body| body.should_not include('Failed') }
     end
     
     it '<<Acts like a success??>> if there are no failed groups and no groups with failed tests' do

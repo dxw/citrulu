@@ -105,6 +105,13 @@ describe TestRunner do
           UserMailer.should_not_receive(:test_notification_success)
           TestRunner.run_all_tests
         end
+        
+        it "should send a 'First' success message on the first test run" do
+          stub_execute_test_groups_to_succeed
+          
+          UserMailer.should_receive(:first_test_notification_success).and_return(Mail::Message.new)
+          TestRunner.run_all_tests
+        end
 
         it "should send success messages if the last TestRun was a failure" do
           stub_execute_test_groups_to_fail
@@ -117,7 +124,7 @@ describe TestRunner do
         end
 
         it "should always send failure messages (1)" do
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:first_test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -125,6 +132,16 @@ describe TestRunner do
         
         it "should always send failure messages (2)" do
           stub_execute_test_groups_to_fail
+          TestRunner.run_all_tests
+          
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+
+          TestRunner.run_all_tests
+        end
+        
+        it "should always send failure messages (3)" do
+          stub_execute_test_groups_to_fail
+          TestRunner.run_all_tests
           TestRunner.run_all_tests
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
@@ -161,6 +178,8 @@ describe TestRunner do
           TestFile.stub(:execute_test_groups) do |file,test_run|
             FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
+          
+          TestRunner.run_all_tests
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
           

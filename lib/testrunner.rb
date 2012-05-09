@@ -34,7 +34,7 @@ class TestRunner
           end
         elsif test_run.has_failures? 
           UserMailer.test_notification_failure(test_run).deliver
-        elsif test_run.previous_run.has_failures?
+        elsif test_run.previous_run && test_run.previous_run.has_failures?
           # previous had failures, but now everything is passing:
           UserMailer.test_notification_success(test_run).deliver
         end
