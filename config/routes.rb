@@ -12,7 +12,7 @@ SimpleFrontEndTesting::Application.routes.draw do
     match 'settings' => "registrations#edit"
   end
 
-  resources :test_files, :only => [:index, :create, :edit, :update]
+  resources :test_files, :only => [:index, :create, :destroy, :edit, :update]
   resources :test_runs, :only => [:index, :show]
   resources :responses, :only => [:show]
   

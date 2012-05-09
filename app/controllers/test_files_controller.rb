@@ -191,7 +191,7 @@ class TestFilesController < ApplicationController
   end
 
   # DELETE /test_files/1
-#  def destroy
+def destroy
 #    @test_file = TestFile.find(params[:id])
 #    @test_file.destroy
 #
@@ -199,7 +199,7 @@ class TestFilesController < ApplicationController
 #      format.html { redirect_to test_files_url }
 #      format.json { head :ok }
 #    end
-#  end
+  end
   
   protected
     

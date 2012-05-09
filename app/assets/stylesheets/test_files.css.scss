@@ -244,7 +244,7 @@ body.test_files.index {
       
       li.test_file {
         margin-bottom: 10px;
-        a {
+        a.test_file_btn {
           display: block;
           color: inherit;
           text-align: left;
@@ -264,6 +264,9 @@ body.test_files.index {
           span.last_updated {
             font-style: italic;
           }
+        }
+        a.btn-danger {
+          margin-top: 15px;
         }
       }
     }
