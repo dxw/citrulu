@@ -16,7 +16,7 @@
   #test_list.span8
     .title
       %h2 Your tests
-      %a.btn{unimplemented_popover.merge({})}
+      =link_to "/test_files", {id: 'new_test_file', :class => 'btn', method: :post} do
         %i.icon-plus-sign
         Create a new test file
     %ul#test_files.unstyled

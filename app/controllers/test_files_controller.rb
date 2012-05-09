@@ -7,9 +7,8 @@ class TestFilesController < ApplicationController
   before_filter :check_ownership!, :only => [:show, :edit, :update, :destroy]
    
   # GET /test_files
-  # GET /test_files.json
   def index
-    @test_files = current_user.test_files.sort{ |a,b| a.updated_at > b.updated_at }
+    @test_files = current_user.test_files.sort{ |a,b| a.updated_at <=> b.updated_at }
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
 
@@ -30,17 +29,18 @@ class TestFilesController < ApplicationController
 #    end
 #  end
 
-  # GET /test_files/new
-  # GET /test_files/new.json
-#  def new
-#    @test_file = TestFile.new
-#    @test_file.user_id = current_user.id
-#
-#    respond_to do |format|
-#      format.html # new.html.erb
-#      format.json { render json: @test_file }
-#    end
-#  end
+  # GET /test_files/create
+  def create
+    @test_file = TestFile.new
+    @test_file.user_id = current_user.id
+    @test_file.name = "New test File"
+    
+    # If it doesn't save successfully, it should rightly raise an exception.
+    @test_file.save!
+    
+    redirect_to action: "edit", id: @test_file.id
+  end
+
 
   # GET /test_files/1/edit
   def edit
@@ -51,24 +51,6 @@ class TestFilesController < ApplicationController
     @console_output = "Welcome to Citrulu"
     @test_file.name = "Unnamed file" if @test_file.name.nil?
   end
-
-  # POST /test_files
-  # POST /test_files.json
-#  def create
-#    @test_file = TestFile.new(params[:test_file])
-#    # In case the user tries to be sneaky and create a test file for someone other than themselves:
-#    @test_file.user_id = current_user.id
-#    
-#    respond_to do |format|
-#      if @test_file.save
-#        format.html { redirect_to @test_file, notice: 'Test file was successfully created.' }
-#        format.json { render json: @test_file, status: :created, location: @test_file }
-#      else
-#        format.html { render action: "new" }
-#        format.json { render json: @test_file.errors, status: :unprocessable_entity }
-#      end
-#    end
-#  end
 
   def update_liveview
     begin
@@ -120,7 +102,6 @@ class TestFilesController < ApplicationController
   end
 
   # PUT /test_files/1
-  # PUT /test_files/1.json
   def update
     @test_file = TestFile.find(params[:id])
     
@@ -211,7 +192,6 @@ class TestFilesController < ApplicationController
   end
 
   # DELETE /test_files/1
-  # DELETE /test_files/1.json
 #  def destroy
 #    @test_file = TestFile.find(params[:id])
 #    @test_file.destroy
