@@ -21,7 +21,7 @@
         Create a new test file
     %ul#test_files.unstyled
       - @test_files.each do |file|
-        %li.test_file
+        %li.test_file{ :id => "test_file#{file.id}" }
           .row
             .span7
               %a.btn.test_file_btn{:href => edit_test_file_path(file)}
@@ -39,7 +39,7 @@
                         Your file hasn't been compiled yet.
                         Click to edit it and kick it off.
             .span1
-              =link_to test_file_path(file), {:class => "btn btn-danger", method: :delete} do
+              =link_to test_file_path(file), {:class => "btn btn-danger", method: :delete, remote: true, confirm: "Are you sure you want to delete this test file? We'll keep the related results, but you won't be able to bring it back."} do
                 %span Delete
                 %i.icon-remove-sign.icon-white
       

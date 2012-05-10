@@ -106,5 +106,22 @@ describe TestFile do
         expect { @test_file_compiled_nil.number_of_tests }.to raise_error(ArgumentError)
       end
     end
+    
+    describe "delete!" do
+      it "should set 'deleted' to true (and save)" do
+        @test_file.delete!
+        
+        #Check that the object has been saved
+        @test_file.changed?.should be_false
+        @test_file.deleted.should be_true
+      end
+    end
+    
+    describe "find(:all)" do 
+      it "should not return deleted test files" do
+        deleted_test_file = FactoryGirl.create(:test_file, deleted: true)
+        TestFile.find(:all).should_not include(deleted_test_file)
+      end
+    end
   end
 end

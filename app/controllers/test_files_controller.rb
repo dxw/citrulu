@@ -191,14 +191,10 @@ class TestFilesController < ApplicationController
   end
 
   # DELETE /test_files/1
-def destroy
-#    @test_file = TestFile.find(params[:id])
-#    @test_file.destroy
-#
-#    respond_to do |format|
-#      format.html { redirect_to test_files_url }
-#      format.json { head :ok }
-#    end
+  def destroy
+    @test_file = TestFile.find(params[:id])
+    # Don't actually destroy - just mark as deleted
+    @test_file.delete!
   end
   
   protected

@@ -5,6 +5,11 @@ class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs, :dependent => :destroy
   
+  
+  # By default we only deal with test files where 'deleted' is Not true
+  default_scope where("deleted IS NULL OR deleted = ?", false)
+  # use TestFile.unscoped.find to ignore this
+  
   validates_presence_of :name
   validates :name, uniqueness: {scope: :user_id}
   
@@ -76,5 +81,9 @@ class TestFile < ActiveRecord::Base
     end
 
     fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
+  end
+  
+  def delete!
+    update_attributes(deleted: true)
   end
 end
