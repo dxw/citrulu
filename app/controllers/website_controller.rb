@@ -4,6 +4,9 @@ class WebsiteController < ApplicationController
   #    "/test_file_editor"
   #  end
 
+  def terms
+  end
+
   def features
     def add(silver, gold, name, description, comingsoon = false) 
       {
@@ -38,4 +41,7 @@ class WebsiteController < ApplicationController
     render :layout => "logged_in"
   end
   
+  def terms
+    render :layout => "logged_in"
+  end
 end

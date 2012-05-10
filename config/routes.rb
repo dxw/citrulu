@@ -20,6 +20,7 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   # Website pages routes:
   match 'alpha' => "website#alpha"
+  match 'terms' => "website#terms"
   match 'features' => "website#features"
   
   authenticated :user do
