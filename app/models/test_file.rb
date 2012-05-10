@@ -7,8 +7,7 @@ class TestFile < ActiveRecord::Base
   
   
   # By default we only deal with test files where 'deleted' is Not true
-  default_scope where("deleted IS NULL OR deleted = ?", false)
-  # use TestFile.unscoped.find to ignore this
+  scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
   
   validates_presence_of :name
   validates :name, uniqueness: {scope: :user_id}
@@ -52,7 +51,7 @@ class TestFile < ActiveRecord::Base
   # All the files which have compiled successfully at some point
   def self.compiled_files
     #todo - put this select into sql
-    all(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
+    not_deleted(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
   end
    
   def average_failures_per_run

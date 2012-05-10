@@ -117,10 +117,10 @@ describe TestFile do
       end
     end
     
-    describe "find(:all)" do 
+    describe "not_deleted" do 
       it "should not return deleted test files" do
         deleted_test_file = FactoryGirl.create(:test_file, deleted: true)
-        TestFile.find(:all).should_not include(deleted_test_file)
+        TestFile.not_deleted.should_not include(deleted_test_file)
       end
     end
   end

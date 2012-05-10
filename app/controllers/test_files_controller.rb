@@ -8,7 +8,7 @@ class TestFilesController < ApplicationController
    
   # GET /test_files
   def index
-    @test_files = current_user.test_files.sort{ |a,b| b.updated_at <=> a.updated_at}
+    @test_files = current_user.test_files.not_deleted.sort{ |a,b| b.updated_at <=> a.updated_at}
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
 
