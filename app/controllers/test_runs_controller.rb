@@ -8,7 +8,7 @@ class TestRunsController < ApplicationController
   # GET /test_runs
   # GET /test_runs.json
   def index
-    @test_files = current_user.test_files
+    @test_files = current_user.test_files.not_deleted
     @recent_failed_groups = @test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
     
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
