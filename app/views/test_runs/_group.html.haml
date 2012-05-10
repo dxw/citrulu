@@ -26,4 +26,7 @@
     =group.updated_at
     - if group.response
       %a{:href => response_path(group.response)} View page
-    %a{:href => edit_test_file_path(group.test_run.test_file)} Edit file
+    - if group.test_run.test_file.deleted
+      %i.error (File deleted)
+    - else
+      %a{:href => edit_test_file_path(group.test_run.test_file)} Edit file
