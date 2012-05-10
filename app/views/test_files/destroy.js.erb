@@ -1,1 +1,5 @@
-$(<%= "'#test_file#{@test_file.id}'" %>).hide("slide",{},"slow")
+$(<%= "'#test_file#{@test_file.id}'" %>).hide(
+  "slide",{},"slow",function() {
+    $(<%= "'#test_file#{@test_file.id}'" %>).remove(); window.show_no_test_files(); 
+  }
+);

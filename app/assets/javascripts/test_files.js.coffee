@@ -3,10 +3,17 @@
 #
 
 $(document).ready ->
-  $("div.welcome a.dismiss").click ->
-    $("div.welcome").fadeOut('fast')
-    id = $('div.welcome').attr('id')
-    window.createCookie("hide_#{id}", 'true', 999)
+  if($('body').hasClass('test_files') && $('body').hasClass('index'))
+    $("div.welcome a.dismiss").click ->
+      $("div.welcome").fadeOut('fast')
+      id = $('div.welcome').attr('id')
+      window.createCookie("hide_#{id}", 'true', 999)
+    window.show_no_test_files()
+  
+window.show_no_test_files = ->
+  # Show it if it's the only thing in the list:
+  if $("#test_files li").length == 1
+    $("#no_test_files").show('bounce')
 
 #
 # Setup the test file editor page:

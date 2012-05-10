@@ -142,6 +142,17 @@ body.test_runs {
     li.fail {
       background-color: #FCF8E3;
     }
+    #no_test_files a{
+      display:block;
+      padding: 15px 10px;
+      font-size:1.6em;
+      line-height:1.2;
+      strong {
+        display:block;
+        margin-bottom: 0.5em;
+        font-size:1.2em;
+      }
+    }
   }
 
   ul#test_runs_list{
