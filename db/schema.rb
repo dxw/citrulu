@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120425165958) do
+ActiveRecord::Schema.define(:version => 20120510103718) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -63,7 +63,6 @@ ActiveRecord::Schema.define(:version => 20120425165958) do
     t.integer  "test_file_count"
     t.string   "name_en"
     t.boolean  "default"
-    t.integer  "spreedly_id"
   end
 
   create_table "responses", :force => true do |t|
@@ -81,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20120425165958) do
     t.integer  "user_id"
     t.text     "compiled_test_file_text"
     t.string   "name"
+    t.boolean  "deleted"
   end
 
   create_table "test_groups", :force => true do |t|

@@ -5,6 +5,9 @@ require 'awesome_print'
 default_source = %{# I should see
 On http://example.com/1
   I should see x
+  
+On http://example.com/1
+  I should see :php_errors
 
 # I should not see
 On http://example.com/2

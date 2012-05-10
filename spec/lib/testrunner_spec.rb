@@ -34,6 +34,21 @@ describe TestRunner do
       TestRunner.should_not_receive(:execute_test_groups)
       TestRunner.run_all_tests
     end
+    
+    context "when a user has more than one test file" do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:compiled_test_file, user: user)
+        FactoryGirl.create(:compiled_test_file, user: user)
+        user2 = FactoryGirl.create(:user)
+        FactoryGirl.create(:compiled_test_file, user: user2)
+      end
+      it "should call execute_test_groups the right number of times" do
+        stub_execute_test_groups_to_succeed
+        TestRunner.should_receive(:execute_test_groups).exactly(3).times
+        TestRunner.run_all_tests
+      end
+    end
 
     describe "(sending email)" do
       before(:each) do
@@ -90,6 +105,13 @@ describe TestRunner do
           UserMailer.should_not_receive(:test_notification_success)
           TestRunner.run_all_tests
         end
+        
+        it "should send a 'First' success message on the first test run" do
+          stub_execute_test_groups_to_succeed
+          
+          UserMailer.should_receive(:first_test_notification_success).and_return(Mail::Message.new)
+          TestRunner.run_all_tests
+        end
 
         it "should send success messages if the last TestRun was a failure" do
           stub_execute_test_groups_to_fail
@@ -102,7 +124,7 @@ describe TestRunner do
         end
 
         it "should always send failure messages (1)" do
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:first_test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_all_tests
@@ -110,6 +132,16 @@ describe TestRunner do
         
         it "should always send failure messages (2)" do
           stub_execute_test_groups_to_fail
+          TestRunner.run_all_tests
+          
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+
+          TestRunner.run_all_tests
+        end
+        
+        it "should always send failure messages (3)" do
+          stub_execute_test_groups_to_fail
+          TestRunner.run_all_tests
           TestRunner.run_all_tests
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
@@ -146,6 +178,8 @@ describe TestRunner do
           TestFile.stub(:execute_test_groups) do |file,test_run|
             FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
+          
+          TestRunner.run_all_tests
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
           
@@ -247,14 +281,14 @@ describe TestRunner do
       it "should set the response time" do
         pending("There's a railscast on how to freeze time...")
         stub_mechanize
-        TestRunner.execute_tests(test_groups)[0][:response_code].should == "X"
+        TestRunner.execute_tests(test_groups)[0][:response_time].should == "X"
       end
       
       it "should set the response code" do
         dummy_page = FactoryGirl.build(:mechanize_page, :code => 404)
         stub_mechanize(dummy_page)
-        
-        TestRunner.execute_tests(@test_groups)[0][:response_code].should == 404
+
+        foo = TestRunner.execute_tests(@test_groups)[0][:response_attributes][:code].should == 404
       end
       
       it "should generate the test results" do
@@ -297,10 +331,13 @@ describe TestRunner do
       before(:each) do
         TestRunner.should_receive(:execute_tests).and_return(
           [
-            :time_run => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
+            :time_run => Time.now, :message => '', :test_url => 'http://example.com',
             :test_results_attributes => [
               { :result => true, :original_line => "I should see foo" }
-            ]
+            ],
+            :response_attributes => {
+              response_time: 200
+            }
           ]
         )
       end
@@ -309,7 +346,7 @@ describe TestRunner do
         TestRunner.execute_test_groups(@test_file, @test_run)
 
         @test_run.test_groups.length.should == 1
-        @test_run.test_groups[0].response_time.should == 200
+        @test_run.test_groups[0].response.response_time.should == 200
         @test_run.test_groups[0].message.should == ''
         @test_run.test_groups[0].test_url.should == 'http://example.com'
       end

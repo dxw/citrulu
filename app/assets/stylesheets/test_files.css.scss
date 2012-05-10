@@ -239,11 +239,12 @@ body.test_files.index {
       }
     } 
 
-    ul {
+    ul#test_files {
       padding-top: 10px;
       
       li.test_file {
-        a {
+        margin-bottom: 10px;
+        a.test_file_btn {
           display: block;
           color: inherit;
           text-align: left;
@@ -263,6 +264,9 @@ body.test_files.index {
           span.last_updated {
             font-style: italic;
           }
+        }
+        a.btn-danger {
+          margin-top: 15px;
         }
       }
     }

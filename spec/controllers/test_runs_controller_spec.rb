@@ -20,11 +20,12 @@ describe TestRunsController do
     # it "assigns all test_runs as @test_runs" do
     it "should define @test_files" do
       get :index
-      assigns(:test_files).should be_an(Array) 
+      assigns(:test_files)[0].should be_a(TestFile) 
     end
     it "should define @test_runs" do
+      FactoryGirl.create(:test_run, :test_file => @user.test_files[0])
       get :index
-      assigns(:test_runs).should be_an(Array) 
+      assigns(:test_runs)[0].should be_a(TestRun) 
     end
 
     it "should define @recent_failed_test_groups" do

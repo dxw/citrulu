@@ -13,8 +13,7 @@ require 'spec_helper'
 describe TestRunsHelper do
   before(:each) do
     @test_run = FactoryGirl.create(:test_run)
-    @test_result_name = FactoryGirl.build(:test_result, :name => ":foo_name", :value => nil, :result => true)
-    @test_result_value = FactoryGirl.build(:test_result, :value => "foo_value", :name => nil, :result => false)
+    @test_result = FactoryGirl.build(:test_result)
   end
 
   describe "ran_tests" do
@@ -45,7 +44,7 @@ describe TestRunsHelper do
 
   describe "test_class" do
     it "should return a string" do
-      helper.test_class(@test_result_value).should be_a(String)
+      helper.test_class(@test_result).should be_a(String)
     end
   end
 end

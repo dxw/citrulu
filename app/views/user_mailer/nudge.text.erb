@@ -1,0 +1,23 @@
+<% content_for :content do %>
+Thanks again for signing up to Citrulu!
+
+It looks like you haven't written any tests for your sites yet so we thought we'd get in touch to see if we can help you get started.
+
+Citrulu is a service that lets you write tests for your live websites which we will then run on a regular basis so that you can be confident that everything is working as it should be.
+
+We've made writing tests for your sites super-easy: we've created an example test file which you can quickly modify to point at the sites you want to test. <%=raw url_for test_files_url %>
+
+Citrulu is free during the Alpha, so please feel free to add as many tests as you like.
+
+Hopefully you should find all the help you need, but if you get stuck, don't hesitate to 
+send us an email <contact@citrulu.com> – or post something using the feedback form on the site. 
+
+We'd also love to hear from you if you've got any suggestions for how we can make Citrulu even better.
+
+<% end %>
+
+<% content_for :footer do %>
+You're receiving this because you signed up at Citrulu.com
+
+Edit your subscription: <%=raw url_for edit_user_registration_url %>
+<% end %>

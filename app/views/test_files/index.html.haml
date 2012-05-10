@@ -16,26 +16,32 @@
   #test_list.span8
     .title
       %h2 Your tests
-      %a.btn{unimplemented_popover.merge({})}
+      =link_to test_files_path, {:class => 'btn', method: :post} do
         %i.icon-plus-sign
         Create a new test file
     %ul#test_files.unstyled
       - @test_files.each do |file|
-        %li.test_file
-          %a.btn{:href => edit_test_file_path(file)}
-            %span.name=file.name
-            .row
-              .span4
-                %span.last_updated="Last updated at #{file.updated_at}"
-              .span3
-                %span.file_info
-                  -if file.compiled?
-                    =pluralize(file.number_of_tests, 'assertion')
-                    on 
-                    =pluralize(file.number_of_pages, 'page')
-                  -else
-                    Your file hasn't been compiled yet.
-                    Click to edit it and kick it off.
+        %li.test_file{ :id => "test_file#{file.id}" }
+          .row
+            .span7
+              %a.btn.test_file_btn{:href => edit_test_file_path(file)}
+                %span.name=file.name
+                .row-fluid
+                  .span7
+                    %span.last_updated="Last updated at #{file.updated_at}"
+                  .span5
+                    %span.file_info
+                      -if file.compiled?
+                        =pluralize(file.number_of_tests, 'assertion')
+                        on 
+                        =pluralize(file.number_of_pages, 'page')
+                      -else
+                        Your file hasn't been compiled yet.
+                        Click to edit it and kick it off.
+            .span1
+              =link_to test_file_path(file), {:class => "btn btn-danger", method: :delete, remote: true, confirm: "Are you sure you want to delete this test file? We'll keep the related results, but you won't be able to bring it back."} do
+                %span Delete
+                %i.icon-remove-sign.icon-white
       
   #sidebar.span4
     #recent_results

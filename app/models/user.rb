@@ -53,6 +53,19 @@ class User < ActiveRecord::Base
     end
   end
   
+  def new_test_file_name
+    names = test_files.pluck :name
+    if !names.include?("New test file")
+      "New test file"
+    else 
+      n = 1
+      until !names.include?("New test file#{n}") do 
+        n += 1
+      end
+      "New test file#{n}"
+    end
+  end
+  
   private
 
   def inf val

@@ -46,6 +46,10 @@ module ApplicationHelper
     content_tag :div, message, :class => cl
   end
   
+  def twitter_button
+    link_to "Follow @citrulu", "https://twitter.com/citrulu", :class => "twitter-follow-button", 'data-show-count' => false, 'data-size' => "large"
+  end
+  
   # See here: https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name
     :user

@@ -20,18 +20,18 @@ describe UserMailer do
       test_group4 = FactoryGirl.create(:test_group_no_results, :test_url => 'http://google.com', :test_run => @test_run3)
       
       
-      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_see, :value=>"a cat", :result=>true)
-      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_see, :value=>"blah", :result=>false)
-      FactoryGirl.create(:test_result, :test_group => test_group1, :assertion=>:i_not_see, :value=>"your face", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group1, :original_line => "I should see a cat", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group1, :original_line => "I should see blah", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group1, :original_line => "I should not see your face", :result=>true)
                                                                    
-      FactoryGirl.create(:test_result, :test_group => test_group2, :assertion=>:i_see, :value=>"a cat", :result=>false)
-      FactoryGirl.create(:test_result, :test_group => test_group2, :assertion=>:i_see, :value=>"blah", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group2, :original_line => "I should see a cat", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group2, :original_line => "I should see blah", :result=>false)
                                                                    
-      FactoryGirl.create(:test_result, :test_group => test_group3, :assertion=>:i_not_see, :value=>"your face", :result=>false)
+      FactoryGirl.create(:test_result, :test_group => test_group3, :original_line => "I should not see your face", :result=>false)
                                                                    
-      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_see, :value=>"a cat", :result=>true)
-      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_see, :value=>"blah", :result=>true)
-      FactoryGirl.create(:test_result, :test_group => test_group4, :assertion=>:i_not_see, :value=>"your face", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group4, :original_line => "I should see a cat", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group4, :original_line => "I should see blah", :result=>true)
+      FactoryGirl.create(:test_result, :test_group => test_group4, :original_line => "I should not see your face", :result=>true)
     end
 
     def both_parts email
@@ -72,7 +72,7 @@ describe UserMailer do
 
       email.subject.should include('1 of your tests just failed')
 
-      both_parts(email) {|body| body.should include('blah (failed)') }
+      both_parts(email) {|body| body.should include('blah') }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/dxw.com/) }
     end
 
@@ -81,9 +81,9 @@ describe UserMailer do
 
       email.subject.should include('3 of your tests just failed')
 
-      both_parts(email) {|body| body.should include('a cat (failed)') }
-      both_parts(email) {|body| body.should include('blah (failed)') }
-      both_parts(email) {|body| body.should include('your face (failed)') }
+      both_parts(email) {|body| body.should include('a cat') }
+      both_parts(email) {|body| body.should include('blah') }
+      both_parts(email) {|body| body.should include('your face') }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org/) }
       both_parts(email) {|body| body.should match(/On\shttp:\/\/example.org\/test/) }
     end
@@ -93,7 +93,7 @@ describe UserMailer do
 
       email.subject.should include('All of your tests are passing')
 
-      both_parts(email) {|body| body.should_not include('(failed)') }
+      both_parts(email) {|body| body.should_not include('Failed') }
     end
     
     it '<<Acts like a success??>> if there are no failed groups and no groups with failed tests' do

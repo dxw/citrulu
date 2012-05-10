@@ -5,7 +5,12 @@ class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs, :dependent => :destroy
   
+  
+  # By default we only deal with test files where 'deleted' is Not true
+  scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
+  
   validates_presence_of :name
+  validates :name, uniqueness: {scope: :user_id}
   
   def last_run
     test_runs.max{|r,u| r.time_run <=> u.time_run }
@@ -46,7 +51,7 @@ class TestFile < ActiveRecord::Base
   # All the files which have compiled successfully at some point
   def self.compiled_files
     #todo - put this select into sql
-    all(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
+    not_deleted(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
   end
    
   def average_failures_per_run
@@ -75,5 +80,9 @@ class TestFile < ActiveRecord::Base
     end
 
     fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
+  end
+  
+  def delete!
+    update_attributes(deleted: true)
   end
 end

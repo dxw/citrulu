@@ -1,0 +1,18 @@
+    <% if @test_run.has_failed_groups? %>
+<%= failed_groups_header %>
+      <% @test_run.failed_groups.each do |group| %>
+<%=raw group.test_url %>
+- <%=raw group.message %>
+      <% end %>
+    <% end %>
+  
+    <% if @test_run.has_groups_with_failed_tests? %>
+Failed <%= pluralize(@test_run.number_of_failed_tests, 'assertion'); %>:
+      <% @test_run.groups_with_failed_tests.each do |group| %>
+
+On <%=raw group.test_url %>
+        <% group.failed_tests.each do |result| %>
+- <%=raw result.original_line + (" (failed)" if result.failed?) %>
+        <% end %>
+      <% end %>
+    <% end %>

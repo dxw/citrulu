@@ -16,7 +16,7 @@ $(document).ready ->
 # When the window loads, set up the editor and kick off the first autosave
 #
 $(window).load ->
-  if($('body').hasClass('test_files') && $('body').hasClass('edit'))
+  if($('body').hasClass('test_files') && ($('body').hasClass('edit') || $('body').hasClass('new') ))
     setup_editor()
     
     setup_title()
@@ -135,7 +135,10 @@ get_current_group = ->
 
 #  console.log "Found the next group at #{line}"
 
-  end = line-1
+  if line == window.editor.lineCount()
+    end = line
+  else
+    end = line-1
 
 #  console.log "This group: #{start} .. #{end}\n\n"
 
