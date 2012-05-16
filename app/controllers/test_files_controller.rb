@@ -38,7 +38,7 @@ class TestFilesController < ApplicationController
     # If it doesn't save successfully, it should rightly raise an exception.
     @test_file.save!
     
-    redirect_to action: "edit", id: @test_file.id
+    redirect_to action: "edit", id: @test_file.id, :new => true
   end
 
 

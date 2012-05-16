@@ -28,6 +28,8 @@ $(window).load ->
     
     setup_title()
     
+    title_editable_if_new()
+    
     highlight_help_text_code()
     
     # create a placeholder to store a hash of the text:
@@ -97,6 +99,14 @@ insert_edit_icon = ->
   #   $(".editable").parent().css('margin-right',icon_width + 10)
   # else
   #   $(".editable").parent().css('margin-right','0')
+
+# When the user has created a new test file we want the title to be editable and the focus to be in the field
+title_editable_if_new = ->
+  # Get the param value using the BBQ jquery plugin:
+  if $.deparam.querystring()['new']
+    $(".editable").click()
+
+
 
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed
