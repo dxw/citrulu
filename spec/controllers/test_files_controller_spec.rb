@@ -49,9 +49,9 @@ describe TestFilesController do
       TestFile.find(assigns(:test_file).id).user.should == @user
     end
 
-    it "redirects to the editor" do
+    it "redirects to the editor with 'new=true'" do
       post :create
-      response.should redirect_to(edit_test_file_path(TestFile.last))
+      response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
     end
   end
   
