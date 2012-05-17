@@ -11,12 +11,18 @@ SimpleFrontEndTesting::Application.routes.draw do
     match 'sign_in' => "devise/sessions#new"
     match 'settings' => "registrations#edit"
   end
-
+  
+  # This needs to go BEFORE the resources, otherwise it gets interpreted as PUT /test_files/id (i.e. update)
+  match '/test_files/update_run_status' => "test_files#update_run_status", :via => :put
+  
+  match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
+  
   resources :test_files, :only => [:index, :create, :destroy, :edit, :update]
   resources :test_runs, :only => [:index, :show]
   resources :responses, :only => [:show]
   
-  match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
+  
+  
 
   # Website pages routes:
   match 'alpha' => "website#alpha"

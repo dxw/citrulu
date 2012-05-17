@@ -196,6 +196,42 @@ describe TestFilesController do
     end
   end
 
+  describe "PUT update_run_status" do
+    context "when the current status is run_tests=true" do
+      before(:each) do
+        @test_file = FactoryGirl.create(:test_file, run_tests: true)
+      end
+      
+      it "doesn't redirect" do
+        put :update_run_status, {:id => @test_file.to_param, :test_file => {run_tests: false}}
+        response.should_not be_redirect
+      end
+      
+      it "changes the status to run_tests=false when the button is pressed" do
+        TestFile.any_instance.should_receive(:update_attributes).with(run_tests: false)
+        put :update_run_status, {:id => @test_file.to_param, :test_file => {run_tests: false}}
+      end
+    end
+    
+    context "when the current status is run_tests=false" do
+      before(:each) do
+        @test_file = FactoryGirl.create(:test_file, run_tests: false)
+      end
+      
+      it "doesn't redirect" do
+        put :update_run_status, {:id => @test_file.to_param, :test_file => {run_tests: true}}
+        response.should_not be_redirect
+      end
+      
+      it "changes the status to run_tests=false when the button is pressed" do
+        TestFile.any_instance.should_receive(:update_attributes).with(run_tests: true)
+        put :update_run_status, {:id => @test_file.to_param, :test_file => {run_tests: true}}
+      end
+    end
+  end
+
+
+
 #
 #  Commented out, along with the delete method, until we actually need it
 #

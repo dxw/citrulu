@@ -30,6 +30,8 @@ $(window).load ->
     
     title_editable_if_new()
     
+    setup_run_status_toggle()
+    
     highlight_help_text_code()
     
     # create a placeholder to store a hash of the text:
@@ -106,7 +108,20 @@ title_editable_if_new = ->
   if $.deparam.querystring()['new']
     $(".editable").click()
 
-
+# Set up the toggle button used to set the run status
+setup_run_status_toggle = ->
+  toggle_button = $("#run_status_toggle_form input[type=submit]")
+  toggle_button.click ->
+    # Set the value explicitly in case the browser and db drift out of sync
+    if toggle_button.hasClass("active")
+      $("#test_file_run_tests").val(true)
+      toggle_button.val('On')
+      toggle_button.removeClass("active")
+    else
+      $("#test_file_run_tests").val(false)
+      toggle_button.val('Off')
+      toggle_button.addClass("active")
+      
 
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed

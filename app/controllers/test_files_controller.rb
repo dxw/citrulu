@@ -189,7 +189,23 @@ class TestFilesController < ApplicationController
       format.js { }
     end
   end
-
+  
+  # PUT /test_files/update_run_status/1
+  def update_run_status
+    test_file = TestFile.find(params[:id])
+    
+    # Whatever happens, render nothing 
+    
+    response.headers['Cache-Control'] = 'no-cache' 
+    if test_file.update_attributes(run_tests: params[:test_file][:run_tests])
+      # Just send back a 200 header:
+      render text: ''
+      # A couple of ways to do this, but both "render nothing: true" and "head :ok" return a non-empty response body.
+    else
+      head :unprocessable_entity #422. Maybe not appropriate, but it seems sensible to return SOMETHING to indicate that the save failed...
+    end
+  end
+  
   # DELETE /test_files/1
   def destroy
     @test_file = TestFile.find(params[:id])

@@ -16,6 +16,15 @@
     
       %div.output=console_line({:welcome => @console_output})
   #help.span4
+    #run_toggle
+      = form_for(@test_file, url: {action: "update_run_status", id: @test_file.id}, remote: true, :html => {:id => "run_status_toggle_form", :class => "form-inline"}) do |f|
+        = f.hidden_field :run_tests
+        %label Run this test file?
+        - if @test_file.run_tests 
+          = f.submit "On", :class => "btn btn-success"
+        - else
+          = f.submit "Off", :class => "btn btn-success active"
+  
     #liveview
       %h2 Live view
       %div.outline
