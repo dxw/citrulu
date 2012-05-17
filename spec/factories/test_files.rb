@@ -6,5 +6,6 @@ FactoryGirl.define do
     test_file_text "On http://example.com\n  I should see foo"
     compiled_test_file_text "On http://example.com\n  I should see foo"
     user
+    run_tests true
   end
 end

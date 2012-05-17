@@ -14,6 +14,8 @@ class TestRunner
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
       end
       
+      next unless file.run_tests?
+      
       test_run = TestRun.create(
         :time_run => Time.zone.now,
         :test_file => file

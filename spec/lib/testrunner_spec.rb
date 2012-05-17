@@ -35,6 +35,18 @@ describe TestRunner do
       TestRunner.run_all_tests
     end
     
+    it "should run tests where run_tests is true" do
+      FactoryGirl.create(:test_file, :run_tests => true)
+      TestRunner.should_receive(:execute_test_groups)
+      TestRunner.run_all_tests
+    end
+    
+    it "should not try and run tests when run_tests is false" do
+      FactoryGirl.create(:test_file, :run_tests => false)
+      TestRunner.should_not_receive(:execute_test_groups)
+      TestRunner.run_all_tests
+    end
+    
     context "when a user has more than one test file" do
       before(:each) do
         user = FactoryGirl.create(:user)
