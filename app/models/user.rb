@@ -54,15 +54,31 @@ class User < ActiveRecord::Base
   end
   
   def new_test_file_name
+    generate_name("New test file")
+  end
+  
+  # Append a number if a name is already taken
+  def generate_name(string)
     names = test_files.pluck :name
-    if !names.include?("New test file")
-      "New test file"
+    if !names.include?(string)
+      string
     else 
       n = 1
-      until !names.include?("New test file#{n}") do 
+      until !names.include?("#{string}#{n}") do 
         n += 1
       end
-      "New test file#{n}"
+      "#{string}#{n}"
+    end
+  end
+  
+  def create_tutorial_test_files
+    # Need to do the each in reverse order so that the most recently created is the first one
+    TUTORIAL_TEST_FILES.reverse_each do |f|
+      test_files.create!(
+        :name => generate_name(f[:name]),
+        :test_file_text => f[:text],
+        :run_tests => false,
+      )
     end
   end
   
@@ -83,16 +99,5 @@ class User < ActiveRecord::Base
 
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
-  end
-  
-  def create_tutorial_test_files
-    # Need to do the each in reverse order so that the most recently created is the first one
-    TUTORIAL_TEST_FILES.reverse_each do |f|
-      self.test_files.create(
-          :name => f[:name],
-          :test_file_text => f[:text],
-          :run_tests => false,
-        )
-    end
   end
 end
