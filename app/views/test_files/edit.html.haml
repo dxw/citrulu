@@ -21,9 +21,9 @@
         = f.hidden_field :run_tests
         %label Run this test file?
         - if @test_file.run_tests 
-          = f.submit "On", :class => "btn btn-success btn-large"
+          = f.submit "On", :class => "btn btn-large btn-success"
         - else
-          = f.submit "Off", :class => "btn btn-success btn-large active"
+          = f.submit "Start", :class => "btn btn-large"
   
     #liveview
       %h2 Live view

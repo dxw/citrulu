@@ -110,17 +110,37 @@ title_editable_if_new = ->
 
 # Set up the toggle button used to set the run status
 setup_run_status_toggle = ->
+  alert $("#test_file_run_tests").val()
   toggle_button = $("#run_status_toggle_form input[type=submit]")
   toggle_button.click ->
     # Set the value explicitly in case the browser and db drift out of sync
-    if toggle_button.hasClass("active")
+    if $("#test_file_run_tests").val() == "t" || $("#test_file_run_tests").val() == "true"
+      $("#test_file_run_tests").val(false)
+      toggle_button.val('Start')
+      toggle_button.removeClass("btn-success").removeClass("btn-danger")
+    else
       $("#test_file_run_tests").val(true)
       toggle_button.val('On')
-      toggle_button.removeClass("active")
-    else
-      $("#test_file_run_tests").val(false)
-      toggle_button.val('Off')
-      toggle_button.addClass("active")
+      toggle_button.addClass("btn-success")
+    
+    alert $("#test_file_run_tests").val()
+  
+  toggle_button.hover(
+    -> (
+      if toggle_button.hasClass("btn-success")
+        toggle_button.val('Stop')
+        toggle_button.removeClass("btn-success")
+        toggle_button.addClass("btn-danger")
+    ),
+    -> (
+      if toggle_button.hasClass("btn-danger")
+        # Then the button wasn't clicked
+        toggle_button.val('On')
+        toggle_button.removeClass("btn-danger")
+        toggle_button.addClass("btn-success")
+    )
+  )
+    
       
 
 ##
