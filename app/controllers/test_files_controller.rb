@@ -31,12 +31,12 @@ class TestFilesController < ApplicationController
 
   # GET /test_files/create
   def create
-    @test_file = TestFile.new
-    @test_file.user_id = current_user.id
-    @test_file.name = current_user.new_test_file_name
-    
+    @test_file = TestFile.create!(
+      user_id: current_user.id,
+      name: current_user.new_test_file_name,
+      run_tests: true
+    )
     # If it doesn't save successfully, it should rightly raise an exception.
-    @test_file.save!
     
     redirect_to action: "edit", id: @test_file.id, :new => true
   end
