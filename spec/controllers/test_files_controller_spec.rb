@@ -230,7 +230,15 @@ describe TestFilesController do
     end
   end
 
-
+  describe "PUT regenerate_tutorials" do
+    it "creates new test files on the user" do
+      test_file_count = @user.test_files.count
+  
+      put :regenerate_tutorials
+      
+      @user.test_files.count.should == test_file_count + TUTORIAL_TEST_FILES.count
+    end
+  end
 
 #
 #  Commented out, along with the delete method, until we actually need it

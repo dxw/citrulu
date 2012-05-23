@@ -14,7 +14,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   
   # This needs to go BEFORE the resources, otherwise it gets interpreted as PUT /test_files/id (i.e. update)
   match '/test_files/update_run_status' => "test_files#update_run_status", :via => :put
-  
+  match '/test_files/regenerate_tutorials' => "test_files#regenerate_tutorials", :via => :put
   match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
   
   resources :test_files, :only => [:index, :create, :destroy, :edit, :update]

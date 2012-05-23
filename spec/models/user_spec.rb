@@ -6,8 +6,8 @@ describe User do
   end
   
   
-  it "should add the default test file when it's created" do
-    @user.test_files.first.test_file_text.should == DEFAULT_TEST_FILE
+  it "should add the tutorial test files when it's created" do
+    @user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
   end
   
   it "should set the email preference to recieve test run emails when it's created" do

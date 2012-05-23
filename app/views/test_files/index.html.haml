@@ -9,9 +9,11 @@
         %p Citrulu lets you write tests for your websites using simple, natural language.
         %p After you've written your tests, we'll run them every hour and let you know if anything fails.
       .span4.offset1
-        %p Want to get straight to the tests? Your default test file has some examples to help you get started.
+        %p We've created a set of tutorial test files to help you get to grips with Citrulu's super-simple syntax.
         %p 
-          %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Edit your first test file
+          %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Start the tutorial
+        %p 
+          =link_to "Regenerate the tutorial files", {:action => "regenerate_tutorials"}, method: :put, :class => "btn btn-info get-testing"
 .row
   #test_list.span8
     .title
