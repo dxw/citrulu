@@ -1,28 +1,13 @@
-tutorial_test_files = [
-  SITE_IS_UP_TEST_FILE,
-  SOURCE_CONTAINS_TEST_FILE,
-  
-  MULTIPLE_GROUPS_AND_REGEX_TEST_FILE,
-  
-  # NEGATIONS_TEST_FILE,
-  #  PREDEFS_TEST_FILE,
-  #  GOTCHAS_TEST_FILE,
-  #  BAD_URL_TEST_FILE,
-]
-
-# Add in hashes of the file text. Doing this once on startup should speed things up:
-TUTORIAL_TEST_FILES = tutorial_test_files.collect{|f| f.merge(hash: f[:text].hash)}
-
-
 SITE_IS_UP_TEST_FILE={
   text: 
     %{On http://wikipedia.org
-  I should see The Free Encyclopedia}
+  I should see The Free Encyclopedia},
   help: [
     "This is a very simple test file which checks that Wikipedia is up and running by looking for some text that should be visible on that page.",
     "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site. Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
     "To make the test pass, replace \"Hello World\" with \"The Free Encyclopedia\" (without quotes) and watch that row turn green."
   ]
+}
 
 SOURCE_CONTAINS_TEST_FILE={
   text:
@@ -30,13 +15,13 @@ SOURCE_CONTAINS_TEST_FILE={
   On http://www.flickr.com
     # The following text is in the alt tag of the flickr logo:
     #   alt="Flickr logo. If you click it, you'll go home"
-    I should see Flickr logo}
+    I should see Flickr logo},
   help: [
       "You can optionally describe what a block of checks is doing using a \"So I know that\" clause before the URL",
       "You can also add comment lines to remind yourself what a particular step is doing. Comment lines start with a #",
       "Comments and \"So I know that\" clauses are both ignored by Citrulu",
       "Sometimes the thing you want to look for to make sure that a site is up isn't in the text of the page. Citrulu supports a number of different types of checks",
-      "To check for strings in the markup of the page you can use the \"Source should contain\""
+      "To check for strings in the markup of the page you can use the \"Source should contain\"",
       "To make the test pass, replace the \"I should see\" with \"Source should contain\""
     ]
 }
@@ -49,8 +34,8 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
 
     So I know that the weather feed is working
       On http://bbc.co.uk
-        # Should have three temperatures, e.g. 25°C
-        I should see /[0-9]+°C/
+        # Should have three temperatures, e.g. 25&deg;C
+        I should see /[0-9]+&deg;C/
         Source should contain <div class="weather-icon">
         Source should contain <a href="http://www.bbc.co.uk/weather/
 
@@ -62,7 +47,7 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
       On http://bbc.co.uk
         I should see Most popular
         I should see What's on
-        I should see Explore}
+        I should see Explore},
   help: [
       "You can test as many things as you like on each URL",
       "You can also test multiple URLs and perform different groups of checks on the same URL",
@@ -72,9 +57,95 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
 }
 
 
+ADVANCED_ASSERTIONS_TEST_FILE={
+  text:
+    %{So I know that caching is working
+      On http://www.youtube.com
+      Headers should include Expires
+      Headers should not include Etag
+      Header Cache-Control should contain FOO
+      Header Cache-Control should not contain private
+
+    So I know that my content and markup are OK 
+      On http://www.youtube.com
+      Source should not contain </br>
+      I should not see Damn 
+
+    So I know that redirection is working
+      On http://www.wikipedia.com
+        # Response code should be a redirect - 3xx
+        Response code should be /3../
+        Response code should be 200 after redirect
+
+    So I know that /nonsense doesn't exist 
+      On http://www.amazon.co.uk/nonsense         
+        Response code should be 200},
+  help: [
+      "There are two checks you can perform on HTTP headers: \"Headers should include\" checks for the existence of a header",
+      "The other type of header check looks for a particular value in that header. Replace \"FOO\" with \"no-cache\" to make the step pass",
+      "All checks support negatives - e.g. \"I should not see\". Try adding some more checks for things which clearly shouldn't be in a page.",
+      "All checks that Citrulu runs have an implicit expectation that the HTTP response code should be 200 (OK) unless specified otherwise",
+      "www.wikipedia.com returns a 301 redirect - we can check for that with \"Response code should be\"",
+      "We can also check that when the redirect is followed, we successfully get the page.",
+      "In the amazon.com example, change the expected response code to 400 to make that test pass."
+    ]
+}
+
+POSTS_FIRST_FINALLY_TEST_FILE={
+  text:
+    %{},
+  help: [
+    ]
+}
+
+BROKEN_TEST_FILE={
+  text:
+    %{So I know that The page works
+      On www.youtube.com
+        I should see YouTube
+
+    So I know that The page works
+      On https://www.faycebookz.com/
+        I should see Facebook
+
+    So I know that The page works
+      On http://youtube.c%m
+        Source should contain Broadcast Yourself
+
+    So I know that there are no </br> tags 
+      On http://www.facebook.com
+      Source Should not contain </br>
+
+    So I know that the site works
+    So I know that both sites work
+      On http://www.wikipedia.com
+      On http://www.wikipedia.org
+        Response code should be 200 after redirect
+
+    So I know that the site works
+      On http://twitter.com/ 
+        I should see Welcome to twitter # this is some text on the homepage},
+  help: [
+    "This test file isn't compiling: see if you can fix it. We'll give you some hints:",
+    "All URLs must be prefixed with http:// or https://",
+    "Badly formed or unreachable URLs will show up as errors in the Live View (we're working on making those errors more user-friendly)",
+    "Assertions are case-sensitive and only have a capital letter at the beginning",
+    "Only one \"So I know that\" line and one \"On\" line are allowed for each block",
+    "Most assertions don't support inline comments"
+    ]
+}
 
 
+tutorial_test_files = [
+  SITE_IS_UP_TEST_FILE,
+  SOURCE_CONTAINS_TEST_FILE,
+  MULTIPLE_GROUPS_AND_REGEX_TEST_FILE,
+  ADVANCED_ASSERTIONS_TEST_FILE,
+  POSTS_FIRST_FINALLY_TEST_FILE,
+  BROKEN_TEST_FILE
+  # PREDEFS_TEST_FILE,
+]
 
-Gotchas:
- Inline comments
- case sensitivity
+# Add in hashes of the file text. Doing this once on startup should speed things up:
+TUTORIAL_TEST_FILES = tutorial_test_files.collect{|f| f.merge(hash: f[:text].hash)}
+
