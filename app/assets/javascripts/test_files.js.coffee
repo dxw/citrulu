@@ -110,7 +110,6 @@ title_editable_if_new = ->
 
 # Set up the toggle button used to set the run status
 setup_run_status_toggle = ->
-  alert $("#test_file_run_tests").val()
   toggle_button = $("#run_status_toggle_form input[type=submit]")
   toggle_button.click ->
     # Set the value explicitly in case the browser and db drift out of sync
@@ -123,8 +122,6 @@ setup_run_status_toggle = ->
       toggle_button.val('On')
       toggle_button.addClass("btn-success")
     
-    alert $("#test_file_run_tests").val()
-  
   toggle_button.hover(
     -> (
       if toggle_button.hasClass("btn-success")
