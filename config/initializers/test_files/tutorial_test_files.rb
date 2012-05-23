@@ -1,4 +1,5 @@
 SITE_IS_UP_TEST_FILE={
+  name: "Tutorial 1: First steps",
   text: 
     %{On http://wikipedia.org
   I should see Hello World},
@@ -10,6 +11,7 @@ SITE_IS_UP_TEST_FILE={
 }
 
 SOURCE_CONTAINS_TEST_FILE={
+  name: "Tutorial 2: Testing source code",
   text:
     %{So I know that The site is working
   On http://www.flickr.com
@@ -27,6 +29,7 @@ SOURCE_CONTAINS_TEST_FILE={
 }
 
 MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
+  name: "Tutorial 3: A more complex test file",
   text:
     %{So I know that the site is working
       On http://bbc.co.uk
@@ -58,6 +61,7 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
 
 
 ADVANCED_ASSERTIONS_TEST_FILE={
+  name: "Tutorial 4: Testing Headers and Response Codes",
   text:
     %{So I know that caching is working
       On http://www.youtube.com
@@ -92,6 +96,7 @@ ADVANCED_ASSERTIONS_TEST_FILE={
 }
 
 POSTS_FIRST_FINALLY_TEST_FILE={
+  name: "Tutorial 5: Testing POSTs and PUTs and all that jazz",
   text:
     %{},
   help: [
@@ -99,6 +104,7 @@ POSTS_FIRST_FINALLY_TEST_FILE={
 }
 
 BROKEN_TEST_FILE={
+  name: "Tutorial 6: I'm broken - fix me",
   text:
     %{So I know that The page works
       On www.youtube.com

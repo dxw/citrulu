@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   belongs_to :invitation
   belongs_to :plan
   
-  after_create :create_default_test_file 
+  after_create :create_tutorial_test_files 
   after_create :subscribe_to_default_plan
   before_create :add_invitation
   before_save :set_email_preference
@@ -85,11 +85,14 @@ class User < ActiveRecord::Base
     self.invitation = Invitation.find_by_code(self.invitation_code)
   end
   
-  def create_default_test_file
-    self.test_files.create(
-        :user => self,
-        :name => "My first test file",
-        :test_file_text => DEFAULT_TEST_FILE
-      )
+  def create_tutorial_test_files
+    # Need to do the each in reverse order so that the most recently created is the first one
+    TUTORIAL_TEST_FILES.reverse_each do |f|
+      self.test_files.create(
+          :name => f[:name],
+          :test_file_text => f[:text],
+          :run_tests => false,
+        )
+    end
   end
 end

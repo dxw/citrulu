@@ -95,4 +95,10 @@ describe User do
       end
     end
   end
+  
+  describe "create_tutorial_test_files" do
+    it "should execute without errors" do
+      @user.create_tutorial_test_files.should_not raise_error
+    end
+  end
 end
