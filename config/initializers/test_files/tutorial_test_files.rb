@@ -1,7 +1,7 @@
 SITE_IS_UP_TEST_FILE={
   text: 
     %{On http://wikipedia.org
-  I should see The Free Encyclopedia},
+  I should see Hello World},
   help: [
     "This is a very simple test file which checks that Wikipedia is up and running by looking for some text that should be visible on that page.",
     "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site. Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
@@ -34,8 +34,8 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
 
     So I know that the weather feed is working
       On http://bbc.co.uk
-        # Should have three temperatures, e.g. 25&deg;C
-        I should see /[0-9]+&deg;C/
+        # Should have three temperatures, e.g. 25\xC2\xB0C
+        I should see /[0-9]+\xC2\xB0C/
         Source should contain <div class="weather-icon">
         Source should contain <a href="http://www.bbc.co.uk/weather/
 
