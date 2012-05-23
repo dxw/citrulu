@@ -19,7 +19,10 @@ SOURCE_CONTAINS_TEST_FILE={
     #   alt="Flickr logo. If you click it, you'll go home"
     I should see Flickr logo},
   help: [
-      "You can optionally describe what a block of checks is doing using a \"So I know that\" clause before the URL",
+    # It's good to write tests for specific things, so that you know what broke if 
+    # the test fails. You can add "So" clauses to remind you what you're looking for:
+    
+      "It's good to write tests for specific things, so that you know what broke if the test fails. You can add \"So\" clauses to remind you what you're looking for.",
       "You can also add comment lines to remind yourself what a particular step is doing. Comment lines start with a #",
       "Comments and \"So I know that\" clauses are both ignored by Citrulu",
       "Sometimes the thing you want to look for to make sure that a site is up isn't in the text of the page. Citrulu supports a number of different types of checks",
@@ -95,11 +98,29 @@ ADVANCED_ASSERTIONS_TEST_FILE={
     ]
 }
 
-POSTS_FIRST_FINALLY_TEST_FILE={
+HTTP_METHODS_TEST_FILE={
   name: "Tutorial 5: Testing POSTs and PUTs and all that jazz",
   text:
-    %{},
+    %{When I get http://wikipedia.org
+      I should see Hello World
+
+    So I know that searches work
+      When I post "search_query=kittens" to http://www.youtube.com/results
+        I should see Search Results
+        I should see Kittens on a Slide
+
+    So I know that searches work
+      When I get http://www.youtube.com
+        I should not see Search Results
+
+    When I head http://example.com
+      Response code should be 302
+      Header Server should contain BigIP},
   help: [
+    "\"On...\" is really just a shortcut for \"When I get...\"",
+    "This syntax lets you use other HTTP methods, and also lets you add data via POST and PUT",
+    "HEAD requests are useful when you only want to check headers.",
+    "\"When I...\" supports the HEAD, GET, POST, PUT and DELETE methods.",
     ]
 }
 
@@ -142,7 +163,25 @@ BROKEN_TEST_FILE={
 }
 
 
-tutorial_test_files = [
+# Setup and Teardown
+# ------------------
+# For more complicated tests, there might be setup and teardown actions
+# that you want to perform. Or, you might want to add something to your 
+# site that provides the Citrulu test-runner a logged-in session, so you
+# can test things that are only visible to authenticated users.
+
+# You can do this using the First and Finally commands. Citrulu will
+# fetch the "First" url, then the test url, and then the "Finally"
+# url. These statements must appear at the start of the test group.
+#On http://example.com
+#  First, fetch http://example.com/example/28268-eba/log-in-citrulu
+#  Finally, fetch http://example.com/example/28268-eba/log-out-citrulu
+#  I should see "Welcome, Citrulu!"
+#  I should see "Log out"
+#  I should not see "Log in to continue"
+
+
+TUTORIAL_TEST_FILES = [
   SITE_IS_UP_TEST_FILE,
   SOURCE_CONTAINS_TEST_FILE,
   MULTIPLE_GROUPS_AND_REGEX_TEST_FILE,
@@ -150,8 +189,5 @@ tutorial_test_files = [
   POSTS_FIRST_FINALLY_TEST_FILE,
   BROKEN_TEST_FILE
   # PREDEFS_TEST_FILE,
+  # SETUP_TEARDOWN_TEST_FILE,
 ]
-
-# Add in hashes of the file text. Doing this once on startup should speed things up:
-TUTORIAL_TEST_FILES = tutorial_test_files.collect{|f| f.merge(hash: f[:text].hash)}
-
