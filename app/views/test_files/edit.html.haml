@@ -16,12 +16,14 @@
         #tutorial_help.hero-unit.carousel.slide
           %ul.unstyled.carousel-inner
             - @help_texts.each_with_index do |text,i| 
-              %li.item.slide{:class => "#{' active' if i == @help_shown }" }
+              %li.item{:class => "#{' active' if i == @help_shown }" }
                 %p=text
                 %div.page_number
                   =i +1
                   of
                   =@help_texts.length 
+              %li.item
+              
 
           %a{:class=>"carousel-control left", href: "#tutorial_help", "data-slide"=>"prev"} &lsaquo;
           %a{:class=>"carousel-control right", href: "#tutorial_help", "data-slide"=>"next"} &rsaquo;
@@ -33,21 +35,23 @@
     
       %div.output=console_line({:welcome => @console_output})
   #help.span4
-    #run_toggle
-      = form_for(@test_file, url: {action: "update_run_status", id: @test_file.id}, remote: true, :html => {:id => "run_status_toggle_form", :class => "form-inline"}) do |f|
-        = f.hidden_field :run_tests
-        %label Run this test file?
-        - if @test_file.run_tests 
-          = f.submit "On", :class => "btn btn-large btn-success"
-        - else
-          = f.submit "Start", :class => "btn btn-large"
-  
     #liveview
       %h2 Live view
       %div.outline
         %div.group
           %div.pending{:class=> "liveview-row"} Edit a page to preview its results here
         %div.buttons
+        
+    #options
+      %h2 Options
+      %div.outline.clearfix
+        = form_for(@test_file, url: {action: "update_run_status", id: @test_file.id}, remote: true, :html => {:id => "run_status_toggle_form", :class => "form-inline"}) do |f|
+          = f.hidden_field :run_tests
+          %label Run this test file every hour?
+          - if @test_file.run_tests 
+            = f.submit "On", :class => "btn btn-success"
+          - else
+            = f.submit "Start", :class => "btn"
 
 
     %header.section_title
