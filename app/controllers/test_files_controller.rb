@@ -222,17 +222,6 @@ class TestFilesController < ApplicationController
     @test_file.delete!
   end
   
-  
-  # PUT /test_files/regenerate_tutorials
-  def regenerate_tutorials
-    current_user.create_tutorial_test_files
-    
-    respond_to do |format|
-      format.html { redirect_to action: "index" } #Fallback if js disabled
-      #format.js { }
-    end
-  end
-  
   protected
     
   # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page
