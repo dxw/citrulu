@@ -76,6 +76,7 @@ class User < ActiveRecord::Base
     TUTORIAL_TEST_FILES.reverse_each do |f|
       test_files.create!(
         :name => generate_name(f[:name]),
+        :tutorial_id => f[:id],
         :test_file_text => f[:text],
         :run_tests => false,
       )

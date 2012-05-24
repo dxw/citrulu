@@ -6,9 +6,26 @@
         %h1.span4
           %span.editable{"data-id" => @test_file.id}><
             =@test_file.name
+            
         #save_btn.span4
           %span#editor_status=@status_msg
           = f.submit "Save now", :class => "btn btn-primary"
+
+      - unless @help_shown.nil?
+        
+        #tutorial_help.hero-unit.carousel.slide
+          %ul.unstyled.carousel-inner
+            - @help_texts.each_with_index do |text,i| 
+              %li.item.slide{:class => "#{' active' if i == @help_shown }" }
+                %p=text
+                %div.page_number
+                  =i +1
+                  of
+                  =@help_texts.length 
+
+          %a{:class=>"carousel-control left", href: "#tutorial_help", "data-slide"=>"prev"} &lsaquo;
+          %a{:class=>"carousel-control right", href: "#tutorial_help", "data-slide"=>"next"} &rsaquo;
+        
       = f.text_area :test_file_text, :id => "editor_content"
  
     %section#console

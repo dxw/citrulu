@@ -128,7 +128,24 @@ body.test_files {
       }
     }
   }  
-
+  
+  #tutorial_help.hero-unit {
+    height: 9em;
+    padding: 5% 10%;
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+    }
+    .item {
+      width: 90%;
+      padding: 0 5%;
+      text-align: justify;
+      .page_number {
+        text-align: right;
+      }
+    }
+  }
+  
   #liveview {
     margin-top: 11px;
 

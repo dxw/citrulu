@@ -1,17 +1,20 @@
 SITE_IS_UP_TEST_FILE={
   name: "Tutorial 1: First steps",
+    id: 1,
   text: 
     %{On http://wikipedia.org
   I should see Hello World},
   help: [
     "This is a very simple test file which checks that Wikipedia is up and running by looking for some text that should be visible on that page.",
-    "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site. Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
+    "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site.",
+    "Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
     "To make the test pass, replace \"Hello World\" with \"The Free Encyclopedia\" (without quotes) and watch that row turn green."
   ]
 }
 
 SOURCE_CONTAINS_TEST_FILE={
   name: "Tutorial 2: Testing source code",
+    id: 2,
   text:
     %{So I know that The site is working
   On http://www.flickr.com
@@ -33,27 +36,28 @@ SOURCE_CONTAINS_TEST_FILE={
 
 MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
   name: "Tutorial 3: A more complex test file",
+    id: 3,
   text:
     %{So I know that the site is working
-      On http://bbc.co.uk
-        Source should contain alt="BBC"
+  On http://bbc.co.uk
+    Source should contain alt="BBC"
 
-    So I know that the weather feed is working
-      On http://bbc.co.uk
-        # Should have three temperatures, e.g. 25\xC2\xB0C
-        I should see /[0-9]+\xC2\xB0C/
-        Source should contain <div class="weather-icon">
-        Source should contain <a href="http://www.bbc.co.uk/weather/
+So I know that the weather feed is working
+  On http://bbc.co.uk
+    # Should have three temperatures, e.g. 25\xC2\xB0C
+    I should see /[0-9]+\xC2\xB0C/
+    Source should contain <div class="weather-icon">
+    Source should contain <a href="http://www.bbc.co.uk/weather/
 
-    So I know that the weather page is working
-      On http://bbc.co.uk/weather
-        I should see /Khazakstan (Today|Overnight)/
+So I know that the weather page is working
+  On http://bbc.co.uk/weather
+    I should see /Khazakstan (Today|Overnight)/
 
-    So I know that all the content discovery sections are present
-      On http://bbc.co.uk
-        I should see Most popular
-        I should see What's on
-        I should see Explore},
+So I know that all the content discovery sections are present
+  On http://bbc.co.uk
+    I should see Most popular
+    I should see What's on
+    I should see Explore},
   help: [
       "You can test as many things as you like on each URL",
       "You can also test multiple URLs and perform different groups of checks on the same URL",
@@ -65,28 +69,29 @@ MULTIPLE_GROUPS_AND_REGEX_TEST_FILE={
 
 ADVANCED_ASSERTIONS_TEST_FILE={
   name: "Tutorial 4: Testing Headers and Response Codes",
+    id: 4,
   text:
     %{So I know that caching is working
-      On http://www.youtube.com
-      Headers should include Expires
-      Headers should not include Etag
-      Header Cache-Control should contain FOO
-      Header Cache-Control should not contain private
+  On http://www.youtube.com
+    Headers should include Expires
+    Headers should not include Etag
+    Header Cache-Control should contain FOO
+    Header Cache-Control should not contain private
 
-    So I know that my content and markup are OK 
-      On http://www.youtube.com
-      Source should not contain </br>
-      I should not see Damn 
+So I know that my content and markup are OK 
+  On http://www.youtube.com
+    Source should not contain </br>
+    I should not see Damn 
 
-    So I know that redirection is working
-      On http://www.wikipedia.com
-        # Response code should be a redirect - 3xx
-        Response code should be /3../
-        Response code should be 200 after redirect
+So I know that redirection is working
+  On http://www.wikipedia.com
+    # Response code should be a redirect - 3xx
+    Response code should be /3../
+    Response code should be 200 after redirect
 
-    So I know that /nonsense doesn't exist 
-      On http://www.amazon.co.uk/nonsense         
-        Response code should be 200},
+So I know that /nonsense doesn't exist 
+  On http://www.amazon.co.uk/nonsense         
+    Response code should be 200},
   help: [
       "There are two checks you can perform on HTTP headers: \"Headers should include\" checks for the existence of a header",
       "The other type of header check looks for a particular value in that header. Replace \"FOO\" with \"no-cache\" to make the step pass",
@@ -100,22 +105,23 @@ ADVANCED_ASSERTIONS_TEST_FILE={
 
 HTTP_METHODS_TEST_FILE={
   name: "Tutorial 5: Testing POSTs and PUTs and all that jazz",
+    id: 5,
   text:
     %{When I get http://wikipedia.org
-      I should see Hello World
+  I should see Hello World
 
-    So I know that searches work
-      When I post "search_query=kittens" to http://www.youtube.com/results
-        I should see Search Results
-        I should see Kittens on a Slide
+So I know that searches work
+  When I post "search_query=kittens" to http://www.youtube.com/results
+    I should see Search Results
+    I should see Kittens on a Slide
 
-    So I know that searches work
-      When I get http://www.youtube.com
-        I should not see Search Results
+So I know that searches work
+  When I get http://www.youtube.com
+    I should not see Search Results
 
-    When I head http://example.com
-      Response code should be 302
-      Header Server should contain BigIP},
+When I head http://example.com
+  Response code should be 302
+  Header Server should contain BigIP},
   help: [
     "\"On...\" is really just a shortcut for \"When I get...\"",
     "This syntax lets you use other HTTP methods, and also lets you add data via POST and PUT",
@@ -126,32 +132,33 @@ HTTP_METHODS_TEST_FILE={
 
 BROKEN_TEST_FILE={
   name: "Tutorial 6: I'm broken - fix me",
+    id: 6,
   text:
     %{So I know that The page works
       On www.youtube.com
-        I should see YouTube
+    I should see YouTube
 
-    So I know that The page works
-      On https://www.faycebookz.com/
-        I should see Facebook
+So I know that The page works
+  On https://www.faycebookz.com/
+    I should see Facebook
 
-    So I know that The page works
-      On http://youtube.c%m
-        Source should contain Broadcast Yourself
+So I know that The page works
+  On http://youtube.c%m
+    Source should contain Broadcast Yourself
 
-    So I know that there are no </br> tags 
-      On http://www.facebook.com
-      Source Should not contain </br>
+So I know that there are no </br> tags 
+  On http://www.facebook.com
+  Source Should not contain </br>
 
-    So I know that the site works
-    So I know that both sites work
-      On http://www.wikipedia.com
-      On http://www.wikipedia.org
-        Response code should be 200 after redirect
+So I know that the site works
+So I know that both sites work
+  On http://www.wikipedia.com
+  On http://www.wikipedia.org
+    Response code should be 200 after redirect
 
-    So I know that the site works
-      On http://twitter.com/ 
-        I should see Welcome to twitter # this is some text on the homepage},
+So I know that the site works
+  On http://twitter.com/ 
+    I should see Welcome to twitter # this is some text on the homepage},
   help: [
     "This test file isn't compiling: see if you can fix it. We'll give you some hints:",
     "All URLs must be prefixed with http:// or https://",

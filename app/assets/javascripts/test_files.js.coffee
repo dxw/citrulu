@@ -32,6 +32,8 @@ $(window).load ->
     
     setup_run_status_toggle()
     
+    setup_tutorial_help()
+    
     highlight_help_text_code()
     
     # create a placeholder to store a hash of the text:
@@ -138,7 +140,12 @@ setup_run_status_toggle = ->
     )
   )
     
-      
+# Set up the help text carousel for tutorial files:
+setup_tutorial_help = ->
+  $('.carousel').carousel()
+  $('.carousel').carousel('pause')
+
+
 
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed

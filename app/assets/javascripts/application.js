@@ -10,4 +10,6 @@
 //= require bootstrap-collapse
 //= require bootstrap-tooltip
 //= require bootstrap-popover
+//= require bootstrap-transition
+//= require bootstrap-carousel
 //= require_tree .

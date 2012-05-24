@@ -49,6 +49,15 @@ class TestFilesController < ApplicationController
     @predefs = Predefs.all
 
     @console_output = "Welcome to Citrulu"
+    
+    unless @test_file.tutorial_id.nil?
+      @help_texts = TUTORIAL_TEST_FILES.select{|t| t[:id] == @test_file.tutorial_id}.first[:help]
+      
+      @help_shown = params[:help_text].to_i
+      @help_shown = 0 if @help_shown < 0 || @help_shown >= @help_texts.length  
+      
+      render action: "edit", help_text: @help_shown 
+    end
   end
 
   def update_liveview
