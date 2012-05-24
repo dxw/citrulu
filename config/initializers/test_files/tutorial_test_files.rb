@@ -22,9 +22,6 @@ SOURCE_CONTAINS_TEST_FILE={
     #   alt="Flickr logo. If you click it, you'll go home"
     I should see Flickr logo},
   help: [
-    # It's good to write tests for specific things, so that you know what broke if 
-    # the test fails. You can add "So" clauses to remind you what you're looking for:
-    
       "It's good to write tests for specific things, so that you know what broke if the test fails. You can add \"So\" clauses to remind you what you're looking for.",
       "You can also add comment lines to remind yourself what a particular step is doing. Comment lines start with a #",
       "Comments and \"So I know that\" clauses are both ignored by Citrulu",
@@ -135,7 +132,7 @@ BROKEN_TEST_FILE={
     id: 6,
   text:
     %{So I know that The page works
-      On www.youtube.com
+  On www.youtube.com
     I should see YouTube
 
 So I know that The page works
