@@ -8,6 +8,7 @@ class TestFile < ActiveRecord::Base
   
   # By default we only deal with test files where 'deleted' is Not true
   scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
+  scope :tutorials, where("tutorial_id IS NOT NULL")
   
   validates_presence_of :name
   validates :name, uniqueness: {scope: :user_id}
@@ -84,5 +85,9 @@ class TestFile < ActiveRecord::Base
   
   def delete!
     update_attributes(deleted: true)
+  end
+  
+  def next_tutorial
+    user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
   end
 end

@@ -21,9 +21,10 @@
                 %div.page_number
                   =i +1
                   of
-                  =@help_texts.length 
-              %li.item
-              
+                  =@help_texts.length
+            %li.item.last
+              %p Awesome! you've completed this tutorial!
+              =link_to "Continue with the next tutorial", edit_test_file_path(@test_file.next_tutorial), :class => "btn btn-large btn-primary"
 
           %a{:class=>"carousel-control left", href: "#tutorial_help", "data-slide"=>"prev"} &lsaquo;
           %a{:class=>"carousel-control right", href: "#tutorial_help", "data-slide"=>"next"} &rsaquo;
