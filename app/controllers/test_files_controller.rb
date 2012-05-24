@@ -29,17 +29,20 @@ class TestFilesController < ApplicationController
 #    end
 #  end
 
-  # GET /test_files/create
+  # POST /test_files/create
   def create
-    @test_file = TestFile.create!(
-      user_id: current_user.id,
-      name: current_user.new_test_file_name,
-      run_tests: true
-    )
-    # If it doesn't save successfully, it should rightly raise an exception.
-    
+    @test_file = current_user.create_new_test_file
+        
     redirect_to action: "edit", id: @test_file.id, :new => true
   end
+  
+  # POST /test_files/create_first_test_file
+  def create_first_test_file
+    @test_file = current_user.create_first_test_file
+
+    redirect_to action: "edit", id: @test_file.id, :new => true
+  end
+  
 
 
   # GET /test_files/1/edit
@@ -221,7 +224,7 @@ class TestFilesController < ApplicationController
     # Don't actually destroy - just mark as deleted
     @test_file.delete!
   end
-  
+    
   protected
     
   # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page

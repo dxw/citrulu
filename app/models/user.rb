@@ -83,6 +83,21 @@ class User < ActiveRecord::Base
     end
   end
   
+  def create_new_test_file
+    test_files.create!(
+      name: new_test_file_name,
+      run_tests: true
+    )
+  end
+  
+  def create_first_test_file
+    test_files.create!(
+      name: generate_name("My first Test File"),
+      test_file_text: FIRST_TEST_FILE_TEXT,
+      run_tests: true
+    )
+  end
+  
   private
 
   def inf val

@@ -101,4 +101,38 @@ describe User do
       @user.create_tutorial_test_files.should_not raise_error
     end
   end
+  
+  describe "create_new_test_file" do
+    before(:each) do
+      @count = @user.test_files.count
+      @user.create_new_test_file
+      @new_test_file = @user.test_files.last
+    end
+    
+    it "should create an empty test_file" do
+      @user.test_files.count.should == @count + 1
+      @new_test_file.test_file_text.should be_blank
+    end
+    
+    it "should be set to run tests " do
+      @new_test_file.run_tests.should be_true
+    end
+  end
+  
+  describe "create_first_test_file" do
+    before(:each) do
+      @count = @user.test_files.count
+      @user.create_first_test_file
+      @new_test_file = @user.test_files.last
+    end
+    
+    it "should create a test_file with helpful text in it" do
+      @user.test_files.count.should == @count + 1
+      @new_test_file.test_file_text.should == FIRST_TEST_FILE_TEXT
+    end
+    
+    it "should be set to run tests " do
+      @new_test_file.run_tests.should be_true
+    end
+  end
 end

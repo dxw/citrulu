@@ -23,8 +23,12 @@
                   of
                   =@help_texts.length
             %li.item.last
-              %p Awesome! you've completed this tutorial!
-              =link_to "Continue with the next tutorial", edit_test_file_path(@test_file.next_tutorial), :class => "btn btn-large btn-primary"
+              - if @test_file.next_tutorial
+                %p Awesome! you've completed this tutorial!
+                =link_to "Continue with the next tutorial", edit_test_file_path(@test_file.next_tutorial), :class => "btn btn-large btn-primary"
+              - else
+                %p Awesome! you've completed all the tutorials!
+                =link_to "Create your first test file", {action: :create_first_test_file}, method: :post, :class => "btn btn-large btn-success"
 
           %a{:class=>"carousel-control left", href: "#tutorial_help", "data-slide"=>"prev"} &lsaquo;
           %a{:class=>"carousel-control right", href: "#tutorial_help", "data-slide"=>"next"} &rsaquo;
