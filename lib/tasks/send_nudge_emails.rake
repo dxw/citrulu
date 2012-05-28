@@ -1,13 +1,11 @@
 desc "Send an email to users who haven't created real test files"
 task :send_nudge_emails => :environment do
   User.all.each do |user|
-    # Replace the below with a condition:
-    # true if the user hasn't created a test file
-    # AND the user's confirmed date is more than N days in the past
-    # false if the user has already been emailed
-  
-    if false && user.confirmed_at + 15.days > Date.Today 
+    # Send an email if the user signed up over 7 days ago, BUT
+    # the user has not already been sent this email.
+    if user.confirmed_at + 7.days < Date.today && !user.nudge_sent
       UserMailer.nudge(user).deliver
+      user.nudge_sent = true
     end
   end    
   

@@ -12,6 +12,29 @@ class User < ActiveRecord::Base
 
   attr_accessor :invitation_code
 
+  # Define meta variables as methods: 
+  ["nudge_sent"].each do |meta|
+    define_method meta do
+      # Assumption: that there's only one instance of any one meta variable
+      m = user_metas.where(name: meta).first
+      return true unless m.nil?
+    end
+    
+    define_method "#{meta}_time" do
+      # Assumption: that there's only one instance of any one meta variable
+      m = user_metas.where(name: meta).first
+      return m.timestamp unless m.nil?
+    end
+    
+    define_method "#{meta}=" do |value|
+      user_metas.where(name: meta).destroy_all
+      if value == true 
+        user_metas.create(name: meta, timestamp: Time.now)
+      end
+    end
+  end
+  
+
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference
   
@@ -22,6 +45,7 @@ class User < ActiveRecord::Base
   end
   
   has_many :test_files, :dependent => :destroy
+  has_many :user_metas
   belongs_to :invitation
   belongs_to :plan
   
@@ -100,6 +124,10 @@ class User < ActiveRecord::Base
       test_file_text: FIRST_TEST_FILE_TEXT,
       run_tests: true
     )
+  end
+  
+  def nudge_sent?
+    user_metas.where("nudge_sent.is")
   end
   
   private
