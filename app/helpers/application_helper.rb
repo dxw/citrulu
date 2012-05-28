@@ -29,6 +29,7 @@ module ApplicationHelper
 
   def unimplemented_popover
     {
+      rel: "popover",
       "data-content" => "Sorry, this isn't implemented yet. We'll get to it when we can. If you have a burning need for it, please let us know using the feedback tab!",
       "data-original-title" => "Not implemented yet"
     }
