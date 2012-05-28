@@ -9,6 +9,8 @@ class TestFile < ActiveRecord::Base
   # By default we only deal with test files where 'deleted' is Not true
   scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
   scope :tutorials, where("tutorial_id IS NOT NULL")
+  scope :running, where(run_tests: true)
+  scope :not_running, where("run_tests IS NULL OR run_tests = ?", false)
   
   validates_presence_of :name
   validates :name, uniqueness: {scope: :user_id}

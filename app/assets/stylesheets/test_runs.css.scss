@@ -153,6 +153,13 @@ body.test_runs {
         font-size:1.2em;
       }
     }
+    #not_running_test_files {
+      .btn {
+        display:block;
+        text-align:left;
+        margin-bottom:9px;
+      }
+    }
   }
 
   ul#test_runs_list{
