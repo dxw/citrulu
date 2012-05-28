@@ -102,6 +102,28 @@ describe User do
     end
   end
   
+  describe "first_tutorial" do
+    before(:each) do
+      @new_user = FactoryGirl.create(:user)
+      @new_user.test_files.destroy_all
+      FactoryGirl.create(:test_file, user: @new_user, tutorial_id: 2)
+    end
+    it "should return nil if the appropriate test file doesn't exist" do
+      @new_user.first_tutorial.should be_nil
+    end
+    
+    it "should return the test file associated with the current user which has a tutorial ID of 1" do
+      tutorial_file = FactoryGirl.create(:test_file, user: @new_user, tutorial_id: 1)
+      @new_user.first_tutorial.should == tutorial_file
+    end
+    
+    it "should not return the test file associated with the current user which has a tutorial ID of 1 if that file is deleted" do
+      tutorial_file = FactoryGirl.create(:test_file, user: @new_user, tutorial_id: 1, deleted: true)
+      @new_user.first_tutorial.should be_nil
+    end
+    
+  end
+  
   describe "create_new_test_file" do
     before(:each) do
       @count = @user.test_files.count

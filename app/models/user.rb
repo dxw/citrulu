@@ -83,6 +83,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def first_tutorial 
+    test_files.tutorials.not_deleted.where(tutorial_id: 1).first
+  end
+  
   def create_new_test_file
     test_files.create!(
       name: new_test_file_name,

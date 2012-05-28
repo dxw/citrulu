@@ -10,8 +10,14 @@
         %p After you've written your tests, we'll run them every hour and let you know if anything fails.
       .span4.offset1
         %p We've created a set of tutorial test files to help you get to grips with Citrulu's super-simple syntax.
-        %p 
-          %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Start the tutorial
+        - if current_user.first_tutorial
+          %p 
+            %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.first_tutorial)} Start the tutorial
+        - else
+          %em
+            The first tutorial file seems to have been deleted - please 
+            = mail_to 'contact@citrulu.com', "send us an email"
+            if you'd like us to re-generate it for you. 
         
 .row
   #test_list.span8
