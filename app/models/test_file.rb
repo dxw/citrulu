@@ -87,6 +87,7 @@ class TestFile < ActiveRecord::Base
     update_attributes(deleted: true)
   end
   
+  # For tutorial files - get the next tutorial file.
   def next_tutorial
     user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
   end

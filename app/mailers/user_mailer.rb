@@ -5,7 +5,18 @@ class UserMailer < ActionMailer::Base
   
   def welcome_email(user)
     @title = "Welcome to Citrulu"
-    mail(to: user.email, subject: "Welcome to Citrulu")
+    mail(to: user.email, subject: @title)
+  end
+  
+  def nudge(user)
+    @title = "How are you getting on with Citrulu?"
+    if user.first_tutorial
+      @first_tutorial_url = edit_test_file_url(user.first_tutorial)
+    else
+      # They must have deleted the first tutorial fiel
+      @first_tutorial_url = test_files_url
+    end
+    mail(to: user.email, subject: @title)
   end
   
   def first_test_notification_success(test_run)
@@ -68,11 +79,6 @@ class UserMailer < ActionMailer::Base
     to = test_run.test_file.user.email
     headers( test_notification_headers )
     mail(to: to, subject: subject, template_name: 'test_notification')
-  end
-  
-  def nudge(user)
-    @title = "Need a hand getting started with Citrulu?"
-    mail(to: user.email, subject: @title)
   end
   
   protected

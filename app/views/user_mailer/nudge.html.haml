@@ -1,15 +1,15 @@
 -content_for :content do
   
   %p{:style => content_p_styles} Thanks again for signing up to Citrulu!
-  %p{:style => content_p_styles} It looks like you haven't written any tests for your sites yet so we thought we'd get in touch to see if we can help you get started.
-  %p{:style => content_p_styles} Citrulu is a service that lets you write tests for your live websites which we will then run on a regular basis so that you can be confident that everything is working as it should be.
-  
-  %p{:style => content_p_styles} We've made writing tests for your sites super-easy: we've created an example test file which you can quickly modify to point at the sites you want to test:
+  %p{:style => content_p_styles} You activated your account over a week ago so we thought we'd get in touch to see how you're getting on.
+  %p{:style => content_p_styles} If you've already set up some tests for your live websites, then we're running them on a regular basis: we'd love to know if they've helped you uncover any problems and generally what you think of the service.
+
+  %p{:style => content_p_styles} If you haven't got that far yet, we've set up some Tutorial test files to guide you through the process of writing tests for your sites:
   %table{:style => "text-align: center; margin-bottom:10px;"} 
     %tr
       %td{:style => "width:220px"}
       %td{:style => content_button_td_styles + "width:198px;"} 
-        =link_to "Let's get started!", test_files_url, :style => content_button_a_styles
+        =link_to "Let's get started!", @first_tutorial_url, :style => content_button_a_styles
       %td{:style => "width:220px"}
   
   %p{:style => content_p_styles} Citrulu is free during the Alpha, so please feel free to add as many tests as you like.
@@ -17,8 +17,6 @@
     Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
     = mail_to 'contact@citrulu.com', "send us an email", :style => content_a_styles
     &ndash; or post something using the feedback form on the site. 
-  
-  %p{:style => content_p_styles} We'd also love to hear from you if you've got any suggestions for how we can make Citrulu even better.
 
 - content_for :footer_text do
   %span
