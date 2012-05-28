@@ -297,8 +297,9 @@ body.test_files.index {
             padding-right: 1em
           }
 
-          span.last_updated {
+          span.last_updated, span.last_run {
             font-style: italic;
+            display:block;
           }
         }
         a.btn-danger {

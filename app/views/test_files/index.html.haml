@@ -39,6 +39,15 @@
                 .row-fluid
                   .span7
                     %span.last_updated="Last updated at #{file.updated_at}"
+                    -if file.compiled?
+                      %span.last_run
+                        - if file.run_tests?
+                          - if file.last_run
+                            Last run at #{file.last_run.time_run}
+                          - else
+                            Not yet run
+                        - else
+                          Not set to run: click to change. 
                   .span5
                     %span.file_info
                       -if file.compiled?

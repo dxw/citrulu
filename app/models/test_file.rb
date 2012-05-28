@@ -14,7 +14,7 @@ class TestFile < ActiveRecord::Base
   validates :name, uniqueness: {scope: :user_id}
   
   def last_run
-    test_runs.max{|r,u| r.time_run <=> u.time_run }
+    test_runs.order("time_run DESC").first
   end
 
   def owner
