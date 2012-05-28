@@ -127,15 +127,17 @@ describe TestFile do
   
   describe "next_tutorial" do
     before(:each) do
-      @test_file = FactoryGirl.create(:test_file, tutorial_id:0)
+      @user = FactoryGirl.create(:user)
+      @user.test_files.destroy_all
+      @test_file = FactoryGirl.create(:test_file, user: @user, tutorial_id:0)
     end
     
     context "when a next file exists" do
       it "should return the next tutorial file" do
-        next_test_file = FactoryGirl.create(:test_file, tutorial_id:2)
-        FactoryGirl.create(:test_file, tutorial_id:5)
+        next_test_file = FactoryGirl.create(:test_file, user: @user, tutorial_id:2)
+        FactoryGirl.create(:test_file, user: @user, tutorial_id:5)
         
-        @test_file.next_tutorial.should == next_test_file1
+        @test_file.next_tutorial.should == next_test_file
       end
     end
     context "when a next file does not exist" do
