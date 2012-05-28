@@ -126,8 +126,11 @@ class User < ActiveRecord::Base
     )
   end
   
-  def nudge_sent?
-    user_metas.where("nudge_sent.is")
+  def send_nudge_email
+    UserMailer.nudge(self).deliver
+    
+    # This creates a record in user_meta - no need to save the User model.
+    nudge_sent = true
   end
   
   private
