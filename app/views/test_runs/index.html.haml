@@ -65,7 +65,7 @@
               - else
                 %p.summary
                   Tests are being run based on the 
-                  =link_to "last successfully compiled file", "#", unimplemented_popover.merge('data-placement' => 'bottom', onclick: "return false;") 
+                  =unimplemented_popover "last successfully compiled file", {'data-placement' => 'bottom'}
                   \- dated 10th March 2012.
                 %p.summary="Those tests were last run on #{file.last_run.time_run}"
               %a.btn{:href => edit_test_file_path(file)} Edit
