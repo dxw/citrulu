@@ -71,7 +71,7 @@
               %a.btn{:href => edit_test_file_path(file)} Edit
     
     - unless @not_running_test_files.empty?
-      %h3 Inctive test files
+      %h3 Inactive test files
       %p The following test files have not been set to run regularly. Click a file to edit it and change this status:
       %ul.unstyled#not_running_test_files
         - @not_running_test_files.each do |file|
