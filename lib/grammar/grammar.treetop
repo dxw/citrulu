@@ -68,7 +68,7 @@ grammar TesterGrammar
   end
 
   rule parameter
-    ( escaped_value / quoted_value / name / regex / value ) <Param>
+    ( escaped_value / quoted_value / name / regex / required_value ) <Param>
   end
 
   rule value
