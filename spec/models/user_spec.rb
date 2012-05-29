@@ -98,7 +98,7 @@ describe User do
   
   describe "create_tutorial_test_files" do
     it "should execute without errors" do
-      @user.create_tutorial_test_files.should_not raise_error
+      expect { @user.create_tutorial_test_files }.to_not raise_error
     end
   end
   
