@@ -192,11 +192,16 @@ class TestFilesController < ApplicationController
   # PUT /test_files/update_name/1
   def update_name
     @test_file = TestFile.find(params[:id])
-    new_name = params[:test_file][:name]  
-    if @test_file.update_attribute(:name, new_name)  
-      # if the name has been updated, put its value back to the page
-      render :text => new_name
-    end  
+    new_name = params[:test_file][:name]
+    
+    @test_file.name = new_name
+    if !@test_file.save
+      # Assume it was because the name was taken
+      @test_file.name = current_user.generate_name(new_name)
+      @test_file.save!
+    end
+    
+    render :text => @test_file.name
   end
   
   # PUT /test_files/update_run_status/1

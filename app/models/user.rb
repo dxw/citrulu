@@ -86,12 +86,22 @@ class User < ActiveRecord::Base
     names = test_files.pluck :name
     if !names.include?(string)
       string
-    else 
-      n = 1
-      until !names.include?("#{string}#{n}") do 
+    else
+      # Find the existing tail number if any:
+      number_suffix = string.match /\d+$/
+      if number_suffix.nil?
+        n = 1
+      else
+        n = number_suffix[0].to_i + 1 
+      end
+      
+      #remove the numbers from the end of the string:
+      trimmed_string = string.gsub /\d+$/, ""
+      
+      until !names.include?("#{trimmed_string}#{n}") do 
         n += 1
       end
-      "#{string}#{n}"
+      "#{trimmed_string}#{n}"
     end
   end
   

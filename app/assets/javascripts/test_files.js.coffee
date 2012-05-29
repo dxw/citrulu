@@ -88,10 +88,11 @@ setup_title = ->
 
 
 insert_edit_icon = ->
-  # Insert an icon after the field
-  $(".editable").after("<i id='edit_icon' class='icon-pencil'/>")
-  # Clicking on the icon acts like clicking on the field
-  $("#edit_icon").click( -> $(".editable").click() )
+  # Insert an icon after the field if one doesn't already exist:
+  if $("#edit_icon").length == 0
+    $(".editable").after("<i id='edit_icon' class='icon-pencil'/>")
+    # Clicking on the icon acts like clicking on the field
+    $("#edit_icon").click( -> $(".editable").click() )
   
   # # Check to see if there is enough room to fit the icon on the same line as the content:  
   # icon_width = 
