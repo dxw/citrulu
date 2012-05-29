@@ -18,19 +18,35 @@ describe TestRunsController do
   
   describe "GET index" do
     # it "assigns all test_runs as @test_runs" do
-    it "should define @test_files" do
+    it "should define @running_test_files" do
+      FactoryGirl.create(:test_file, user: @user, run_tests: true)
       get :index
-      assigns(:test_files)[0].should be_a(TestFile) 
+      assigns(:running_test_files)[0].should be_a(TestFile) 
+    end
+    it "should define @not_running_test_files" do
+      FactoryGirl.create(:test_file, user: @user, run_tests: false)
+      get :index
+      assigns(:not_running_test_files)[0].should be_a(TestFile) 
     end
     it "should define @test_runs" do
       FactoryGirl.create(:test_run, :test_file => @user.test_files[0])
       get :index
       assigns(:test_runs)[0].should be_a(TestRun) 
     end
-
-    it "should define @recent_failed_test_groups" do
-      get :index
-      assigns(:recent_failed_groups).should be_an(Array) 
+    
+    context "when there are running test_files" do
+      before(:each) do
+        FactoryGirl.create(:test_file, user: @user, run_tests: true)
+      end
+      it "should define @recent_failed_test_groups" do
+        get :index
+        assigns(:recent_failed_groups).should be_an(Array) 
+      end
+      
+      it "should define @recent_failed_test_groups" do
+        get :index
+        assigns(:recent_failed_groups).should be_an(Array) 
+      end
     end
     
     it "should render the index template" do
@@ -40,11 +56,14 @@ describe TestRunsController do
     end
 
     it "only shows test runs which belong to the current user" do 
-      another_user = FactoryGirl.create(:user)
-
+      test_file = FactoryGirl.create(:test_file, user: @user)
+      FactoryGirl.create(:test_run, test_file: test_file )
+      
+      # We now have one test run for the current user, and one for another user (defined in the before :each above)
+      
       get :index
 
-      file_users = assigns(:test_files).collect{|f| f.user_id}.uniq
+      file_users = assigns(:test_runs).collect{|f| f.test_file.user_id}.uniq
 
       file_users.should have(1).items
       file_users.first.should == controller.current_user.id
