@@ -3,6 +3,7 @@ SimpleCov.start do
   add_filter '/spec/'
   add_filter '/config/'
   add_filter '/vendor/'
+  add_filter '/app/admin/'
 end
 
 require 'pry' # specs need debugging sometimes too!
