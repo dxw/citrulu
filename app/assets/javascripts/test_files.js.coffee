@@ -28,8 +28,6 @@ $(window).load ->
     
     setup_title()
     
-    title_editable_if_new()
-    
     setup_run_status_toggle()
     
     setup_tutorial_help()
@@ -79,12 +77,15 @@ setup_title = ->
   }
     
   test_file_id = $(".editable").attr("data-id")
-  $(".editable").editable("/test_files/"+test_file_id, args)
+  $(".editable").editable("/test_files/update_name/"+test_file_id, args)
   
   $(".editable").click( (e) -> 
     $("#edit_icon").remove()
     $(".editable input").css("width","100%")
   )
+  
+  title_editable_if_new()
+
 
 insert_edit_icon = ->
   # Insert an icon after the field

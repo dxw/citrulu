@@ -115,66 +115,60 @@ class TestFilesController < ApplicationController
   # PUT /test_files/1
   def update
     @test_file = TestFile.find(params[:id])
-    
-    # We're either going to get the test_file_text, or the name, but not both together.
-    # We only need to try and compile if we have text:
-    if params[:test_file][:name].nil? 
-      # Then we should expect some code:
-      code = params[:test_file][:test_file_text]
-      begin
-        # If there's no code to complile, don't even try - drop straight through to the 'else' block
-        CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
-  
-      rescue CitruluParser::TestPredefError => e
-        # Unknown predef:
-        @console_msg_hash = { :text0 => e.to_s }
-        succeeded = false
+    code = params[:test_file][:test_file_text]
+    begin
+      # If there's no code to complile, don't even try - drop straight through to the 'else' block
+      CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
 
-      rescue CitruluParser::TestCompileError => e
-        # Compile fail:
-        begin 
-          error = CitruluParser.format_error(e)
-        rescue => e
-          @console_msg_hash = {
-            :text1 => "Something has gone wrong: ",
-            :exception_text => e.to_s,
-            :text2 => " Sorry! This is a bug. Please let us know."
-          }
-          succeeded = false
-        else
-      
-          @console_msg_hash = {
-            :text1 => "Compilation failed! Expected: ",
-            :expected => error[:expected],
-            :text2 => " at line ",
-            :line => error[:line],
-            :text3 => ", column ",
-            :column => error[:column],
-          }
+    rescue CitruluParser::TestPredefError => e
+      # Unknown predef:
+      @console_msg_hash = { :text0 => e.to_s }
+      succeeded = false
 
-          if !error[:after].empty?
-            @console_msg_hash[:text4] = " after "
-            @console_msg_hash[:after] = error[:after]
-          end
-          succeeded = false
-        end
-    
+    rescue CitruluParser::TestCompileError => e
+      # Compile fail:
+      begin 
+        error = CitruluParser.format_error(e)
       rescue => e
-        # catch-all, including CitruluParser::TestCompileUnknownError
         @console_msg_hash = {
           :text1 => "Something has gone wrong: ",
           :exception_text => e.to_s,
           :text2 => " Sorry! This is a bug. Please let us know."
         }
         succeeded = false
-      
       else
-        # Compile win!
-        @console_msg_hash = { :text0 => "Saved!" }
-        succeeded = true
+    
+        @console_msg_hash = {
+          :text1 => "Compilation failed! Expected: ",
+          :expected => error[:expected],
+          :text2 => " at line ",
+          :line => error[:line],
+          :text3 => ", column ",
+          :column => error[:column],
+        }
 
-        @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+        if !error[:after].empty?
+          @console_msg_hash[:text4] = " after "
+          @console_msg_hash[:after] = error[:after]
+        end
+        succeeded = false
       end
+  
+    rescue => e
+      # catch-all, including CitruluParser::TestCompileUnknownError
+      @console_msg_hash = {
+        :text1 => "Something has gone wrong: ",
+        :exception_text => e.to_s,
+        :text2 => " Sorry! This is a bug. Please let us know."
+      }
+      succeeded = false
+    
+    else
+      # Compile win!
+      @console_msg_hash = { :text0 => "Saved!" }
+      succeeded = true
+
+      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
     end
     
     if succeeded
@@ -190,16 +184,19 @@ class TestFilesController < ApplicationController
 
       # TODO: is there a case where the test_file can't be updated? What on earth would we do then??
       
-      format.html { 
-        if request.xhr?
-          # if the name has been updated, put its value back to the page
-          render :text => params[:test_file].values.first
-        else  
-          render action: "edit"
-        end
-      }
+      format.html { render action: "edit" }
       format.js { }
     end
+  end
+  
+  # PUT /test_files/update_name/1
+  def update_name
+    @test_file = TestFile.find(params[:id])
+    new_name = params[:test_file][:name]  
+    if @test_file.update_attribute(:name, new_name)  
+      # if the name has been updated, put its value back to the page
+      render :text => new_name
+    end  
   end
   
   # PUT /test_files/update_run_status/1
