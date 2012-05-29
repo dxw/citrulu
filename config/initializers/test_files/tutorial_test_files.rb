@@ -8,7 +8,7 @@ SITE_IS_UP_TEST_FILE={
     "This is a very simple test file which checks that Wikipedia is up and running by looking for some text that should be visible on that page.",
     "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site.",
     "Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
-    "To make the test pass, replace \"Hello World\" with \"The Free Encyclopedia\" (without quotes) and watch that row turn green."
+    "To make the test pass, replace \"Hello World\" with \"Encyclopedia\" and watch that row turn green."
   ]
 }
 
@@ -24,10 +24,9 @@ SOURCE_CONTAINS_TEST_FILE={
   help: [
       "It's good to write tests for specific things, so that you know what broke if the test fails. You can add \"So\" clauses to remind you what you're looking for.",
       "You can also add comment lines to remind yourself what a particular step is doing. Comment lines start with a #",
-      "Comments and \"So I know that\" clauses are both ignored by Citrulu",
-      "Sometimes the thing you want to look for to make sure that a site is up isn't in the text of the page. Citrulu supports a number of different types of checks",
-      "To check for strings in the markup of the page you can use the \"Source should contain\"",
-      "To make the test pass, replace the \"I should see\" with \"Source should contain\""
+      "Sometimes it's not possible or sufficient to look for something in the text of the page. Citrulu supports a number of different types of checks.",
+      "To check for strings in the markup of the page you can use \"Source should contain\".",
+      "To make the test pass, replace the \"I should see\" with \"Source should contain\"."
     ]
 }
 
@@ -56,7 +55,7 @@ So I know that all the content discovery sections are present
     I should see What's on
     I should see Explore},
   help: [
-      "You can test as many things as you like on each URL",
+      "You can test as many things as you like on each page",
       "You can also test multiple URLs and perform different groups of checks on the same URL",
       "You can use Regular Expressions to write more flexible tests",
       "Fix the test which is failing by replacing Khazakstan with the location of the Citrulu servers (UK)"
@@ -96,7 +95,7 @@ So I know that /nonsense doesn't exist
       "All checks that Citrulu runs have an implicit expectation that the HTTP response code should be 200 (OK) unless specified otherwise",
       "www.wikipedia.com returns a 301 redirect - we can check for that with \"Response code should be\"",
       "We can also check that when the redirect is followed, we successfully get the page.",
-      "In the amazon.com example, change the expected response code to 400 to make that test pass."
+      "In the Amazon.co.uk example, change the expected response code to 400 to make that test pass."
     ]
 }
 
