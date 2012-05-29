@@ -9,7 +9,7 @@ class TestRunsController < ApplicationController
   # GET /test_runs.json
   def index
     @running_test_files = current_user.test_files.not_deleted.running
-    @not_running_test_files = current_user.test_files.not_deleted.not_running
+    @not_running_test_files = current_user.test_files.not_deleted.not_running.order("name ASC")
     
     unless @running_test_files.blank?
       @recent_failed_groups = @running_test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
