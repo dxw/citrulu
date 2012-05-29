@@ -143,6 +143,12 @@ class User < ActiveRecord::Base
     nudge_sent = true
   end
   
+  # This sets the from field on Devise emails:
+  def headers_for(action)
+    {:from => "Citrulu <contact@citrulu.com>"}
+  end
+  
+  
   private
 
   def inf val
