@@ -56,6 +56,17 @@ describe TestFilesController do
   end
   
   
+  describe "POST create_first_test_file" do
+    it "should assign @test_file" do
+      User.any_instance.should_receive(:create_first_test_file).and_return(@test_file)
+      post :create_first_test_file
+    end
+    
+    it "should redirect to the editor with 'new=true'" do
+      post :create_first_test_file
+      response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
+    end
+  end
 
   describe "GET edit" do
     it "assigns the requested test_file as @test_file" do
@@ -276,10 +287,6 @@ describe TestFilesController do
     end
   end
   
-  describe "POST create_first_test_file" do
-  
-  end
-  
 
   describe "DELETE destroy" do
     context "when the file belongs to the user" do
@@ -287,7 +294,7 @@ describe TestFilesController do
         TestFilesController.stub(:check_ownership!)
       end
     
-      it "sets 'deleted' to true" do
+      it "Calls 'delete!' on the model" do
         TestFile.any_instance.should_receive(:delete!)
         delete :destroy, :id => @test_file.to_param, :format => 'js'
       end
