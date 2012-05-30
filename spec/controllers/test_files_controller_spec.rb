@@ -148,49 +148,74 @@ describe TestFilesController do
     context "when a compilation error is raised" do 
       before(:each) do
         controller.stub(:check_ownership!)
+        CitruluParser.any_instance.stub(:compile_tests).and_raise(CitruluParser::TestCompileError.new("foo"))
+      end
+      
+      context "and the error can be formatted" do
+        before(:each) do
+          CitruluParser.stub(:format_error).and_return({:after => "x"})
+          put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "some text"}}
+        end
+        it "should set error messages" do
+          assigns(:console_msg_type).should == "error"
+          assigns(:status_msg).should == "Saved (with errors)"
+        end
+      
+        it "raises an appropriate console message" do
+          assigns(:console_msg_hash)[:text1].should include "Compilation failed"
+        end
+      end
+      
+      context "and the error could not be formatted" do
+        before(:each) do
+          CitruluParser.stub(:format_error).and_raise("a format error")
+          put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "some text"}}
+        end
+        it "should set error messages" do
+          assigns(:console_msg_type).should == "error"
+          assigns(:status_msg).should == "Saved (with errors)"
+        end
+        
+        it "raises an appropriate console message" do
+          #These should maybe be split out into seperate tests?
+          assigns(:console_msg_hash)[:text1].should include "Something has gone wrong"
+        end
+      end
+    end
+    
+      
+    context "when a predef error is raised" do
+      before(:each) do 
+        CitruluParser.any_instance.stub(:compile_tests).and_raise(CitruluParser::TestPredefError.new("foo"))
+        put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "foo"}}
+      end
+      it "should set error messages" do
+        assigns(:console_msg_type).should == "error"
+        assigns(:status_msg).should == "Saved (with errors)"
+      end
+      
+      it "should assign @console_msg_hash" do
+        assigns(:console_msg_hash).should be_a(Hash)
+        assigns(:console_msg_hash).should_not be blank?
+      end
+    end
+      
+    context "when an unknown error is raised" do
+      before(:each) do 
+        CitruluParser.any_instance.stub(:compile_tests).and_raise(CitruluParser::TestCompileUnknownError.new("foo"))
+        put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "foo"}}
         @new_test_file_params = {:test_file_text => "foo"}
       end
       
-      context "because the input was invalid" do
-        it "raises an appropriate error message" do
-          put :update, {:id => @test_file.to_param, :test_file => {:test_file_text => "foo"}}
+      it "should set error messages" do
+        assigns(:console_msg_type).should == "error"
+        assigns(:status_msg).should == "Saved (with errors)"
+      end
 
-          #These should maybe be split out into seperate tests?
-          assigns(:console_msg_hash)[:text1].should include "Compilation failed"
-          assigns(:console_msg_hash)[:expected].should include "#"
-          assigns(:console_msg_hash)[:line].should == "1"
-          assigns(:console_msg_hash)[:column].should == "1"
-        end
-        
-        context "and the error could not be formatted" do
-          before(:each) do 
-            CitruluParser.any_instance.stub(:format_error).and_raise("foo")
-          end
-          it "raises an appropriate error message" do
-            pending
-            put :update, {:id => @test_file.to_param, :test_file => @new_test_file_params}
-            # Check for the error:
-          end
-        end
+      it "should assign @console_msg_hash" do
+        assigns(:console_msg_hash).should be_a(Hash)
+        assigns(:console_msg_hash).should_not be blank?
       end
-      
-      context "because of an unknown error" do
-        before(:each) do 
-          CitruluParser.any_instance.stub(:compile_tests).and_raise(CitruluParser::TestCompileUnknownError.new("foo"))
-          @new_test_file_params = {:test_file_text => "foo"}
-        end
-        
-        it "raises an appropriate error message" do
-          pending
-          put :update, {:id => @test_file.to_param, :test_file => @new_test_file_params}
-          # Check for the error:
-        end  
-      end
-      
-      context "because of a predef error" do
-        it "raises an appropriate error message"
-      end
-      
     end
     
     describe "shouldn't try and compile" do

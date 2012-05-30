@@ -126,6 +126,7 @@ class TestFilesController < ApplicationController
       succeeded = false
 
     rescue CitruluParser::TestCompileError => e
+      succeeded = false
       # Compile fail:
       begin 
         error = CitruluParser.format_error(e)
@@ -135,7 +136,7 @@ class TestFilesController < ApplicationController
           :exception_text => e.to_s,
           :text2 => " Sorry! This is a bug. Please let us know."
         }
-        succeeded = false
+        
       else
     
         @console_msg_hash = {
@@ -151,7 +152,6 @@ class TestFilesController < ApplicationController
           @console_msg_hash[:text4] = " after "
           @console_msg_hash[:after] = error[:after]
         end
-        succeeded = false
       end
   
     rescue => e
