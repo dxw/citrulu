@@ -75,6 +75,20 @@ describe TestFilesController do
       assigns(:test_file).should eq(@test_file)
     end
     
+    context "when the test file is a tutorial" do
+      before(:each) do
+        @test_file.update_attribute(:tutorial_id, 1)
+        get :edit, {:id => @test_file.to_param}
+      end
+      it "should assign an array of strings to @help_texts" do
+        assigns(:help_texts).should be_an(Array)
+        assigns(:help_texts).first.should be_a(String)
+      end
+      it "should assign @help_shown" do
+        assigns(:help_shown).should be_an(Integer)
+      end
+    end
+    
     it "checks ownership of the test file" do
       get :edit, {:id => @other_test_file.to_param}
       response.should redirect_to(:controller => "test_files", :action => "index")
