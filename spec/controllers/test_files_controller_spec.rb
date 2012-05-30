@@ -14,7 +14,7 @@ describe TestFilesController do
   end
   
   before(:each) do
-    @test_file = FactoryGirl.create(:test_file)
+    @test_file = FactoryGirl.create(:test_file, user: @user)
     
     # For ownership checks: create another user with their own test file
     other_user = FactoryGirl.create(:user)
@@ -196,6 +196,52 @@ describe TestFilesController do
     end
   end
 
+  describe "PUT update_name" do
+    before(:each) do
+      @new_name = "New Name"
+    end
+    
+    after(:each) do 
+      put :update_name,  {:id => @test_file.to_param, :test_file => {name: @new_name}}
+    end
+    
+    context "when the name is not taken" do
+      it "should assign that name" do
+        TestFile.any_instance.should_receive(:name=).with(@new_name)
+      end
+      
+      it "should save the test file" do
+        TestFile.any_instance.should_receive(:save)
+      end
+      
+    end
+    
+    context "when the name is taken" do
+      before(:each) do
+        FactoryGirl.create(:test_file, name: @new_name, user: @user)
+      end
+      it "should generate a different name" do
+        User.any_instance.should_receive(:generate_name).with(@new_name).and_return("foo") 
+      end
+      
+      it "should assign a new name to the test_file" do
+        TestFile.any_instance.should_receive(:name=)
+        # 'should_recieve' means that the function doesn't actually execute,
+        # so we need to simulate the validation failure: 
+        TestFile.any_instance.stub(:save).and_return(false)
+        User.any_instance.stub(:generate_name).and_return("foo123")
+        
+        # Second assignment:
+        TestFile.any_instance.should_receive(:name=).with("foo123")
+      end
+      
+      it "should save the test file" do
+        TestFile.any_instance.should_receive(:save!)
+      end
+      
+    end
+  end
+
   describe "PUT update_run_status" do
     context "when the current status is run_tests=true" do
       before(:each) do
@@ -233,32 +279,29 @@ describe TestFilesController do
   describe "POST create_first_test_file" do
   
   end
+  
 
-#
-#  Commented out, along with the delete method, until we actually need it
-#
-#  describe "DELETE destroy" do
-#    before (:each) do
-#      TestFilesController.skip_before_filter :check_ownership!
-#    end
-#    
-#    it "destroys the requested test_file" do 
-#      test_file = FactoryGirl.create(:test_file)
-#      expect {
-#        delete :destroy, {:id => test_file.to_param}
-#      }.to change(TestFile, :count).by(-1)
-#    end
-#  
-#    it "redirects to the test_files list" do
-#      test_file = FactoryGirl.create(:test_file)
-#      delete :destroy, {:id => test_file.to_param}
-#      response.should redirect_to(test_files_url)
-#    end
-#
-#    it "checks ownership of the test file" do
-#      delete :destroy, {:id => @other_test_file.to_param}
-#      response.should redirect_to(:controller => "test_files", :action => "index")
-#    end
-#  end
+  describe "DELETE destroy" do
+    context "when the file belongs to the user" do
+      before (:each) do
+        TestFilesController.stub(:check_ownership!)
+      end
+    
+      it "sets 'deleted' to true" do
+        TestFile.any_instance.should_receive(:delete!)
+        delete :destroy, :id => @test_file.to_param, :format => 'js'
+      end
+
+      it "renders the destroy (js) template" do
+        delete :destroy, :id => @test_file.to_param, :format => 'js'
+        response.should render_template("destroy")
+      end
+    end
+
+    it "checks ownership of the test file" do
+      delete :destroy, :id => @other_test_file.to_param, :format => 'js'
+      response.should redirect_to(:controller => "test_files", :action => "index")
+    end
+  end
 
 end
