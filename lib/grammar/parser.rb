@@ -56,7 +56,7 @@ class CitruluParser < TesterGrammarParser
     result = parse(code)
 
     # Check for parser errors
-    if result == nil
+    if result.nil?
       if failure_reason.nil?
         raise TestCompileUnknownError.new("A strange compiler error has occurred. Sorry! This is a bug. Please let us know")
       else

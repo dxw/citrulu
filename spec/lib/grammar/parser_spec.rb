@@ -6,6 +6,21 @@ describe CitruluParser do
       expect { CitruluParser.new.compile_tests(nil) }.to raise_error(ArgumentError)
     end
     
+    context "when the parser returns nil" do
+      before(:each) do
+        CitruluParser.any_instance.stub(:parse)
+      end
+      it "should raise an Unknown exception if the failure reason was nil" do
+        CitruluParser.any_instance.stub(:failure_reason).and_return(nil)
+        expect { CitruluParser.new.compile_tests("foo") }.to raise_error(CitruluParser::TestCompileUnknownError) 
+      end
+      it "should raise a compile error if the failure reason was not nill" do
+        CitruluParser.any_instance.stub(:failure_reason).and_return("A failure reason")
+        expect { CitruluParser.new.compile_tests("foo") }.to raise_error(CitruluParser::TestCompileError, /A failure reason/)
+      end
+    end
+    
+    
     COMPILER_OUTPUT_TESTS = [
       {:assertion=>:response_code_be, :value=>"200", :original_line=>"Response code should be 200 after redirects", :value=>"200"},
       {:assertion=>:i_see, :original_line =>  "I should see are you feeling lucky?", :value=>"are you feeling lucky?"},
@@ -128,5 +143,34 @@ describe CitruluParser do
       error = "Line 1: Expected one of #, So I know that, On, When I at line 1, column 1 (byte 1) after"
       CitruluParser.parse_error(error).should_not be_blank
     end
+  end
+  
+  describe "format_error" do
+    before(:each) do
+      @match_string = [0,1,2,3,"expected_thing",5,"linenum","columnnum",8,"aftermsg"]
+    end
+    
+    it "should raise an exception if the error format was not recognised" do
+      CitruluParser.stub(:parse_error) #so returns nil
+      expect { CitruluParser.format_error("bar") }.to raise_error(ArgumentError)
+    end
+    
+    context "when processing the 'after' part" do
+      it "should convert ' ' into 'a space" do
+        @match_string[9] = ' '
+        CitruluParser.stub(:parse_error).and_return(@match_string)
+        CitruluParser.format_error("bar")[:after].should == "a space"
+      end
+      it "should convert \n into 'a newline" do
+        @match_string[9] = "\n" 
+        CitruluParser.stub(:parse_error).and_return(@match_string)
+        CitruluParser.format_error("bar")[:after].should == "a newline"
+      end
+      it "should add quotes around non- whitespace strings" do
+        CitruluParser.stub(:parse_error).and_return(@match_string)
+        CitruluParser.format_error("bar")[:after].should == "'aftermsg'"
+      end
+      
+    end    
   end
 end
