@@ -47,6 +47,10 @@ class UserMailer < ActionMailer::Base
     mail(to: to, subject: subject, template_name: 'first_test_notification')
   end
 
+  def weekly_test_summary_email(user)
+    
+  end
+  
   def test_notification_success(test_run)
     raise "Tried to create a test notification for a nil test run" if test_run.nil?
     @status = :pass
@@ -80,7 +84,7 @@ class UserMailer < ActionMailer::Base
     headers( test_notification_headers )
     mail(to: to, subject: subject, template_name: 'test_notification')
   end
-  
+
   protected
   
   def test_notification_headers

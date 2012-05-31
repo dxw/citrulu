@@ -76,6 +76,10 @@ class User < ActiveRecord::Base
       self.plan = Plan.default
     end
   end
+
+  def one_week_of_test_runs
+    test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+  end
   
   def new_test_file_name
     generate_name("New test file")
