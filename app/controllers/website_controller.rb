@@ -1,11 +1,4 @@
 class WebsiteController < ApplicationController
-  
-  # def after_sign_up_path_for(resource)
-  #    "/test_file_editor"
-  #  end
-
-  def terms
-  end
 
   def features
     def add(silver, gold, name, description, comingsoon = false) 
