@@ -109,8 +109,35 @@ describe UserMailer do
   end
   
   describe "welcome_email" do
-    it "should create an email with the user's email as the subject" do
+    it "should create an email to the user" do
       UserMailer.welcome_email(@user).to.should == [@user.email]
     end
   end
+  
+  describe "nudge" do
+    it "should create an email to the user" do
+      UserMailer.nudge(@user).to.should == [@user.email]
+    end
+    context "when the first tutorial exists" do
+      before(:each) do
+        tutorial = FactoryGirl.create(:test_file)
+        User.any_instance.stub(:first_tutorial).and_return(tutorial)
+      end
+      it "should assign @first_tutorial_url" do
+        UserMailer.nudge(@user).body.encoded.should match /\/test_files\/\d+\/edit\"/
+      end
+    end    
+    context "when the first tutorial does not exist" do
+      before(:each) do
+        User.any_instance.stub(:first_tutorial)
+      end
+      
+      it "should assign @first_tutorial_url to the index page" do
+        UserMailer.nudge(@user).body.encoded.should match /\/test_files\"/
+      end
+    end
+    
+  end
+  
+  
 end
