@@ -30,6 +30,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match 'alpha' => "website#alpha"
   match 'terms' => "website#terms"
   match 'features' => "website#features"
+  match 'email' => "website#email"
   
   authenticated :user do
     root :to => 'test_files#index'
