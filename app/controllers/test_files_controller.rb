@@ -63,6 +63,8 @@ class TestFilesController < ApplicationController
     end
   end
 
+
+  # POST /test_files/update_liveview
   def update_liveview
     begin
       @current_line = params[:current_line]
@@ -98,7 +100,7 @@ class TestFilesController < ApplicationController
         :text4 => " of the current group",
       })
 
-      if !error[:after].empty?
+      if !error[:after].blank?
         @error[:text4] = " after "
         @error[:after] = error[:after]
       end

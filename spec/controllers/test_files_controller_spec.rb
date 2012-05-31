@@ -75,9 +75,56 @@ describe TestFilesController do
       assigns(:test_file).should eq(@test_file)
     end
     
+    context "when the test file is a tutorial" do
+      before(:each) do
+        @test_file.update_attribute(:tutorial_id, 1)
+        get :edit, {:id => @test_file.to_param}
+      end
+      it "should assign an array of strings to @help_texts" do
+        assigns(:help_texts).should be_an(Array)
+        assigns(:help_texts).first.should be_a(String)
+      end
+      it "should assign @help_shown" do
+        assigns(:help_shown).should be_an(Integer)
+      end
+    end
+    
     it "checks ownership of the test file" do
       get :edit, {:id => @other_test_file.to_param}
       response.should redirect_to(:controller => "test_files", :action => "index")
+    end
+  end
+  
+  describe "POST update_liveview" do
+    context "when there are no errors" do      
+      it "should assign @current_line from params" do
+        post :update_liveview, {:id => @other_test_file.to_param, :current_line => 2}
+        assigns(:current_line).should == "2"
+      end
+      
+      it "should call execute_tests and assign the result @results" do
+        CitruluParser.any_instance.stub(:compile_tests)
+        TestRunner.stub(:execute_tests).and_return(["result"])
+        
+        post :update_liveview, {:id => @other_test_file.to_param, group: "foo"}
+        assigns(:results).should == "result"
+      end
+    end
+    
+    context "when a compilation error is thrown" do
+      before(:each) do
+        CitruluParser.any_instance.stub(:compile_tests).and_raise(CitruluParser::TestCompileError.new("comp error"))
+        @error_message = {
+          expected_arr: [],
+          line: 1,
+          column: 1,
+        }
+      end
+      it "should assign @error" do
+        CitruluParser.stub(:format_error).and_return(@error_message)
+        post :update_liveview, {:id => @other_test_file.to_param, group: "foo"}
+        assigns(:error).should be_a(Hash)
+      end
     end
   end
   

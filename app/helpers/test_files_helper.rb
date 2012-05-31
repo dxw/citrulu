@@ -10,6 +10,8 @@ module TestFilesHelper
       if !item.match(/^text/)
         item = item.to_s.gsub(/\d+$/, '')
         line_items << content_tag(:span, content, :class => item) 
+        # Seperate the list of expected items with commas:
+        line_items << ", " if item == "expected"
       else
         line_items << content
       end

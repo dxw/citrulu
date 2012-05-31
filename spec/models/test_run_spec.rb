@@ -16,6 +16,16 @@ describe TestRun do
     expect{ TestGroup.find(test_group_1_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe "name" do
+    it "should return the correct string" do
+      time_run = "2012-05-30 11:44:20 +0100".to_time
+      test_file = FactoryGirl.create(:test_file, name: "My Test File")
+      test_run = FactoryGirl.create(:test_run, test_file: test_file, time_run: time_run)
+      
+      test_run.name.should == "My Test File::2012-05-30 10:44:20 UTC"
+    end
+  end
+  
   describe "previous_run" do
     before(:each) do
       @test_file = FactoryGirl.create(:test_file)
