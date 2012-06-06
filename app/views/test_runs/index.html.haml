@@ -1,8 +1,8 @@
 %header.page-header
   %h1 Results
-- if @recent_failed_groups.empty? && @test_runs.empty?
+- if @recent_failed_groups.blank? && @test_runs.blank?
   %div.bigmsg  Your tests have not yet been run.
-- elsif @recent_failed_groups.empty? && !@test_runs.empty?
+- elsif @recent_failed_groups.blank? && !@test_runs.blank?
   %div.bigmsg.all_pass All your tests are passing. Hooray!
 - else
   .recentfails
