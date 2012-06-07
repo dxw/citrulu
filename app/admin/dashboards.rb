@@ -15,6 +15,14 @@ ActiveAdmin::Dashboards.build do
    end
   end
   
+  section "Recently updated Test Files" do
+   ul do
+     TestFile.not_deleted.where("tutorial_id IS NULL").where("compiled_test_file_text IS NOT NULL").order("updated_at desc").limit(10).each do |file|
+       li link_to(file.name, admin_test_file_path(file))
+     end
+   end
+  end
+  
   # == Render Partial Section
   # The block is rendered within the context of the view, so you can
   # easily render a partial rather than build content in ruby.
