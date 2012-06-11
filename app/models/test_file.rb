@@ -4,8 +4,7 @@ require 'symbolizer'
 class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs, :dependent => :destroy
-  
-  
+
   # By default we only deal with test files where 'deleted' is Not true
   scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
   scope :tutorials, where("tutorial_id IS NOT NULL")
@@ -14,6 +13,10 @@ class TestFile < ActiveRecord::Base
   
   validates_presence_of :name
   validates :name, uniqueness: {scope: :user_id}
+
+  def to_param
+    "#{self.id}-#{self.name.parameterize}"
+  end
   
   def last_run
     test_runs.order("time_run DESC").first
