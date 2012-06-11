@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 source 'http://gems.github.com'
 
 gem 'rake'
-gem 'rails', '3.2.0'
+gem 'rails', '3.2.3'
 
 # Pagination
 gem 'kaminari'
