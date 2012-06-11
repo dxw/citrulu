@@ -10,9 +10,23 @@ ActiveAdmin::Dashboards.build do
   section "Recent Registrations" do
    ul do
      User.find(:all, :order => "created_at desc", :limit => 10).each do |user|
-       li link_to(user.email, admin_user_path(user))
+       li do
+         link_to(user.email, admin_user_path(user)) << " - "  << user.confirmed_at << 
+         " -  Opened #{user.test_files.tutorials.where('compiled_test_file_text IS NOT NULL').count} tutorials" <<
+         " and created #{user.test_files.where('tutorial_id IS NULL').count} other test files."
+        end
      end
    end
+  end
+  
+  section "Recently updated Test Files" do
+    ul do
+      TestFile.not_deleted.where("tutorial_id IS NULL").where("compiled_test_file_text IS NOT NULL").order("updated_at desc").limit(10).each do |file|
+        li do 
+          link_to(file.name, admin_test_file_path(file)) << " - " << truncate(file.test_file_text)
+        end
+      end
+    end
   end
   
   # == Render Partial Section

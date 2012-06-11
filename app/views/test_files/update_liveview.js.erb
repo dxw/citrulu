@@ -16,7 +16,7 @@ $('#liveview div.group').empty();
   <% end %>
 
   <% @results[:test_results_attributes].each do |test| %>
-    $('#liveview div.group').append("<div class='liveview-row <%=j (test[:result] ? 'pass' : 'fail')%>'><%=j test[:original_line].strip %></div>");
+    $('#liveview div.group').append("<div class='liveview-row " + window.make_hash('<%=j test[:original_line].strip %>') + " <%=j (test[:result] ? 'pass' : 'fail')%>'><%=j test[:original_line].strip %></div>");
   <% end %>
 <% end %>
 

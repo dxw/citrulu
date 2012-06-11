@@ -152,9 +152,8 @@ setup_tutorial_help = ->
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed
 #
-make_hash = (input_text) ->
-  shaObj = new jsSHA input_text, "ASCII"
-  shaObj.getHash "B64"
+window.make_hash = (input_text) ->
+  $.md5(input_text);
   
 ##
 # Returns an object containing the full text of the test group currently under the cursor 
@@ -234,7 +233,7 @@ update_selected_test = (current_group) ->
 
   return if selected_test == '' 
 
-  $("#liveview div.group div:contains('" + selected_test + "')").addClass('current')
+  $("#liveview div.group div." + window.make_hash( selected_test)).addClass('current')
 
 
 ##
@@ -263,7 +262,7 @@ window.check_liveview = ->
     update_selected_test(current_group)
 
     # Has the current group been changed?
-    if make_hash(current_group.group) != make_hash(window.lastGroup.group)
+    if window.make_hash(current_group.group) != window.make_hash(window.lastGroup.group)
       
       # Is the group big enough to be a valid group?
 
@@ -306,7 +305,7 @@ setup_editor = ->
   $("#editor_form").submit ->
     saving_file()
     editor_text = window.editor.getValue()
-    window.text_hash = make_hash(editor_text)
+    window.text_hash = window.make_hash(editor_text)
 
 ##
 # Updates the UI to indicate that a save is in progress
@@ -320,7 +319,7 @@ saving_file = ->
 # Initiates an an autosave if the test file text has been modified and the user is not currently typing
 #
 window.save_file = ->
-  new_text_hash = make_hash(window.editor.getValue())
+  new_text_hash = window.make_hash(window.editor.getValue())
   
 
   if (new_text_hash isnt window.text_hash) and window.editor.getValue() isnt '' and (new Date).getTime() - window.lastKeyPress > 500
