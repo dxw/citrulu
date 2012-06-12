@@ -12,8 +12,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :invitation_code
 
-  # Define meta variables as methods: 
-  ["nudge_sent"].each do |meta|
+  def self.define_meta_methods(meta)
     define_method meta do
       # Assumption: that there's only one instance of any one meta variable
       m = user_metas.where(name: meta).first
@@ -32,6 +31,11 @@ class User < ActiveRecord::Base
         user_metas.create(name: meta, timestamp: Time.now)
       end
     end
+  end
+  
+  # Define meta variables as methods: 
+  ["nudge_sent"].each do |meta|
+    self.define_meta_methods(meta)
   end
   
 

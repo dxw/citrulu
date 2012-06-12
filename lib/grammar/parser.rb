@@ -84,4 +84,9 @@ class CitruluParser < TesterGrammarParser
 
     parsed_object
   end
+  
+  def self.count_checks(parsed_object)
+    # -1 to ignore the implicit response code checks
+    parsed_object.sum{ |page| page[:tests].length - 1 }
+  end
 end
