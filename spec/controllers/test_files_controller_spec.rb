@@ -24,8 +24,8 @@ describe TestFilesController do
   describe "GET index" do
     it "should create @test_files" do
       get :index
-
-      assigns(:test_files).should be_a(Array)
+      
+      assigns(:test_files).should be_an(ActiveRecord::Relation)
     end
     
     it "should create @recent_failed_groups" do
@@ -53,6 +53,20 @@ describe TestFilesController do
       post :create
       response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
     end
+    
+    it "should fire a google analytics event if this is the first created file" do
+      # @user should be fresh so won't have a created test file, but let's double-check:
+      UserMeta.where(user_id: @user.to_param).should be_empty
+      
+      controller.should_receive(:log_event).with("Test Files", "Created test file")
+      post :create
+    end
+    
+    it "should NOT fire a google analytics event if this is not the first created file" do
+      post :create
+      controller.should_not_receive(:log_event).with("Test Files", "Created test file")
+      post :create
+    end
   end
   
   
@@ -65,6 +79,20 @@ describe TestFilesController do
     it "should redirect to the editor with 'new=true'" do
       post :create_first_test_file
       response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
+    end
+    
+    it "should fire a google analytics event if this is the first created file" do
+      # @user should be fresh so won't have a created test file, but let's double-check:
+      UserMeta.where(user_id: @user.to_param).should be_empty
+      
+      controller.should_receive(:log_event).with("Test Files", "Created test file")
+      post :create
+    end
+    
+    it "should NOT fire a google analytics event if this is not the first created file" do
+      post :create
+      controller.should_not_receive(:log_event).with("Test Files", "Created test file")
+      post :create
     end
   end
 
@@ -380,6 +408,20 @@ describe TestFilesController do
     it "checks ownership of the test file" do
       delete :destroy, :id => @other_test_file.to_param, :format => 'js'
       response.should redirect_to(:controller => "test_files", :action => "index")
+    end
+  end
+  
+  
+  describe "log_event" do
+    before(:each) do
+      session[:events] = nil
+      controller.send(:log_event, "foo","bar","faz","baz")
+    end
+    it "should create session[:events] if it doesn't exist" do
+      session[:events].should be_an(Array)
+    end
+    it "should add a category/action/label hash to the array" do 
+      session[:events].should == [{category:"foo",action:"bar",label:"faz", value:"baz"}]
     end
   end
 

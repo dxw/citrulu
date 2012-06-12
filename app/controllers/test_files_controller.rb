@@ -32,13 +32,17 @@ class TestFilesController < ApplicationController
   # POST /test_files/create
   def create
     @test_file = current_user.create_new_test_file
-        
+    
+    log_event_if_first(current_user, "Test Files", "Created test file")
+    
     redirect_to action: "edit", id: @test_file, :new => true
   end
   
   # POST /test_files/create_first_test_file
   def create_first_test_file
     @test_file = current_user.create_first_test_file
+    
+    log_event_if_first(current_user, "Test Files", "Created test file", "Tutorial end")
 
     redirect_to action: "edit", id: @test_file, :new => true
   end
