@@ -155,7 +155,24 @@ class User < ActiveRecord::Base
   def headers_for(action)
     {:from => "Citrulu <contact@citrulu.com>"}
   end
-  
+
+  def enqueue_test_files
+    self.test_files.each do |file|
+      file.enqueue
+    end
+  end
+
+  def priority_enqueue_test_files
+    self.test_files.each do |file|
+      file.priority_enqueue
+    end
+  end
+
+  def prioritise_test_files
+    self.test_files.each do |file|
+      file.prioritise
+    end
+  end
   
   private
 

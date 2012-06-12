@@ -100,4 +100,17 @@ class TestFile < ActiveRecord::Base
   def is_a_tutorial
     !tutorial_id.nil?
   end
+
+  def enqueue
+    Resque.enqueue(TestFileJob, self.id)
+  end
+
+  def priority_enqueue
+    Resque.enqueue(PriorityTestFileJob, self.id)
+  end
+
+  def prioritise
+    Resque.dequeue(TestFileJob, self.id)
+    Resque.enqueue(PriorityTestFileJob, self.id)
+  end
 end

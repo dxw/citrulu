@@ -1,45 +1,46 @@
 require 'grammar/parser'
 require 'grammar/predefs'
-require 'mechanize'
 
 class TestRunner
   class TestCompileError < Exception
   end
 
-  def self.run_all_tests
-    return "Nothing to run" if TestFile.compiled_files.empty?
-    
+  def self.enqueue_all_tests
     TestFile.compiled_files.each do |file|
       if file.user.nil?
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
       end
-      
-      next unless file.run_tests?
-      
-      test_run = TestRun.create(
-        :time_run => Time.zone.now,
-        :test_file => file
-      )
-      
-      execute_test_groups(file, test_run)
-      
-      if file.user.email_preference == 1
-        # 1. If it's the first test run send a special email
-        # 2. If tests failed, send a failure email
-        # 3. If no tests failed, but the previous run had failing tests, send a success email
-        if test_run.users_first_run?
-          # This was the first test run:
-          if test_run.has_failures?
-            UserMailer.first_test_notification_failure(test_run).deliver
-          else
-            UserMailer.first_test_notification_success(test_run).deliver
-          end
-        elsif test_run.has_failures? 
-          UserMailer.test_notification_failure(test_run).deliver
-        elsif test_run.previous_run && test_run.previous_run.has_failures?
-          # previous had failures, but now everything is passing:
-          UserMailer.test_notification_success(test_run).deliver
+
+      file.enqueue
+    end
+  end
+
+  def self.run_test(file)
+    return unless file.run_tests?
+    
+    test_run = TestRun.create(
+      :time_run => Time.zone.now,
+      :test_file => file
+    )
+    
+    execute_test_groups(file, test_run)
+    
+    if file.user.email_preference == 1
+      # 1. If it's the first test run send a special email
+      # 2. If tests failed, send a failure email
+      # 3. If no tests failed, but the previous run had failing tests, send a success email
+      if test_run.users_first_run?
+        # This was the first test run:
+        if test_run.has_failures?
+          UserMailer.first_test_notification_failure(test_run).deliver
+        else
+          UserMailer.first_test_notification_success(test_run).deliver
         end
+      elsif test_run.has_failures? 
+        UserMailer.test_notification_failure(test_run).deliver
+      elsif test_run.previous_run && test_run.previous_run.has_failures?
+        # previous had failures, but now everything is passing:
+        UserMailer.test_notification_success(test_run).deliver
       end
     end
   end
