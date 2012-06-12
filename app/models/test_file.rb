@@ -96,4 +96,8 @@ class TestFile < ActiveRecord::Base
   def next_tutorial
     user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
   end
+  
+  def is_a_tutorial
+    !tutorial_id.nil?
+  end
 end

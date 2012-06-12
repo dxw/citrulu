@@ -33,7 +33,7 @@ class TestFilesController < ApplicationController
   def create
     @test_file = current_user.create_new_test_file
     
-    log_event_if_first(current_user, "Test Files", "Created test file")
+    log_event_if_first(current_user, "Test Files", "First created")
     
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -42,7 +42,7 @@ class TestFilesController < ApplicationController
   def create_first_test_file
     @test_file = current_user.create_first_test_file
     
-    log_event_if_first(current_user, "Test Files", "Created test file", "Tutorial end")
+    log_event_if_first(current_user, "Test Files", "First created", "Tutorial end")
 
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -124,7 +124,7 @@ class TestFilesController < ApplicationController
     code = params[:test_file][:test_file_text]
     begin
       # If there's no code to complile, don't even try - drop straight through to the 'else' block
-      CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+      compiled_object = CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
 
     rescue CitruluParser::TestPredefError => e
       # Unknown predef:
@@ -175,6 +175,13 @@ class TestFilesController < ApplicationController
       succeeded = true
 
       @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      
+      if !@test_file.is_a_tutorial
+        number_of_checks = CitruluParser.count_checks(compiled_object)
+        log_event_if_first(current_user, "Test Files", "First compiled")
+        log_event_if_first(current_user, "Test Files", "First compiled with 3 checks") if number_of_checks >= 3
+        log_event_if_first(current_user, "Test Files", "First compiled with 5 checks") if number_of_checks >= 5
+      end
     end
     
     if succeeded

@@ -58,13 +58,13 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("Test Files", "Created test file")
+      controller.should_receive(:log_event).with("Test Files", "First created")
       post :create
     end
     
     it "should NOT fire a google analytics event if this is not the first created file" do
       post :create
-      controller.should_not_receive(:log_event).with("Test Files", "Created test file")
+      controller.should_not_receive(:log_event).with("Test Files", "First created")
       post :create
     end
   end
@@ -85,13 +85,13 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("Test Files", "Created test file")
+      controller.should_receive(:log_event).with("Test Files", "First created")
       post :create
     end
     
     it "should NOT fire a google analytics event if this is not the first created file" do
       post :create
-      controller.should_not_receive(:log_event).with("Test Files", "Created test file")
+      controller.should_not_receive(:log_event).with("Test Files", "First created")
       post :create
     end
   end
@@ -166,15 +166,20 @@ describe TestFilesController do
       assigns(:console_msg_type).should == "error"
     end
     
+    before(:each) do
+      CitruluParser.stub(:count_checks).and_return 1
+    end
+    
     it "checks ownership of the test file" do
       put :update, {:id => @other_test_file.to_param, :test_file => valid_update_attributes}
       response.should redirect_to(:controller => "test_files", :action => "index")
     end
     
     
-    describe "with valid params" do
+    context "with valid params" do
       before(:each) do
         controller.stub(:check_ownership!)
+        CitruluParser.stub(:count_checks).and_return 1
       end
       
       it "updates the requested test_file" do
@@ -207,7 +212,7 @@ describe TestFilesController do
       end
     end
   
-    describe "with invalid params" do
+    context "with invalid params" do
       before(:each) do
         controller.stub(:check_ownership!)
       end
@@ -217,6 +222,91 @@ describe TestFilesController do
         TestFile.any_instance.stub(:save).and_return(false)
         put :update, {:id => @test_file.to_param, :test_file => {}}
         assigns(:test_file).should eq(@test_file)
+      end
+    end
+    
+    context "when the file compiles successfully" do
+      before(:each) do
+        CitruluParser.any_instance.stub(:compile_tests) # equates to successful compilation
+      end
+      after(:each) do
+        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+      end
+      it "should fire a google analytics event if this is the first time the file has compiled" do
+        controller.should_receive(:log_event).with("Test Files", "First compiled")
+      end
+      it "should NOT fire a google analytics event if the file is a tutorial" do
+        @test_file.update_attribute :tutorial_id, 1
+        controller.should_not_receive(:log_event)
+      end
+      
+      context "when a file has previously compiled with 1 check" do
+        before(:each) do
+          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+        end
+
+        it "should NOT fire a google analytics event if the file compiles with one check" do
+          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
+          controller.should_not_receive(:log_event)
+        end
+      
+        it "should NOT fire a google analytics event if the file compiles with 2 checks" do
+          CitruluParser.stub(:count_checks).and_return 2
+          controller.should_not_receive(:log_event)
+        end
+      
+        it "should fire a google analytics event if the file compiles with 3 checks" do
+          CitruluParser.stub(:count_checks).and_return 3
+          controller.should_receive(:log_event).with("Test Files", "First compiled with 3 checks")
+        end
+        it "should NOT fire a google analytics event if the file is a tutorial and compiles with 3 checks" do
+          @test_file.update_attribute :tutorial_id, 1
+          controller.should_not_receive(:log_event)
+        end
+        
+        context "when a file has previously compiled with 3 checks in it" do
+          before(:each) do
+            CitruluParser.stub(:count_checks).and_return 3
+            put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+          end
+        
+          it "should NOT fire a google analytics event if the file compiles with 3 checks" do
+            put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
+            controller.should_not_receive(:log_event)
+          end
+      
+          it "should NOT fire a google analytics event if the file compiles with 4 checks" do
+            CitruluParser.stub(:count_checks).and_return 4
+            controller.should_not_receive(:log_event)
+          end
+      
+          it "should fire a google analytics event if this is the file compiles with 5 checks" do
+            CitruluParser.stub(:count_checks).and_return 5
+            controller.should_receive(:log_event).with("Test Files", "First compiled with 5 checks")
+          end
+          it "should NOT fire a google analytics event if the file is a tutorial and compiles with 5 checks" do
+            @test_file.update_attribute :tutorial_id, 1
+            controller.should_not_receive(:log_event)
+          end
+          
+          context "when a file has previously compiled with 5 checks in it " do
+            before(:each) do
+              CitruluParser.stub(:count_checks).and_return 5
+              put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+            end
+          
+            it "should NOT fire a google analytics event if the file compiles with 5 checks" do
+              CitruluParser.stub(:count_checks).and_return 5
+              put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+              controller.should_not_receive(:log_event)
+            end
+      
+            it "should not fire a google analytics event if the file compiles with 6 checks" do
+              CitruluParser.stub(:count_checks).and_return 6
+              controller.should_not_receive(:log_event)
+            end
+          end
+        end
       end
     end
     

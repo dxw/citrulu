@@ -146,4 +146,13 @@ describe TestFile do
       end
     end
   end 
+  
+  describe "is_a_tutorial" do
+    it "should return true if tutorial_id is not nil" do
+      FactoryGirl.create(:test_file, tutorial_id: 1).is_a_tutorial.should be_true
+    end
+    it "should return false if tutorial_id is nil" do
+      FactoryGirl.create(:test_file, tutorial_id: nil).is_a_tutorial.should be_false
+    end
+  end
 end
