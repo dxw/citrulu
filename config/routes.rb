@@ -22,9 +22,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   resources :test_files, :only => [:index, :create, :destroy, :edit, :update]
   resources :test_runs, :only => [:index, :show]
   resources :responses, :only => [:show]
-  
-  
-  
 
   # Website pages routes:
   match 'alpha' => "website#alpha"
@@ -33,7 +30,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match 'email' => "website#email"
   
   authenticated :user do
-    root :to => 'test_files#index'
+    root :to => redirect('/test_files')
   end
 
   root :to => "website#index"
