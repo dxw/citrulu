@@ -3,20 +3,15 @@
     %h1.masthead Citrulu
     %p Hosted, human-friendly, continuous front-end tests for your live websites
   .row
+    .span8
+      %div#subForm.form-horizontal.well.signup
+        = render 'registrations/new'
     .span4
-      %h2.well
-        We'll launch soon!
+      .well.blue.signup
+        %h3 Welcome to the beta
+        %p Thanks for coming along. We're proud of Citrulu, but we still want to get lots of feedback and ideas.
+        %p Please have a play and a poke about, and let us know what you think via the GetSatisfaction feedback tab.
         =twitter_button
-    %section#mailing_list.span8
-      %form#subForm.form-horizontal.well{:action => "http://dxw.createsend.com/t/r/s/gwutt/", :method => "post", :onsubmit => "_gaq.push(['_trackEvent', 'Goals', 'subscribe']);"}
-        %h3.legend Sign up, and we'll email you when exciting things happen.
-        %ul.unstyled
-          %li.control-group
-            %input#name.control{:name => "cm-name", :placeholder => "Name", :type => "text"}/
-          %li.control-group
-            %input#gwutt-gwutt{:name => "cm-gwutt-gwutt", :placeholder => "Email", :type => "email"}/
-        .submit
-          %input.btn-success.btn-large{:type => "submit", :value => "Sign up"}/
 
   #selling_points.row
     %section#for_humans.span4
