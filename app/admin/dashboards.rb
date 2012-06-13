@@ -23,7 +23,9 @@ ActiveAdmin::Dashboards.build do
     ul do
       TestFile.not_deleted.where("tutorial_id IS NULL").where("compiled_test_file_text IS NOT NULL").order("updated_at desc").limit(10).each do |file|
         li do 
-          link_to(file.name, admin_test_file_path(file)) << " - " << truncate(file.test_file_text)
+          link_to(file.name, admin_test_file_path(file)) <<
+          " - " << file.updated_at <<
+          " - " << truncate(file.test_file_text)
         end
       end
     end
