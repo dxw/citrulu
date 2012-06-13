@@ -71,9 +71,12 @@ setup_title = ->
     method:"PUT", 
     name:"test_file[name]",
     
+    onblur: "submit", 
+    
     # When the form is reset or submitted, show the icon again
     "onreset": -> insert_edit_icon()
     "onsubmit": -> insert_edit_icon()
+    
   }
     
   test_file_id = $(".editable").attr("data-id")
