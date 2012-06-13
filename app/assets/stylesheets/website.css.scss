@@ -34,50 +34,10 @@ table {
 }
 
 body.website.alpha {
-  .well.blue {
-    background-color: #D9EDF7;
-  }
-
-  #mailing_list form{
-    background-color: whiteSmoke !important;
-    border-color: #eee !important;
-  }
-
-  .signup {
-    height: 180px;
-  }
-
-  .row.no-invite {
-    margin-top: 10px; 
-    
-    .notrdy {
-      height: 110px !important;
-    }
-  }
-
-  #new_user {
-    margin: 0;
-
-    legend {
-      margin-bottom: 15px
-    }
-
-    input {
-      margin-bottom: 20px;
-
-
-      &.btn {
-        margin-left: 10px;
-      }
-    }
-
-    .devise_links {
-      margin: 0;
-    }
-  }
+  
 }
 
-body.website.index, body.website.alpha {
+body.website.index {
   padding: 0 0 80px 0;
 
   header.title {
@@ -94,38 +54,55 @@ body.website.index, body.website.alpha {
       line-height: 1em
     }
   }
+  .signup {
+    height: 180px;  
+    #buttons {
+      float:left;
+      width:40%;
+    }
+    #terms {
+      float:right;
+      width:60%;
+    }
+  }
   
-  h2.well {
+  h2 {
     font-size: 3em;
-    line-height: 1em;
+    margin-top: 20px;
+    margin-bottom:20px;
   }
-  #mailing_list form{
-    height: 78px;
-    /*FRAGILE!*/
-    
+  
+  .well.blue {
     background-color: #D9EDF7;
-    border-color: #BCE8F1;
+  }
+
+  
+
+  .row.no-invite {
+    margin-top: 10px; 
     
-    legend, .legend {
-      border: 0;
-      width: 230px;
-      padding-right: 15px;
-      margin-top: -6px;
-      float: left;
-      font-size: 20px;
-      line-height: 28px;
-      font-weight: normal;
-    }
-    ul{
-      width: 220px;
-      float: left;
-      margin-bottom: 0 
-    }
-    .submit {
-      float: left;
-      padding-left: 25px
+    .notrdy {
+      height: 110px !important;
     }
   }
+
+  #new_user {
+    margin: 0;
+
+    legend {
+      margin-bottom: 15px
+    }
+
+    input, .btn {
+      margin-bottom: 20px;
+      margin-right: 10px;
+    }
+
+    .devise_links {
+      margin: 0;
+    }
+  }
+  
   ul.devise_links {
     margin-top: 20px;
   }
