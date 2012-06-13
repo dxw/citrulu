@@ -1,7 +1,10 @@
 .container
   %header.title
     %h1.masthead Citrulu
-    %p Hosted, human-friendly, continuous front-end tests for your live websites
+    %p 
+      Hosted, human-friendly, continuous front-end tests for your 
+      %em Live
+      websites
   .row
     .span8
       %div#subForm.form-horizontal.well.signup
@@ -13,23 +16,30 @@
         %p Please have a play and a poke about, and let us know what you think via the GetSatisfaction feedback tab.
         =twitter_button
 
+  .row
+    %h2.span12 What is Citrulu?
   #selling_points.row
-    %section#for_humans.span4
-      =image_tag "brochure/test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax", :class => "thumbnail"
-      %header
-        %h3 Front end tests for humans
-      %p Write tests for your sites using natural language. No complex code or annoying forms - just simple instructions to check strings, headers and HTML in your pages.
     %section#make_sure.span4
       =image_tag "brochure/test_results_list.png", :alt => "A list of test results, showing successes and failures", :class => "thumbnail"
       %header
-        %h3 Make sure everything's working
-      %p Citrulu runs regular checks on your website, but it's better than uptime monitoring: you can check for specific strings, headers and HTML code that prove specific features are working.
+        %h3 Keep testing: even after launch
+      %p Testing to ensure that your site works shouldn't have to stop when you go live. 
+      %p Citrulu runs regular checks on your website, but it's so much more powerful than uptime monitoring: you can write tests that prove specific features are working, or check for scenarios which might only arise intermittently in a Live environment.
+    %section#for_humans.span4
+      =image_tag "brochure/test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax", :class => "thumbnail"
+      %header
+        %h3 A test language for humans
+      %p Write tests for your sites using natural language. 
+      %p No complex code or annoying forms - just simple instructions to check for strings and HTML in your pages.*  
+      %p No deployment or configuration either - get up and running in minutes
+      %small 
+        %em*plus powerful features if you need them, like inspecting response headers and POSTing data.
     %section#presets.span4
       =image_tag "brochure/notifications.png", :alt => "An inbox, showing some notifications from Citrulu", :class => "thumbnail"
       %header
         %h3 Respond quickly
       %p When something goes wrong on your live site, you want to know immediately. Citrulu will email you the moment a test fails so that you can start fixing it right away.
   #contact.row
-    If you'd like to know more, sign up at the top of this page, or
-    = succeed "." do
-      %a{:href => "mailto:contact@dxw.com?subject=About%20that%20Citrulu%20thing..."} get in touch (We're friendly).
+    If you'd like to know more, try it out for free, or
+    %a{:href => "mailto:contact@dxw.com?subject=About%20that%20Citrulu%20thing..."} get in touch
+    (We're friendly).
