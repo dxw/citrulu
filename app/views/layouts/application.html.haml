@@ -6,14 +6,12 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body{ :class => "#{controller_name} #{params[:action]}"}
-    %div.banner
-      .container
-        - if user_signed_in?
+    - if user_signed_in?
+      %div.banner
+        .container
           %p
-            %strong Thanks for joining the Alpha!
-            We really appreciate the help making Citrulu MOAR BETTER. If you have ideas or find bugs, please use the feedback tab.
-        - else
-          %p!="<strong>Citrulu is now in Alpha!</strong> Already got an account, or an invitation? If so, you can <a href='#{new_registration_path(:user)}'>sign up</a>, or <a href='#{new_session_path(:user)}'>log in</a>. If you'd like to get an invitation, <a href='/'>sign up here</a>!"
+            %strong Thanks for joining the Beta!
+            Citrulu is free for a limited time. It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
 
     = content_for?(:content) ? yield(:content) : yield
 

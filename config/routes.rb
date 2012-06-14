@@ -3,15 +3,12 @@ SimpleFrontEndTesting::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   devise_for :admin_users, ActiveAdmin::Devise.config
-
+  
+  # Force redirect of users/sign_up to the root - for analytics consistency (?)
+  match 'users/sign_up' => redirect("/")
+  
   devise_for :users, :controllers => { :registrations => "registrations", :confirmations => "confirmations", :sessions => "sessions" }
-  
-  devise_scope :user do
-    match 'sign_up' => "registrations#new"
-    match 'sign_in' => "devise/sessions#new"
-    match 'settings' => "registrations#edit"
-  end
-  
+    
   # This needs to go BEFORE the resources, otherwise it gets interpreted as PUT /test_files/id (i.e. update)
   match '/test_files/update_name/:id' => "test_files#update_name", :via => :put
   match '/test_files/update_run_status' => "test_files#update_run_status", :via => :put
@@ -36,7 +33,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   get "payments/cancel_confirmation"
 
   # Website pages routes:
-  match 'alpha' => "website#alpha"
   match 'terms' => "website#terms"
   match 'features' => "website#features"
   match 'email' => "website#email"
@@ -44,8 +40,15 @@ SimpleFrontEndTesting::Application.routes.draw do
   authenticated :user do
     root :to => redirect('/test_files')
   end
-
-  root :to => "website#index"
+  
+  devise_scope :user do
+    match 'sign_up' => redirect("/")
+    match 'sign_in' => redirect("/users/sign_in")
+    match 'settings' => redirect("/users/edit")
+    # This is the root route:
+    root :to => "registrations#new"
+  end
+  
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

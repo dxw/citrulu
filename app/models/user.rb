@@ -43,20 +43,12 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
   serialize :status # 4 possible values- :free, :paid, :cancelled, :inactive
   
-  
-  # Check that the entered invitation code matches this secret string:
-  validates_each :invitation_code, :on => :create do |record, attr, value|
-    record.errors.add attr, "isn't valid" unless
-      value && Invitation.exists?(:code => value) && Invitation.find_by_code(value).enabled
-  end
-  
   has_many :test_files, :dependent => :destroy
   has_many :user_metas
   belongs_to :invitation
   belongs_to :plan
   
   before_create :set_email_preference
-  before_create :add_invitation
   before_create :set_default_plan
   after_create :create_tutorial_test_files 
   after_save :update_subscriber
