@@ -21,7 +21,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   resources :responses, :only => [:show]
 
   # Website pages routes:
-  match 'alpha' => "website#alpha"
   match 'terms' => "website#terms"
   match 'features' => "website#features"
   match 'email' => "website#email"
