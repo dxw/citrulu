@@ -33,11 +33,8 @@ table {
   }
 }
 
-body.website.alpha {
-  
-}
 
-body.website.index {
+body.registrations.new {
   padding: 0 0 80px 0;
 
   header.title {
@@ -76,40 +73,19 @@ body.website.index {
     background-color: #D9EDF7;
   }
 
-  
-
-  .row.no-invite {
-    margin-top: 10px; 
-    
-    .notrdy {
-      height: 110px !important;
-    }
-  }
-
   #new_user {
     margin: 0;
-
     legend {
       margin-bottom: 15px
     }
-
     input, .btn {
       margin-bottom: 20px;
       margin-right: 10px;
     }
-
-    .devise_links {
-      margin: 0;
-    }
-  }
-  
-  ul.devise_links {
-    margin-top: 20px;
   }
   
   #selling_points{ 
     margin-top: 10px;
-    
     h3 {
       margin-bottom: 10px;
     }

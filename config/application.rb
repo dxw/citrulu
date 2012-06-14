@@ -15,9 +15,9 @@ module SimpleFrontEndTesting
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     
-    # Set the layout of the Registrations controller when the user is logged in (i.e. when they're editing their details)
     config.to_prepare do
-      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "devise" }   
+      # The Registrations controller uses the main website layouts, not the devise layouts:
+      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "application" }   
       Devise::Mailer.layout "user_mailer"
     end
 
