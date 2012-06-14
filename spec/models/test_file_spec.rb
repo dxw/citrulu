@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe TestFile do
   before(:each) do
+    user1 = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
+    
     # Test Files:
-    @test_file_compiled_text = FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar") 
-    @test_file_compiled_nil = FactoryGirl.create(:test_file, :compiled_test_file_text => nil)
-    @test_file_compiled_empty = FactoryGirl.create(:test_file, :compiled_test_file_text => "")
+    @test_file_compiled_text = FactoryGirl.create(:test_file, :compiled_test_file_text => "foobar", user: user1) 
+    @test_file_compiled_nil = FactoryGirl.create(:test_file, :compiled_test_file_text => nil, user: user1)
+    @test_file_compiled_empty = FactoryGirl.create(:test_file, :compiled_test_file_text => "", user: user2)
     
     # Test Runs:
     FactoryGirl.create(:test_run, :test_file => @test_file_compiled_text, :time_run => Time.now-1)
@@ -84,22 +87,72 @@ describe TestFile do
     end
   
     describe "number_of_tests" do
-      it "should return 3 if there are 3 checks in 3 pages" do
-        @test_file.number_of_tests.should == 3
+      it "should return 6 if there are 3 checks in 3 pages" do
+        # 3 natural checks, 3 injected checks for response code == 200
+        @test_file.number_of_tests.should == 6
       end
       
-      it "should return 5 if there are 2 checks on 1 page and 3 on another" do
+      it "should return 7 if there are 2 checks on 1 page and 3 on another" do
+        # 5 natural checks, 2 injected checks for response code == 200
         compiled_test_file_text = 
           "On http://foo.com\n  I should see foo\n  I should not see faz\n" +
           "On http://bar.com\n  Source should contain bar\n  Source should not contain baz\n  Headers should not include tizzwoz"
         test_file = FactoryGirl.create(:test_file, :compiled_test_file_text => compiled_test_file_text)
         
-        test_file.number_of_tests.should == 5
+        test_file.number_of_tests.should == 7
       end
     
       it "should raise an error if the file has never compiled" do
         expect { @test_file_compiled_nil.number_of_tests }.to raise_error(ArgumentError)
       end
+    end
+    
+    describe "delete!" do
+      it "should set 'deleted' to true (and save)" do
+        @test_file.delete!
+        
+        #Check that the object has been saved
+        @test_file.changed?.should be_false
+        @test_file.deleted.should be_true
+      end
+    end
+    
+    describe "not_deleted" do 
+      it "should not return deleted test files" do
+        deleted_test_file = FactoryGirl.create(:test_file, deleted: true)
+        TestFile.not_deleted.should_not include(deleted_test_file)
+      end
+    end
+  end
+  
+  describe "next_tutorial" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+      @user.test_files.destroy_all
+      @test_file = FactoryGirl.create(:test_file, user: @user, tutorial_id:0)
+    end
+    
+    context "when a next file exists" do
+      it "should return the next tutorial file" do
+        next_test_file = FactoryGirl.create(:test_file, user: @user, tutorial_id:2)
+        FactoryGirl.create(:test_file, user: @user, tutorial_id:5)
+        
+        @test_file.next_tutorial.should == next_test_file
+      end
+    end
+    context "when a next file does not exist" do
+      it "should return nil" do
+        @test_file.next_tutorial.should == nil
+      end
+    end
+  end 
+  
+  describe "is_a_tutorial" do
+    it "should return true if tutorial_id is not nil" do
+      FactoryGirl.create(:test_file, tutorial_id: 1).is_a_tutorial.should be_true
+    end
+    it "should return false if tutorial_id is nil" do
+      FactoryGirl.create(:test_file, tutorial_id: nil).is_a_tutorial.should be_false
     end
   end
 end

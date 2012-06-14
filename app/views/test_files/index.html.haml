@@ -9,17 +9,24 @@
         %p Citrulu lets you write tests for your websites using simple, natural language.
         %p After you've written your tests, we'll run them every hour and let you know if anything fails.
       .span4.offset1
-        %p Want to get straight to the tests? Your default test file has some examples to help you get started.
-        %p 
-          %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.test_files.first)} Edit your first test file
+        %p We've created a set of tutorial test files to help you get to grips with Citrulu's super-simple syntax.
+        - if current_user.first_tutorial
+          %p 
+            %a.btn.btn-primary.get-testing{:href => edit_test_file_path(current_user.first_tutorial)} Start the tutorial
+        - else
+          %em
+            The first tutorial file seems to have been deleted - please 
+            = mail_to 'contact@citrulu.com', "send us an email"
+            if you'd like us to re-generate it for you. 
+        
 .row
   #test_list.span8
     .title
       %h2 Your tests
-      %a.btn{unimplemented_popover.merge({})}
+      =link_to test_files_path, {:class => 'btn', method: :post} do
         %i.icon-plus-sign
         Create a new test file
-    %ul.unstyled
+    %ul#test_files.unstyled
       =render partial: @test_files
       
   #sidebar.span4
@@ -49,23 +56,25 @@
     .stat.span2
       %img{:src => "http://placehold.it/25x50"}
       %p You've got <strong>#{pluralize(current_user.test_files.count, 'test file')}</strong>
-    - if current_user.test_files.first.compiled?
-      .stat.span2
-        %img{:src => "http://placehold.it/25x50"}
-        %p Testing <strong>#{pluralize(current_user.test_files.first.number_of_pages, 'page')}</strong>
-      .stat.span2
-        %img{:src => "http://placehold.it/25x50"}
-        %p Checking <strong>#{pluralize(current_user.test_files.first.number_of_tests, 'condition')}</strong>
-      .stat.span2
-        %img{:src => "http://placehold.it/25x50"}
-        %p On average, checking <strong>#{pluralize(current_user.test_files.first.number_of_tests/current_user.test_files.first.number_of_pages, 'condition')}</strong> per page
-    - if current_user.test_files.first.test_runs.size != 0
-      .stat.span2
-        %img{:src => "http://placehold.it/25x50"}
-        %p In a typical test run, <strong>#{pluralize(current_user.test_files.first.average_failures_per_run, 'page')}</strong>  fail
-      .stat.span2
-        %img{:src => "http://placehold.it/25x50"}
-        %p On average, failing pages are fixed within <strong>#{distance_of_time_in_words(Time.now, Time.now + current_user.test_files.first.average_fix_speed.seconds)}</strong>
+    / - if current_user.test_files.first.compiled?
+    /   .stat.span2
+    /     %img{:src => "http://placehold.it/25x50"}
+    /     %p Testing <strong>#{pluralize(current_user.test_files.first.number_of_pages, 'page')}</strong>
+    /   .stat.span2
+    /     %img{:src => "http://placehold.it/25x50"}
+    /     %p Checking <strong>#{pluralize(current_user.test_files.first.number_of_tests, 'condition')}</strong>
+    /   .stat.span2
+    /     %img{:src => "http://placehold.it/25x50"}
+    /     %p On average, checking <strong>#{pluralize(current_user.test_files.first.number_of_tests/current_user.test_files.first.number_of_pages, 'condition')}</strong> per page
+    / - if current_user.test_files.first.test_runs.size != 0
+    /   .stat.span2
+    /     %img{:src => "http://placehold.it/25x50"}
+    /     %p In a typical test run, <strong>#{pluralize(current_user.test_files.first.average_failures_per_run, 'page')}</strong>  fail
+    /   .stat.span2
+    /     %img{:src => "http://placehold.it/25x50"}
+    /     %p
+    /       On average, failing pages are fixed within 
+    /       %strong#{distance_of_time_in_words(Time.now, Time.now + current_user.test_files.first.average_fix_speed.seconds)}
 
 
 

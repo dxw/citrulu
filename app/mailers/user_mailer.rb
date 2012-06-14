@@ -5,19 +5,63 @@ class UserMailer < ActionMailer::Base
   
   def welcome_email(user)
     @title = "Welcome to Citrulu"
-    mail(to: user.email, subject: "Welcome to Citrulu")
+    mail(to: user.email, subject: @title)
   end
-
-  def test_notification_success(test_run)
+  
+  def nudge(user)
+    @title = "How are you getting on with Citrulu?"
+    if user.first_tutorial
+      @first_tutorial_url = edit_test_file_url(user.first_tutorial)
+    else
+      # They must have deleted the first tutorial fiel
+      @first_tutorial_url = test_files_url
+    end
+    mail(to: user.email, subject: @title)
+  end
+  
+  def first_test_notification_success(test_run)
     raise "Tried to create a test notification for a nil test run" if test_run.nil?
     @status = :pass
-    @title = 'All of your tests are passing'
+    @title = 'We ran your tests and they all pass!'
+    subject = "#{@title} (#{test_run.test_file.name})"
     
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'test_notification')
+    mail(to: to, subject: subject, template_name: 'first_test_notification')
+  end
+
+  def first_test_notification_failure(test_run)
+    raise "Tried to create a test notification for a nil test run" if test_run.nil?
+    raise "Tried to create a test notification for a test test_run with no groups: id#{test_run.id}" if test_run.test_groups.nil?
+    
+    @status = :fail
+    @title = 'We ran your tests and some of them failed.'
+    subject = "#{@title} (#{test_run.test_file.name})"
+    
+    # TODO - DRY These up - couldn't work out how to do it!
+    @test_run = test_run
+    to = test_run.test_file.user.email
+    headers( test_notification_headers )
+    mail(to: to, subject: subject, template_name: 'first_test_notification')
+  end
+
+  def weekly_test_summary_email(user)
+    
+  end
+  
+  def test_notification_success(test_run)
+    raise "Tried to create a test notification for a nil test run" if test_run.nil?
+    @status = :pass
+    @title = 'All of your tests are passing'
+    subject = "#{@title} (#{test_run.test_file.name})"
+    
+    # TODO - DRY These up - couldn't work out how to do it!
+    @test_run = test_run
+    to = test_run.test_file.user.email
+    headers( test_notification_headers )
+    mail(to: to, subject: subject, template_name: 'test_notification')
   end
   
   def test_notification_failure(test_run)
@@ -32,16 +76,18 @@ class UserMailer < ActionMailer::Base
       @title = "#{test_run.number_of_failed_groups} pages could not be retrieved"
     end
     
+    subject = "#{@title} (#{test_run.test_file.name})"
+    
     # TODO - DRY These up - couldn't work out how to do it!
     @test_run = test_run
     to = test_run.test_file.user.email
     headers( test_notification_headers )
-    mail(to: to, subject: @title, template_name: 'test_notification')
+    mail(to: to, subject: subject, template_name: 'test_notification')
   end
-  
+
   protected
   
   def test_notification_headers
     {"List-Unsubscribe" => "<#{url_for(:controller => "registrations", :action => "edit", :only_path => false) }>"}
-  end
+  end  
 end

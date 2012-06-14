@@ -16,6 +16,16 @@ describe TestRun do
     expect{ TestGroup.find(test_group_1_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe "name" do
+    it "should return the correct string" do
+      time_run = "2012-05-30 11:44:20 +0100".to_time
+      test_file = FactoryGirl.create(:test_file, name: "My Test File")
+      test_run = FactoryGirl.create(:test_run, test_file: test_file, time_run: time_run)
+      
+      test_run.name.should == "My Test File::2012-05-30 10:44:20 UTC"
+    end
+  end
+  
   describe "previous_run" do
     before(:each) do
       @test_file = FactoryGirl.create(:test_file)
@@ -37,6 +47,36 @@ describe TestRun do
     end
   end
   
+  
+  describe "users_first_run?" do
+    before(:each) do
+      @user1 = FactoryGirl.create(:user)
+      @test_fileA = FactoryGirl.create(:test_file, user: @user1)
+      @test_runA = FactoryGirl.create(:test_run, test_file: @test_fileA)
+    end
+    
+    it "should return false if there are two test runs for the same test_file" do
+      FactoryGirl.create(:test_run, test_file: @test_fileA)
+
+      @test_runA.users_first_run?.should be_false
+    end
+    
+    it "should return false if there is a run for the same user in a different test_file" do
+      test_fileB = FactoryGirl.create(:test_file, user: @user1)
+      FactoryGirl.create(:test_run, test_file: test_fileB)
+      
+      @test_runA.users_first_run?.should be_false
+    end
+    
+    it "should return true if the only other Run is for a different user" do
+      user2 = FactoryGirl.create(:user)
+      test_fileC = FactoryGirl.create(:test_file, user: user2)
+      FactoryGirl.create(:test_run, test_file: test_fileC)      
+
+      @test_runA.users_first_run?.should be_true
+    end
+    
+  end
   
 
   describe "number_of_pages" do

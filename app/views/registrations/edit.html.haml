@@ -62,7 +62,7 @@
     %p
       If you change your mind and decide you'd like to reinstate your subscription before it has fully expired, please
       #{mail_to 'contact@citrulu.com', 'send us an email'}.
-
+      
   - if current_user.status == :paid
     %p
       You're currently on the 
@@ -93,8 +93,8 @@
                 After that you'll 
               still have full access to Citrulu, but your tests won't be run and you won't receive any alerts.
               
-%h3 Cancel my account
+%h3 Terminate my account
 %p
-  Unhappy? 
+  Unhappy? You can terminate your account at any time, and we'll do our best to delete everything. If you terminate your account, we will not be able to recover it.
 %p
-  = link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete, :class => "btn btn-danger"
+  = link_to "Terminate my account", registration_path(resource_name), :confirm => "Are you sure? You can't recover your account once it's gone.", :method => :delete, :class => "btn btn-danger"

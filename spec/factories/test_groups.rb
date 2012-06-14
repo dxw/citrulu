@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :test_group, :aliases => [:test_group_with_failures] do
     time_run Time.now
     page_content "Foo"
-    response_time 237
+    response
     
     ignore do 
       successful_results 4

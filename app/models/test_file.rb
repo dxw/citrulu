@@ -4,11 +4,22 @@ require 'symbolizer'
 class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs, :dependent => :destroy
+
+  # By default we only deal with test files where 'deleted' is Not true
+  scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
+  scope :tutorials, where("tutorial_id IS NOT NULL")
+  scope :running, where(run_tests: true)
+  scope :not_running, where("run_tests IS NULL OR run_tests = ?", false)
   
   validates_presence_of :name
+  validates :name, uniqueness: {scope: :user_id}
+
+  def to_param
+    "#{self.id}-#{self.name.parameterize}"
+  end
   
   def last_run
-    test_runs.max{|r,u| r.time_run <=> u.time_run }
+    test_runs.order("time_run DESC").first
   end
 
   def owner
@@ -46,7 +57,7 @@ class TestFile < ActiveRecord::Base
   # All the files which have compiled successfully at some point
   def self.compiled_files
     #todo - put this select into sql
-    all(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
+    not_deleted(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
   end
    
   def average_failures_per_run
@@ -75,5 +86,31 @@ class TestFile < ActiveRecord::Base
     end
 
     fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
+  end
+  
+  def delete!
+    update_attributes(deleted: true)
+  end
+  
+  # For tutorial files - get the next tutorial file.
+  def next_tutorial
+    user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
+  end
+  
+  def is_a_tutorial
+    !tutorial_id.nil?
+  end
+
+  def enqueue
+    Resque.enqueue(TestFileJob, self.id)
+  end
+
+  def priority_enqueue
+    Resque.enqueue(PriorityTestFileJob, self.id)
+  end
+
+  def prioritise
+    Resque.dequeue(TestFileJob, self.id)
+    Resque.enqueue(PriorityTestFileJob, self.id)
   end
 end

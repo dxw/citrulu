@@ -2,9 +2,10 @@
 
 FactoryGirl.define do
   factory :test_file, :aliases => [:compiled_test_file] do
-    name 'my first test file'
+    sequence(:name) { |n| "my first test file#{n}" }
     test_file_text "On http://example.com\n  I should see foo"
     compiled_test_file_text "On http://example.com\n  I should see foo"
     user
+    run_tests true
   end
 end

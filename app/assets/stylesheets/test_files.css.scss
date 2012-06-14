@@ -118,7 +118,35 @@ body.test_files {
       }
     }
   }  
-
+  
+  #tutorial_help.hero-unit {
+    height: 9em;
+    padding: 5% 10%;
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+    }
+    .item {
+      width: 90%;
+      padding: 0 5%;
+      text-align: justify;
+      .page_number {
+        text-align: right;
+      }
+    }
+    .item.last {
+      text-align: center;
+    }
+  }
+  
+  div.outline {
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 9px 15px;
+  }
+  
   #liveview {
     margin-top: 11px;
 
@@ -127,12 +155,7 @@ body.test_files {
     }
 
     div.outline {
-      border: 1px solid #e5e5e5;
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      border-radius: 4px;
       padding: 3px;
-
       div.buttons {
         border: solid #e5e5e5;
         border-width: 1px 0 0 0;
@@ -209,6 +232,19 @@ body.test_files {
       }
     }
   }
+  
+  #options{
+    label{
+      width: 65%;
+      float:left;
+      margin-top: 0.5em;
+    }
+    input[type=submit] {
+      width: 30%;
+      float: right;
+    }
+  }
+  
 }
 
 body.test_files.index {
@@ -224,6 +260,56 @@ body.test_files.index {
       margin-top: -100px;
       margin-right: -20px;
       font-size: 14px;
+    }
+  }
+
+  #test_list {
+    .title {
+      a.btn {
+        float: right;
+        margin-top: -40px;
+      }
+    } 
+
+    ul#test_files {
+      padding-top: 10px;
+      
+      li.test_file {
+        margin-bottom: 10px;
+        a.test_file_btn {
+          display: block;
+          color: inherit;
+          text-align: left;
+          padding: 15px 10px;
+
+          &:hover {
+            text-decoration: none;
+            border-color: rgba(0,0,0,0.3);
+          }
+
+          span.name {
+            font-size: 16px;
+            font-weight: bold;
+            padding-right: 1em
+          }
+
+          span.last_updated, span.last_run {
+            font-style: italic;
+            display:block;
+          }
+        }
+        a.btn-danger {
+          margin-top: 15px;
+        }
+      }
+      #no_test_files a{
+        text-align:center;
+        font-size:1.2em;
+        line-height:1.5;
+        strong {
+          font-size:1.2em;
+        }
+      }
     }
   }
 

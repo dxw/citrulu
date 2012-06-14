@@ -1,15 +1,34 @@
-%li.test_file
-  %a.btn{:href => edit_test_file_path(test_file)}
-    %span.name=test_file.name
+%li#no_test_files.test_file{style: "display: none"}
+  =render partial: 'no_test_files'
+
+- @test_files.each do |file|
+  %li.test_file{ :id => "test_file#{file.id}" }
     .row
-      .span4
-        %span.last_updated="Last updated at #{test_file.updated_at}"
-      .span3
-        %span.file_info
-          -if test_file.compiled?
-            =pluralize(test_file.number_of_tests, 'assertion')
-            on 
-            =pluralize(test_file.number_of_pages, 'page')
-          -else
-            Your file hasn't been compiled yet.
-            Click to edit it and kick it off.
+      .span7
+        %a.btn.test_file_btn{:href => edit_test_file_path(file)}
+          %span.name=file.name
+          .row-fluid
+            .span7
+              %span.last_updated="Last updated at #{file.updated_at}"
+              -if file.compiled?
+                %span.last_run
+                  - if file.run_tests?
+                    - if file.last_run
+                      Last run at #{file.last_run.time_run}
+                    - else
+                      Not yet run
+                  - else
+                    Not set to run: click to change. 
+            .span5
+              %span.file_info
+                -if file.compiled?
+                  =pluralize(file.number_of_tests, 'assertion')
+                  on 
+                  =pluralize(file.number_of_pages, 'page')
+                -else
+                  Your file hasn't been compiled yet.
+                  Click to edit it and kick it off.
+      .span1
+        =link_to test_file_path(file), {:class => "btn btn-danger", method: :delete, remote: true, confirm: "Are you sure you want to delete this test file? We'll keep the related test results, but you won't be able to bring it back."} do
+          %span Delete
+          %i.icon-remove-sign.icon-white

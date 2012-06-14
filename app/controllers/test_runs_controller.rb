@@ -8,11 +8,15 @@ class TestRunsController < ApplicationController
   # GET /test_runs
   # GET /test_runs.json
   def index
-    @test_files = current_user.test_files
-    @recent_failed_groups = @test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
+    @running_test_files = current_user.test_files.not_deleted.running
+    @not_running_test_files = current_user.test_files.not_deleted.not_running.order("name ASC")
     
-    @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
-    @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
+    unless @running_test_files.blank?
+      @recent_failed_groups = @running_test_files.collect{|t| t.last_run.groups_with_failures unless t.last_run.nil?}.flatten.compact
+    
+      @recent_failed_pages = @running_test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
+      @recent_failed_assertions = @running_test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
+    end
 
     @test_runs = TestRun.joins(:test_file).where('test_files.user_id' => current_user.id).page(params[:page])
 

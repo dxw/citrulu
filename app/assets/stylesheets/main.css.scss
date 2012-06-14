@@ -134,7 +134,7 @@ footer {
   .citrulu {
     padding-top: 3px;
   
-    a {
+    a.brand {
       color: #555;
       font-size: 15px;
       &:hover {
@@ -142,6 +142,10 @@ footer {
       }
     }
   }
+
+ .twitter-follow-button {
+	padding-top: 10px;
+}
 
   .content {
     padding: 10px;

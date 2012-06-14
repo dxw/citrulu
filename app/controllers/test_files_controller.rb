@@ -7,9 +7,8 @@ class TestFilesController < ApplicationController
   before_filter :check_ownership!, :only => [:show, :edit, :update, :destroy]
    
   # GET /test_files
-  # GET /test_files.json
   def index
-    @test_files = current_user.test_files.sort{ |a,b| a.updated_at > b.updated_at }
+    @test_files = current_user.test_files.not_deleted.order("tutorial_id, updated_at desc")
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
 
@@ -30,17 +29,25 @@ class TestFilesController < ApplicationController
 #    end
 #  end
 
-  # GET /test_files/new
-  # GET /test_files/new.json
-#  def new
-#    @test_file = TestFile.new
-#    @test_file.user_id = current_user.id
-#
-#    respond_to do |format|
-#      format.html # new.html.erb
-#      format.json { render json: @test_file }
-#    end
-#  end
+  # POST /test_files/create
+  def create
+    @test_file = current_user.create_new_test_file
+    
+    log_event_if_first(current_user, "Test Files", "First created")
+    
+    redirect_to action: "edit", id: @test_file, :new => true
+  end
+  
+  # POST /test_files/create_first_test_file
+  def create_first_test_file
+    @test_file = current_user.create_first_test_file
+    
+    log_event_if_first(current_user, "Test Files", "First created", "Tutorial end")
+
+    redirect_to action: "edit", id: @test_file, :new => true
+  end
+  
+
 
   # GET /test_files/1/edit
   def edit
@@ -49,27 +56,19 @@ class TestFilesController < ApplicationController
     @predefs = Predefs.all
 
     @console_output = "Welcome to Citrulu"
-    @test_file.name = "Unnamed file" if @test_file.name.nil?
+    
+    unless @test_file.tutorial_id.nil?
+      @help_texts = TUTORIAL_TEST_FILES.select{|t| t[:id] == @test_file.tutorial_id}.first[:help]
+      
+      @help_shown = params[:help_text].to_i
+      @help_shown = 0 if @help_shown < 0 || @help_shown >= @help_texts.length
+      
+      render action: "edit", help_text: @help_shown 
+    end
   end
 
-  # POST /test_files
-  # POST /test_files.json
-#  def create
-#    @test_file = TestFile.new(params[:test_file])
-#    # In case the user tries to be sneaky and create a test file for someone other than themselves:
-#    @test_file.user_id = current_user.id
-#    
-#    respond_to do |format|
-#      if @test_file.save
-#        format.html { redirect_to @test_file, notice: 'Test file was successfully created.' }
-#        format.json { render json: @test_file, status: :created, location: @test_file }
-#      else
-#        format.html { render action: "new" }
-#        format.json { render json: @test_file.errors, status: :unprocessable_entity }
-#      end
-#    end
-#  end
 
+  # POST /test_files/update_liveview
   def update_liveview
     begin
       @current_line = params[:current_line]
@@ -105,7 +104,7 @@ class TestFilesController < ApplicationController
         :text4 => " of the current group",
       })
 
-      if !error[:after].empty?
+      if !error[:after].blank?
         @error[:text4] = " after "
         @error[:after] = error[:after]
       end
@@ -120,68 +119,68 @@ class TestFilesController < ApplicationController
   end
 
   # PUT /test_files/1
-  # PUT /test_files/1.json
   def update
     @test_file = TestFile.find(params[:id])
-    
-    # We're either going to get the test_file_text, or the name, but not both together.
-    # We only need to try and compile if we have text:
-    if params[:test_file][:name].nil? 
-      # Then we should expect some code:
-      code = params[:test_file][:test_file_text]
-      begin
-        # If there's no code to complile, don't even try - drop straight through to the 'else' block
-        CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
-  
-      rescue CitruluParser::TestPredefError => e
-        # Unknown predef:
-        @console_msg_hash = { :text0 => e.to_s }
-        succeeded = false
+    code = params[:test_file][:test_file_text]
+    begin
+      # If there's no code to complile, don't even try - drop straight through to the 'else' block
+      compiled_object = CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
 
-      rescue CitruluParser::TestCompileError => e
-        # Compile fail:
-        begin 
-          error = CitruluParser.format_error(e)
-        rescue => e
-          @console_msg_hash = {
-            :text1 => "Something has gone wrong: ",
-            :exception_text => e.to_s,
-            :text2 => " Sorry! This is a bug. Please let us know."
-          }
-          succeeded = false
-        else
-      
-          @console_msg_hash = {
-            :text1 => "Compilation failed! Expected: ",
-            :expected => error[:expected],
-            :text2 => " at line ",
-            :line => error[:line],
-            :text3 => ", column ",
-            :column => error[:column],
-          }
+    rescue CitruluParser::TestPredefError => e
+      # Unknown predef:
+      @console_msg_hash = { :text0 => e.to_s }
+      succeeded = false
 
-          if !error[:after].empty?
-            @console_msg_hash[:text4] = " after "
-            @console_msg_hash[:after] = error[:after]
-          end
-          succeeded = false
-        end
-    
+    rescue CitruluParser::TestCompileError => e
+      succeeded = false
+      # Compile fail:
+      begin 
+        error = CitruluParser.format_error(e)
       rescue => e
-        # catch-all, including CitruluParser::TestCompileUnknownError
         @console_msg_hash = {
           :text1 => "Something has gone wrong: ",
           :exception_text => e.to_s,
           :text2 => " Sorry! This is a bug. Please let us know."
         }
-        succeeded = false
-      
+        
       else
-        # Compile win!
-        @console_msg_hash = { :text0 => "Saved!" }
-        succeeded = true
+    
+        @console_msg_hash = {
+          :text1 => "Compilation failed! Expected: ",
+          :expected => error[:expected],
+          :text2 => " at line ",
+          :line => error[:line],
+          :text3 => ", column ",
+          :column => error[:column],
+        }
 
-        @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+        if !error[:after].empty?
+          @console_msg_hash[:text4] = " after "
+          @console_msg_hash[:after] = error[:after]
+        end
+      end
+  
+    rescue => e
+      # catch-all, including CitruluParser::TestCompileUnknownError
+      @console_msg_hash = {
+        :text1 => "Something has gone wrong: ",
+        :exception_text => e.to_s,
+        :text2 => " Sorry! This is a bug. Please let us know."
+      }
+      succeeded = false
+    
+    else
+      # Compile win!
+      @console_msg_hash = { :text0 => "Saved!" }
+      succeeded = true
+
+      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      
+      if !@test_file.is_a_tutorial
+        number_of_checks = CitruluParser.count_checks(compiled_object)
+        log_event_if_first(current_user, "Test Files", "First compiled")
+        log_event_if_first(current_user, "Test Files", "First compiled with 3 checks") if number_of_checks >= 3
+        log_event_if_first(current_user, "Test Files", "First compiled with 5 checks") if number_of_checks >= 5
       end
     end
     
@@ -198,30 +197,49 @@ class TestFilesController < ApplicationController
 
       # TODO: is there a case where the test_file can't be updated? What on earth would we do then??
       
-      format.html { 
-        if request.xhr?
-          # if the name has been updated, put its value back to the page
-          render :text => params[:test_file].values.first
-        else  
-          render action: "edit"
-        end
-      }
+      format.html { render action: "edit" }
       format.js { }
     end
   end
-
-  # DELETE /test_files/1
-  # DELETE /test_files/1.json
-#  def destroy
-#    @test_file = TestFile.find(params[:id])
-#    @test_file.destroy
-#
-#    respond_to do |format|
-#      format.html { redirect_to test_files_url }
-#      format.json { head :ok }
-#    end
-#  end
   
+  # PUT /test_files/update_name/1
+  def update_name
+    @test_file = TestFile.find(params[:id])
+    new_name = params[:test_file][:name]
+    
+    @test_file.name = new_name
+    if !@test_file.save
+      # Assume it was because the name was taken
+      @test_file.name = current_user.generate_name(new_name)
+      @test_file.save!
+    end
+    
+    render :text => @test_file.name
+  end
+  
+  # PUT /test_files/update_run_status/1
+  def update_run_status
+    test_file = TestFile.find(params[:id])
+    
+    # Whatever happens, render nothing 
+    
+    response.headers['Cache-Control'] = 'no-cache' 
+    if test_file.update_attributes(run_tests: params[:test_file][:run_tests])
+      # Just send back a 200 header:
+      render text: ''
+      # A couple of ways to do this, but both "render nothing: true" and "head :ok" return a non-empty response body.
+    else
+      head :unprocessable_entity #422. Maybe not appropriate, but it seems sensible to return SOMETHING to indicate that the save failed...
+    end
+  end
+  
+  # DELETE /test_files/1
+  def destroy
+    @test_file = TestFile.find(params[:id])
+    # Don't actually destroy - just mark as deleted
+    @test_file.delete!
+  end
+    
   protected
     
   # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page

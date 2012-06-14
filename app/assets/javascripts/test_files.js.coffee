@@ -3,10 +3,17 @@
 #
 
 $(document).ready ->
-  $("div.welcome a.dismiss").click ->
-    $("div.welcome").fadeOut('fast')
-    id = $('div.welcome').attr('id')
-    window.createCookie("hide_#{id}", 'true', 999)
+  if($('body').hasClass('test_files') && $('body').hasClass('index'))
+    $("div.welcome a.dismiss").click ->
+      $("div.welcome").fadeOut('fast')
+      id = $('div.welcome').attr('id')
+      window.createCookie("hide_#{id}", 'true', 999)
+    window.show_no_test_files()
+  
+window.show_no_test_files = ->
+  # Show it if it's the only thing in the list:
+  if $("#test_files li").length == 1
+    $("#no_test_files").show('bounce')
 
 #
 # Setup the test file editor page:
@@ -16,10 +23,14 @@ $(document).ready ->
 # When the window loads, set up the editor and kick off the first autosave
 #
 $(window).load ->
-  if($('body').hasClass('test_files') && $('body').hasClass('edit'))
+  if($('body').hasClass('test_files') && ($('body').hasClass('edit') || $('body').hasClass('new') ))
     setup_editor()
     
     setup_title()
+    
+    setup_run_status_toggle()
+    
+    setup_tutorial_help()
     
     highlight_help_text_code()
     
@@ -60,24 +71,31 @@ setup_title = ->
     method:"PUT", 
     name:"test_file[name]",
     
+    onblur: "submit", 
+    
     # When the form is reset or submitted, show the icon again
     "onreset": -> insert_edit_icon()
     "onsubmit": -> insert_edit_icon()
+    
   }
     
   test_file_id = $(".editable").attr("data-id")
-  $(".editable").editable("/test_files/"+test_file_id, args)
+  $(".editable").editable("/test_files/update_name/"+test_file_id, args)
   
   $(".editable").click( (e) -> 
     $("#edit_icon").remove()
     $(".editable input").css("width","100%")
   )
+  
+  title_editable_if_new()
+
 
 insert_edit_icon = ->
-  # Insert an icon after the field
-  $(".editable").after("<i id='edit_icon' class='icon-pencil'/>")
-  # Clicking on the icon acts like clicking on the field
-  $("#edit_icon").click( -> $(".editable").click() )
+  # Insert an icon after the field if one doesn't already exist:
+  if $("#edit_icon").length == 0
+    $(".editable").after("<i id='edit_icon' class='icon-pencil'/>")
+    # Clicking on the icon acts like clicking on the field
+    $("#edit_icon").click( -> $(".editable").click() )
   
   # # Check to see if there is enough room to fit the icon on the same line as the content:  
   # icon_width = 
@@ -91,12 +109,54 @@ insert_edit_icon = ->
   # else
   #   $(".editable").parent().css('margin-right','0')
 
+# When the user has created a new test file we want the title to be editable and the focus to be in the field
+title_editable_if_new = ->
+  # Get the param value using the BBQ jquery plugin:
+  if $.deparam.querystring()['new']
+    $(".editable").click()
+
+# Set up the toggle button used to set the run status
+setup_run_status_toggle = ->
+  toggle_button = $("#run_status_toggle_form input[type=submit]")
+  toggle_button.click ->
+    # Set the value explicitly in case the browser and db drift out of sync
+    if $("#test_file_run_tests").val() == "t" || $("#test_file_run_tests").val() == "true"
+      $("#test_file_run_tests").val(false)
+      toggle_button.val('Start')
+      toggle_button.removeClass("btn-success").removeClass("btn-danger")
+    else
+      $("#test_file_run_tests").val(true)
+      toggle_button.val('On')
+      toggle_button.addClass("btn-success")
+    
+  toggle_button.hover(
+    -> (
+      if toggle_button.hasClass("btn-success")
+        toggle_button.val('Stop')
+        toggle_button.removeClass("btn-success")
+        toggle_button.addClass("btn-danger")
+    ),
+    -> (
+      if toggle_button.hasClass("btn-danger")
+        # Then the button wasn't clicked
+        toggle_button.val('On')
+        toggle_button.removeClass("btn-danger")
+        toggle_button.addClass("btn-success")
+    )
+  )
+    
+# Set up the help text carousel for tutorial files:
+setup_tutorial_help = ->
+  $('.carousel').carousel()
+  $('.carousel').carousel('pause')
+
+
+
 ##
 # Returns a hash of the input text. Used to detect whether the test file has been changed
 #
-make_hash = (input_text) ->
-  shaObj = new jsSHA input_text, "ASCII"
-  shaObj.getHash "B64"
+window.make_hash = (input_text) ->
+  $.md5(input_text);
   
 ##
 # Returns an object containing the full text of the test group currently under the cursor 
@@ -135,7 +195,10 @@ get_current_group = ->
 
 #  console.log "Found the next group at #{line}"
 
-  end = line-1
+  if line == window.editor.lineCount()
+    end = line
+  else
+    end = line-1
 
 #  console.log "This group: #{start} .. #{end}\n\n"
 
@@ -173,7 +236,7 @@ update_selected_test = (current_group) ->
 
   return if selected_test == '' 
 
-  $("#liveview div.group div:contains('" + selected_test + "')").addClass('current')
+  $("#liveview div.group div." + window.make_hash( selected_test)).addClass('current')
 
 
 ##
@@ -202,7 +265,7 @@ window.check_liveview = ->
     update_selected_test(current_group)
 
     # Has the current group been changed?
-    if make_hash(current_group.group) != make_hash(window.lastGroup.group)
+    if window.make_hash(current_group.group) != window.make_hash(window.lastGroup.group)
       
       # Is the group big enough to be a valid group?
 
@@ -245,7 +308,7 @@ setup_editor = ->
   $("#editor_form").submit ->
     saving_file()
     editor_text = window.editor.getValue()
-    window.text_hash = make_hash(editor_text)
+    window.text_hash = window.make_hash(editor_text)
 
 ##
 # Updates the UI to indicate that a save is in progress
@@ -259,7 +322,7 @@ saving_file = ->
 # Initiates an an autosave if the test file text has been modified and the user is not currently typing
 #
 window.save_file = ->
-  new_text_hash = make_hash(window.editor.getValue())
+  new_text_hash = window.make_hash(window.editor.getValue())
   
 
   if (new_text_hash isnt window.text_hash) and window.editor.getValue() isnt '' and (new Date).getTime() - window.lastKeyPress > 500

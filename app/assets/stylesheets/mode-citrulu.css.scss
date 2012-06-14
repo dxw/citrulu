@@ -23,7 +23,7 @@
 
   span {
     &.cm-comment {
-      color: #75715e;
+      color: #BC9358;
     }
 
     &.cm-regex {
@@ -64,6 +64,11 @@
 
     &.cm-error {
     }
+
+    &.highlight {
+      background: #5D5E56;
+    }
+
   }
 
 }

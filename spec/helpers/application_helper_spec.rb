@@ -48,5 +48,24 @@ describe TestFilesHelper do
       helper.flash_message(:alert, 'bar').should include('class=')
     end
   end
+  
+  describe "twitter_button" do
+    it "should render a link" do
+      helper.twitter_button.should include("<a href=")
+    end
+  end
+  
+  describe "unimplemented_popover" do
+    it "should render a link" do
+      helper.unimplemented_popover("foo").should include("<a href=")
+    end
+    it "should be disabled" do
+      helper.unimplemented_popover("foo").should include("onclick=\"return false;\"")
+    end
+    it "should have a popover title and text" do
+      helper.unimplemented_popover("foo").should include("data-original-title=")
+      helper.unimplemented_popover("foo").should include("data-content=")
+    end
+  end
 
 end

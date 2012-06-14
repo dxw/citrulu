@@ -2,8 +2,41 @@ require 'spec_helper'
 require 'testrunner'
 
 describe TestRunner do
-  describe "run_all_tests" do
+  describe "enqueue_all_tests" do
+
+    before(:each) do
+      Resque.stub(:enqueue)
+      class TestFileJob
+      end
+    end
     
+    it "should raise an exception if a test file is orphaned" do
+      FactoryGirl.create(:compiled_test_file)
+      FactoryGirl.create(:compiled_test_file, :user => nil)
+      FactoryGirl.create(:compiled_test_file)
+      expect { TestRunner.enqueue_all_tests }.to raise_error(RuntimeError)
+    end
+
+    it "should not try and run tests where the compiled test file text is nil" do
+      FactoryGirl.create(:test_file, :compiled_test_file_text => nil)
+      TestRunner.should_not_receive(:execute_test_groups)
+      TestRunner.enqueue_all_tests
+    end
+
+    it "should not try and run tests where the compiled test file text is empty" do
+      FactoryGirl.create(:test_file, :compiled_test_file_text => "")
+      TestRunner.should_not_receive(:execute_test_groups)
+      TestRunner.enqueue_all_tests
+    end
+    
+    it "should not try and run tests when run_tests is false" do
+      FactoryGirl.create(:test_file, :run_tests => false)
+      TestRunner.should_not_receive(:execute_test_groups)
+      TestRunner.enqueue_all_tests
+    end
+  end
+
+  describe 'run_test' do
     def stub_execute_test_groups_to_succeed
       TestRunner.stub(:execute_test_groups) do |file,test_run|
         FactoryGirl.create(:test_group_no_failures, :test_run => test_run)
@@ -16,23 +49,27 @@ describe TestRunner do
       end
     end
     
-    it "should raise an exception if a test file is orphaned" do
-      FactoryGirl.create(:compiled_test_file)
-      FactoryGirl.create(:compiled_test_file, :user => nil)
-      FactoryGirl.create(:compiled_test_file)
-      expect { TestRunner.run_all_tests }.to raise_error(RuntimeError)
+    it "should run tests where run_tests is true" do
+      @test_file = FactoryGirl.create(:test_file, :run_tests => true)
+      TestRunner.should_receive(:execute_test_groups)
+      TestRunner.run_test(@test_file)
     end
 
-    it "should not try and run tests where the compiled test file text is nil" do
-      FactoryGirl.create(:test_file, :compiled_test_file_text => nil)
-      TestRunner.should_not_receive(:execute_test_groups)
-      TestRunner.run_all_tests
-    end
-
-    it "should not try and run tests where the compiled test file text is empty" do
-      FactoryGirl.create(:test_file, :compiled_test_file_text => "")
-      TestRunner.should_not_receive(:execute_test_groups)
-      TestRunner.run_all_tests
+    context "when a user has more than one test file" do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        @test_file1 = FactoryGirl.create(:compiled_test_file, user: user)
+        @test_file2 = FactoryGirl.create(:compiled_test_file, user: user)
+        user2 = FactoryGirl.create(:user)
+        @test_file3 = FactoryGirl.create(:compiled_test_file, user: user2)
+      end
+      it "should call execute_test_groups the right number of times" do
+        stub_execute_test_groups_to_succeed
+        TestRunner.should_receive(:execute_test_groups).exactly(3).times
+        TestRunner.run_test(@test_file1)
+        TestRunner.run_test(@test_file2)
+        TestRunner.run_test(@test_file3)
+      end
     end
     
     it "should not try and run tests where the user is inactive" do
@@ -62,7 +99,7 @@ describe TestRunner do
 
           # Check that the call isn't made to the mailer
           UserMailer.should_not_receive(:test_notification)
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
       end
       
@@ -76,76 +113,93 @@ describe TestRunner do
         it "should not send success messages if the last TestRun was successful" do
           # Tests Fail...
           stub_execute_test_groups_to_fail          
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
           
           # ...then succeed...
           stub_execute_test_groups_to_succeed
           
-          # Should be able to use this line but doesn't work - complains that the second call to run_all_tests is also made...
+          # Should be able to use this line but doesn't work - complains that the second call to run_test is also made...
           # UserMailer.should_receive(:test_notification)  
-          TestRunner.run_all_tests        
+          TestRunner.run_test(@test_file)
           
           stub_execute_test_groups_to_succeed
           
           # ...still succeeding - shouldn't get mail...
           UserMailer.should_not_receive(:test_notification_success)      
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
       
         it "should not send a success message on the first test run" do
           stub_execute_test_groups_to_succeed
           
           UserMailer.should_not_receive(:test_notification_success)
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
+        end
+        
+        it "should send a 'First' success message on the first test run" do
+          stub_execute_test_groups_to_succeed
+          
+          UserMailer.should_receive(:first_test_notification_success).and_return(Mail::Message.new)
+          TestRunner.run_test(@test_file)
         end
 
         it "should send success messages if the last TestRun was a failure" do
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
 
           UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_succeed
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
 
         it "should always send failure messages (1)" do
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          UserMailer.should_receive(:first_test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
         
         it "should always send failure messages (2)" do
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
+        end
+        
+        it "should always send failure messages (3)" do
+          stub_execute_test_groups_to_fail
+          TestRunner.run_test(@test_file)
+          TestRunner.run_test(@test_file)
+          
+          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+
+          TestRunner.run_test(@test_file)
         end
 
         it "should send a failure message if the tests were succeeding but are now failing (1)" do
           stub_execute_test_groups_to_succeed
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
 
         it "should send a failure message if the tests were succeeding but are now failing (2)" do
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
 
           stub_execute_test_groups_to_succeed
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
 
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
 
           stub_execute_test_groups_to_fail
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
         
         
@@ -155,9 +209,11 @@ describe TestRunner do
             FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
           
+          TestRunner.run_test(@test_file)
+          
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
           
-          TestRunner.run_all_tests
+          TestRunner.run_test(@test_file)
         end
       end
     end
@@ -255,14 +311,14 @@ describe TestRunner do
       it "should set the response time" do
         pending("There's a railscast on how to freeze time...")
         stub_mechanize
-        TestRunner.execute_tests(test_groups)[0][:response_code].should == "X"
+        TestRunner.execute_tests(test_groups)[0][:response_time].should == "X"
       end
       
       it "should set the response code" do
         dummy_page = FactoryGirl.build(:mechanize_page, :code => 404)
         stub_mechanize(dummy_page)
-        
-        TestRunner.execute_tests(@test_groups)[0][:response_code].should == 404
+
+        foo = TestRunner.execute_tests(@test_groups)[0][:response_attributes][:code].should == 404
       end
       
       it "should generate the test results" do
@@ -305,10 +361,13 @@ describe TestRunner do
       before(:each) do
         TestRunner.should_receive(:execute_tests).and_return(
           [
-            :time_run => Time.now, :response_time => 200, :message => '', :test_url => 'http://example.com',
+            :time_run => Time.now, :message => '', :test_url => 'http://example.com',
             :test_results_attributes => [
               { :result => true, :original_line => "I should see foo" }
-            ]
+            ],
+            :response_attributes => {
+              response_time: 200
+            }
           ]
         )
       end
@@ -317,7 +376,7 @@ describe TestRunner do
         TestRunner.execute_test_groups(@test_file, @test_run)
 
         @test_run.test_groups.length.should == 1
-        @test_run.test_groups[0].response_time.should == 200
+        @test_run.test_groups[0].response.response_time.should == 200
         @test_run.test_groups[0].message.should == ''
         @test_run.test_groups[0].test_url.should == 'http://example.com'
       end

@@ -12,6 +12,33 @@ class User < ActiveRecord::Base
 
   attr_accessor :invitation_code
 
+  def self.define_meta_methods(meta)
+    define_method meta do
+      # Assumption: that there's only one instance of any one meta variable
+      m = user_metas.where(name: meta).first
+      return true unless m.nil?
+    end
+    
+    define_method "#{meta}_time" do
+      # Assumption: that there's only one instance of any one meta variable
+      m = user_metas.where(name: meta).first
+      return m.timestamp unless m.nil?
+    end
+    
+    define_method "#{meta}=" do |value|
+      user_metas.where(name: meta).destroy_all
+      if value == true 
+        user_metas.create(name: meta, timestamp: Time.now)
+      end
+    end
+  end
+  
+  # Define meta variables as methods: 
+  ["nudge_sent"].each do |meta|
+    self.define_meta_methods(meta)
+  end
+  
+
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
   serialize :status # 4 possible values- :free, :paid, :cancelled, :inactive
@@ -24,13 +51,14 @@ class User < ActiveRecord::Base
   end
   
   has_many :test_files, :dependent => :destroy
+  has_many :user_metas
   belongs_to :invitation
   belongs_to :plan
   
   before_create :set_email_preference
   before_create :add_invitation
   before_create :set_default_plan
-  after_create :create_default_test_file 
+  after_create :create_tutorial_test_files 
   after_save :update_subscriber
   after_destroy :cancel_subscription
   
@@ -153,6 +181,99 @@ class User < ActiveRecord::Base
       save!
     end
   end
+
+  def one_week_of_test_runs
+    test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+  end
+  
+  def new_test_file_name
+    generate_name("New test file")
+  end
+  
+  # Append a number if a name is already taken
+  def generate_name(string)
+    names = test_files.pluck :name
+    if !names.include?(string)
+      string
+    else
+      # Find the existing tail number if any:
+      number_suffix = string.match /\d+$/
+      if number_suffix.nil?
+        n = 1
+      else
+        n = number_suffix[0].to_i + 1 
+      end
+      
+      #remove the numbers from the end of the string:
+      trimmed_string = string.gsub /\d+$/, ""
+      
+      until !names.include?("#{trimmed_string}#{n}") do 
+        n += 1
+      end
+      "#{trimmed_string}#{n}"
+    end
+  end
+  
+  def create_tutorial_test_files
+    # Need to do the each in reverse order so that the most recently created is the first one
+    TUTORIAL_TEST_FILES.reverse_each do |f|
+      test_files.create!(
+        :name => generate_name(f[:name]),
+        :tutorial_id => f[:id],
+        :test_file_text => f[:text],
+        :run_tests => false,
+      )
+    end
+  end
+  
+  def first_tutorial 
+    test_files.tutorials.not_deleted.where(tutorial_id: 1).first
+  end
+  
+  def create_new_test_file
+    test_files.create!(
+      name: new_test_file_name,
+      run_tests: true
+    )
+  end
+  
+  def create_first_test_file
+    test_files.create!(
+      name: generate_name("My first Test File"),
+      test_file_text: FIRST_TEST_FILE_TEXT,
+      run_tests: true
+    )
+  end
+  
+  def send_nudge_email
+    UserMailer.nudge(self).deliver
+    
+    # This creates a record in user_meta - no need to save the User model.
+    nudge_sent = true
+  end
+  
+  # This sets the from field on Devise emails:
+  def headers_for(action)
+    {:from => "Citrulu <contact@citrulu.com>"}
+  end
+
+  def enqueue_test_files
+    self.test_files.each do |file|
+      file.enqueue
+    end
+  end
+
+  def priority_enqueue_test_files
+    self.test_files.each do |file|
+      file.priority_enqueue
+    end
+  end
+
+  def prioritise_test_files
+    self.test_files.each do |file|
+      file.prioritise
+    end
+  end
   
   
   private
@@ -190,13 +311,5 @@ class User < ActiveRecord::Base
 
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
-  end
-  
-  def create_default_test_file
-    self.test_files.create(
-        :user => self,
-        :name => "My first test file",
-        :test_file_text => DEFAULT_TEST_FILE
-      )
   end
 end

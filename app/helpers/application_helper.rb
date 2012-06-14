@@ -27,12 +27,18 @@ module ApplicationHelper
     link_to(text, url, :target => '_blank', :title => url)
   end
 
-  def unimplemented_popover
-    {
+  def unimplemented_popover(text, options={})
+    options={
+      rel: "popover",
+      onclick: "return false;",
       "data-content" => "Sorry, this isn't implemented yet. We'll get to it when we can. If you have a burning need for it, please let us know using the feedback tab!",
       "data-original-title" => "Not implemented yet"
-    }
+    }.merge options
+    
+    link_to text, "#", options
   end
+  
+  
   
   def flash_message(name, message)
     cl = 'alert'
@@ -79,7 +85,11 @@ module ApplicationHelper
   end
   
   
+  def twitter_button
+    link_to "Follow @citrulu", "https://twitter.com/citrulu", :class => "twitter-follow-button", 'data-show-count' => false, 'data-size' => "large"
+  end
   
+
   # See here: https://github.com/plataformatec/devise/wiki/How-To:-Display-a-custom-sign_in-form-anywhere-in-your-app
   def resource_name
     :user

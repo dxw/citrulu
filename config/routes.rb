@@ -11,12 +11,17 @@ SimpleFrontEndTesting::Application.routes.draw do
     match 'sign_in' => "devise/sessions#new"
     match 'settings' => "registrations#edit"
   end
-
-  resources :test_files, :only => [:index, :update, :edit]
-  resources :test_runs, :only => [:index, :show]
-  resources :responses, :only => [:show]
+  
+  # This needs to go BEFORE the resources, otherwise it gets interpreted as PUT /test_files/id (i.e. update)
+  match '/test_files/update_name/:id' => "test_files#update_name", :via => :put
+  match '/test_files/update_run_status' => "test_files#update_run_status", :via => :put
+  match '/test_files/create_first_test_file' => "test_files#create_first_test_file", :via => :post
   
   match '/test_files/update_liveview' => "test_files#update_liveview", :via => :post
+  
+  resources :test_files, :only => [:index, :create, :destroy, :edit, :update]
+  resources :test_runs, :only => [:index, :show]
+  resources :responses, :only => [:show]
 
   get "payments/choose_plan"
   match "payments/choose_plan" => "payments#change_plan", :via => :put
@@ -32,10 +37,12 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   # Website pages routes:
   match 'alpha' => "website#alpha"
+  match 'terms' => "website#terms"
   match 'features' => "website#features"
+  match 'email' => "website#email"
   
   authenticated :user do
-    root :to => 'test_files#index'
+    root :to => redirect('/test_files')
   end
 
   root :to => "website#index"

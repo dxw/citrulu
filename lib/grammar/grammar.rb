@@ -1202,7 +1202,7 @@ module TesterGrammar
             r0 = r4
             r0.extend(Param)
           else
-            r5 = _nt_value
+            r5 = _nt_required_value
             if r5
               r0 = r5
               r0.extend(Param)

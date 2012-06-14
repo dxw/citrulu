@@ -6,9 +6,33 @@
         %h1.span4
           %span.editable{"data-id" => @test_file.id}><
             =@test_file.name
+            
         #save_btn.span4
           %span#editor_status=@status_msg
           = f.submit "Save now", :class => "btn btn-primary"
+
+      - unless @help_shown.nil?
+        
+        #tutorial_help.hero-unit.carousel.slide
+          %ul.unstyled.carousel-inner
+            - @help_texts.each_with_index do |text,i| 
+              %li.item{:class => "#{' active' if i == @help_shown }" }
+                %p=text
+                %div.page_number
+                  =i +1
+                  of
+                  =@help_texts.length
+            %li.item.last
+              - if @test_file.next_tutorial
+                %p Awesome! you've completed this tutorial!
+                =link_to "Continue with the next tutorial", edit_test_file_path(@test_file.next_tutorial), :class => "btn btn-large btn-primary"
+              - else
+                %p Awesome! you've completed all the tutorials!
+                =link_to "Create your first test file", {action: :create_first_test_file}, method: :post, :class => "btn btn-large btn-success"
+
+          %a{:class=>"carousel-control left", href: "#tutorial_help", "data-slide"=>"prev"} &lsaquo;
+          %a{:class=>"carousel-control right", href: "#tutorial_help", "data-slide"=>"next"} &rsaquo;
+        
       = f.text_area :test_file_text, :id => "editor_content"
  
     %section#console
@@ -22,6 +46,17 @@
         %div.group
           %div.pending{:class=> "liveview-row"} Edit a page to preview its results here
         %div.buttons
+        
+    #options
+      %h2 Options
+      %div.outline.clearfix
+        = form_for(@test_file, url: {action: "update_run_status", id: @test_file.id}, remote: true, :html => {:id => "run_status_toggle_form", :class => "form-inline"}) do |f|
+          = f.hidden_field :run_tests
+          %label Run this test file every hour?
+          - if @test_file.run_tests 
+            = f.submit "On", :class => "btn btn-success"
+          - else
+            = f.submit "Start", :class => "btn"
 
 
     %header.section_title
@@ -35,15 +70,24 @@
           %p First, decide which pages you would like to test. Then, add each page with at least one assertion:
           %pre.editor-code="On http://example.com\n  I should see Welcome to this site"
           %p You can add as many pages as you like, and as many tests as you like under each assertion. 
-          %p For more information on specific assertions, expand the section below.
+          %p For more information on specific assertions, expand the sections below.
+          
+          %h4 So I know that
+          %p To help remind you what a particular test is looking for you can add a "So clause before the URL", e.g:
+          %pre.editor-code.scrolling="So I know that the Weather widget is working\n  On http://mysite.com\n    I should see Today's Weather"
+          
+          %h4 Comments
+          %p You can also add comments by starting the line with a "#" character:
+          %pre.editor-code="On http://mysite.com\n  # This is a comment and will be ignored by Citrulu\n  I should see Today's Weather"
       
-      =accordion_group("i_should_see") do
+        
+      =accordion_group("content_assertions") do
         =accordion_heading do
-          Assertions
+          Content Assertions
         =accordion_body do
-          %p Assertions allow you to specify conditions that must be true in order for your test to pass.
+          %p 'Simple' Assertions allow you to specify conditions about the content of webpages that must be true in order for your test to pass.
 
-          %h4 I should see
+          %h4 I should see / I should not see
           %p This assertion retrieves a page and looks for text without looking at HTML tags. So, the following assertion:
           %pre.editor-code="  I should see Hello, world!"
           %p Would match all of:
@@ -51,19 +95,84 @@
           %pre="<strong>Hello</strong> world!"
           %pre="Hello,<br>world!"
 
-          %h4 Source should contain
+          %h4 Source should contain / Source should not contain
           %p This assertion retrieves a page and looks for text in its source code. So, the following assertion:
           %pre.editor-code="  Source should contain <strong>Hello</strong>, world!"
           %p Would match:
           %pre="Hello is bold: <strong>Hello</strong> world! Bold text is great!"
-      
-          %h4 Header should contain
-          %p This assertion retrieves the headers of a page and looks for a header with the name you specify. So, the following assertion:
+
+      =accordion_group("header_assertions") do
+        =accordion_heading do
+          Header Assertions
+        =accordion_body do
+          %p Header Assertions retrieve the response headers of a page and allow you to specify conditions on them that must be true in order for your test to pass.
+
+          %h4 Headers should include / Headers should not include
+          %p This assertion looks for the existence of a header with the name you specify. So, the following assertion:
           %pre.editor-code="  Headers should include X-Varnish"
           %p Would match:
           %pre="X-Varnish: 128371292"
           %p But would not match:
           %pre="X-Varnish-assertion: miss"
+          
+          %h4 Header should contain / Header should not contain
+          %p This assertion looks for the contents of a header with the name you specify. So, the following assertion:
+          %pre.editor-code="  Header Cache-Control should include max-age=600"
+          %p Would match:
+          %pre="Cache-Control: public, max-age=600"
+          %p But would not match:
+          %pre="Cache-Control: max-age=0"
+
+
+      =accordion_group("response_code_assertions") do
+        =accordion_heading do
+          Response Code Assertions
+        =accordion_body do
+          %p Response Code Assertions retrieve the response headers of the page request and allow you to specify conditions on the response code.
+          %p If you don't specify a response code, the following implicit check for a Success code after redirects(200) will be added to that group of checks:
+          %pre.editor-code="Response code should be 200 after redirects"
+
+          %h4 Response code should be / Response code should not be
+          %p This assertion checks for a response code that you specify, so:
+          %pre.editor-code="  Response code should be 200"
+          %p &hellip;would succeed if the initial response was 'Success',
+          %pre.editor-code="  Response code should be /3../"
+          %p &hellip;uses a regular expression and will succeed if the initial response was any redirect (e.g. 301),
+          %pre.editor-code="  Response code should be 404"
+          %p &hellip;would succeed if the response was "Not found"
+
+          %h4 &hellip; after redirect(s)
+          %p Adding "after redirect" onto the end of any response code assertion asks Citrulu to follow any redirects before checking the assertion.
+          %p For example 
+          %pre "http://www.wikipedia.com"
+          %p redirects to 
+          %pre "http://www.wikipedia.org"
+          %p with a response code of 301 (moved permanently), so:
+          %pre.editor-code="On http://www.wikipeda.com\n  Response code should be 200"
+          %p &hellip; will fail, but 
+          %pre.editor-code="On http://www.wikipeda.com\n  Response code should be 200 after redirect"
+          %p &hellip; will succeed. 
+      
+      =accordion_group("http_method_assertions") do
+        =accordion_heading do
+          PUTs and POSTs etc.
+        =accordion_body do
+          %p When you write 
+          %pre.editor-code="On http://mysite.com"
+          %p &hellip;Citrulu performs a GET request for that page. There is also a more general syntax which supports HEAD, GET, POST, PUT and DELETE:
+          
+          %h4 Without a body (HEAD, GET, DELETE)
+          %p Use the following when you're only interested in checking the headers:
+          %pre.editor-code.scrolling="When I head http://abc.com\n  Header Content-Type should contain text/html;"
+          %p Use the following when you want to be explicit that you are making a GET request
+          %pre.editor-code.scrolling="When I get http://abc.com/search_results?query=kittens\n  I should see..."
+          %p Use the following to perform a DELETE request
+          %pre.editor-code.scrolling="When I delete http://abc.com/products/1\n  I should see..."
+          
+          %h4 With a body (PUT, POST)
+          %p To supply parameters in a PUT or POST body, use the following syntax:
+          %pre.editor-code.scrolling="When I post \"username=test_user&password=12gk4fa5\" to https://www.foocorp.com/\n  I should see..."
+          %p (the quotes are required in this case)
 
       -#=accordion_group("predefines") do
         =accordion_heading do
@@ -84,19 +193,20 @@
           %pre.editor-code.scrolling="On http://example.com\n  First, fetch http://example.com/22ebd/first-script\n  Finally, fetch http://example.com/22ebd/finally-script\n  I should see You are now logged in"
           %p You don't have to use both first and finally: you can use either one by itself.
 
-      =accordion_group("general_tips") do 
+      -# =accordion_group("general_tips") do 
         =accordion_heading do
           General tips
         =accordion_body do
           %p We haven't written any tips yet.
-    %header.section_title
+    
+    -#%header.section_title
       %h2 Predefines
-    =accordion("predefines", :h3) do
-      -@predefs.each do |predef, values|
-        =accordion_group(predef.to_sym) do
-          = accordion_heading do
-            = ":#{predef}"
-          = accordion_body do
-            %ul
-              - values.each do |value|
-                %li=value
+      =accordion("predefines", :h3) do
+        -@predefs.each do |predef, values|
+          =accordion_group(predef.to_sym) do
+            = accordion_heading do
+              = ":#{predef}"
+            = accordion_body do
+              %ul
+                - values.each do |value|
+                  %li=value

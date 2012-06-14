@@ -1,14 +1,11 @@
 require 'grammar/parser'
 require 'grammar/predefs'
-require 'mechanize'
 
 class TestRunner
   class TestCompileError < Exception
   end
 
-  def self.run_all_tests
-    return "Nothing to run" if TestFile.compiled_files.empty?
-    
+  def self.enqueue_all_tests
     TestFile.compiled_files.each do |file|
       if file.user.nil?
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
@@ -16,26 +13,37 @@ class TestRunner
       
       # Only run tests for users who are paid up (or on the free trial)
       next if !file.user.active?
-      
-      test_run = TestRun.create(
-        :time_run => Time.zone.now,
-        :test_file => file
-      )
-      
-      execute_test_groups(file, test_run)
-      
-      if file.user.email_preference == 1
-        # Send email if:
-        # 1. It's not the first run
-        # 2. The current run has failures OR the previous run had failures
-        if test_run.has_failures? || (test_run.previous_run && test_run.previous_run.has_failures?)
-          if test_run.has_failures?
-            mail = UserMailer.test_notification_failure(test_run)
-          else # no failures this run, but the previous run exists and had failures
-            mail = UserMailer.test_notification_success(test_run)
-          end
-          mail.deliver
+
+      file.enqueue
+    end
+  end
+
+  def self.run_test(file)
+    return unless file.run_tests?
+    
+    test_run = TestRun.create(
+      :time_run => Time.zone.now,
+      :test_file => file
+    )
+    
+    execute_test_groups(file, test_run)
+    
+    if file.user.email_preference == 1
+      # 1. If it's the first test run send a special email
+      # 2. If tests failed, send a failure email
+      # 3. If no tests failed, but the previous run had failing tests, send a success email
+      if test_run.users_first_run?
+        # This was the first test run:
+        if test_run.has_failures?
+          UserMailer.first_test_notification_failure(test_run).deliver
+        else
+          UserMailer.first_test_notification_success(test_run).deliver
         end
+      elsif test_run.has_failures? 
+        UserMailer.test_notification_failure(test_run).deliver
+      elsif test_run.previous_run && test_run.previous_run.has_failures?
+        # previous had failures, but now everything is passing:
+        UserMailer.test_notification_success(test_run).deliver
       end
     end
   end
@@ -64,8 +72,10 @@ class TestRunner
     def self.handle_retrieved_page(agent, page, group_params, group)
       group_params[:response_attributes] = {}
       group_params[:response_attributes][:response_time] = (agent.agent.http.last_response_time*1000).to_i
-      group_params[:response_attributes][:content] = page.content.encode
-      group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+      if page.content
+        group_params[:response_attributes][:content] = page.content.encode
+        group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+      end
       group_params[:response_attributes][:headers] = page.header.collect{|header| "#{header[0]}: #{header[1]}"}.join("\n")
       group_params[:response_attributes][:code] = page.code
 

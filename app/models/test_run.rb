@@ -71,4 +71,10 @@ class TestRun < ActiveRecord::Base
     # Definition by ID is cleaner but probably not what we should be doing...
     # test_file.test_runs.select{|run|run.id < id}.max{|a,b|a.id <=> b.id}
   end
+  
+  # Are there any other test_runs?
+  def users_first_run?
+    test_file.test_runs(true) # Cache-busting
+    test_file.test_runs.length == 1 && test_file.user.test_files.select{|f| (f.id != test_file.id) && !f.test_runs.empty?}.blank? 
+  end  
 end

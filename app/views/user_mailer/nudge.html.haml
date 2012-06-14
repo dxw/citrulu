@@ -1,0 +1,26 @@
+-content_for :content do
+  
+  %p{:style => content_p_styles} Thanks again for signing up to Citrulu!
+  %p{:style => content_p_styles} You activated your account over a week ago so we thought we'd get in touch to see how you're getting on.
+  %p{:style => content_p_styles} If you've already set up some tests for your live websites, then we're running them on a regular basis: we'd love to know if they've helped you uncover any problems and generally what you think of the service.
+
+  %p{:style => content_p_styles} If you haven't got that far yet, we've set up some Tutorial test files to guide you through the process of writing tests for your sites:
+  %table{:style => "text-align: center; margin-bottom:10px;"} 
+    %tr
+      %td{:style => "width:220px"}
+      %td{:style => content_button_td_styles + "width:198px;"} 
+        =link_to "Let's get started!", @first_tutorial_url, :style => content_button_a_styles
+      %td{:style => "width:220px"}
+  
+  %p{:style => content_p_styles} Citrulu is free during the Alpha, so please feel free to add as many tests as you like.
+  %p{:style => content_p_styles} 
+    Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
+    = mail_to 'contact@citrulu.com', "send us an email", :style => content_a_styles
+    &ndash; or post something using the feedback form on the site. 
+
+- content_for :footer_text do
+  %span
+    You're receiving this because you signed up at
+    =link_to "Citrulu.com", "http://www.citrulu.com", :style => footer_a_styles
+- content_for :footer_links do
+  =link_to "Edit your subscription", edit_user_registration_url, :style => footer_a_styles
