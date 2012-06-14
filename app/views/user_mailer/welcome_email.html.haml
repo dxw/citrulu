@@ -1,13 +1,13 @@
 - content_for :content do
-  %p{:style => content_p_styles} Thanks for joining us for the Citrulu Alpha!
-  %p{:style => content_p_styles} We're delighted that you've signed up to test your live websites. To get you started we've created an example test file which you can quickly modify to point at the sites you want to test.
+  %p{:style => content_p_styles} Thanks for joining Citrulu!
+  %p{:style => content_p_styles} We're delighted that you've signed up to test your live websites. We've created some tutorials to make it really easy for you to get started with some simple but powerful tests.
   %table{:style => "text-align: center; margin-bottom:10px;"} 
     %tr
       %td{:style => "width:220px"}
-      %td{:style => content_button_td_styles + "width:198px;"} 
-        =link_to "Let's get started!", test_files_url, :style => content_button_a_styles
+      %td{:style => content_button_td_styles + "width:198px;"}
+        =link_to "Let's get started!", @first_tutorial_url, :style => content_button_a_styles
       %td{:style => "width:220px"}
-  %p{:style => content_p_styles} Citrulu is free during the Alpha, so please feel free to add as many tests as you like.
+  %p{:style => content_p_styles} Citrulu is currently in Beta and it's free at the moment, so please feel free to add as many tests as you like.
   %p{:style => content_p_styles} 
     Hopefully you should find all the help you need, but if you get stuck, don't hesitate to
     = mail_to 'contact@citrulu.com', "send us an email", :style => content_a_styles

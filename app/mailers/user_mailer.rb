@@ -5,17 +5,15 @@ class UserMailer < ActionMailer::Base
   
   def welcome_email(user)
     @title = "Welcome to Citrulu"
+    @first_tutorial_url = tutorial_url(user)
+    
     mail(to: user.email, subject: @title)
   end
   
   def nudge(user)
     @title = "How are you getting on with Citrulu?"
-    if user.first_tutorial
-      @first_tutorial_url = edit_test_file_url(user.first_tutorial)
-    else
-      # They must have deleted the first tutorial fiel
-      @first_tutorial_url = test_files_url
-    end
+    @first_tutorial_url = tutorial_url(user)
+    
     mail(to: user.email, subject: @title)
   end
   
@@ -89,5 +87,17 @@ class UserMailer < ActionMailer::Base
   
   def test_notification_headers
     {"List-Unsubscribe" => "<#{url_for(:controller => "registrations", :action => "edit", :only_path => false) }>"}
-  end  
+  end 
+  
+  private 
+  
+  # Url which should point to the first tutorial
+  def tutorial_url(user)
+    if user.first_tutorial
+      return edit_test_file_url(user.first_tutorial)
+    else
+      # They must have deleted the first tutorial file
+      return test_files_url
+    end
+  end
 end
