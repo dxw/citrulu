@@ -42,12 +42,6 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference
   
-  # Check that the entered invitation code matches this secret string:
-  validates_each :invitation_code, :on => :create do |record, attr, value|
-    record.errors.add attr, "isn't valid" unless
-      value && Invitation.exists?(:code => value) && Invitation.find_by_code(value).enabled
-  end
-  
   has_many :test_files, :dependent => :destroy
   has_many :user_metas
   belongs_to :invitation
@@ -55,7 +49,6 @@ class User < ActiveRecord::Base
   
   after_create :create_tutorial_test_files 
   after_create :subscribe_to_default_plan
-  before_create :add_invitation
   before_save :set_email_preference
   
   def send_welcome_email
