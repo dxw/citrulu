@@ -8,8 +8,8 @@ class PaymentsController < ApplicationController
   
   def choose_plan
     @names = Plan::LEVELS
-    @limits = Plan::LIMITS
-    @features = Plan::FEATURES
+    @limits = Plan.limits
+    @features = Plan.features
   end
   
   def change_plan

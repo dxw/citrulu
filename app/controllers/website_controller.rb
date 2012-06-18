@@ -2,8 +2,8 @@ class WebsiteController < ApplicationController
 
   def features
     @names = Plan::LEVELS
-    @limits = Plan::LIMITS
-    @features = Plan::FEATURES
+    @limits = Plan.limits
+    @features = Plan.features
 
     render :layout => "logged_in"
   end
