@@ -73,11 +73,11 @@ describe TestRunner do
     end
     
     it "should not try and run tests where the user is inactive" do
-      user = FactoryGirl.create(:user, active: false)
+      user = FactoryGirl.create(:user, status: :inactive)
       FactoryGirl.create(:test_file, user: user)
       
       TestRunner.should_not_receive(:execute_test_groups)
-      TestRunner.run_all_tests
+      TestRunner.enqueue_all_tests
     end
 
     describe "(sending email)" do

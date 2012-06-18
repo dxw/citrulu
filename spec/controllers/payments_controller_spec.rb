@@ -3,20 +3,35 @@ require 'spec_helper'
 describe PaymentsController do
   login_user
   
-  describe "GET 'choose_plan'" do
-    context "when the user is active in spreedly" do
-      it "should redirect to the homepage" do
-        User.any_instance.stub(:status).and_return(:paid)
-        get 'choose_plan'
-        response.should redirect_to('/')
+  describe "GET 'change_plan'" do
+    
+    context "with no plan ID" do
+      it "should redirect to the plans page" do
+        put 'change_plan'
+        response.should redirect_to('/payments/choose_plan')
       end
     end
+  
+    context "with a plan ID" do
+      before(:each) do
+        @plan = FactoryGirl.create(:plan)
+        User.any_instance.stub(:change_plan)
+      end
       
-    context "when the user is inactive in spreedly" do
-      it "returns http success" do
-        User.any_instance.stub(:status).and_return(:inactive)
-        get 'choose_plan'
-        response.should be_success
+      context "when the user is active in spreedly" do
+        it "returns http success" do
+          User.any_instance.stub(:status).and_return(:paid)
+          put 'change_plan', :plan_id => @plan.to_param
+          response.should redirect_to("/payments/change_plan_confirmation")
+        end
+      end
+      
+      context "when the user is inactive in spreedly" do
+        it "should redirect to the homepage" do
+          User.any_instance.stub(:status).and_return(:inactive)
+          put 'change_plan', :plan_id => @plan.to_param
+          response.should redirect_to('/')
+        end
       end
     end
   end
@@ -58,19 +73,7 @@ describe PaymentsController do
       before(:each) do
         User.any_instance.stub(:status).and_return(:paid)
       end
-      it "sets @plan to the user's plan" do
-        plan = FactoryGirl.create(:plan)
-        @user.plan = plan
-        @user.save!
-        get 'confirmation'
-
-        assigns(:plan).should == plan
-      end
-       
-      it "sets @test files to the user's test_files" do
-        get 'confirmation'
-        assigns(:test_files).should == @user.test_files
-      end
+      # nothing required at the moment...
     end
   end
 

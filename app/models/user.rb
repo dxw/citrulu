@@ -284,6 +284,8 @@ class User < ActiveRecord::Base
   end
   
   def cancel_subscription
+    return if subscriber.nil?
+    
     if subscriber.stop_auto_renew
       self.status = :cancelled
       save!

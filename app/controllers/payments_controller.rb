@@ -6,12 +6,14 @@ class PaymentsController < ApplicationController
   
   layout "logged_in"
   
+  # GET /change_plan
   def choose_plan
     @names = Plan::LEVELS
     @limits = Plan.limits
     @features = Plan.features
   end
   
+  # PUT /change_plan
   def change_plan
     current_user.change_plan(params[:plan_id])
     redirect_to action: "change_plan_confirmation"
