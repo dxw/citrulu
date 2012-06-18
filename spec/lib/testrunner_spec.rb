@@ -107,7 +107,7 @@ describe TestRunner do
       context "when emails are enabled" do
         before(:each) do
           @user = FactoryGirl.create(:user, :email_preference => 1)
-          @test_file = FactoryGirl.create(:test_file, :user => @user)
+          @test_file = FactoryGirl.create(:compiled_test_file, :user => @user)
         end
         
         it "should not send success messages if the last TestRun was successful" do
@@ -345,7 +345,7 @@ describe TestRunner do
   describe "execute_test_groups" do
     before(:each) do
       @user = FactoryGirl.create(:user)
-      @test_file = FactoryGirl.create(:test_file, :user => @user)
+      @test_file = FactoryGirl.create(:compiled_test_file, :user => @user)
       @test_run = FactoryGirl.create(:test_run, :test_file => @test_file)
 
       # Don't actually send any email
