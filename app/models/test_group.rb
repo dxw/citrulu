@@ -33,12 +33,8 @@ class TestGroup < ActiveRecord::Base
     # How many times has this page been tested in total?
     total_tests = TestGroup.find_all_by_test_url(test_url).size
 
-    puts total_tests
-
     # How many times has this page been irretrievable or had a failed assertion?
     total_failed_tests = TestGroup.find_all_by_test_url(test_url).select{|g| g.failed? || g.number_of_failed_tests > 0}.size
-    
-    puts total_failed_tests
 
     (total_failed_tests.to_f/total_tests.to_f).round(2)
   end
