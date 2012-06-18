@@ -57,7 +57,7 @@ class PaymentsController < ApplicationController
     subscriber = current_user.subscriber 
     
     if subscriber.update_attributes(payment_method: @credit_card)
-      if status = :inactive
+      if status == :inactive
         current_user.status = :paid
         current_user.save!
       end
