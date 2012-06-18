@@ -1,6 +1,7 @@
 # Make ONE call to Spreedly:
 spreedly_plans = Plan.spreedly_plans
 
+# N.B. If any of the following plans don't already exist in Spreedly, this will (correctly) fail
 cornichon_free_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon Free")
 
 cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon")
