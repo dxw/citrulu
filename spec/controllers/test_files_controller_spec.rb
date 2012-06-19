@@ -236,13 +236,13 @@ describe TestFilesController do
         assigns(:test_file).compiled_test_file_text.should == "newthing"
       end
       
-      it "should update the number_of_domains attribute" do
-        # For every other test we just want to stub domains_count, but here we're testing that bit, so we need to unstub and __mock__ it instead
-        CitruluParser.unstub(:domains_count)
-        CitruluParser.should_receive(:domains_count).with(@compiled_object).and_return(5)
-        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
-        assigns(:test_file).number_of_domains.should == 5
-      end
+      # it "should update the number_of_domains attribute" do
+      #   # For every other test we just want to stub domains_count, but here we're testing that bit, so we need to unstub and __mock__ it instead
+      #   CitruluParser.unstub(:domains_count)
+      #   CitruluParser.should_receive(:domains_count).with(@compiled_object).and_return(5)
+      #   put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
+      #   assigns(:test_file).number_of_domains.should == 5
+      # end
       
       it "should fire a google analytics event if this is the first time the file has compiled" do
         controller.should_receive(:log_event).with("Test Files", "First compiled")

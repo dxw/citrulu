@@ -7,7 +7,9 @@ class TestFile < ActiveRecord::Base
 
   # By default we only deal with test files where 'deleted' is Not true
   scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)
+  scope :compiled, where("compiled_test_file_text IS NOT NULL")
   scope :tutorials, where("tutorial_id IS NOT NULL")
+  scope :not_tutorial, where("tutorial_id IS NULL")
   scope :running, where(run_tests: true)
   scope :not_running, where("run_tests IS NULL OR run_tests = ?", false)
   

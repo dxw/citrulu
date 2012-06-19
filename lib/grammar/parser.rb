@@ -91,7 +91,9 @@ class CitruluParser < TesterGrammarParser
   
   # Get the number of unique domains in a parsed object
   def self.count_domains(parsed_object)
-    
+    self.domains(parsed_object).length
+  end
+  def self.domains(parsed_object)
     parsed_object.collect do |group| 
       host = URI(group[:page][:url]).host
       begin
@@ -99,6 +101,6 @@ class CitruluParser < TesterGrammarParser
       rescue PublicSuffix::DomainInvalid
         # Do nothing - don't count this URL: return nil and compact the whole array to remove nils.
       end
-    end.compact.uniq.length
+    end.compact.uniq
   end
 end

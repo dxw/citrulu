@@ -245,6 +245,20 @@ class User < ActiveRecord::Base
     test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
   end
   
+  # The number of unique domains across all active test files
+  def number_of_domains
+    domains.count
+  end
+  
+  # The list of unique domains across all active test files
+  def domains
+    # Approach: Compile all the files and concatenate the results together, then call 'count_domains' on the whole lot
+    relevant_test_files = test_files.running.not_deleted.not_tutorial.compiled
+    mega_compiled_object = relevant_test_files.collect{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text)}.flatten
+    
+    CitruluParser.domains(mega_compiled_object)
+  end
+  
   
   def send_nudge_email
     UserMailer.nudge(self).deliver

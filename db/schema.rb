@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120618112501) do
+ActiveRecord::Schema.define(:version => 20120619161640) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -93,7 +93,6 @@ ActiveRecord::Schema.define(:version => 20120618112501) do
     t.boolean  "deleted"
     t.boolean  "run_tests"
     t.integer  "tutorial_id"
-    t.integer  "number_of_domains"
   end
 
   create_table "test_groups", :force => true do |t|
