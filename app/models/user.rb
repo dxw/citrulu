@@ -173,10 +173,11 @@ class User < ActiveRecord::Base
       save!
     end
   end
-
-  def one_week_of_test_runs
-    test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
-  end
+  
+  
+  #######################
+  # New Test Files etc. #
+  #######################
   
   def new_test_file_name
     generate_name("New test file")
@@ -237,6 +238,14 @@ class User < ActiveRecord::Base
     )
   end
   
+  ####################
+  # Stats and limits #
+  ####################
+  def one_week_of_test_runs
+    test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+  end
+  
+  
   def send_nudge_email
     UserMailer.nudge(self).deliver
     
@@ -266,7 +275,6 @@ class User < ActiveRecord::Base
       file.prioritise
     end
   end
-  
   
   private
   
