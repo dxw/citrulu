@@ -55,12 +55,7 @@ class TestFile < ActiveRecord::Base
   def compiled?
     !compiled_test_file_text.blank?
   end
-  
-  # All the files which have compiled successfully at some point
-  def self.compiled_files
-    #todo - put this select into sql
-    not_deleted(:conditions => "compiled_test_file_text is not null").select{|f| f.compiled? }
-  end
+
    
   def average_failures_per_run
     return 0 if test_runs.size == 0

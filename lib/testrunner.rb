@@ -6,7 +6,7 @@ class TestRunner
   end
 
   def self.enqueue_all_tests
-    TestFile.compiled_files.each do |file|
+    TestFile.compiled.each do |file|
       if file.user.nil?
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
       end

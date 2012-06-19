@@ -61,12 +61,6 @@ describe TestFile do
     end
   end
   
-  describe "self.compiled_files" do
-    it "should only return successfully compiled files" do
-      TestFile.compiled_files.should==[@test_file_compiled_text]
-    end    
-  end
-  
   context "(functions for getting stats)" do
     before(:each) do
       compiled_test_file_text = 
