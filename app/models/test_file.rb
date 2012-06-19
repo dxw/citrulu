@@ -27,7 +27,7 @@ class TestFile < ActiveRecord::Base
   def due
     return false if !run_tests
     return false if deleted
-    last_run.time_run + user.plan.test_frequency < Time.now
+    last_run.time_run + frequency < Time.now
   end
 
   def owner

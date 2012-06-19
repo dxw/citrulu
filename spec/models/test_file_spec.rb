@@ -50,11 +50,8 @@ describe TestFile do
   describe "due" do
     context "when the user is on a plan which runs tests hourly" do
       before(:each) do
-        plan = FactoryGirl.create(:plan, test_frequency: 1.hour)
-        @user = FactoryGirl.create(:user, plan: plan)
-        
         Timecop.freeze
-        @test_file = FactoryGirl.create(:test_file, user: @user)
+        @test_file = FactoryGirl.create(:test_file, frequency: 1.hour)
       end
       context "when the test_file was last run under one hour ago" do
         before(:each) do
