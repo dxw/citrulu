@@ -14,6 +14,8 @@ describe TestFilesController do
   end
   
   before(:each) do
+    @user.plan = FactoryGirl.create(:plan)
+    @user.save!
     @test_file = FactoryGirl.create(:test_file, user: @user)
     
     # For ownership checks: create another user with their own test file

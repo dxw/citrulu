@@ -226,7 +226,8 @@ class User < ActiveRecord::Base
   def create_new_test_file
     test_files.create!(
       name: new_test_file_name,
-      run_tests: true
+      run_tests: true,
+      frequency: plan.test_frequency
     )
   end
   
@@ -234,7 +235,8 @@ class User < ActiveRecord::Base
     test_files.create!(
       name: generate_name("My first Test File"),
       test_file_text: FIRST_TEST_FILE_TEXT,
-      run_tests: true
+      run_tests: true,
+      frequency: plan.test_frequency
     )
   end
   

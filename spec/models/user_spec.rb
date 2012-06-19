@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe User do
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    plan = FactoryGirl.create(:plan, test_frequency: 23)
+    @user = FactoryGirl.create(:user, plan: plan)
     
     @subscriber = double(RSpreedly::Subscriber)
     RSpreedly::Subscriber.stub(:new).and_return(@subscriber)
@@ -187,7 +188,7 @@ describe User do
   end
   
   describe "create_new_test_file" do
-    before(:each) do
+    before(:each) do      
       @count = @user.test_files.count
       @user.create_new_test_file
       @new_test_file = @user.test_files.last
@@ -201,10 +202,15 @@ describe User do
     it "should be set to run tests " do
       @new_test_file.run_tests.should be_true
     end
+    
+    it "should set the frequency based on the user's current plan" do
+      #N.B. this will change in future if we allow frequency to be set on a per-file basis
+      @new_test_file.frequency.should == 23
+    end
   end
   
   describe "create_first_test_file" do
-    before(:each) do
+    before(:each) do      
       @count = @user.test_files.count
       @user.create_first_test_file
       @new_test_file = @user.test_files.last
@@ -217,6 +223,11 @@ describe User do
     
     it "should be set to run tests " do
       @new_test_file.run_tests.should be_true
+    end
+    
+    it "should set the frequency based on the user's current plan" do
+      #N.B. this will change in future if we allow frequency to be set on a per-file basis
+      @new_test_file.frequency.should == 23
     end
   end
   
