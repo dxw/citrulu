@@ -70,7 +70,7 @@ class Plan < ActiveRecord::Base
   def self.limits
     [
       add(cornichon.number_of_sites, gherkin.number_of_sites, 'Number of sites', 'The maximum number of domains you can runs tests on'),
-      add('Four times a day', 'Four times an hour', 'Test Frequency', 'How often we\'ll run all your tests'),
+      add('Every Hour', 'Every Minute', 'Test Frequency', 'How often we\'ll run all your tests'),
       add("#{cornichon.mobile_alerts_allowance} per month", "#{gherkin.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
       add('Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
       add('Unlimited', 'Unlimited' , 'Test files', 'Structure your tests into several files. For example, you might want one per site.', true),
