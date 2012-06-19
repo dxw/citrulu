@@ -19,7 +19,7 @@ Plan.create([
     active: !cornichon_free_spreedly.nil?,
     
     # Limits:
-    test_frequency: 21600, # 4 times a day = every 6 hours = 21600
+    test_frequency: 21600, # every hour
     number_of_sites: 3,
     mobile_alerts_allowance: 12,
     
@@ -37,7 +37,7 @@ Plan.create([
     active: !cornichon_spreedly.nil?,
     
     # Limits:
-    test_frequency: 21600, # 4 times a day = every 6 hours = 21600
+    test_frequency: 3600, # every hour
     number_of_sites: 3,
     mobile_alerts_allowance: 12,
     
@@ -54,7 +54,7 @@ Plan.create([
     active: !gherkin_spreedly.nil?,
     
     # Limits:
-    test_frequency: 900, # 4 times an hour = every 15 mins = 900
+    test_frequency: 60, # every minute
     number_of_sites: 30,
     mobile_alerts_allowance: 120,
     
