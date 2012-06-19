@@ -81,12 +81,24 @@ class CitruluParser < TesterGrammarParser
 
     raise TestPredefError.new("The following predefines could not be found: #{undefined_predefs.join(", ")}") unless undefined_predefs.empty?
 
-
     parsed_object
   end
   
   def self.count_checks(parsed_object)
     # -1 to ignore the implicit response code checks
-    parsed_object.sum{ |page| page[:tests].length - 1 }
+    parsed_object.sum{ |group| group[:tests].length - 1 }
+  end
+  
+  # Get the number of unique domains in a parsed object
+  def self.count_domains(parsed_object)
+    
+    parsed_object.collect do |group| 
+      host = URI(group[:page][:url]).host
+      begin
+        PublicSuffix.parse(host).domain
+      rescue PublicSuffix::DomainInvalid
+        # Do nothing - don't count this URL: return nil and compact the whole array to remove nils.
+      end
+    end.compact.uniq.length
   end
 end

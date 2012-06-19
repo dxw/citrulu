@@ -168,6 +168,7 @@ describe TestFilesController do
     
     before(:each) do
       CitruluParser.stub(:count_checks).and_return 1
+      CitruluParser.stub(:domains_count)
     end
     
     it "checks ownership of the test file" do
@@ -179,7 +180,6 @@ describe TestFilesController do
     context "with valid params" do
       before(:each) do
         controller.stub(:check_ownership!)
-        CitruluParser.stub(:count_checks).and_return 1
       end
       
       it "updates the requested test_file" do
@@ -227,21 +227,38 @@ describe TestFilesController do
     
     context "when the file compiles successfully" do
       before(:each) do
-        CitruluParser.any_instance.stub(:compile_tests) # equates to successful compilation
+        @compiled_object = [{foo: "bar"}]
+        CitruluParser.any_instance.stub(:compile_tests).and_return(@compiled_object) # equates to successful compilation
       end
-      after(:each) do
-        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+      
+      it "should set compiled_test_file_text to the new text" do
+        put :update, {:id => @test_file.to_param, :test_file => {test_file_text: "newthing"}}
+        assigns(:test_file).compiled_test_file_text.should == "newthing"
       end
+      
+      it "should update the number_of_domains attribute" do
+        # For every other test we just want to stub domains_count, but here we're testing that bit, so we need to unstub and __mock__ it instead
+        CitruluParser.unstub(:domains_count)
+        CitruluParser.should_receive(:domains_count).with(@compiled_object).and_return(5)
+        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
+        assigns(:test_file).number_of_domains.should == 5
+      end
+      
       it "should fire a google analytics event if this is the first time the file has compiled" do
         controller.should_receive(:log_event).with("Test Files", "First compiled")
+        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
       end
       it "should NOT fire a google analytics event if the file is a tutorial" do
         @test_file.update_attribute :tutorial_id, 1
         controller.should_not_receive(:log_event)
+        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
       end
       
       context "when a file has previously compiled with 1 check" do
         before(:each) do
+          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
+        end
+        after(:each) do
           put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
         end
 

@@ -302,4 +302,61 @@ describe CitruluParser do
       CitruluParser.count_checks(object).should == 3
     end
   end
+  
+  describe "count_domains" do
+    # this function removes the repetition from the specs below:
+    def domain_count(test_file_text)
+      parsed_object = CitruluParser.new.compile_tests(test_file_text)
+      CitruluParser.count_domains(parsed_object)
+    end
+    
+    it "should return 1 if there is one domain" do
+      domain_count("On http://abc.com\n  I should see x").should == 1
+    end
+    it "should return 2 if there are two different domains" do
+      domain_count("On http://abc.com\n  I should see x\nOn http://xyz.com\n  I should see y").should == 2      
+    end
+    it "should return 1 if there are two identical urls" do
+      domain_count("On http://abc.com\n  I should see x\nOn http://abc.com\n  I should see y").should == 1
+    end
+    it "should return 1 if there are two different urls with the same domain" do
+      domain_count("On http://abc.com\n  I should see x\nOn http://abc.com/login\n  I should see y").should == 1
+    end
+    it "should return 1 if there are two different urls, one with www, the other without" do
+      domain_count("On http://abc.com\n  I should see x\nOn http://www.abc.com\n  I should see y").should == 1
+    end
+    it "should return 1 if there are two similar urls, one with http the other with https" do
+      domain_count("On http://www.abc.com\n  I should see x\nOn https://www.abc.com\n  I should see y").should == 1
+    end
+    it "should return 1 if there are two similar urls, one with a subdomain" do
+      domain_count("On http://www.abc.com\n  I should see x\nOn http://www.xyz.abc.com\n  I should see y").should == 1
+    end
+    it "should return 2 if there are two similar urls, one with .com, the other with .co.uk" do
+      domain_count("On http://www.abc.com\n  I should see x\nOn http://www.abc.co.uk\n  I should see y").should == 2
+    end
+    
+    it "should not count a single invalid URL" do
+      domain_count("On http://abcd.asfasfasfasf\n  I should see x").should == 0
+    end
+    it "should not count an invalid URL in-between valid URLs" do
+      domain_count(
+        "On http://abcd.com\n  I should see x\n" +
+        "On http://abcd.asfasfasfasf\n  I should see x\n" +
+        "On http://abcd.co.uk\n  I should see x"
+        ).should == 2
+    end
+    
+    it "should return 2 in a complex example :-)" do
+      domain_count(
+        #These should all count as 1:
+        "On http://www.d23.ef9.abc.com\n  I should see x\nOn https://www.xyz.abc.com\n  I should see y\n" +
+        #These should be ignored:
+        "On http://abcd.asfass\n  I should see x\n" +
+        #These should all count as 1:
+        "On http://abc.co.uk\n  I should see x\nOn http://abc.co.uk\n  I should see y\n" +
+        #This is different - should count as 1:
+        "On http://abc.foo.co.uk\n  I should see x"      
+      ).should == 3
+    end
+  end
 end

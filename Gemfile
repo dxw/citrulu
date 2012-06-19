@@ -16,6 +16,9 @@ gem 'codemirror-rails'
 # Treetop to drive the grammar:
 gem 'treetop'
 
+# For deciding whether domains are unique:
+gem 'public_suffix'
+
 # Rails seems to depend on this
 gem 'therubyracer'
 

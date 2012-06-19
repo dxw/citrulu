@@ -175,6 +175,7 @@ class TestFilesController < ApplicationController
       succeeded = true
 
       @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
+      @test_file.number_of_domains = CitruluParser.domains_count(compiled_object)
       
       if !@test_file.is_a_tutorial
         number_of_checks = CitruluParser.count_checks(compiled_object)
