@@ -263,56 +263,6 @@ body.test_files.index {
     }
   }
 
-  #test_list {
-    .title {
-      a.btn {
-        float: right;
-        margin-top: -40px;
-      }
-    } 
-
-    ul#test_files {
-      padding-top: 10px;
-      
-      li.test_file {
-        margin-bottom: 10px;
-        a.test_file_btn {
-          display: block;
-          color: inherit;
-          text-align: left;
-          padding: 15px 10px;
-
-          &:hover {
-            text-decoration: none;
-            border-color: rgba(0,0,0,0.3);
-          }
-
-          span.name {
-            font-size: 16px;
-            font-weight: bold;
-            padding-right: 1em
-          }
-
-          span.last_updated, span.last_run {
-            font-style: italic;
-            display:block;
-          }
-        }
-        a.btn-danger {
-          margin-top: 15px;
-        }
-      }
-      #no_test_files a{
-        text-align:center;
-        font-size:1.2em;
-        line-height:1.5;
-        strong {
-          font-size:1.2em;
-        }
-      }
-    }
-  }
-
   #sidebar {
     #recent_results {
       .fail, .pass {
@@ -369,11 +319,12 @@ body.test_files.index {
     }
   } 
 
-  ul {
+  ul#test_files {
     padding-top: 10px;
     
     li.test_file {
-      a {
+      margin-bottom: 10px;
+      a.test_file_btn {
         display: block;
         color: inherit;
         text-align: left;
@@ -390,9 +341,21 @@ body.test_files.index {
           padding-right: 1em
         }
 
-        span.last_updated {
+        span.last_updated, span.last_run {
           font-style: italic;
+          display:block;
         }
+      }
+      a.btn-danger {
+        margin-top: 15px;
+      }
+    }
+    #no_test_files a{
+      text-align:center;
+      font-size:1.2em;
+      line-height:1.5;
+      strong {
+        font-size:1.2em;
       }
     }
   }
