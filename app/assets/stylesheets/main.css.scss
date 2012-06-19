@@ -79,17 +79,12 @@ ul.devise_links {
   }
 }
 
-div.banner {
+.banner {
   width: 100%;
-  height: 15px;
   padding: 10px;
-  background: #EBB68F;
-  text-align: center;
-
-  p {
-    font-size: 13px;
-    line-height: 15px;
-    margin: 0;
+  text-align: center;  
+  &.beta{
+    background: #EBB68F;
   }
 }
 
