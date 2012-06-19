@@ -67,5 +67,12 @@ Spork.each_run do
   # Reload everything in lib/grammar
   Dir["#{Rails.root}/lib/grammar/*.rb"].each { |f| load f }
   Dir["#{Rails.root}/lib/*.rb"].each { |f| load f }
+  
+  # Hack to ensure models get reloaded by Spork - remove as soon as this is fixed in Spork.
+  # Silence warnings to avoid all the 'warning: already initialized constant' messages that
+  # appear for constants defined in the models.
+  silence_warnings do
+    Dir["#{Rails.root}/app/models/**/*.rb"].each {|f| load f}
+  end
 end
 
