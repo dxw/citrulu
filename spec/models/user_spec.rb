@@ -100,6 +100,20 @@ describe User do
     end
   end
   
+  describe "change_plan" do
+    context "when the spreedly subscriber could be updated" do
+      before(:each) do
+        RSpreedly::Subscriber.stub(:find).and_return(@subscriber)
+        @subscriber.stub(:change_subscription_plan).and_return(true)
+        @new_plan = FactoryGirl.create(:plan)
+      end
+      it "should update the frequencies of all the test_files" do
+        @user.should_receive(:update_test_file_frequencies)
+        @user.change_plan(@new_plan.id)
+      end
+    end
+  end
+  
   
   context "when calculating free trial periods" do
     describe ".is_within_free_trial" do

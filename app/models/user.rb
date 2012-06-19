@@ -156,9 +156,17 @@ class User < ActiveRecord::Base
     if subscriber.change_subscription_plan(new_plan.spreedly_id)
       plan = new_plan
       save!
+      
+      # We've changed the plan so we need to update all the test file frequencies
+      update_test_file_frequencies
     else  
       raise "Couldn't find subscriber to update"
     end
+  end
+  
+  # Update the frequency of all the test files to reflect a change of plan
+  def update_test_file_frequencies
+    test_files.each{|f| f.update_attribute(:frequency, plan.test_frequency)}
   end
   
   def destroy_subscriber
