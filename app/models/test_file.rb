@@ -23,6 +23,12 @@ class TestFile < ActiveRecord::Base
   def last_run
     test_runs.order("time_run DESC").first
   end
+  
+  def due
+    return false if !run_tests
+    return false if deleted
+    last_run.time_run + user.plan.test_frequency < Time.now
+  end
 
   def owner
     user

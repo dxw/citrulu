@@ -14,7 +14,7 @@ class TestRunner
       # Only run tests for users who are paid up (or on the free trial)
       next if !file.user.active?
 
-      file.enqueue
+      file.enqueue if file.due
     end
   end
 

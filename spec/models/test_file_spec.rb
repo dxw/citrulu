@@ -47,6 +47,46 @@ describe TestFile do
     end
   end
   
+  describe "due" do
+    context "when the user is on a plan which runs tests hourly" do
+      before(:each) do
+        plan = FactoryGirl.create(:plan, test_frequency: 1.hour)
+        @user = FactoryGirl.create(:user, plan: plan)
+        
+        Timecop.freeze
+        @test_file = FactoryGirl.create(:test_file, user: @user)
+      end
+      context "when the test_file was last run under one hour ago" do
+        before(:each) do
+          @test_run = FactoryGirl.create(:test_run, test_file: @test_file, time_run: (Time.now - 1.hour) + 1)
+          TestFile.any_instance.stub(:last_run).and_return(@test_run)
+        end
+        it "should return false" do
+          @test_file.due.should be_false
+        end
+      end
+      
+      context "when the test_file was last run over one hour ago" do
+        before(:each) do
+          @test_run = FactoryGirl.create(:test_run, test_file: @test_file, time_run: (Time.now - 1.hour) - 1)
+          TestFile.any_instance.stub(:last_run).and_return(@test_run)
+        end
+        it "should return true if the file is active" do
+          @test_file.due.should be_true
+        end
+
+        it "should return false if the file is deleted" do
+          @test_file.deleted = true
+          @test_file.due.should be_false
+        end
+        it "should return false if the file is not set to run" do
+          @test_file.run_tests = false
+          @test_file.due.should be_false
+        end
+      end
+    end
+  end
+  
   describe "compiled?" do
     it "should return true if compiled_test_file_text contains text" do
       @test_file_compiled_text.compiled?.should be_true

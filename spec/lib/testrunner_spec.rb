@@ -8,6 +8,8 @@ describe TestRunner do
       Resque.stub(:enqueue)
       class TestFileJob
       end
+      
+      TestFile.any_instance.stub(:due).and_return(true)
     end
     
     it "should raise an exception if a test file is orphaned" do
