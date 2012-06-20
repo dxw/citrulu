@@ -11,14 +11,7 @@
         .container
           %strong Thanks for joining the Beta!
           It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
-      - if current_user.number_of_domains > current_user.plan.number_of_sites && controller_name != "payments"
-        %div.banner.alert-error
-          .container
-            %strong Warning
-            Your current plan allows #{current_user.plan.number_of_sites} domains to be tested. Your test files currently check #{current_user.number_of_domains} domains. Not all limits are not enforced during the beta, but you may wish to 
-            =link_to "upgrade", "choose_plan"
-            to a plan which reflects your usage.
-
+      =render partial: "limits_banner"
     = content_for?(:content) ? yield(:content) : yield
 
     :javascript
