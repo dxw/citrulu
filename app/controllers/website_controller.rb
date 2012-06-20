@@ -4,8 +4,7 @@ class WebsiteController < ApplicationController
     @names = Plan::LEVELS
     @limits = Plan.limits
     @features = Plan.features
-
-    render :layout => "logged_in"
+    render :layout => "application"
   end
   
   def terms

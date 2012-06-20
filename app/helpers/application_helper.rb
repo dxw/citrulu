@@ -56,7 +56,7 @@ module ApplicationHelper
   def choose_plan_link(user, plan_level)
     plan = Plan.get_plan_from_level(plan_level)
     
-    if user.status == :paid
+    if user && user.status == :paid
       method = :put
       # We're updating:
       url = {plan_id: plan.id}
@@ -68,14 +68,14 @@ module ApplicationHelper
       end
     else
       text = "Sign up now for"
-      url = {action: :new, plan_id: plan.id}
+      url = {controller: :payments, action: :new, plan_id: plan.id}
     end
     
     plan_text_span = content_tag :span, text, :class => "plan_text"
     plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
     content = (plan_text_span << " " << plan_cost_span)
     
-    if user.status == :paid && plan == user.plan
+    if user && user.status == :paid && plan == user.plan
       # Render a div:
       content_tag :div, content, :class => "btn btn-large btn-warning disabled"
     else

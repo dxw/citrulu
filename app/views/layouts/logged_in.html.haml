@@ -19,7 +19,7 @@
             - else 
               = link_to( "Sign up", new_user_registration_path )  + " or " + link_to( "sign in", new_user_session_path )
     
-    - unless params[:controller] == "payments" 
+    - if user_signed_in? && params[:controller] != "payments" 
       - if current_user.status == :inactive
         =render partial: "inactive_banner"
       - if current_user.status == :free
