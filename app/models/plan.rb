@@ -22,20 +22,6 @@ class Plan < ActiveRecord::Base
     end
   end
   
-  private
-  
-  def self.add(silver, gold, name, description, comingsoon = false) 
-    {
-      :name => name, 
-      :description => description,
-      :silver => silver,
-      :gold => gold,
-      :comingsoon => comingsoon
-    }
-  end
-
-  public
-  
 
   def self.cornichon
     self.where(:name_en => "Cornichon", :active => true).first
@@ -69,24 +55,45 @@ class Plan < ActiveRecord::Base
   
   def self.limits
     [
-      add(cornichon.number_of_sites, gherkin.number_of_sites, 'Number of sites', 'The maximum number of domains you can runs tests on'),
-      add('Every Hour', 'Every Minute', 'Test Frequency', 'How often we\'ll run all your tests'),
-      add("#{cornichon.mobile_alerts_allowance} per month", "#{gherkin.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
-      add('Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
-      add('Unlimited', 'Unlimited' , 'Test files', 'Structure your tests into several files. For example, you might want one per site.', true),
+      add_limit(cornichon.number_of_sites, gherkin.number_of_sites, 'Number of sites', 'The maximum number of domains you can runs tests on'),
+      add_limit('Every Hour', 'Every Minute', 'Test Frequency', 'How often we\'ll run all your tests'),
+      add_limit("#{cornichon.mobile_alerts_allowance} per month", "#{gherkin.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
+      add_limit('Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
   #      add('?', '?', 'SLA', 'There should be different support SLAs?'),
     ]
   end
 
   def self.features 
     [
-      add(true,  true, 'Human-friendly tests', 'Write tests in English'),
-      add(true,  true, 'Browse test results', 'Look back over all your past test results'),
-      add(true,  true, 'Use predefines', 'Write tests faster by searching for predefined lists of things to check for -- like PHP errors, warnings and notices'),
-      add(cornichon.allows_custom_predefines, gherkin.allows_custom_predefines, 'Write custom Predefines', 'Write your own predefines, to make writing good tests for your apps quicker, tidier and easier to maintain', true),
-      add(cornichon.allows_retrieved_pages, gherkin.allows_retrieved_pages, 'View retrieved pages', 'Look at the cached page we retrieved from your site to see exactly what was returned when we tested it', true),
-      add(cornichon.allows_git_support, gherkin.allows_git_support, 'Git support', 'Edit your files locally, push them to Citrulu\'s git server, and we\'ll take them from there', true),
-      add(cornichon.allows_tests_on_demand, gherkin.allows_tests_on_demand, 'Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs', true),
+      add_feature('Human-friendly tests', 'Write tests in English, not in some arcane scripting language', 'icon-user'),
+      add_feature('Unlimited Test files', 'Structure your tests how you want. For example, you might want one per site.', 'icon-file'),
+      add_feature('Browse test results', 'Look back over all your past test results', 'icon-list-alt'),
+      add_feature('View retrieved pages', 'Look at the cached page we retrieved from your site to see exactly what was returned when we tested it', 'icon-eye-open'),
+      add_feature('Use predefines', "Write tests faster and make them easier to maintain by searching for predefined lists of things to check for &ndash; like PHP errors, warnings and notices", 'icon-tags', true),
+      # add_feature('Write custom Predefines', 'Write your own predefines, to make writing good tests for your apps quicker, tidier and easier to maintain', 'icon-pencil', true),
+      add_feature('Git support', 'Edit your files locally, push them to Citrulu\'s git server, and we\'ll take them from there', 'icon-share', true),
+      # add_feature('Run tests on demand', 'Click on a button to schedule a test at any time, and get priority over other users\' runs','icon-play-circle', true),
     ]
+  end
+  
+  private
+  
+  def self.add_limit(silver, gold, name, description, comingsoon = false) 
+    {
+      :name => name, 
+      :description => description,
+      :silver => silver,
+      :gold => gold,
+      :comingsoon => comingsoon
+    }
+  end
+  
+  def self.add_feature(name, description, icon, comingsoon = false) 
+    {
+      :name => name, 
+      :description => description,
+      :icon => icon,
+      :comingsoon => comingsoon
+    }
   end
 end

@@ -22,12 +22,6 @@ Plan.create([
     test_frequency: 21600, # every hour
     number_of_sites: 3,
     mobile_alerts_allowance: 12,
-    
-    # Features:
-    allows_custom_predefines: false,
-    allows_retrieved_pages: false,
-    allows_git_support: false,
-    allows_tests_on_demand: false
   },
   {
     name_en: 'Cornichon',
@@ -40,12 +34,6 @@ Plan.create([
     test_frequency: 3600, # every hour
     number_of_sites: 3,
     mobile_alerts_allowance: 12,
-    
-    # Features:
-    allows_custom_predefines: false,
-    allows_retrieved_pages: false,
-    allows_git_support: false,
-    allows_tests_on_demand: false
   },
   {
     name_en: 'Gherkin',
@@ -57,11 +45,5 @@ Plan.create([
     test_frequency: 60, # every minute
     number_of_sites: 30,
     mobile_alerts_allowance: 120,
-    
-    # Features:
-    allows_custom_predefines: true,
-    allows_retrieved_pages: true,
-    allows_git_support: true,
-    allows_tests_on_demand: true
   }
 ])

@@ -1,41 +1,43 @@
-%table.table-striped.span12
-  %thead
-    %tr
-      %td.span5
-      %td.span2=@names[:silver]
-      %td.span2=@names[:gold]
-      %td.span1
-      %td.span2
-
-  %tbody
-    %tr.costs
-      %td.feature
-        %p Cost
-        %small Monthly cost
-      %td.silver
-        =choose_plan_link(current_user, :silver)
-      %td.gold
-        =choose_plan_link(current_user, :gold)
-      %td
-    
-    - @limits.each do |limit|
+.row
+  %table.table-striped.span12
+    %thead
       %tr
-        %td.feature
-          %p=limit[:name]
-          %small=limit[:description]
-        %td.silver=limit[:silver]
-        %td.gold=limit[:gold]
-        %td
+        %td.span5
+        %td.span2=@names[:silver]
+        %td.span2=@names[:gold]
+        %td.span1
+        %td.span2
 
-    - @features.each do |feature|
-      %tr
+    %tbody
+      %tr.costs
         %td.feature
-          %p=feature[:name]
-          %small=feature[:description]
+          %h3 Cost
+          %small Monthly cost
         %td.silver
-          %i{:class => feature[:silver] ? 'icon-ok' : 'icon-remove'}
+          =choose_plan_link(current_user, :silver)
         %td.gold
-          %i{:class => feature[:gold] ? 'icon-ok' : 'icon-remove'}
-        %td.comingsoon
+          =choose_plan_link(current_user, :gold)
+        %td
+    
+      - @limits.each do |limit|
+        %tr
+          %td.feature
+            %h3=limit[:name]
+            %small=limit[:description]
+          %td.silver=limit[:silver]
+          %td.gold=limit[:gold]
+          %td
+
+%section.features
+  %h2 Whatever your plan, you'll always have access to these great features:
+  - @features.each_slice(3) do |three_features|
+    .row
+      - three_features.each do |feature|
+        .span4
+          %h3
+            =feature[:name]
+            %i{:class => feature[:icon]}
           - if feature[:comingsoon]
-            %p Coming soon!
+            %p
+              %em.comingsoon Coming soon!
+          %p=raw feature[:description]

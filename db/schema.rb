@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120619182826) do
+ActiveRecord::Schema.define(:version => 20120620122433) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -56,19 +56,15 @@ ActiveRecord::Schema.define(:version => 20120619182826) do
 
   create_table "plans", :force => true do |t|
     t.integer  "test_frequency"
-    t.datetime "created_at",                                                            :null => false
-    t.datetime "updated_at",                                                            :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name_en"
     t.boolean  "default"
     t.integer  "spreedly_id"
     t.boolean  "active"
-    t.integer  "number_of_sites",          :limit => 255
-    t.integer  "mobile_alerts_allowance",  :limit => 255
-    t.boolean  "allows_custom_predefines"
-    t.boolean  "allows_retrieved_pages"
-    t.boolean  "allows_git_support"
-    t.boolean  "allows_tests_on_demand"
-    t.decimal  "cost_usd",                                :precision => 6, :scale => 2
+    t.integer  "number_of_sites",         :limit => 255
+    t.integer  "mobile_alerts_allowance", :limit => 255
+    t.decimal  "cost_usd",                               :precision => 6, :scale => 2
     t.boolean  "free_trial"
   end
 
