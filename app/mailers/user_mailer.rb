@@ -13,6 +13,7 @@ class UserMailer < ActionMailer::Base
   def nudge(user)
     @title = "How are you getting on with Citrulu?"
     @first_tutorial_url = tutorial_url(user)
+    @days_left_of_free_trial = user.days_left_of_free_trial
     
     mail(to: user.email, subject: @title)
   end
