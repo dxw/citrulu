@@ -33,7 +33,7 @@ table {
   }
 }
 
-body.registrations.new {
+body.registrations.new, body.registrations.create {
   padding: 0 0 80px 0;
 
   header.title {
@@ -60,12 +60,22 @@ body.registrations.new {
       float:right;
       width:60%;
     }
+    .field_with_errors {
+      
+      display: inline;
+      input {
+        color: #B94A48;
+        border-color: #B94A48;
+      }
+    }
   }
   
-  h2 {
-    font-size: 3em;
-    margin-top: 20px;
-    margin-bottom:10px;
+  .description {
+    h2 {
+      font-size: 3em;
+      margin-top: 20px;
+      margin-bottom:10px;
+    }
   }
   
   .well.blue {
