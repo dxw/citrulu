@@ -5,6 +5,9 @@
       Hosted, human-friendly, continuous front-end tests for your 
       %em Live
       websites
+  - flash.each do |name, message|
+    = flash_message(name, message)
+  = devise_error_messages!
   .row
     .span8
       %div#subForm.form-horizontal.well.signup
@@ -16,7 +19,7 @@
         %p Please have a play and a poke about, and let us know what you think via the GetSatisfaction feedback tab.
         =twitter_button
 
-  .row
+  %section#description.row
     %h2.span12 What is Citrulu?
   #selling_points.row
     %section#make_sure.span4
