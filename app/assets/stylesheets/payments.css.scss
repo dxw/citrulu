@@ -27,4 +27,13 @@ body.payments {
     background-color: transparent;
     padding: 5px 0 0 10px;
   }
+  
+  #terms {
+    float:left;
+    margin-left:20px;
+    margin-top: 10px;
+  }
+  input[type="submit"], #submit {
+    float:left;
+  }
 }

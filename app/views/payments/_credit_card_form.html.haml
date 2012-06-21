@@ -38,3 +38,4 @@
         = f.select :year, NEXT_TEN_YEARS
     .form-actions
       = f.submit "Submit", :class => "btn btn-primary btn-large"
+      %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
