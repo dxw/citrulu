@@ -274,9 +274,7 @@ class User < ActiveRecord::Base
   def domains
     # Approach: Compile all the files and concatenate the results together, then call 'count_domains' on the whole lot
     relevant_test_files = test_files.running.not_deleted.not_tutorial.compiled
-    mega_compiled_object = relevant_test_files.collect{|f| CitruluParser.new.compile_tests(f.compiled_test_file_text)}.flatten
-    
-    CitruluParser.domains(mega_compiled_object)
+    relevant_test_files.collect{|f| f.domains}.compact.flatten.uniq
   end
   
   

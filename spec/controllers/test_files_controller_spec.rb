@@ -170,7 +170,7 @@ describe TestFilesController do
     
     before(:each) do
       CitruluParser.stub(:count_checks).and_return 1
-      CitruluParser.stub(:domains_count)
+      CitruluParser.stub(:domains)
     end
     
     it "checks ownership of the test file" do
@@ -238,13 +238,13 @@ describe TestFilesController do
         assigns(:test_file).compiled_test_file_text.should == "newthing"
       end
       
-      # it "should update the number_of_domains attribute" do
-      #   # For every other test we just want to stub domains_count, but here we're testing that bit, so we need to unstub and __mock__ it instead
-      #   CitruluParser.unstub(:domains_count)
-      #   CitruluParser.should_receive(:domains_count).with(@compiled_object).and_return(5)
-      #   put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
-      #   assigns(:test_file).number_of_domains.should == 5
-      # end
+      it "should update the 'domains' attribute" do
+        # For every other test we just want to stub CitruluParser.domains, but here we're testing that bit, so we need to unstub and __mock__ it instead
+        CitruluParser.unstub(:domains)
+        CitruluParser.should_receive(:domains).with(@compiled_object).and_return(["faz.com","baz.co.uk"])
+        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
+        assigns(:test_file).domains.should == ["faz.com","baz.co.uk"]
+      end
       
       it "should fire a google analytics event if this is the first time the file has compiled" do
         controller.should_receive(:log_event).with("Test Files", "First compiled")

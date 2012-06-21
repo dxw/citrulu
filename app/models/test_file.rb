@@ -4,6 +4,7 @@ require 'symbolizer'
 class TestFile < ActiveRecord::Base
   belongs_to :user 
   has_many :test_runs, :dependent => :destroy
+  serialize :domains # An array of strings - each string is a domain found in the test file
 
   # By default we only deal with test files where 'deleted' is Not true
   scope :not_deleted, where("deleted IS NULL OR deleted = ?", false)

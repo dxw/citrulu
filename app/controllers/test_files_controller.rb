@@ -175,7 +175,9 @@ class TestFilesController < ApplicationController
       succeeded = true
 
       @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
-            
+      # Get the list of domains checked by this file and store them so we can work out if a user is hitting their limits:
+      @test_file.domains = CitruluParser.domains(compiled_object)
+          
       if !@test_file.is_a_tutorial
         number_of_checks = CitruluParser.count_checks(compiled_object)
         log_event_if_first(current_user, "Test Files", "First compiled")

@@ -256,26 +256,26 @@ describe User do
       @user.number_of_domains.should == 0
     end
     it "should return 0 if the user has no compiled test files" do
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: nil)
+      text = nil
+      FactoryGirl.create(:test_file, user: @user, domains: nil, compiled_test_file_text: "foo")
       @user.number_of_domains.should == 0
     end
     it "should return 1 if the user has 1 compiled test file containing 1 domain" do
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: "On http://abc.com\n  I should see x")
+      FactoryGirl.create(:test_file, user: @user, domains: ["abc.com"], compiled_test_file_text: "foo")
       @user.number_of_domains.should == 1
     end
     it "should return 2 if the user has 1 compiled test file containing 2 domains" do
-      text = "On http://abc.com\n  I should see x\nOn http://xyz.com\n  I should see y"
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: text)
+      FactoryGirl.create(:test_file, user: @user, domains: ["abc.com","xyz.com"], compiled_test_file_text: "foo")
       @user.number_of_domains.should == 2
     end
     it "should return 2 if the user has 2 compiled test files, each containing 1 domain" do
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: "On http://abc.com\n  I should see x")
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: "On http://xyz.com\n  I should see a")
+      FactoryGirl.create(:test_file, user: @user, domains: ["abc.com"], compiled_test_file_text: "foo")
+      FactoryGirl.create(:test_file, user: @user, domains: ["xyz.com"], compiled_test_file_text: "foo")
       @user.number_of_domains.should == 2
     end
     it "should return 1 if the user has 2 compiled test files, each containing the same 1 domain" do
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: "On http://abc.com\n  I should see x")
-      FactoryGirl.create(:test_file, user: @user, compiled_test_file_text: "On http://abc.com\n  I should see a")
+      FactoryGirl.create(:test_file, user: @user, domains: ["abc.com"], compiled_test_file_text: "foo")
+      FactoryGirl.create(:test_file, user: @user, domains: ["abc.com"], compiled_test_file_text: "foo")
       @user.number_of_domains.should == 1
     end
   end
