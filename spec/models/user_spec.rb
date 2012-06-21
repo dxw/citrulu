@@ -124,12 +124,16 @@ describe User do
         @user.confirm!
       end
       it "should return true if the user is active and was created less than x days ago" do
+        pending "enforcement of trial periods" 
+        
         Timecop.travel(Time.now + (@free_trial_days -1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_true
       end
     
       it "should return false if the user is active and was created MORE than x days ago" do
+        pending "enforcement of trial periods" 
+        
         Timecop.travel(Time.now + (@free_trial_days +1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_false
