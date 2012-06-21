@@ -1,6 +1,6 @@
 #limits_banner
   - if current_user.number_of_domains > current_user.plan.number_of_sites && controller_name != "payments"
-    .banner.alert-error
+    .banner.alert
       .container
         %strong Warning
         Your current plan allows #{current_user.plan.number_of_sites} domains to be tested. Your test files currently check #{current_user.number_of_domains} domains. Not all limits are not enforced during the beta, but you may wish to 
