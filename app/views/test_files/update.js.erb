@@ -7,8 +7,7 @@ $("#editor_status").html("<%= @status_msg %>");
 $("#editor_form input[type='submit']").attr("disabled", false);
 
 // Refresh the banner
-// TODO: Be cleverer about when we refresh this? e.g. only when the file actually compiles
-$("#limits_banner").replaceWith("<%= escape_javascript(render partial: 'limits_banner')%>")
+$("#limits_banner").replaceWith("<%=j render partial: 'limits_banner' %>")
 
 // Clear existing timeouts (in case the user pressed the save button) and set next one
 var save_interval;
