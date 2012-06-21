@@ -79,16 +79,20 @@ class User < ActiveRecord::Base
     end
     self[:status] = new_status
   end
+
+
+  # THESE TWO METHODS WILL BE REQUIRED when we impose free trial limits.
+  # Until then, leave them commented out so we can be sure that nothing is trying to use them:
   
-  def days_left_of_free_trial
-    return 0 unless confirmed?
-    FREE_TRIAL_DAYS + 1 - (Date.today - confirmed_at.to_date).to_i
-  end
-  
-  def is_within_free_trial?
-    # Calculate free trial from when the user was actually confirmed
-    days_left_of_free_trial > 0
-  end
+  # def days_left_of_free_trial
+  #   return 0 unless confirmed?
+  #   FREE_TRIAL_DAYS + 1 - (Date.today - confirmed_at.to_date).to_i
+  # end
+  # 
+  # def is_within_free_trial?
+  #   # Calculate free trial from when the user was actually confirmed
+  #   days_left_of_free_trial > 0
+  # end
   
   # Look at Spreedly to check what the status of each user should be 
   def set_status
@@ -100,11 +104,17 @@ class User < ActiveRecord::Base
       else
         self.status = :cancelled
       end
-    elsif is_within_free_trial?
-      self.status = :free
+    # REMOVE THIS WEN WE LAUNCH:
     else
-      self.status = :inactive
+      # While we're in beta everyone should stay on the free plan
+      self.status = :free
     end
+    # PUT THE FOLLOWING LINES IN WHEN WE LAUNCH:
+    # elsif is_within_free_trial?
+    #   self.status = :free
+    # else
+    #   self.status = :inactive
+    # end
     save!
   end
   

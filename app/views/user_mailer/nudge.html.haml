@@ -12,9 +12,14 @@
         =link_to "Let's get started!", @first_tutorial_url, :style => content_button_a_styles
       %td{:style => "width:220px"}
   
+  -# This will be required when we enforce free trial limits:
+    %p{:style => content_p_styles} 
+      Citrulu is currently in Beta and you can still try it out free for the next #{@days_left_of_free_trial}
+      days, or
+      =link_to "check out our subscription plans", {controller: :payments, action: :choose_plan, :only_path => false}
+  -# Remove the following when we enforce free trial limits:
   %p{:style => content_p_styles} 
-    Citrulu is currently in Beta and you can still try it out free for the next #{@days_left_of_free_trial}
-    days, or
+    Citrulu is free while we're in Beta, but 
     =link_to "check out our subscription plans", {controller: :payments, action: :choose_plan, :only_path => false}
     
   %p{:style => content_p_styles} 

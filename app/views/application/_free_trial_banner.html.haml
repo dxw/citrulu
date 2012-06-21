@@ -2,9 +2,12 @@
   =link_to "Sign up to one of our plans", {controller: :payments, action: :choose_plan}, :class => "btn btn-success btn-large"
   %span.text
     %strong 
-      You currently have
-      =current_user.days_left_of_free_trial 
-      days left of your free trial.
-    You're currently on the basic plan:
-    %strong #{Plan.default.name}.
+      -#
+        -# Uncomment this when we impose free trial limits
+        You currently have
+        =current_user.days_left_of_free_trial 
+        days left of your free trial.
+      -# Remove this when we impose free trial limits:
+      Citrulu is Free during Beta.
+    You're currently on the basic plan.
     To access additional features, sign up to one of our premium plans.

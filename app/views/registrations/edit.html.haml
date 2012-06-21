@@ -38,11 +38,16 @@
     %p
       You're currently on the 
       %strong=current_user.plan.name
-      plan on a free trial. You have
-      %strong
-        =current_user.days_left_of_free_trial 
-        days left 
-      of your free trial.
+      plan on a free trial.
+      -# The following should be removed when we impose free trial limits:
+      This free trial will not expire while Citrulu is in Beta.
+        
+      -# The following should stay commented out for now but will be required when we impose free trial limits:
+        You have
+        %strong
+          =current_user.days_left_of_free_trial 
+          days left 
+        of your free trial.
     %p To access additional features, sign up to one of our premium plans.
   - if current_user.status == :inactive
     %p You don't currently have an active subscription and your free trial has expired.
