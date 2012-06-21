@@ -2,48 +2,60 @@
 spreedly_plans = Plan.spreedly_plans
 
 # N.B. If any of the following plans don't already exist in Spreedly, this will (correctly) fail
-cornichon_free_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon Free")
-
 cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon")
 cornichon_price = cornichon_spreedly.price.to_f unless cornichon_spreedly.nil?
 
 gherkin_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Gherkin")
 gherkin_price = gherkin_spreedly.price.to_f unless gherkin_spreedly.nil?
 
+cucumber_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cucumber")
+cucumber_price = cucumber_spreedly.price.to_f unless cucumber_spreedly.nil?
+
 Plan.create([
   {
     name_en: 'Cornichon Free',
     default: true,
     free_trial: true,
-    spreedly_id: cornichon_free_spreedly.id,
-    active: !cornichon_free_spreedly.nil?,
+    spreedly_id: nil,
+    active: true,
     
     # Limits:
-    test_frequency: 21600, # every hour
-    number_of_sites: 3,
-    mobile_alerts_allowance: 12,
+    test_frequency: 3600, # every hour
+    number_of_sites: 2,
+    mobile_alerts_allowance: 0,
   },
   {
     name_en: 'Cornichon',
     default: false,
-    cost_usd: cornichon_spreedly.price.to_f, # $14.95 to start with?
+    cost_usd: cornichon_spreedly.price.to_f, # $5 to start with?
     spreedly_id: cornichon_spreedly.id,
     active: !cornichon_spreedly.nil?,
     
     # Limits:
     test_frequency: 3600, # every hour
-    number_of_sites: 3,
-    mobile_alerts_allowance: 12,
+    number_of_sites: 2,
+    mobile_alerts_allowance: 0,
   },
   {
     name_en: 'Gherkin',
-    cost_usd: gherkin_spreedly.price.to_f, # $49.95 to start with?
+    cost_usd: gherkin_spreedly.price.to_f, # $15 to start with?
     spreedly_id: gherkin_spreedly.id,
     active: !gherkin_spreedly.nil?,
     
     # Limits:
-    test_frequency: 60, # every minute
-    number_of_sites: 30,
-    mobile_alerts_allowance: 120,
-  }
+    test_frequency: 900, # every 15 minutes
+    number_of_sites: 5,
+    mobile_alerts_allowance: 15,
+  },
+  {
+    name_en: 'Cucumber',
+    cost_usd: cucumber_spreedly.price.to_f, # $50 to start with?
+    spreedly_id: cucumber_spreedly.id,
+    active: !cucumber_spreedly.nil?,
+    
+    # Limits:
+    test_frequency: 300, # every 5 minutes
+    number_of_sites: 50,
+    mobile_alerts_allowance: 100,
+  },
 ])

@@ -1,9 +1,6 @@
 class Plan < ActiveRecord::Base
   has_many :users
   
-  # We should create the plan in Spreedly before adding it to this table
-  validates_presence_of :spreedly_id 
-  
   alias_attribute :name, :name_en
 
   def self.default
@@ -26,9 +23,11 @@ class Plan < ActiveRecord::Base
   def self.cornichon
     self.where(:name_en => "Cornichon", :active => true).first
   end
-  
   def self.gherkin
     self.where(:name_en => "Gherkin", :active => true).first
+  end
+  def self.cucumber
+    self.where(:name_en => "Cucumber", :active => true).first
   end
   
   def self.get_plan_name_from_plan_level(plan_level)
@@ -49,16 +48,17 @@ class Plan < ActiveRecord::Base
   end
     
   LEVELS = {
-    :silver => "Cornichon",
-    :gold => "Gherkin"
+    :bronze => "Cornichon",
+    :silver => "Gherkin",
+    :gold => "Cucumber"
   }
   
   def self.limits
     [
-      add_limit(cornichon.number_of_sites, gherkin.number_of_sites, 'Number of sites', 'The maximum number of domains you can runs tests on'),
-      add_limit('Every Hour', 'Every Minute', 'Test Frequency', 'How often we\'ll run all your tests'),
-      add_limit("#{cornichon.mobile_alerts_allowance} per month", "#{gherkin.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
-      add_limit('Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
+      add_limit(cornichon.number_of_sites, gherkin.number_of_sites, cucumber.number_of_sites,'Number of sites', 'The maximum number of domains you can runs tests on'),
+      add_limit('Every Hour', 'Every 15 Minutes', 'Every 5 Minutes', 'Test Frequency', 'How often we\'ll run all your tests'),
+      add_limit("None", "#{gherkin.mobile_alerts_allowance} per month", "#{cucumber.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
+      add_limit('Unlimited',  'Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
   #      add('?', '?', 'SLA', 'There should be different support SLAs?'),
     ]
   end
@@ -78,10 +78,11 @@ class Plan < ActiveRecord::Base
   
   private
   
-  def self.add_limit(silver, gold, name, description, comingsoon = false) 
+  def self.add_limit(bronze, silver, gold, name, description, comingsoon = false) 
     {
       :name => name, 
       :description => description,
+      :bronze => bronze,
       :silver => silver,
       :gold => gold,
       :comingsoon => comingsoon
