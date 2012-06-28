@@ -28,6 +28,8 @@ class TestFile < ActiveRecord::Base
   def due
     return false if !run_tests
     return false if deleted
+    return true if !last_run #i.e. never run before
+    
     last_run.time_run + frequency < Time.now
   end
 

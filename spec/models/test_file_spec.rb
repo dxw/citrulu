@@ -53,6 +53,12 @@ describe TestFile do
         Timecop.freeze
         @test_file = FactoryGirl.create(:test_file, frequency: 1.hour)
       end
+      context "when the test_file has never been run" do
+        it "should return false" do
+          @test_file.due.should be_true
+        end
+      end
+      
       context "when the test_file was last run under one hour ago" do
         before(:each) do
           @test_run = FactoryGirl.create(:test_run, test_file: @test_file, time_run: (Time.now - 1.hour) + 1)
