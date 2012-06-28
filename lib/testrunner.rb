@@ -1,9 +1,12 @@
 require 'grammar/parser'
 require 'grammar/predefs'
+require 'digest/md5'
 
 class TestRunner
   class TestCompileError < Exception
   end
+  
+  FAILURE_EMAIL_FREQUENCY = 1.hour
 
   def self.enqueue_all_tests
     TestFile.compiled.each do |file|
@@ -39,11 +42,31 @@ class TestRunner
         else
           UserMailer.first_test_notification_success(test_run).deliver
         end
-      elsif test_run.has_failures? 
-        UserMailer.test_notification_failure(test_run).deliver
+      elsif test_run.has_failures?
+        email = UserMailer.test_notification_failure(test_run)
+        
+        # If it's exactly the same as the last failure email, don't send it unless some time has passed:
+        #   First strip out the unique parts (at the moment only the link to the specific test run)
+        
+        email_hash = Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
+
+        if (email_hash != file.user.last_failure_email_hash) && 
+          (file.user.last_failure_email_time.nil? ||
+            (file.user.last_failure_email_time + FAILURE_EMAIL_FREQUENCY < Time.now))
+          
+          file.user.last_failure_email_hash = email_hash
+          file.user.last_failure_email_time =  Time.now
+          file.user.save!
+          
+          email.deliver
+        end
       elsif test_run.previous_run && test_run.previous_run.has_failures?
         # previous had failures, but now everything is passing:
         UserMailer.test_notification_success(test_run).deliver
+        
+        file.user.last_failure_email_hash = nil
+        file.user.last_failure_email_time = nil
+        file.user.save!
       end
     end
   end

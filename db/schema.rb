@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120621140108) do
+ActiveRecord::Schema.define(:version => 20120628125616) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -148,7 +148,9 @@ ActiveRecord::Schema.define(:version => 20120621140108) do
     t.string   "unconfirmed_email"
     t.integer  "invitation_id"
     t.integer  "plan_id"
-    t.string   "status",                 :default => "free"
+    t.string   "status",                  :default => "free"
+    t.text     "last_failure_email_hash"
+    t.time     "last_failure_email_time"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

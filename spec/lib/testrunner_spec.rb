@@ -217,6 +217,27 @@ describe TestRunner do
           
           TestRunner.run_test(@test_file)
         end
+        
+        it "should not send a failure message when the failure email exactly matches the previously sent email" do
+          pending "This test doesn't fail properly when the functionality isn't implemented :("
+          
+          long_nonsense_string ="Vinyl quis odd future iphone, enim aute adipisicing art party you probably haven't heard of them minim. Beard aute vinyl mlkshk, cray consectetur skateboard cred fixie cillum pop-up freegan portland. Sapiente godard pariatur carles, salvia occupy mixtape velit forage vegan irony skateboard high life. Ullamco anim hoodie, sunt magna dolore PBR nisi sed Austin craft beer. Photo booth semiotics aliquip, kogi raw denim eiusmod cliche sartorial sapiente id. Odd future ullamco thundercats keytar sartorial leggings, pariatur ethical raw denim irony. Wes anderson lo-fi vinyl, etsy kale chips seitan duis flexitarian id excepteur put a bird on it."
+          
+          stub_execute_test_groups_to_fail
+          
+          # Should be able to stub :users_first_run, but it doesn't work
+          #First failure
+          TestRunner.run_test(@test_file)
+                UserMailer.should_receive(:test_notification_failure).twice.and_return(Mail::Message.new(body:long_nonsense_string))
+          
+          #Subsequent failure:
+          TestRunner.run_test(@test_file)
+          
+          # Identical subsequent failure
+          # It's going to need to make the message in order to compare it, but it shouldn't send it:
+          Mail::Message.any_instance.should_not_receive(:deliver)
+          TestRunner.run_test(@test_file)
+        end
       end
     end
   end
