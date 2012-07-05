@@ -5,7 +5,7 @@ ActiveAdmin.register User do
     column :email_preference
     column :sign_in_count
     column :invitation do |user|
-      div user.invitation.description
+      div user.invitation.description if user.invitation
     end
     column :current_sign_in_at
     column :last_sign_in_at
