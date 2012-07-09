@@ -53,7 +53,7 @@ module ApplicationHelper
   end
   
   
-  def choose_plan_link(user, plan_level)
+  def choose_plan_link(user, plan_level, highlight=false)
     plan = Plan.get_plan_from_level(plan_level)
     
     if user && user.status == :paid
@@ -80,7 +80,7 @@ module ApplicationHelper
       content_tag :div, content, :class => "btn btn-large btn-warning disabled"
     else
       # Render a button
-      link_to content, url, method: method, :class => "btn btn-large btn-primary"
+      link_to content, url, method: method, :class => "btn btn-large " + (highlight ? "btn-success" : "btn-primary")
     end
   end
   

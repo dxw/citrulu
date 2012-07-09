@@ -2,12 +2,11 @@
   %table.table-striped.span12
     %thead
       %tr
-        %td.span5
-        %td.span2=@names[:bronze]
-        %td.span2=@names[:silver]
-        %td.span2=@names[:gold]
-        %td.span1
-        %td.span2
+        %th.span5
+        %th.span2=@names[:bronze]
+        %th.span2=@names[:silver]
+        %th.span2=@names[:gold]
+        %th.span2=@names[:bespoke]
 
     %tbody
       %tr.costs
@@ -17,10 +16,11 @@
         %td.bronze
           =choose_plan_link(current_user, :bronze)
         %td.silver
-          =choose_plan_link(current_user, :silver)
+          =choose_plan_link(current_user, :silver, true)
         %td.gold
           =choose_plan_link(current_user, :gold)
-        %td
+        %td.bespoke
+          =mail_to "contact@citrulu.com", "Talk to us", :subject => "I want my own super-duper awesome version of Citrulu!", :class => "btn btn-large btn-primary"
     
       - @limits.each do |limit|
         %tr
@@ -30,7 +30,7 @@
           %td.bronze=limit[:bronze]
           %td.silver=limit[:silver]
           %td.gold=limit[:gold]
-          %td
+          %td.bespoke=limit[:bespoke]
 
 %section.features
   %h2 Whatever your plan, you'll always have access to these great features:

@@ -50,15 +50,16 @@ class Plan < ActiveRecord::Base
   LEVELS = {
     :bronze => "Cornichon",
     :silver => "Gherkin",
-    :gold => "Cucumber"
+    :gold => "Cucumber",
+    :bespoke => "Marrow",
   }
   
   def self.limits
     [
-      add_limit(cornichon.number_of_sites, gherkin.number_of_sites, cucumber.number_of_sites,'Number of sites', 'The maximum number of domains you can runs tests on'),
-      add_limit('Every Hour', 'Every 15 Minutes', 'Every 5 Minutes', 'Test Frequency', 'How often we\'ll run all your tests'),
-      add_limit("None", "#{gherkin.mobile_alerts_allowance} per month", "#{cucumber.mobile_alerts_allowance} per month", 'Mobile alerts', 'Receive SMS messages when tests fail', true),
-      add_limit('Unlimited',  'Unlimited',  'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
+      add_limit(cornichon.number_of_sites, gherkin.number_of_sites, cucumber.number_of_sites, 'Loads!', 'Number of sites', 'The maximum number of domains you can runs tests on'),
+      add_limit('Every Hour', 'Every 15 Minutes', 'Every 5 Minutes', 'Often as you like', 'Test Frequency', 'How often we\'ll run all your tests'),
+      add_limit("None", "#{gherkin.mobile_alerts_allowance} per month", "#{cucumber.mobile_alerts_allowance} per month", 'Tons!', 'Mobile alerts (Coming Soon!)', 'Receive SMS messages when tests fail', true),
+      add_limit('Unlimited',  'Unlimited',  'Unlimited', 'Unlimited', 'Email alerts', 'Receive emails when tests fail'),
   #      add('?', '?', 'SLA', 'There should be different support SLAs?'),
     ]
   end
@@ -78,13 +79,14 @@ class Plan < ActiveRecord::Base
   
   private
   
-  def self.add_limit(bronze, silver, gold, name, description, comingsoon = false) 
+  def self.add_limit(bronze, silver, gold, bespoke, name, description, comingsoon = false) 
     {
       :name => name, 
       :description => description,
       :bronze => bronze,
       :silver => silver,
       :gold => gold,
+      :bespoke => bespoke,
       :comingsoon => comingsoon
     }
   end
