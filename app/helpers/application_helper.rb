@@ -4,7 +4,7 @@ module ApplicationHelper
   end
   
   def nav_link(text, path)
-    if path == request.fullpath # gives the current uri after the first slash
+    if url_for(path) == request.fullpath # gives the current uri after the first slash
       content_tag :li, :class => "active" do 
         #EWW! EWW! Bootstrap styles force you to render the current nav as a link instead of text
         link_to text
