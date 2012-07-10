@@ -86,7 +86,10 @@ body.registrations.new, body.registrations.create {
   #new_user {
     margin: 0;
     legend {
-      margin-bottom: 15px
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight:bold;
+      float:left;
     }
     input, .btn {
       margin-bottom: 20px;
