@@ -2,9 +2,12 @@
   %fieldset
     %legend Sign up
     = f.email_field :email, :placeholder => "Email"
+    %p#beta_line Citrulu is currently free while in Beta
     %div  
       = f.password_field :password, :placeholder => "Password"
       = f.password_field :password_confirmation, :placeholder => "Confirm Password"
+      
+      
     #buttons
       = f.submit "Sign up", :class => "btn btn-large btn-success"
       = link_to "Sign in", new_session_path(resource_name), :class => "btn btn-large btn-primary"

@@ -8,19 +8,21 @@
   - flash.each do |name, message|
     = flash_message(name, message)
   = devise_error_messages!
+  
   .row
+    %p.span12
+      
+  .row
+    .span4
+      .well.blue.signup#description
+        %h3 What is Citrulu?
+        %p Citrulu is a website testing and monitoring tool which runs automated front-end tests on your Live websites to check that they're working, and sends you email alerts if they fail.
+        =twitter_button
     .span8
       %div#subForm.form-horizontal.well.signup
         = render partial: 'new'
-    .span4
-      .well.blue.signup
-        %h3 Welcome to the beta
-        %p Thanks for coming along. We're proud of Citrulu, but we still want to get lots of feedback and ideas.
-        %p Please have a play and a poke about, and let us know what you think via the GetSatisfaction feedback tab.
-        =twitter_button
-
-  %section#description.row
-    %h2.span12 What is Citrulu?
+  #why.row
+    %h2.span12 What can Citrulu do for you?
   #selling_points.row
     %section#make_sure.span4
       =image_tag "brochure/test_results_list.png", :alt => "A list of test results, showing successes and failures", :class => "thumbnail"
