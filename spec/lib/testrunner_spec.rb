@@ -110,6 +110,9 @@ describe TestRunner do
         before(:each) do
           @user = FactoryGirl.create(:user, :email_preference => 1)
           @test_file = FactoryGirl.create(:compiled_test_file, :user => @user)
+          
+          # The generated email text is hashed for comparison, so we need to stub this out to avoid getting "stuff is nil" errors
+          Mail::Message.any_instance.stub(:text_part).and_return(Mail::Part.new)
         end
         
         it "should not send success messages if the last TestRun was successful" do
