@@ -77,4 +77,10 @@ class TestRun < ActiveRecord::Base
     test_file.test_runs(true) # Cache-busting
     test_file.test_runs.length == 1 && test_file.user.test_files.select{|f| (f.id != test_file.id) && !f.test_runs.empty?}.blank? 
   end  
+
+
+  def self.delete_all_older_than(limit_date)
+    where( "time_run < ?", limit_date).destroy_all    
+  end
+
 end

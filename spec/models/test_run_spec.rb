@@ -255,5 +255,20 @@ describe TestRun do
       it "should return two test_groups"
     end
   end
-
+  
+  describe "delete_all_older_than" do
+    before(:each) do
+      TestRun.destroy_all
+      @time = Time.now
+      FactoryGirl.create(:test_run, time_run: @time - 1.day)
+      @test_run_1 = FactoryGirl.create(:test_run, time_run: @time)
+      @test_run_2 = FactoryGirl.create(:test_run, time_run: @time + 1.day)
+    end
+    it "should delete test_runs older than the specified time" do
+      TestRun.delete_all_older_than(@time)
+      TestRun.all.length.should
+      TestRun.all.should include(@test_run_1)
+      TestRun.all.should include(@test_run_2)
+    end
+  end
 end
