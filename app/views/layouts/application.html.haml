@@ -5,16 +5,7 @@
     = stylesheet_link_tag    "application"
     = javascript_include_tag "application"
     = csrf_meta_tags
-  %body{ :class => "#{controller_name} #{params[:action]}"}
-    - if user_signed_in?
-      %div.banner
-        .container
-          %p
-            %strong Thanks for joining the Beta!
-            Citrulu is free for a limited time. It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
-
-    = content_for?(:content) ? yield(:content) : yield
-
+    
     :javascript
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-29765005-1']);
@@ -31,6 +22,16 @@
        var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
        
        document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+    
+  %body{ :class => "#{controller_name} #{params[:action]}"}
+    - if user_signed_in?
+      %div.banner
+        .container
+          %p
+            %strong Thanks for joining the Beta!
+            Citrulu is free for a limited time. It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
+
+    = content_for?(:content) ? yield(:content) : yield
 
     :javascript
        var feedback_widget_options = {};
