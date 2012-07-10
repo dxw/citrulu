@@ -5,7 +5,7 @@
     %span{:class => "plan_name"}=@plan.name_en
     plan.
     
-    You'll be billed $#{@plan.cost_usd} every month
+    You'll be billed #{@plan.print_cost} every month
     
   %p Now we just need to get your payment details and you can continue as a fully-fledged Citrulu user.
 

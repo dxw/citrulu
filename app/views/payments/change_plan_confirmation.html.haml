@@ -5,7 +5,7 @@
     %span{ :class => "plan_name"}=current_user.plan.name_en
     plan.
   %p
-    You'll now be billed $#{current_user.plan.cost_usd} every month
+    You'll now be billed #{current_user.plan.print_cost} every month
   %p
     Your usage will be pro-rated and will be reflected in your next bill.
 

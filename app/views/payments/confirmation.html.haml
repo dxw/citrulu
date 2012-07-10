@@ -5,7 +5,7 @@
     %span{ :class => "plan_name"}=current_user.plan.name_en
     plan
   %p
-    ="You'll be billed $#{current_user.plan.cost_usd} every month"
+    ="You'll be billed #{current_user.plan.print_cost} every month"
     
   %p 
     You can cancel your subscription at any time by editing your 

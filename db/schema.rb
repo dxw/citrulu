@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120703155338) do
+ActiveRecord::Schema.define(:version => 20120710103508) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20120703155338) do
     t.integer  "mobile_alerts_allowance", :limit => 255
     t.decimal  "cost_usd",                               :precision => 6, :scale => 2
     t.boolean  "free_trial"
+    t.decimal  "cost_gbp"
   end
 
   add_index "plans", ["active", "name_en"], :name => "index_plans_on_active_and_name_en"

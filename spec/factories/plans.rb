@@ -3,6 +3,7 @@ FactoryGirl.define do
     name_en 'Plan'
     active true
     cost_usd 1000
+    cost_gbp 800
     
     test_frequency 86400
     number_of_sites 3

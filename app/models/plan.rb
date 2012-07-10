@@ -1,7 +1,19 @@
+# encoding: utf-8
 class Plan < ActiveRecord::Base
   has_many :users
   
   alias_attribute :name, :name_en
+
+  #Change this when we move over to USD
+  def print_cost
+    "£#{cost_gbp}"
+    #"$#{cost_usd}"
+  end
+  
+  def cost
+    cost_gbp
+  end
+
 
   def self.default
     default_plan = where(:default => true).first

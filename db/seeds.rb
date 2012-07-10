@@ -27,7 +27,8 @@ Plan.create([
   {
     name_en: 'Cornichon',
     default: false,
-    cost_usd: cornichon_spreedly.price.to_f, # $5 to start with?
+    # cost_usd: cornichon_spreedly.price.to_f, # $5 to start with?
+    cost_gbp: cornichon_spreedly.price.to_f, # £5 to start with?
     spreedly_id: cornichon_spreedly.id,
     active: !cornichon_spreedly.nil?,
     
@@ -38,7 +39,8 @@ Plan.create([
   },
   {
     name_en: 'Gherkin',
-    cost_usd: gherkin_spreedly.price.to_f, # $15 to start with?
+    # cost_usd: gherkin_spreedly.price.to_f, # $15 to start with?
+    cost_gbp: gherkin_spreedly.price.to_f, # £15 to start with?
     spreedly_id: gherkin_spreedly.id,
     active: !gherkin_spreedly.nil?,
     
@@ -49,7 +51,8 @@ Plan.create([
   },
   {
     name_en: 'Cucumber',
-    cost_usd: cucumber_spreedly.price.to_f, # $50 to start with?
+    # cost_usd: cucumber_spreedly.price.to_f, # $50 to start with?
+    cost_gbp: cucumber_spreedly.price.to_f, # £50 to start with?
     spreedly_id: cucumber_spreedly.id,
     active: !cucumber_spreedly.nil?,
     

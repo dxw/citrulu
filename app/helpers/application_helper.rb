@@ -72,7 +72,7 @@ module ApplicationHelper
     end
     
     plan_text_span = content_tag :span, text, :class => "plan_text"
-    plan_cost_span = content_tag :span, "$#{plan.cost_usd}/month", :class => "plan_cost"
+    plan_cost_span = content_tag :span, "#{plan.print_cost}/month", :class => "plan_cost"
     content = (plan_text_span << " " << plan_cost_span)
     
     if user && user.status == :paid && plan == user.plan
