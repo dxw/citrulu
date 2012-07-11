@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title Citrulu: website monitoring with hosted front-end tests
+    %title= content_for?(:title) ? yield(:title) : "Citrulu: website monitoring with hosted front-end tests"
     %meta{name: "description", content: "Citrulu is a website testing and monitoring tool which runs automated front-end tests on your Live websites to check that they're working, and sends you email alerts if they fail."}
     = stylesheet_link_tag    "application"
     = javascript_include_tag "application"
