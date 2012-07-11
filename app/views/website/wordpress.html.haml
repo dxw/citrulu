@@ -1,0 +1,52 @@
+= content_for :title, "Citrulu: monitor your WordPress website with hosted front-end tests"
+.container.landing_page
+  %header.title
+    %h1.masthead Citrulu
+    %p 
+      Monitor your WordPress website with human-friendly, continuous front-end tests
+  - flash.each do |name, message|
+    = flash_message(name, message)
+  = devise_error_messages!
+  
+  .row
+    .span4
+      .well.blue.signup#description
+        %h3 What is Citrulu?
+        %p Citrulu is a website testing and monitoring tool which runs automated front-end tests on your Live websites to check that they're working, and sends you email alerts if they fail.
+        =twitter_button
+    .span8
+      %div#subForm.form-horizontal.well.signup
+        = render partial: 'registrations/new'
+  #why.row
+    .span12
+      %h2 What can Citrulu do for you?
+      %p Do you have a website which runs on WordPress? Citrulu can give you peace of mind that it's working by alerting you about any issues quickly:
+      
+  #selling_points.row
+    %section.span4
+      =image_tag "http://placehold.it/290x200", :alt => "TODO!!!!!!!!!!!", :class => "thumbnail"
+      %header
+        %h3 Keep an eye on WordPress
+      %p WordPress is a powerful platform, but dynamic content, feeds from external services and third party themes and plugins can be a fairly fragile combination
+      %p You can use Citrulu to keep an eye on your website and give you confidence that all those widgets and feeds stay working, when you update them.
+  
+    %section#for_humans.span4
+      =image_tag "brochure/test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax", :class => "thumbnail"
+      %header
+        %h3 A test language for humans
+      %p Write tests for your sites using natural language. 
+      %p No complex code or annoying forms - just simple instructions to check for strings and HTML in your pages.*  
+      %p No deployment or configuration either - get up and running in minutes
+      %small 
+        %em*plus powerful features if you need them, like inspecting response headers and POSTing data.
+
+    %section.span4
+      =image_tag "brochure/notifications.png", :alt => "An inbox, showing some notifications from Citrulu", :class => "thumbnail"
+      %header
+        %h3 Respond quickly
+      %p Finding out that something on your website has been broken for hours or even days can be frustrating. Citrulu continuously runs tests on your site and will email you the moment that something fails so that you can address it straight away, helping you to maintain a professional reputation.
+       
+  #contact.row
+    If you'd like to know more, try it out for free, or
+    %a{:href => "mailto:contact@dxw.com?subject=About%20that%20Citrulu%20thing..."} get in touch
+    (We're friendly).
