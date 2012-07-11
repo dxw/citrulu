@@ -6,7 +6,7 @@ SITE_IS_UP_TEST_FILE={
   I should see Hello World},
   help: [
     "This is a very simple test file which checks that Wikipedia is up and running by looking for some text that should be visible on that page.",
-    "The first thing to notice is the 'Live view' over on the right. This is compiling your tests and checking them against the site.",
+    "The first thing to notice is the 'Live view' over on the right. This is compiling your tests as you write them, and checking them against the site.",
     "Currently one of the rows in the Live view should be red, indicating that one of the tests isn't passing.",
     "To make the test pass, replace \"Hello World\" with \"Encyclopedia\" and watch that row turn green."
   ]
