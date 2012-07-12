@@ -1,3 +1,4 @@
+# encoding: utf-8
 class WebsiteController < ApplicationController
 
   def features
@@ -12,7 +13,7 @@ class WebsiteController < ApplicationController
     end
 
     @limits = [
-      add('$14.95/month', '$49.95/month', 'Cost', 'Monthly cost'),
+      add('£15/month', '£50/month', 'Cost', 'Monthly cost'),
       add('3', '30', 'Number of sites', 'The maximum number of domains you can runs tests on'),
       add('Four times a day', 'Four times an hour', 'Test Frequency', 'How often we\'ll run all your tests'),
       add(3, 'Unlimited' , 'Test files', 'Structure your tests into several files. For example, you might want one per site.', true),
