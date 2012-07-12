@@ -36,6 +36,8 @@ SimpleFrontEndTesting::Application.routes.draw do
   match 'terms' => "website#terms"
   match 'features' => "website#features"
   match 'email' => "website#email"
+  match 'agencies' => "website#agencies"
+  match 'wordpress' => "website#wordpress"
   
   authenticated :user do
     root :to => redirect('/test_files')

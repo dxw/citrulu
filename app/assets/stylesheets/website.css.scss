@@ -33,7 +33,7 @@ table {
   }
 }
 
-body.registrations.new, body.registrations.create {
+body.registrations.new, body.registrations.create, .landing_page {
   padding: 0 0 80px 0;
 
   header.title {
@@ -70,22 +70,38 @@ body.registrations.new, body.registrations.create {
     }
   }
   
-  .description {
+  #why {
     h2 {
-      font-size: 3em;
+      font-size: 2em;
       margin-top: 20px;
       margin-bottom:10px;
+    }
+    p {
+      font-size: 16px;
     }
   }
   
   .well.blue {
     background-color: #D9EDF7;
   }
+  #description {
+    h3 {
+      margin-bottom:8px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+  }
 
   #new_user {
     margin: 0;
     legend {
-      margin-bottom: 15px
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight:bold;
+      float:left;
     }
     input, .btn {
       margin-bottom: 20px;
@@ -111,5 +127,12 @@ body.registrations.new, body.registrations.create {
     margin-top: 30px;
     font-size: 1.5em;
     text-align: center;
+  }
+  
+  #beta_line {
+    display: inline;
+    bottom: 8px;
+    position: relative;
+    font-size: 18px;
   }
 }

@@ -1,11 +1,14 @@
 = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
-  %legend
-    %h3 Sign up
-  = f.email_field :email, :placeholder => "Email"
-  %div  
-    = f.password_field :password, :placeholder => "Password"
-    = f.password_field :password_confirmation, :placeholder => "Confirm Password"
-  #buttons
-    = f.submit "Sign up", :class => "btn btn-large btn-success"
-    = link_to "Sign in", new_session_path(resource_name), :class => "btn btn-large btn-primary"
-  %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
+  %fieldset
+    %legend Sign up
+    = f.email_field :email, :placeholder => "Email"
+    %p#beta_line Citrulu is currently free while in Beta
+    %div  
+      = f.password_field :password, :placeholder => "Password"
+      = f.password_field :password_confirmation, :placeholder => "Confirm Password"
+      
+      
+    #buttons
+      = f.submit "Sign up", :class => "btn btn-large btn-success"
+      = link_to "Sign in", new_session_path(resource_name), :class => "btn btn-large btn-primary"
+    %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
