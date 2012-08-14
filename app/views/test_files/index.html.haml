@@ -27,7 +27,9 @@
         %i.icon-plus-sign
         Create a new test file
     %ul#test_files.unstyled
-      =render partial: @test_files
+      %li#no_test_files.test_file{style: "display: none"}
+        =render partial: 'no_test_files'
+      =render @test_files
       
   #sidebar.span4
     #recent_results
