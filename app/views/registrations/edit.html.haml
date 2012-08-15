@@ -73,7 +73,7 @@
       You're currently on the 
       %strong=current_user.plan.name
       plan and paying
-      %strong#{current_user.plan.print_cost}
+      %strong=current_user.plan.print_cost
       per month.
     
       %ul.unstyled
@@ -90,13 +90,12 @@
           .span9
             %p
               This will stop the next payment from being requested - you can continue using Citrulu until then.
-              - if current_user.is_within_free_trial?
+              -# if current_user.is_within_free_trial?
                 You're still within your free trial period so when your paid-for time elapses you may still be able to continue using Citrulu on the 
                 %strong=Plan.default.name
                 plan. When that expires, you'll
-              -else
-                After that you'll 
-              still have full access to Citrulu, but your tests won't be run and you won't receive any alerts.
+              -# else
+              After that you'll still have full access to Citrulu, but your tests won't be run and you won't receive any alerts.
               
 %h3 Terminate my account
 %p
