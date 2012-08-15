@@ -23,15 +23,7 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
 	}
 }
 
-.status_banner {
-  span.text {
-    margin-right: 200px;
-  }
-  a.btn {
-    float: right;
-    margin-left: 20px;
-  }
-}
+
 
 #error_explanation{
 	@extend  .alert-error;
@@ -86,6 +78,17 @@ ul.devise_links {
   text-align: center;  
   &.beta{
     background: #EBB68F;
+  }
+  &.status_banner{
+    background: #EBB68F;
+    text-align: left;
+    span.text {
+      margin-right: 250px;
+    }
+    a.btn {
+      float: right;
+      margin-left: 20px;
+    }
   }
 }
 
