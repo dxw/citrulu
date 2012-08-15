@@ -1,4 +1,9 @@
 - content_for :content do
+  %div.banner.beta
+    .container
+      %strong Thanks for joining the Beta!
+      It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
+  =render partial: "limits_banner"
   %div.container
     .navbar
       .navbar-inner

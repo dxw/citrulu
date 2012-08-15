@@ -24,13 +24,7 @@
        
        document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
 
-  %body{ :class => "#{controller_name} #{params[:action]}"}
-    - if user_signed_in?
-      %div.banner.beta
-        .container
-          %strong Thanks for joining the Beta!
-          It's early days, so if you have ideas or find bugs, please let us know by using the feedback tab.
-      =render partial: "limits_banner"
+  %body{ :class => "#{controller_name} #{params[:action]}"}      
     = content_for?(:content) ? yield(:content) : yield
 
     :javascript
