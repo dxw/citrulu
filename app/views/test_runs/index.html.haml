@@ -43,7 +43,7 @@
     - if @running_test_files.empty?
       - if @not_running_test_files.empty?
         #no_test_files
-          =render partial: 'no_test_files'
+          =render partial: 'test_files/no_test_files'
     -else
       %h3 Active test files
       %ul.unstyled#test_files

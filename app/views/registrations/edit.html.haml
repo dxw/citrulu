@@ -90,6 +90,7 @@
           .span9
             %p
               This will stop the next payment from being requested - you can continue using Citrulu until then.
+              -# The following if statement will be required when we implement free trials
               -# if current_user.is_within_free_trial?
                 You're still within your free trial period so when your paid-for time elapses you may still be able to continue using Citrulu on the 
                 %strong=Plan.default.name
