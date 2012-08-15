@@ -100,6 +100,4 @@
               
 %h3 Terminate my account
 %p
-  Unhappy? You can terminate your account at any time, and we'll do our best to delete everything. If you terminate your account, we will not be able to recover it.
-%p
-  = link_to "Terminate my account", registration_path(resource_name), :confirm => "Are you sure? You can't recover your account once it's gone.", :method => :delete, :class => "btn btn-danger"
+  Unhappy? You can terminate your account at any time by #{mail_to 'contact@citrulu.com', 'sending us an email', subject: "Please Terminate my Citrulu account"} and we'll do our best to delete everything. If you terminate your account, we will not be able to recover it.
