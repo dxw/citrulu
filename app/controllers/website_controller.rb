@@ -9,7 +9,11 @@ class WebsiteController < ApplicationController
   end
   
   def terms
-    render :layout => "logged_in"
+    if current_user
+      render :layout => "logged_in"
+    else
+      render :layout => "application"
+    end
   end
 
   def email
