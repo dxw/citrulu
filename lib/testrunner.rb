@@ -50,7 +50,7 @@ class TestRunner
         
         email_hash = Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
 
-        if (email_hash != file.user.last_failure_email_hash) && 
+        if (email_hash != file.user.last_failure_email_hash) ||
           (file.user.last_failure_email_time.nil? ||
             (file.user.last_failure_email_time + FAILURE_EMAIL_FREQUENCY < Time.now))
           

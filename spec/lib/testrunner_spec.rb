@@ -145,6 +145,8 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           
           UserMailer.should_receive(:first_test_notification_success).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
+          
           TestRunner.run_test(@test_file)
         end
 
@@ -153,35 +155,33 @@ describe TestRunner do
           TestRunner.run_test(@test_file)
 
           UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_test(@test_file)
         end
 
-        it "should always send failure messages (1)" do
+        it "should send the 'first failure' message the first time a test fails" do
           UserMailer.should_receive(:first_test_notification_failure).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
         end
         
-        it "should always send failure messages (2)" do
+        it "should not send a second failure message if the first was recently delivered" do
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
           
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_not_receive(:deliver)
 
           TestRunner.run_test(@test_file)
         end
         
-        it "should always send failure messages (3)" do
-          stub_execute_test_groups_to_fail
-          TestRunner.run_test(@test_file)
-          TestRunner.run_test(@test_file)
-          
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
-
-          TestRunner.run_test(@test_file)
+        it "should send a second failure message if the first was delivered a while ago" do
+        end
+        
+        it "should send a second failure message if the second failure was different even if the first was recently delivered" do
         end
 
         it "should send a failure message if the tests were succeeding but are now failing (1)" do
@@ -189,12 +189,13 @@ describe TestRunner do
           TestRunner.run_test(@test_file)
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
         end
 
-        it "should send a failure message if the tests were succeeding but are now failing (2)" do
+        it "should send a failure message if the tests failed, then succeeded, then failed again for teh same reason." do
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
 
@@ -202,6 +203,7 @@ describe TestRunner do
           TestRunner.run_test(@test_file)
 
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
@@ -217,6 +219,7 @@ describe TestRunner do
           TestRunner.run_test(@test_file)
           
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
+          Mail::Message.any_instance.should_receive(:deliver)
           
           TestRunner.run_test(@test_file)
         end
