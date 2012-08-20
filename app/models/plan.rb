@@ -4,10 +4,9 @@ class Plan < ActiveRecord::Base
   
   alias_attribute :name, :name_en
 
-  #Change this when we move over to USD
   def print_cost
-    "£#{cost_gbp}"
-    #"$#{cost_usd}"
+    # Stored as a decimal, but round to the nearest pound for display:
+    "£#{cost_gbp.to_i}"
   end
   
   def cost
