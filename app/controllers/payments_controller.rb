@@ -94,14 +94,14 @@ class PaymentsController < ApplicationController
   # so if they already have an active subscription in Spreedly, redirect them
   def redirect_if_active
     if current_user.status == :paid || current_user.status == :cancelled 
-      redirect_to "/"
+      redirect_to action: "choose_plan"
     end
   end
   
   # It makes no sense for a user to try and edit a subscription which isn't active!
   def redirect_if_not_active
     unless current_user.status == :paid
-      redirect_to "/"
+      redirect_to action: "choose_plan"
     end
   end
 end
