@@ -18,9 +18,9 @@
           .span5
             %span.file_info
               -if test_file.compiled?
-                =pluralize(test_file.number_of_tests, 'assertion')
-                on 
                 =pluralize(test_file.number_of_pages, 'page')
+                on 
+                =pluralize(test_file.domains.count, 'domain')
               -else
                 Your file hasn't been compiled yet.
                 Click to edit it and kick it off.
