@@ -1,6 +1,10 @@
 = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
   %fieldset
-    %legend Sign up
+    %legend
+      Sign up
+      %small
+        or
+        = link_to "sign in", new_session_path(resource_name)
     = f.email_field :email, :placeholder => "Email"
     %p#beta_line Citrulu is currently free while in Beta
     %div  
@@ -10,5 +14,4 @@
       
     #buttons
       = f.submit "Sign up", :class => "btn btn-large btn-success"
-      = link_to "Sign in", new_session_path(resource_name), :class => "btn btn-large btn-primary"
     %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
