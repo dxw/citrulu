@@ -218,10 +218,10 @@ class User < ActiveRecord::Base
       #remove the numbers from the end of the string:
       trimmed_string = string.gsub /\d+$/, ""
       
-      until !names.include?("#{trimmed_string}#{n}") do 
+      until !names.include?("#{trimmed_string} #{n}") do 
         n += 1
       end
-      "#{trimmed_string}#{n}"
+      "#{trimmed_string} #{n}"
     end
   end
   

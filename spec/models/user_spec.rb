@@ -151,8 +151,8 @@ describe User do
         FactoryGirl.create(:test_file, user: @user, name: 'New test file')
       end
     
-      it "should return 'New test file1'" do
-        @user.new_test_file_name.should == 'New test file1'
+      it "should return 'New test file 1'" do
+        @user.new_test_file_name.should == 'New test file 1'
       end
       
       context "and if a test file exists with a different name" do
@@ -160,18 +160,18 @@ describe User do
           FactoryGirl.create(:test_file, user: @user, name: 'Foo')
         end
       
-        it "should return 'New test file1'" do
-          @user.new_test_file_name.should == 'New test file1'
+        it "should return 'New test file 1'" do
+          @user.new_test_file_name.should == 'New test file 1'
         end
       end
       
-      context "and if 'New test file1' exists" do
+      context "and if 'New test file 1' exists" do
         before(:each) do
-          FactoryGirl.create(:test_file, user: @user, name: 'New test file1')
+          FactoryGirl.create(:test_file, user: @user, name: 'New test file 1')
         end
       
-        it "should return 'New test file2'" do
-          @user.new_test_file_name.should == 'New test file2'
+        it "should return 'New test file 2'" do
+          @user.new_test_file_name.should == 'New test file 2'
         end
       end
     end
