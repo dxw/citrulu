@@ -124,7 +124,7 @@ describe UserMailer do
         User.any_instance.stub(:first_tutorial).and_return(tutorial)
       end
       it "should assign @first_tutorial_url" do
-        UserMailer.nudge(@user).body.encoded.should match /\/test_files\/\d+\/edit\"/
+        UserMailer.nudge(@user).body.encoded.should match /\/test_files\/[a-zA-Z0-9\-]*\/edit\"/
       end
     end    
     context "when the first tutorial does not exist" do
