@@ -3,7 +3,9 @@
   %header.title
     %h1.masthead Citrulu
     %p 
-      Monitor your clients' Live websites with hosted, continuous front-end tests
+      Monitor your clients' 
+      %strong live 
+      websites with hosted, continuous front-end tests
   - flash.each do |name, message|
     = flash_message(name, message)
   = devise_error_messages!
@@ -12,7 +14,10 @@
     .span4
       .well.blue.signup#description
         %h3 What is Citrulu?
-        %p Citrulu is a website testing and monitoring tool which runs automated front-end tests on your Live websites to check that they're working, and sends you email alerts if they fail.
+        %p 
+          Citrulu is a website testing and monitoring tool which runs automated front-end tests on your 
+          %strong live 
+          websites to check that they're working, and sends you email alerts if they fail.
         =twitter_button
     .span8
       %div#subForm.form-horizontal.well.signup
@@ -36,7 +41,7 @@
         Testing websites 
         %em before 
         they go live is essential best practice, but when building sites for clients there's rarely enough time to do as much testing as we'd like.
-      %p Citrulu lets you runs regular checks on websites after they go live, and it's so much more powerful than uptime monitoring: you can write tests that prove specific features are working, or check for scenarios which might only arise intermittently in a Live environment.
+      %p Citrulu lets you runs regular checks on websites after they go live, and it's so much more powerful than uptime monitoring: you can write tests that prove specific features are working, or check for scenarios which might only arise intermittently in a live environment.
       
     %section#for_humans.span4
       =image_tag "brochure/test_steps.png", :alt => "A list of tests written in Citrulu's simple syntax", :class => "thumbnail"
