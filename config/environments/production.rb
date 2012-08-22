@@ -65,7 +65,7 @@ SimpleFrontEndTesting::Application.configure do
   # Exception notifications: 
   config.middleware.use ExceptionNotifier,
     sender_address: 'noreply@citrulu.com',
-    exception_recipients: 'contact@citrulu.com',
+    exception_recipients: 'systems@dxw.com',
     ignore_exceptions: ExceptionNotifier.default_ignore_exceptions # + [RuntimeError]
   # ignore_exceptions is an array of exception types which will not send email. default_ignore_exceptions includes things which usually result in a 404
 end
