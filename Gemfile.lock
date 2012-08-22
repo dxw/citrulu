@@ -81,6 +81,8 @@ GEM
       eventmachine (>= 0.12.9)
     erubis (2.7.0)
     eventmachine (0.12.10)
+    exception_notification (2.6.1)
+      actionmailer (>= 3.0.4)
     execjs (1.3.0)
       multi_json (~> 1.0)
     factory_girl (2.6.4)
@@ -283,6 +285,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.0)
   database_cleaner
   devise
+  exception_notification
   factory_girl_rails (~> 1.2)
   formtastic (~> 2.1.1)
   guard-livereload
