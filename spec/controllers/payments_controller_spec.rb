@@ -30,7 +30,7 @@ describe PaymentsController do
         it "should redirect to the homepage" do
           User.any_instance.stub(:status).and_return(:inactive)
           put 'change_plan', :plan_id => @plan.to_param
-          response.should redirect_to('/')
+          response.should redirect_to('/payments/choose_plan')
         end
       end
     end
@@ -41,7 +41,7 @@ describe PaymentsController do
       it "should redirect to the homepage" do
         User.any_instance.stub(:status).and_return(:paid)
         get 'new'
-        response.should redirect_to('/')
+        response.should redirect_to('/payments/choose_plan')
       end
     end
       
