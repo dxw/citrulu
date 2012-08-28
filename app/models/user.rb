@@ -59,9 +59,9 @@ class User < ActiveRecord::Base
   end
   
   def set_default_plan
-    plan = Plan.default
+    self.plan = Plan.default
     # Assumption: as long as we're assigning a default plan at this point, it only makes sense for it to be free.
-    status = :free 
+    self.status = :free 
   end
   
   # Can the user use the service?

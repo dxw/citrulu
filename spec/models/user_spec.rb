@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe User do
   before(:each) do
-    plan = FactoryGirl.create(:plan, test_frequency: 23)
-    @user = FactoryGirl.create(:user, plan: plan)
+    @plan = FactoryGirl.create(:plan, test_frequency: 23)
+    @user = FactoryGirl.create(:user)
+    @user.update_attribute(:plan, @plan)
     
     @subscriber = double(RSpreedly::Subscriber)
     RSpreedly::Subscriber.stub(:new).and_return(@subscriber)
@@ -11,14 +12,18 @@ describe User do
     RSpreedly::Subscriber.any_instance.stub(:update)
   end
   
-  
-  it "should add the tutorial test files when it's created" do
-    @user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
-  end
-  
-  it "should set the email preference to recieve test run emails when it's created" do
-    @user.email_preference.should == 1
-  end
+  context "when it is created"
+    it "should add the tutorial test files" do
+      @user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
+    end
+    it "should set the email preference to recieve test run emails" do
+      @user.email_preference.should == 1
+    end
+    it "should assign the default plan" do
+      Plan.stub(:default).and_return(@plan)
+      user = FactoryGirl.create(:user)
+      user.plan.should == @plan
+    end
   
   describe ".send_welcome_email" do
     it "should create a welcome email for the current user and deliver it" do
