@@ -7,14 +7,24 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
 
-    - if Rails.env == 'production'
-      :javascript
-        var _kmk = _kmk || '579068171dfcf09c02b5f78761cda442a1f468e3';
-    - else
-      :javascript
-        var _kmk = _kmk || '22cd4c4339b5f4b986cd054248f947715da7db5c';
+
     :javascript
       var _kmq = _kmq || [];
+ 
+      #{
+        key = if Rails.env == 'production'
+          "var _kmk = _kmk || '579068171dfcf09c02b5f78761cda442a1f468e3';\n"
+        else
+          "var _kmk = _kmk || '22cd4c4339b5f4b986cd054248f947715da7db5c';\n"
+        end
+        
+        identity = if user_signed_in?
+          "_kmq.push(['identify', '#{current_user.email}']);"
+        end
+
+        key + identity
+      }
+
       function _kms(u){
         setTimeout(function(){
           var d = document, f = d.getElementsByTagName('script')[0],
