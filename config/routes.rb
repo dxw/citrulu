@@ -35,6 +35,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   # Website pages routes:
   match 'terms' => "website#terms"
   match 'features' => "website#features"
+  match 'info' => "website#info"
   match 'email' => "website#email"
   match 'agencies' => "website#agencies"
   match 'wordpress' => "website#wordpress"

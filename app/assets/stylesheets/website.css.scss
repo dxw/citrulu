@@ -123,16 +123,47 @@ body.registrations.new, body.registrations.create, .landing_page {
     }
   }
     
-  #contact {
-    margin-top: 30px;
-    font-size: 1.5em;
-    text-align: center;
-  }
-  
   #beta_line {
     display: inline;
     bottom: 8px;
     position: relative;
     font-size: 18px;
+  }
+  #readmore{
+    text-align:center;
+    font-size: 2em;
+    margin-top: 15px;
+  }
+  
+  #contact {
+    margin-top: 30px;
+    font-size: 1.5em;
+    text-align: center;
+  }
+}
+
+
+
+body.info {
+  padding: 0 0 60px 0;
+  header.title {
+    margin: 30px 0 60px;
+    text-align: center;
+  
+     h1 {
+      font-size: 10em;
+      line-height: 1em;
+      margin-bottom: 18px;
+    }
+    p {
+      font-size: 2em;
+      line-height: 1em
+    }
+    
+  }
+  #contact {
+    margin-top: 60px;
+    font-size: 2em;
+    text-align: center;
   }
 }

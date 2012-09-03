@@ -337,8 +337,15 @@ window.save_file = ->
 #
 
 highlight_help_text_code = ->
-  $("#help_sections pre.editor-code").each (i) ->
+  $("pre.editor-code").each (i) ->
     # Apply the mode:
     CodeMirror.runMode( $(this).html(), "text/citrulu-tests", this, {escapeHtml: false})
     # Apply the theme:
     $(this).addClass("cm-s-monokai")
+    
+##
+# When the window loads, set up the editor and kick off the first autosave
+#
+$(window).load ->
+  if $('body').hasClass('info')
+    highlight_help_text_code()

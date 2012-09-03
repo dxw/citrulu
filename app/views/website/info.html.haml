@@ -1,0 +1,51 @@
+.container
+  %header.title
+    %h1.masthead Citrulu
+    %p So you wanna know more?
+  %nav
+    =link_to "<--Back","/"
+  
+  %h2 What's it for?
+  %p We built Citrulu because we want to be able to keep testing our sites after they launch.
+
+  %p We build lots of sites and test them while we're developing, but not after that. If a plugin or external component breaks on the live site, we sometimes don't hear about it until the client complains. That sucks!
+
+  %p We think most sites would benefit from extra testing after they launch, so we decided to build a tool that would let us write tests quickly that prove specific parts of a site are working: not just that pages are up.
+  
+  %h2 How does it all work?
+  %p When you sign up (all we need is an email address) we walk you through a few tutorials to help you get to grips with Citrulu's super-simple testing language. Then you can write your own Test Files - simple descriptions of what your site looks like when everything is working.
+  %p By default we'll run those Test Files run every hour, but you can sign up to premium plans which run them much more frequently.
+  %p We'll send an email to your registered address if any of those tests break, so you can work on diagnosing and fixing any problems before your customers know about them.
+  
+  %h2 What can you test?
+  %p Citrulu's test language is simple but powerful, here are some of the things you can test:
+  
+  %p For basic tests that a page is working, or that a particular section is present, you can check for text visible on the page:
+  %pre.editor-code="On http://example.com\n  I should see Welcome to this site"
+  
+  %p Sometimes looking for text just doesn't cut it: if you need to be super-specific, or to check for a non-text based element, or even checking that markup is getting generated correctly, you can look for strings in the source of the page:
+
+  %pre.editor-code="  Source should contain <h1>Hello</h1>, world!"
+  
+  %p 
+    Even better, all of Citrulu's assertions support negation ("I should 
+    %strong not 
+    see") and regular expression matching.
+  
+  %p If you want to check the routing of your site, or that caching is enabled, you can inspect the headers and response codes associated with pages:
+  %pre.editor-code="Headers should include X-Varnish\nHeader Cache-Control should contain max-age=600\nResponse code should be /3../\nResponse code should be 200 after redirects"
+
+  %p Forms and complex functionality are no problem to test: Citrulu supports HEAD, GET, PUT, POST and DELETE.
+  
+  %pre.editor-code.scrolling="When I get http://abc.com/search_results?query=kittens\n  I should see..."
+  %pre.editor-code.scrolling="When I post \"username=test_user&password=12gk4fa5\" to https://www.foocorp.com/\n  I should see..."
+  
+  #contact
+    =link_to "Sign up now", "/"
+    to try it out for free!
+
+
+  
+  
+  
+  
