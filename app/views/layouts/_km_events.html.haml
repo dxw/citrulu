@@ -1,0 +1,9 @@
+- unless session[:events].nil?
+  - session[:events].each do |event|
+
+    _kmq.push(['record', '#{event[:name]}', 
+    - if event[:properties]
+      !="   #{event[:properties].to_json}"
+    =" ]);"
+  
+- session[:events] = Array.new

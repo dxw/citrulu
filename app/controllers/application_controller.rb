@@ -19,19 +19,8 @@ class ApplicationController < ActionController::Base
   end
   
   # Add an event for Google Analytics
-  def log_event(category, action, lab=nil, value=nil)
+  def log_event(event, properties = {})
     session[:events] ||= Array.new
-    session[:events] << { category: category, action: action, label: lab, value: value }
-  end
-  
-  def log_event_if_first(user, category, action, *args)
-    meta_name = (category+ " " + action).parameterize("_")
-    User.define_meta_methods(meta_name)
-    
-    # If a meta flag exists, then it's not the first time for this event:
-    unless user.send(meta_name)
-      user.send("#{meta_name}=", true)
-      log_event(category, action, *args)
-    end
+    session[:events] << {name: event, properties: properties }
   end
 end

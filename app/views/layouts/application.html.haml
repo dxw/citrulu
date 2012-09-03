@@ -10,16 +10,17 @@
 
     :javascript
       var _kmq = _kmq || [];
- 
       #{
         key = if Rails.env == 'production'
-          "var _kmk = _kmk || '579068171dfcf09c02b5f78761cda442a1f468e3';\n"
+          "var _kmk = _kmk || '579068171dfcf09c02b5f78761cda442a1f468e3';"
         else
-          "var _kmk = _kmk || '22cd4c4339b5f4b986cd054248f947715da7db5c';\n"
+          "var _kmk = _kmk || '22cd4c4339b5f4b986cd054248f947715da7db5c';"
         end
         
         identity = if user_signed_in?
-          "_kmq.push(['identify', '#{current_user.email}']);"
+          "\n\n_kmq.push(['identify', '#{current_user.email}']);"
+        else 
+          ""
         end
 
         key + identity
@@ -40,7 +41,6 @@
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-29765005-1']);
       _gaq.push(['_trackPageview']);
-      #{ render "layouts/ga_events" }
 
       (function() {
          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -66,4 +66,6 @@
        feedback_widget_options.style = "idea";
             
        var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+
+       #{ render "layouts/km_events" }
 

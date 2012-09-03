@@ -8,6 +8,8 @@ class TestFilesController < ApplicationController
    
   # GET /test_files
   def index
+ 
+
     @test_files = current_user.test_files.not_deleted.order("tutorial_id, updated_at desc")
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
@@ -33,7 +35,7 @@ class TestFilesController < ApplicationController
   def create
     @test_file = current_user.create_new_test_file
     
-    log_event_if_first(current_user, "Test Files", "First created")
+    log_event("file_created", {:id => @test_file.id})
     
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -42,7 +44,7 @@ class TestFilesController < ApplicationController
   def create_first_test_file
     @test_file = current_user.create_first_test_file
     
-    log_event_if_first(current_user, "Test Files", "First created", "Tutorial end")
+    log_event("file_created", {:id => @test_file.id})
 
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -131,8 +133,13 @@ class TestFilesController < ApplicationController
       @console_msg_hash = { :text0 => e.to_s }
       succeeded = false
 
+      log_event("compile_fail", {:type => :pebkac})
+
     rescue CitruluParser::TestCompileError => e
       succeeded = false
+      
+      log_event("compile_fail", {:type => :pebkac})
+
       # Compile fail:
       begin 
         error = CitruluParser.format_error(e)
@@ -142,9 +149,7 @@ class TestFilesController < ApplicationController
           :exception_text => e.to_s,
           :text2 => " Sorry! This is a bug. Please let us know."
         }
-        
       else
-    
         @console_msg_hash = {
           :text1 => "Compilation failed! Expected: ",
           :expected => error[:expected],
@@ -168,6 +173,8 @@ class TestFilesController < ApplicationController
         :text2 => " Sorry! This is a bug. Please let us know."
       }
       succeeded = false
+
+      log_event("compile_fail", {:type => :bug})
     
     else
       # Compile win!
@@ -178,12 +185,8 @@ class TestFilesController < ApplicationController
       # Get the list of domains checked by this file and store them so we can work out if a user is hitting their limits:
       @test_file.domains = CitruluParser.domains(compiled_object)
           
-      if !@test_file.is_a_tutorial
-        number_of_checks = CitruluParser.count_checks(compiled_object)
-        log_event_if_first(current_user, "Test Files", "First compiled")
-        log_event_if_first(current_user, "Test Files", "First compiled with 3 checks") if number_of_checks >= 3
-        log_event_if_first(current_user, "Test Files", "First compiled with 5 checks") if number_of_checks >= 5
-      end
+      number_of_checks = CitruluParser.count_checks(compiled_object)
+      log_event("compile_win", {:checks => number_of_checks, :tutorial => @test_file.is_a_tutorial})
     end
     
     if succeeded
@@ -215,7 +218,7 @@ class TestFilesController < ApplicationController
       @test_file.name = current_user.generate_name(new_name)
       @test_file.save!
     end
-    
+
     render :text => @test_file.name
   end
   

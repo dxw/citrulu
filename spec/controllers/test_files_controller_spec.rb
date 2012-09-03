@@ -60,13 +60,13 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("Test Files", "First created")
+      controller.should_receive(:log_event).with("file_created")
       post :create
     end
     
     it "should NOT fire a google analytics event if this is not the first created file" do
       post :create
-      controller.should_not_receive(:log_event).with("Test Files", "First created")
+      controller.should_not_receive(:log_event).with("created_file")
       post :create
     end
   end
@@ -87,13 +87,13 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("Test Files", "First created")
+      controller.should_receive(:log_event).with("create_file")
       post :create
     end
     
     it "should NOT fire a google analytics event if this is not the first created file" do
       post :create
-      controller.should_not_receive(:log_event).with("Test Files", "First created")
+      controller.should_not_receive(:log_event).with("create_file")
       post :create
     end
   end
@@ -247,7 +247,7 @@ describe TestFilesController do
       end
       
       it "should fire a google analytics event if this is the first time the file has compiled" do
-        controller.should_receive(:log_event).with("Test Files", "First compiled")
+        controller.should_receive(:log_event).with("compile_win")
         put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
       end
       it "should NOT fire a google analytics event if the file is a tutorial" do
@@ -276,7 +276,7 @@ describe TestFilesController do
       
         it "should fire a google analytics event if the file compiles with 3 checks" do
           CitruluParser.stub(:count_checks).and_return 3
-          controller.should_receive(:log_event).with("Test Files", "First compiled with 3 checks")
+          controller.should_receive(:log_event).with("compile_win")
         end
         it "should NOT fire a google analytics event if the file is a tutorial and compiles with 3 checks" do
           @test_file.update_attribute :tutorial_id, 1
@@ -524,13 +524,10 @@ describe TestFilesController do
   describe "log_event" do
     before(:each) do
       session[:events] = nil
-      controller.send(:log_event, "foo","bar","faz","baz")
+      controller.send(:log_event, "foo")
     end
     it "should create session[:events] if it doesn't exist" do
       session[:events].should be_an(Array)
-    end
-    it "should add a category/action/label hash to the array" do 
-      session[:events].should == [{category:"foo",action:"bar",label:"faz", value:"baz"}]
     end
   end
 
