@@ -6,13 +6,16 @@ class PaymentsController < ApplicationController
   
   layout "logged_in"
   
-  # GET /change_plan
+  # GET /choose_plan
   def choose_plan
     @names = Plan::LEVELS
     @limits = Plan.limits
     @features = Plan.features
 
-    log_event("viewed potential purchase")
+    if current_user.status != :paid
+      log_event("viewed potential purchase")
+    end
+
   end
   
   # PUT /change_plan
