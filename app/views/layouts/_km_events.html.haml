@@ -1,4 +1,4 @@
-- unless session[:events].nil?
+- if !session[:events].nil?
   - session[:events].each do |event|
 
     _kmq.push(['record', '#{event[:name]}', 
@@ -6,4 +6,4 @@
       !="   #{event[:properties].to_json}"
     =" ]);"
   
-- session[:events] = Array.new
+  - session[:events] = Array.new
