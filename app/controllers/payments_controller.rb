@@ -11,6 +11,8 @@ class PaymentsController < ApplicationController
     @names = Plan::LEVELS
     @limits = Plan.limits
     @features = Plan.features
+
+    log_event("viewed potential purchase")
   end
   
   # PUT /change_plan
@@ -21,6 +23,7 @@ class PaymentsController < ApplicationController
 
   def new
     @plan = Plan.find(params[:plan_id])   
+    log_event("started purchase", {:plan => params[:plan_id]})
   end
   
   def create
@@ -43,6 +46,8 @@ class PaymentsController < ApplicationController
       current_user.plan = @plan
       current_user.status = :paid
       current_user.save!
+
+      log_event("purchased", {:plan => @plan.id})
       
       redirect_to action: "confirmation"
     else
@@ -79,6 +84,10 @@ class PaymentsController < ApplicationController
     else
       @errors = subscriber.errors
     end
+  end
+
+  def cancel_confirmation
+    log_event("canceled")
   end
   
   protected
