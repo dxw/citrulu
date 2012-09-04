@@ -17,7 +17,15 @@ class PaymentsController < ApplicationController
   
   # PUT /change_plan
   def change_plan
+    old_plan = current_user.plan
     current_user.change_plan(params[:plan_id])
+    
+    if old_plan.cost_gbp < current_user.plan.cost_gbp
+      log_event("upgraded", { old_plan: old_plan.id, new_plan: new_plan.id})
+    elsif
+      log_event("downgraded", { old_plan: old_plan.id, new_plan: new_plan.id})
+    end
+    
     redirect_to action: "change_plan_confirmation"
   end
 
