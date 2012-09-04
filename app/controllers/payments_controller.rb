@@ -23,10 +23,11 @@ class PaymentsController < ApplicationController
     old_plan = current_user.plan
     current_user.change_plan(params[:plan_id])
     
+    # Not sure whether plan_name or plan_level is the most appropriate - we'll record both for the time being
     if old_plan.cost_gbp < current_user.plan.cost_gbp
-      log_event("upgraded", { old_plan: old_plan.id, new_plan: new_plan.id})
+      log_event("upgraded", { plan: current_user.plan_id, plan_name: current_user.plan.name, plan_level: current_user.plan.name} )
     elsif
-      log_event("downgraded", { old_plan: old_plan.id, new_plan: new_plan.id})
+      log_event("downgraded", { plan: current_user.plan_id, plan_name: current_user.plan.name, plan_level: current_user.plan.name})
     end
     
     redirect_to action: "change_plan_confirmation"
