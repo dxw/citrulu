@@ -35,7 +35,7 @@ class TestFilesController < ApplicationController
   def create
     @test_file = current_user.create_new_test_file
     
-    log_event("file_created", {:id => @test_file.id})
+    log_event("file_created", {:id => @test_file.id, content_type: "new test file"})
     
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -44,7 +44,7 @@ class TestFilesController < ApplicationController
   def create_first_test_file
     @test_file = current_user.create_first_test_file
     
-    log_event("file_created", {:id => @test_file.id})
+    log_event("file_created", {:id => @test_file.id, content_type: "new test file after tutorials"})
 
     redirect_to action: "edit", id: @test_file, :new => true
   end
