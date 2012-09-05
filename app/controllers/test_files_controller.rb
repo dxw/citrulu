@@ -35,7 +35,7 @@ class TestFilesController < ApplicationController
   def create
     @test_file = current_user.create_new_test_file
     
-    log_event("file_created", {:id => @test_file.id, content_type: "new test file"})
+    log_event("file_created", {:test_file_id => @test_file.id, content_type: "new test file"})
     
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -44,7 +44,7 @@ class TestFilesController < ApplicationController
   def create_first_test_file
     @test_file = current_user.create_first_test_file
     
-    log_event("file_created", {:id => @test_file.id, content_type: "new test file after tutorials"})
+    log_event("file_created", {:test_file_id => @test_file.id, content_type: "new test file after tutorials"})
 
     redirect_to action: "edit", id: @test_file, :new => true
   end
@@ -60,6 +60,7 @@ class TestFilesController < ApplicationController
     @console_output = "Welcome to Citrulu"
     
     unless @test_file.tutorial_id.nil?
+      log_event("tutorial opened", { test_file_id: @test_file.id, content_type: "tutorial test file", tutorial_id: @test_file.tutorial_id })
       @help_texts = TUTORIAL_TEST_FILES.select{|t| t[:id] == @test_file.tutorial_id}.first[:help]
       
       @help_shown = params[:help_text].to_i
@@ -186,7 +187,11 @@ class TestFilesController < ApplicationController
       @test_file.domains = CitruluParser.domains(compiled_object)
           
       number_of_checks = CitruluParser.count_checks(compiled_object)
-      log_event("compile_win", {:checks => number_of_checks, :tutorial => @test_file.is_a_tutorial})
+      if @test_file.is_a_tutorial
+        log_event("compile_win", { test_file_id: @test_file.id, content_type: "tutorial test file", tutorial_id: @test_file.tutorial_id, checks: number_of_checks })
+      else
+        log_event("compile_win", { test_file_id: @test_file.id, content_type: "user test file", checks: number_of_checks })
+      end
     end
     
     if succeeded
