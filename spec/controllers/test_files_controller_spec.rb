@@ -56,7 +56,7 @@ describe TestFilesController do
       response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
     end
     
-    it "should fire a google analytics event if this is the first created file" do
+    it "should fire an analytics event if this is the first created file" do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
@@ -64,7 +64,7 @@ describe TestFilesController do
       post :create
     end
     
-    it "should NOT fire a google analytics event if this is not the first created file" do
+    it "should NOT fire an analytics event if this is not the first created file" do
       post :create
       controller.should_not_receive(:log_event).with("created_file")
       post :create
@@ -83,7 +83,7 @@ describe TestFilesController do
       response.should redirect_to(edit_test_file_path(TestFile.last)+'?new=true')
     end
     
-    it "should fire a google analytics event if this is the first created file" do
+    it "should fire an analytics event if this is the first created file" do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
@@ -91,7 +91,7 @@ describe TestFilesController do
       post :create
     end
     
-    it "should NOT fire a google analytics event if this is not the first created file" do
+    it "should NOT fire an analytics event if this is not the first created file" do
       post :create
       controller.should_not_receive(:log_event).with("create_file")
       post :create
@@ -246,86 +246,9 @@ describe TestFilesController do
         assigns(:test_file).domains.should == ["faz.com","baz.co.uk"]
       end
       
-      it "should fire a google analytics event if this is the first time the file has compiled" do
+      it "should fire an analytics event if this is the first time the file has compiled" do
         controller.should_receive(:log_event).with("compile_win")
         put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-      end
-      it "should NOT fire a google analytics event if the file is a tutorial" do
-        @test_file.update_attribute :tutorial_id, 1
-        controller.should_not_receive(:log_event)
-        put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-      end
-      
-      context "when a file has previously compiled with 1 check" do
-        before(:each) do
-          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-        end
-        after(:each) do
-          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-        end
-
-        it "should NOT fire a google analytics event if the file compiles with one check" do
-          put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
-          controller.should_not_receive(:log_event)
-        end
-      
-        it "should NOT fire a google analytics event if the file compiles with 2 checks" do
-          CitruluParser.stub(:count_checks).and_return 2
-          controller.should_not_receive(:log_event)
-        end
-      
-        it "should fire a google analytics event if the file compiles with 3 checks" do
-          CitruluParser.stub(:count_checks).and_return 3
-          controller.should_receive(:log_event).with("compile_win")
-        end
-        it "should NOT fire a google analytics event if the file is a tutorial and compiles with 3 checks" do
-          @test_file.update_attribute :tutorial_id, 1
-          controller.should_not_receive(:log_event)
-        end
-        
-        context "when a file has previously compiled with 3 checks in it" do
-          before(:each) do
-            CitruluParser.stub(:count_checks).and_return 3
-            put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-          end
-        
-          it "should NOT fire a google analytics event if the file compiles with 3 checks" do
-            put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes} 
-            controller.should_not_receive(:log_event)
-          end
-      
-          it "should NOT fire a google analytics event if the file compiles with 4 checks" do
-            CitruluParser.stub(:count_checks).and_return 4
-            controller.should_not_receive(:log_event)
-          end
-      
-          it "should fire a google analytics event if this is the file compiles with 5 checks" do
-            CitruluParser.stub(:count_checks).and_return 5
-            controller.should_receive(:log_event).with("Test Files", "First compiled with 5 checks")
-          end
-          it "should NOT fire a google analytics event if the file is a tutorial and compiles with 5 checks" do
-            @test_file.update_attribute :tutorial_id, 1
-            controller.should_not_receive(:log_event)
-          end
-          
-          context "when a file has previously compiled with 5 checks in it " do
-            before(:each) do
-              CitruluParser.stub(:count_checks).and_return 5
-              put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-            end
-          
-            it "should NOT fire a google analytics event if the file compiles with 5 checks" do
-              CitruluParser.stub(:count_checks).and_return 5
-              put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
-              controller.should_not_receive(:log_event)
-            end
-      
-            it "should not fire a google analytics event if the file compiles with 6 checks" do
-              CitruluParser.stub(:count_checks).and_return 6
-              controller.should_not_receive(:log_event)
-            end
-          end
-        end
       end
     end
     
