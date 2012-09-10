@@ -9,7 +9,7 @@ class TestRunner
   FAILURE_EMAIL_FREQUENCY = 1.hour
 
   def self.enqueue_all_tests
-    TestFile.compiled.each do |file|
+    TestFile.not_deleted.running.compiled.each do |file|
       if file.user.nil?
         raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
       end
@@ -22,7 +22,13 @@ class TestRunner
   end
 
   def self.run_test(file)
-    return unless file.run_tests?
+    if !file.run_tests?
+      raise ArgumentError, "Tried to call TestRunner.run_test with a file that is set to not run"
+    elsif file.deleted
+      raise ArgumentError, "Tried to call TestRunner.run_test on a deleted test file"
+    elsif !file.compiled?
+      raise ArgumentError, "Tried to call TestRunner.run_test on a test file which hasn't compiled"
+    end
     
     test_run = TestRun.create(
       :time_run => Time.zone.now,

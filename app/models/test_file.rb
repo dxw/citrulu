@@ -27,8 +27,9 @@ class TestFile < ActiveRecord::Base
   
   def due
     return false if !run_tests
-    return false if deleted
     return true if !last_run #i.e. never run before
+    fail "Tried to call due on a deleted test file" if deleted
+    fail "Frequency was nil on test_file ##{id} when trying to calculate 'due'" if !frequency
     
     last_run.time_run + frequency < Time.now
   end
@@ -39,7 +40,7 @@ class TestFile < ActiveRecord::Base
 
   def number_of_pages
     unless compiled?
-      raise ArgumentError.new("Tried to get 'number of pages' on a test file which has never compiled.")
+      raise ArgumentError.new("Tried to get 'number of pages' on a test file which hasn't compiled.")
     end
     
     @compiled_tests ||= CitruluParser.new.compile_tests(compiled_test_file_text)
@@ -49,7 +50,7 @@ class TestFile < ActiveRecord::Base
   
   def number_of_tests
     unless compiled?
-      raise ArgumentError.new("Tried to get 'number of tests' on a test file which has never compiled.")
+      raise ArgumentError.new("Tried to get 'number of tests' on a test file which hasn't compiled.")
     end
     
     @compiled_tests ||= CitruluParser.new.compile_tests(compiled_test_file_text)

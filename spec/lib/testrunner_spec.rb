@@ -51,8 +51,8 @@ describe TestRunner do
       end
     end
     
-    it "should run tests where run_tests is true" do
-      @test_file = FactoryGirl.create(:test_file, :run_tests => true)
+    it "should run tests where run_tests is true and the file has compiled" do
+      @test_file = FactoryGirl.create(:test_file, :run_tests => true, :compiled_test_file_text => "x")
       TestRunner.should_receive(:execute_test_groups)
       TestRunner.run_test(@test_file)
     end
@@ -91,7 +91,7 @@ describe TestRunner do
       context "when emails are disabled" do
         before(:each) do
           @user = FactoryGirl.create(:user, :email_preference => 0)
-          @test_file = FactoryGirl.create(:test_file, :user => @user)
+          @test_file = FactoryGirl.create(:test_file, :user => @user, :compiled_test_file_text => "x")
           # Make sure there's something to run tests on:
           # TestFile.stub(:compiled_files).and_return([@test_file])
         end
