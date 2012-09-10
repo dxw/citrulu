@@ -127,7 +127,7 @@ class TestFilesController < ApplicationController
     code = params[:test_file][:test_file_text]
     begin
       # If there's no code to complile, don't even try - drop straight through to the 'else' block
-      compiled_object = CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.nil? || code.empty?
+      compiled_object = CitruluParser.new.compile_tests(params[:test_file][:test_file_text]) unless code.blank?
 
     rescue CitruluParser::TestPredefError => e
       # Unknown predef:
@@ -135,7 +135,7 @@ class TestFilesController < ApplicationController
       succeeded = false
 
       log_event("compile_fail", {:type => :pebkac})
-
+      
     rescue CitruluParser::TestCompileError => e
       succeeded = false
       
@@ -182,11 +182,17 @@ class TestFilesController < ApplicationController
       @console_msg_hash = { :text0 => "Saved!" }
       succeeded = true
 
-      @test_file.compiled_test_file_text = params[:test_file][:test_file_text]
-      # Get the list of domains checked by this file and store them so we can work out if a user is hitting their limits:
-      @test_file.domains = CitruluParser.domains(compiled_object)
-          
-      number_of_checks = CitruluParser.count_checks(compiled_object)
+      @test_file.compiled_test_file_text = code
+      
+      if code.blank? # and therefore compiled_object.blank?
+        @test_file.domains = 0
+        number_of_checks = 0
+      else  
+        # Get the list of domains checked by this file and store them so we can work out if a user is hitting their limits:
+        @test_file.domains = CitruluParser.domains(compiled_object)
+        number_of_checks = CitruluParser.count_checks(compiled_object)
+      end  
+      
       if @test_file.is_a_tutorial
         log_event("compile_win", { test_file_id: @test_file.id, content_type: "tutorial test file", tutorial_id: @test_file.tutorial_id, checks: number_of_checks })
       else

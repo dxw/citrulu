@@ -290,13 +290,14 @@ describe CitruluParser do
   end
   
   describe "count_checks" do
+    it "should fail if the parsed object is nil" do
+      expect { CitruluParser.count_checks(nil) }.to raise_error(ArgumentError)
+    end
     it "should return 1 if there is 1 check" do
-      # 1 for the check, 1 for the implicit response code check
       object = CitruluParser.new.compile_tests("On http://abc.com\n  I should see x")
       CitruluParser.count_checks(object).should == 1
     end
     it "should return 3 if there are 3 checks on 2 pages" do
-      # 3 for the checks, 2 for the implicit response code checks
       test_file_text = "On http://abc.com\n  I should see x\n  Source should contain y\n\nOn http://xyz.co.uk\n  I should see z"
       object = CitruluParser.new.compile_tests(test_file_text)
       CitruluParser.count_checks(object).should == 3
@@ -310,6 +311,9 @@ describe CitruluParser do
       CitruluParser.count_domains(parsed_object)
     end
     
+    it "should return 0 if there are no domains" do
+      expect { CitruluParser.count_domains(nil) }.to raise_error(ArgumentError)
+    end
     it "should return 1 if there is one domain" do
       domain_count("On http://abc.com\n  I should see x").should == 1
     end

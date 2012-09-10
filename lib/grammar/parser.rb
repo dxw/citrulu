@@ -48,8 +48,8 @@ class CitruluParser < TesterGrammarParser
   end
 
   def compile_tests(code)
-    if code.nil?
-      raise ArgumentError.new("Something has gone wrong: we tried to compile a nonexistent Test File! Sorry! This is a bug. Please let us know")
+    if code.blank?
+      raise ArgumentError.new("Something has gone wrong: we tried to compile an empty or nonexistent Test File! Sorry! This is a bug. Please let us know")
     end
     
     # Ensure the file ends with a line return
@@ -85,6 +85,7 @@ class CitruluParser < TesterGrammarParser
   end
   
   def self.count_checks(parsed_object)
+    raise ArgumentError, "Nil parsed object" if parsed_object.nil?
     # -1 to ignore the implicit response code checks
     parsed_object.sum{ |group| group[:tests].length - 1 }
   end
@@ -94,6 +95,7 @@ class CitruluParser < TesterGrammarParser
     self.domains(parsed_object).length
   end
   def self.domains(parsed_object)
+    raise ArgumentError, "Nil parsed object" if parsed_object.nil?
     parsed_object.collect do |group| 
       host = URI(group[:page][:url]).host
       begin
