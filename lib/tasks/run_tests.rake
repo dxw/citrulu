@@ -17,6 +17,6 @@ task :run_tests => :environment do
     next if !file.user.active?
     
     puts "About to run tests on Test File ##{file.id}" 
-    run_test(file) if file.due
+    TestRunner.run_test(file) if file.due
   end
 end
