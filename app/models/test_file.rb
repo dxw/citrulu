@@ -14,7 +14,7 @@ class TestFile < ActiveRecord::Base
   scope :running, where(run_tests: true)
   scope :not_running, where("run_tests IS NULL OR run_tests = ?", false)
   
-  validates_presence_of :name
+  validates_presence_of :name, :frequency
   validates :name, uniqueness: {scope: :user_id}
 
   def to_param

@@ -233,6 +233,7 @@ class User < ActiveRecord::Base
         :tutorial_id => f[:id],
         :test_file_text => f[:text],
         :run_tests => false,
+        frequency: plan.test_frequency 
       )
     end
   end

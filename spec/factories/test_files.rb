@@ -5,6 +5,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "my first test file#{n}" }
     test_file_text "On http://example.com\n  I should see foo"
     user
+    frequency 3600
     run_tests true
     
     factory :compiled_test_file do
