@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PaymentsController do
   login_user
   
-  describe "GET 'change_plan'" do
+  describe "PUT 'change_plan'" do
     
     context "with no plan ID" do
       it "should redirect to the plans page" do
@@ -16,6 +16,7 @@ describe PaymentsController do
       before(:each) do
         @plan = FactoryGirl.create(:plan)
         User.any_instance.stub(:change_plan)
+        User.any_instance.stub(:plan).and_return(FactoryGirl.create(:plan)) 
       end
       
       context "when the user is active in spreedly" do

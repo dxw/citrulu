@@ -60,7 +60,7 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("file_created")
+      controller.should_receive(:log_event).with("file_created",anything)
       post :create
     end
     
@@ -87,7 +87,7 @@ describe TestFilesController do
       # @user should be fresh so won't have a created test file, but let's double-check:
       UserMeta.where(user_id: @user.to_param).should be_empty
       
-      controller.should_receive(:log_event).with("create_file")
+      controller.should_receive(:log_event).with("file_created",anything)
       post :create
     end
     
@@ -247,7 +247,7 @@ describe TestFilesController do
       end
       
       it "should fire an analytics event if this is the first time the file has compiled" do
-        controller.should_receive(:log_event).with("compile_win")
+        controller.should_receive(:log_event).with("compile_win",anything)
         put :update, {:id => @test_file.to_param, :test_file => valid_update_attributes}
       end
     end

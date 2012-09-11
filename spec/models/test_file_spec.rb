@@ -22,8 +22,9 @@ describe TestFile do
     test_file = FactoryGirl.create(:test_file)
     test_run = FactoryGirl.create(:test_run, :test_file => test_file)
     test_run_id = test_run.id
-   
-    test_file.destroy
+    
+    test_run_id = @test_run2.id
+    @test_file_compiled_text.destroy
     
     expect{ TestRun.find(test_run_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
@@ -78,9 +79,9 @@ describe TestFile do
           @test_file.due.should be_true
         end
 
-        it "should return false if the file is deleted" do
+        it "should raise an error if the file is deleted" do
           @test_file.deleted = true
-          @test_file.due.should be_false
+          expect { @test_file.due }.to raise_error
         end
         it "should return false if the file is not set to run" do
           @test_file.run_tests = false
