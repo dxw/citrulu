@@ -2,6 +2,8 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   ActiveAdmin.routes(self)
 
+  mount Resque::Server, :at => "/resque"
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   
   # Force redirect of users/sign_up to the root - for analytics consistency (?)
