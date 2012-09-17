@@ -23,6 +23,7 @@ ActiveAdmin.register TestFile do
     attributes_table do
       row :created_at
       row :updated_at
+      row :deleted
       row :run_tests
       row :tutorial? do
         !test_file.tutorial_id.nil?
