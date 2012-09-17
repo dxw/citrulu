@@ -54,8 +54,18 @@ describe TestFile do
         Timecop.freeze
         @test_file = FactoryGirl.create(:test_file, frequency: 1.hour)
       end
-      context "when the test_file has never been run" do
+      
+      context "when the test_file is set to not run" do
+        before(:each) do
+          @test_file.run_tests = false
+        end
         it "should return false" do
+          @test_file.due.should be_false
+        end
+      end
+      
+      context "when the test_file has never been run" do
+        it "should return true" do
           @test_file.due.should be_true
         end
       end

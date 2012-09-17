@@ -31,7 +31,7 @@ class TestFile < ActiveRecord::Base
     fail "Tried to call due on a deleted test file" if deleted
     fail "Frequency was nil on test_file ##{id} when trying to calculate 'due'" if !frequency
     
-    last_run.time_run + frequency < Time.now
+    last_run.time_run + frequency < DateTime.now
   end
 
   def owner
