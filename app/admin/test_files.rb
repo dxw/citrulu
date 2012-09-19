@@ -1,4 +1,14 @@
 ActiveAdmin.register TestFile do
+  filter :user, order: "email asc"
+  filter :name
+  filter :frequency
+  filter :created_at
+  filter :updated_at
+  filter :test_file_text
+  filter :compiled_test_file_text
+  filter :search_test_file_text
+  filter :domains
+  
   index do
     column :name
     column :test_file_text do |file|
