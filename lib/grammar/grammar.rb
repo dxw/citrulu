@@ -186,11 +186,11 @@ module TesterGrammar
     r1 = _nt_space
     s0 << r1
     if r1
-      if has_terminal?("So I know that", false, index)
-        r2 = instantiate_node(SyntaxNode,input, index...(index + 14))
-        @index += 14
+      if has_terminal?("So I know that ", false, index)
+        r2 = instantiate_node(SyntaxNode,input, index...(index + 15))
+        @index += 15
       else
-        terminal_parse_failure("So I know that")
+        terminal_parse_failure("So I know that ")
         r2 = nil
       end
       s0 << r2
@@ -1220,6 +1220,9 @@ module TesterGrammar
     r0
   end
 
+  module Value0
+  end
+
   def _nt_value
     start_index = index
     if node_cache[:value].has_key?(index)
@@ -1231,25 +1234,55 @@ module TesterGrammar
       return cached
     end
 
-    s0, i0 = [], index
+    i0, s0 = index, []
+    s1, i1 = [], index
     loop do
-      if has_terminal?('\G[^\\n]', true, index)
-        r1 = true
+      if has_terminal?('\G[^:]', true, index)
+        r2 = true
         @index += 1
       else
-        r1 = nil
+        r2 = nil
       end
-      if r1
-        s0 << r1
+      if r2
+        s1 << r2
       else
         break
       end
     end
-    r0 = instantiate_node(Value,input, i0...index, s0)
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    s0 << r1
+    if r1
+      s3, i3 = [], index
+      loop do
+        if has_terminal?('\G[^\\n]', true, index)
+          r4 = true
+          @index += 1
+        else
+          r4 = nil
+        end
+        if r4
+          s3 << r4
+        else
+          break
+        end
+      end
+      r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(Value,input, i0...index, s0)
+      r0.extend(Value0)
+    else
+      @index = i0
+      r0 = nil
+    end
 
     node_cache[:value][start_index] = r0
 
     r0
+  end
+
+  module RequiredValue0
   end
 
   def _nt_required_value
@@ -1263,25 +1296,52 @@ module TesterGrammar
       return cached
     end
 
-    s0, i0 = [], index
+    i0, s0 = index, []
+    s1, i1 = [], index
     loop do
-      if has_terminal?('\G[^\\n]', true, index)
-        r1 = true
+      if has_terminal?('\G[^\\s]', true, index)
+        r2 = true
         @index += 1
       else
-        r1 = nil
+        r2 = nil
       end
-      if r1
-        s0 << r1
+      if r2
+        s1 << r2
       else
         break
       end
     end
-    if s0.empty?
+    if s1.empty?
+      @index = i1
+      r1 = nil
+    else
+      r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    end
+    s0 << r1
+    if r1
+      s3, i3 = [], index
+      loop do
+        if has_terminal?('\G[^\\n]', true, index)
+          r4 = true
+          @index += 1
+        else
+          r4 = nil
+        end
+        if r4
+          s3 << r4
+        else
+          break
+        end
+      end
+      r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(RequiredValue,input, i0...index, s0)
+      r0.extend(RequiredValue0)
+    else
       @index = i0
       r0 = nil
-    else
-      r0 = instantiate_node(RequiredValue,input, i0...index, s0)
     end
 
     node_cache[:required_value][start_index] = r0

@@ -12,7 +12,7 @@ grammar TesterGrammar
   end
 
   rule so_clause
-    space "So I know that" required_value <SoClause>
+    space "So I know that " required_value <SoClause>
   end
 
   rule on_clause
@@ -72,11 +72,11 @@ grammar TesterGrammar
   end
 
   rule value
-    [^\n]* <Value>
+    [^:]* [^\n]* <Value>
   end
 
   rule required_value
-    [^\n]+ <RequiredValue>
+    [^\s]+ [^\n]* <RequiredValue>
   end
 
   rule quoted_value

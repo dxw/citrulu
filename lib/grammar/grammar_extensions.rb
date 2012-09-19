@@ -120,8 +120,9 @@ module TesterGrammar
       hash[:original_line] = elements[2].text_value.strip
 
       # Horrid hack, really
-      if hash[:value].class != Regexp && !hash[:value].nil? && hash[:value].match(/^:/) && !hash[:value].match(/^::/)
+      if hash[:value].class != Regexp && !hash[:value].nil? && hash[:value].match(/^:[^\s]+/) && !hash[:value].match(/^::/)
         hash[:name] = hash[:value]
+        hash[:value] = nil
       end
       
       hash
