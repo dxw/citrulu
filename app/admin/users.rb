@@ -10,7 +10,6 @@ ActiveAdmin.register User do
     column :files_running do |user|
       user.test_files.running.not_deleted.count
     end
-    
     column :unconfirmed_email
     column :email_preference
     column :sign_in_count
