@@ -1,6 +1,12 @@
 ActiveAdmin.register User do
   index do
     column :email
+    column :tutorials_opened do |user|
+      user.test_files.tutorials.where('compiled_test_file_text IS NOT NULL').count
+    end
+    column :real_files_created do |user|
+      user.test_files.where('tutorial_id IS NULL').count
+    end
     column :unconfirmed_email
     column :email_preference
     column :sign_in_count
