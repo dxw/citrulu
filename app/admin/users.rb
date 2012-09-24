@@ -1,6 +1,15 @@
 ActiveAdmin.register User do
   index do
     column :email
+    column :tutorials_opened do |user|
+      user.test_files.tutorials.compiled.count
+    end
+    column :real_files_created do |user|
+      user.test_files.not_tutorial.count
+    end
+    column :files_running do |user|
+      user.test_files.running.not_deleted.count
+    end
     column :unconfirmed_email
     column :email_preference
     column :sign_in_count
