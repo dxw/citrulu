@@ -45,7 +45,8 @@ class TestFilesController < ApplicationController
     @test_file = current_user.create_first_test_file
     
     log_event("file_created", {:test_file_id => @test_file.id, content_type: "new test file after tutorials"})
-
+    log_event("file_created_after_tutorial", {:test_file_id => @test_file.id, content_type: "new test file after tutorials"})
+    
     redirect_to action: "edit", id: @test_file, :new => true
   end
   
@@ -61,6 +62,7 @@ class TestFilesController < ApplicationController
     
     unless @test_file.tutorial_id.nil?
       log_event("tutorial opened", { test_file_id: @test_file.id, content_type: "tutorial test file", tutorial_id: @test_file.tutorial_id })
+      log_event("tutorial #{@test_file.tutorial_id} opened", { test_file_id: @test_file.id, content_type: "tutorial test file", tutorial_id: @test_file.tutorial_id })
       @help_texts = TUTORIAL_TEST_FILES.select{|t| t[:id] == @test_file.tutorial_id}.first[:help]
       
       @help_shown = params[:help_text].to_i
