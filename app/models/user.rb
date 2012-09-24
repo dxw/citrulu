@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   
   # We'll put :rememberable back in later, once we've figured out how to make it work.
   devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :trackable, :validatable 
+         :recoverable, :trackable, :validatable, :token_authenticatable
 
   alias_attribute :name, :email
 

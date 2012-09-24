@@ -5,7 +5,9 @@ SimpleFrontEndTesting::Application.routes.draw do
   mount Resque::Server, :at => "/resque"
 
   devise_for :admin_users, ActiveAdmin::Devise.config
-  
+ 
+  resources :token_authentications, :only => [:create, :destroy]
+
   # Force redirect of users/sign_up to the root - for analytics consistency (?)
   match 'users/sign_up' => redirect("/")
   
