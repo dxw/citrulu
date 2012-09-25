@@ -1,5 +1,3 @@
-require 'api_constraints'
-
 SimpleFrontEndTesting::Application.routes.draw do
 
   ActiveAdmin.routes(self)
@@ -27,8 +25,10 @@ SimpleFrontEndTesting::Application.routes.draw do
 
 
   namespace :api, defaults: {format: 'json'} do
-    scope module: :v1, :name_prefix => 'v1' do
-      resources :test_files
+    namespace :v1 do
+#  scope module: :v1 do
+        resources :test_files
+#     end
     end
   end
 
