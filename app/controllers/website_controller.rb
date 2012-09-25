@@ -39,7 +39,9 @@ class WebsiteController < ApplicationController
     end
     
     @broken_pages.sort!{|a,b| b[:fails_this_week] <=> a[:fails_this_week]}
-
+    
+    @page_response_times = @user.pages_average_times
+    
     render :layout => "user_mailer"
   end
 end

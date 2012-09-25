@@ -8,12 +8,12 @@ class TestFilesController < ApplicationController
    
   # GET /test_files
   def index
- 
-
     @test_files = current_user.test_files.not_deleted.order("tutorial_id, updated_at desc")
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
-
+    
+    @page_response_times = current_user.pages_average_times
+    
     respond_to do |format|
       format.html 
       format.json { render json: @test_files }
