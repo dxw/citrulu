@@ -4,33 +4,42 @@ module Api
       respond_to :json
 
       before_filter :authenticate_user!
-      before_filter :check_deleted!, :except => [:create]
-      before_filter :check_ownership!, :except => [:create]
-
+      before_filter :check_deleted!, :except => [:create, :index]
+      before_filter :check_ownership!, :except => [:create, :index]
 
       def index
-        # TODO - Do we want to display all of everything here, or just links/summaries?
-        respond_with current_user.test_files.all
+        respond_with current_user.test_files.select([:id, :name]).all
       end
 
       def show
-        # TODO - Are there fields we should hide?
-        respond_with TestFile.find(params[:id])
+        respond_with TestFile.where(:id => params[:id]), :only => [:id, :name, :compiled_test_file_text, :test_file_text, :domains, :frequency, :run_tests, :tutorial_id, :updated_at, :created_at]
       end
 
       def create
-        test_file = TestFile.create(params[:test_file])
+        parameters = prepare_params(params)
+
+        test_file = TestFile.create(parameters[:test_file])
 
         current_user.test_files << test_file
-
-        # TODO - Don't let API users set all the fields.
 
         respond_with test_file
       end
 
+      def compile
+        test_file = TestFile.find(params[:id])
+        
+        begin
+          CitruluParser.new.compile_tests(test_file.test_file_text)
+        rescue CitruluParser::TestCompileError => e
+          respond_with({:error => e.message}, :status => :unprocessable_entity, :location => '')
+        else
+          respond_with test_file, :only => [:id, :name, :compiled_test_file_text, :test_file_text, :domains, :frequency, :run_tests, :tutorial_id, :updated_at, :created_at]
+        end
+      end
+
       def update
-        # TODO - Don't let API users update all the fields
-        respond_with TestFile.update(params[:id], params[:test_file])
+        parameters  = prepare_params(params)
+        respond_with TestFile.update(params[:id], parameters[:test_file])
       end
 
       def destroy
@@ -42,6 +51,27 @@ module Api
       end
 
       protected
+
+      def prepare_params(parameters)
+        # Don't make people put everything in test_file[]
+puts parameters.inspect
+        orig_params = parameters
+
+        parameters = {:auth_token => orig_params[:auth_token], :format => orig_params[:format], :action => orig_params[:action], :controller => orig_params[:controller]}
+
+        # Only keep the things that users are allowed to set
+        parameters[:test_file] = {}
+        [:name, :run_tests, :test_file_text].each do |allowed|
+          if orig_params[allowed]
+            parameters[:test_file][allowed] = orig_params[allowed]
+          end
+        end
+
+        # Some things are not set by users but must be set
+        parameters[:test_file][:frequency] = current_user.plan.test_frequency
+
+        parameters
+      end
       
       def check_deleted!
         begin
