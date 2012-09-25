@@ -54,6 +54,11 @@ Spork.prefork do
     # rspec-rails.
     config.infer_base_class_for_anonymous_controllers = false
 
+    # If any specs have a "focus" tag - only run those specs
+    config.treat_symbols_as_metadata_keys_with_true_values = true
+    config.filter_run :focus => true
+    config.run_all_when_everything_filtered = true
+
     # Include Devise helpers and a module which uses them
     config.include Devise::TestHelpers, :type => :controller
     config.extend ControllerMacros, :type => :controller

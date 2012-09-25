@@ -263,7 +263,14 @@ class User < ActiveRecord::Base
   # Stats and limits #
   ####################
   def one_week_of_test_runs
-    test_runs = TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+    TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+  end
+  
+  def pages_average_times
+    # Merge the (url => response_time) results of all of the test runs from the last week 
+    array_of_hashes = one_week_of_test_runs.map{ |test_run| test_run.pages_average_times }
+    
+    array_of_hashes.reduce{ |bighash, this_hash | bighash.merge(this_hash){ |url, oldval, newval| (newval+oldval)/2} }
   end
   
   # The number of unique domains across all active test files
@@ -347,4 +354,5 @@ class User < ActiveRecord::Base
   def add_invitation
     self.invitation = Invitation.find_by_code(self.invitation_code)
   end
+  
 end
