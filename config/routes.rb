@@ -26,9 +26,8 @@ SimpleFrontEndTesting::Application.routes.draw do
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
-#  scope module: :v1 do
-        resources :test_files
-#     end
+      resources :test_files
+      match 'test_files/compile/:id' => "test_files#compile", :via => :post
     end
   end
 
@@ -54,6 +53,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match 'email' => "website#email"
   match 'agencies' => "website#agencies"
   match 'wordpress' => "website#wordpress"
+  match 'api' => "website#api"
   
   authenticated :user do
     root :to => redirect('/test_files')

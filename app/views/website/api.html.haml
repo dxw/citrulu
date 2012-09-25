@@ -1,0 +1,94 @@
+.container.apidocs
+  %header.title
+    %h1.masthead Citrulu
+    %p Using the API
+  %nav
+    =link_to "<--Back","/"
+  
+  %h2 What's it for?
+  %p Currently, the API allows you to create, update, delete and compile text files. 
+  %p In the future, it'll be extended to allow you to retrieve the results of tests, and set up custom notifications for failures.
+  %p The API is an alpha feature, and may change without notice.
+
+  %h2 How do I use it?
+
+  %p The API works using HTTPS requests which return JSON objects.
+  %p To make API requests, you need an API key which is available from your Account Settings page. This key needs to be passed in with every request as the auth_token parameter.
+
+  %h2 Results
+  %p If there is an error, a response in the 4xx range will be returned, along with an error message in JSON format.
+  %p If the request is successful, a response in the 2xx range will be returned. There may or may not be a body, depending on the request you made.
+
+  %h2 Listing files
+  %p To list files, make a GET request to:
+  %pre https://www.citrulu.com/api/v1/test_files?auth_token=<span class="variable">[your api key]</span>
+  %p The response is a JSON object containing a list of your test files.
+
+  %h2 Retrieving a file
+  %p To retrieve all the data for a particular file, make a GET request to:
+  %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
+  %p The response is a JSON object containing all the data for the specified file. The fields are:
+  %dl
+    %dt name
+    %dd A string containing name of the file.
+    %dt test_file_text
+    %dd A string containing body of the file.
+    %dt compiled_test_file_text
+    %dd A string containing the most recently successfully compiled body of the file
+    %dt run_tests
+    %dd A boolean, indicating whether or not Citrulu should run the tests.
+    %dt domains
+    %dd An array containing a list of the top-level domains referenced by the tests in the file
+    %dt frequency
+    %dd An integer, indicating the approximate time (in seconds) that Citrulu will wait after running the tests in the file, before running them again
+    %dt id
+    %dd The ID of the file
+    %dt tutorial_id
+    %dd An integer, indicating that the file is part of a series of tutorial files, and specifying where the file appears in the series. For non-tutorial files, this is null.
+    %dt updated_at
+    %dd A datetime, containing the time the file was last modified.
+    %dt created_at
+    %dd A datetime, containing the time the file was created.
+  
+  %h2 Creating a file
+  %p To create a file, make a POST request to: 
+  %pre https://www.citrulu.com/api/v1/test_files/?auth_token=<span class="variable">[your api key]</span>
+  %p The body of your request should be an HTTP query string with the following parameters:
+  %dl
+    %dt name
+    %dd A string containing name of the file. This is required.
+    %dt test_file_text
+    %dd A string containing body of the file.
+    %dt run_tests
+    %dd A boolean, indicating whether or not Citrulu should run the tests.
+  %p The response is a JSON object containing the data for the new file.
+  %p <strong>Important note:</strong> Citrulu will not attempt to compile the new file, and files must be successfully compiled before they can be run. The run_tests parameter will therefore have no effect unless you also compile the file (see below). You must compile a new file, or its tests will not run.
+
+  %h2 Updating a file
+  %p To update a file, make a PUT request to:
+  %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
+  %p The body of your request should be an HTTP query string containing data for the parameters you wish to update. The permitted parameters are the same as those for creating a file (see above)
+  %p The response is 204 if the request succeeded, or an error if not. The body is always empty.
+  %p <strong>Important note:</strong> Citrulu will not attempt to compile the updated file, and files must be successfully compiled before they can be run. If you do not compile the updated file, Citrulu will continue to run the most recently compiled set of tests (assuming that run_tests is true)
+
+  %h2 Deleting a file
+  %p To delete a file, make a DELETE request to:
+  %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
+  %p The response is always 204, even if the file did not exist.
+
+  %h2 Compiling a file
+  %p To compile a file, make a POST request to: 
+  %pre https://www.citrulu.com/api/v1/test_files/compile/?auth_token=<span class="variable">[your api key]</span>
+  %p The body of your request should be empty.
+  %p The response is a JSON object containing all the data for the specified file, or an error. 
+
+
+  
+  #contact
+    %p Stuck? Got questions?
+    %p Contact us using the Feedback tab on the left, or by email: <a href="mailto:contact@citrulu.com">contact@citrulu.com</a>
+
+  
+  
+  
+  
