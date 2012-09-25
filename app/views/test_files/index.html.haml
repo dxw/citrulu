@@ -48,7 +48,19 @@
             - else
               %p Your tests all pass. Huzzah!
           %a.btn{:href => test_runs_path} You can see results, but nowt's going on
-
+  
+      - unless @page_response_times.blank?
+        %section.well.stats
+          %header
+            %h3 Average page load times for the past week:
+          %ul.unstyled
+            - @page_response_times.keys.sort.each do |url|
+              %li.row-fluid
+                .span9.url= url
+                .span3.response_time= "#{@page_response_times[url] }ms"
+                -# needs to be this size in order to prevent nasty wrapping
+                
+          
 -#sexy_stats
   .row
     %h3.span12 Stats, for your reading pleasure

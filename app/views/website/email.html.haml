@@ -21,12 +21,12 @@
   %li{:style => content_p_styles} http://google.com has problems 22% of the time
   %li{:style => content_p_styles} http://harry.com has problems 3.5% of the time
 
-%p{:style => content_p_styles} Your average response times for the week are:
-%ul
-  %li{:style => content_p_styles} 132ms: http://flabberjabber.com
-  %li{:style => content_p_styles} 232ms: http://google.com 
-  %li{:style => content_p_styles} 432ms: http://pigglewabble.com 
-
+- unless @page_response_times.blank?
+  - # TODO - do something in the case that @page response times is blank (i.e. no tests have been run in the last week)
+  %p{:style => content_p_styles} Your average response times for the week are:
+  %ul
+    - @page_response_times.keys.sort.each do |url|
+      %li{:style => content_p_styles}="#{ @page_response_times[url] }ms: #{ url }"
 
 %table
   %tr

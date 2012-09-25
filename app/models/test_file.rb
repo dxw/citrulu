@@ -65,8 +65,24 @@ class TestFile < ActiveRecord::Base
   def compiled?
     !compiled_test_file_text.blank?
   end
-
-   
+  
+  def delete!
+    update_attributes(deleted: true)
+  end
+  
+  # For tutorial files - get the next tutorial file.
+  def next_tutorial
+    user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
+  end
+  
+  def is_a_tutorial
+    !tutorial_id.nil?
+  end
+  
+  #########
+  # Stats #
+  #########
+  
   def average_failures_per_run
     return 0 if test_runs.size == 0
 
@@ -95,19 +111,11 @@ class TestFile < ActiveRecord::Base
     fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
   end
   
-  def delete!
-    update_attributes(deleted: true)
-  end
   
-  # For tutorial files - get the next tutorial file.
-  def next_tutorial
-    user.test_files.tutorials.where("tutorial_id > ?", tutorial_id).order("tutorial_id ASC").first
-  end
+  ##########
+  # Resque #
+  ##########  
   
-  def is_a_tutorial
-    !tutorial_id.nil?
-  end
-
   def enqueue
     Resque.enqueue(TestFileJob, self.id)
   end
@@ -120,4 +128,5 @@ class TestFile < ActiveRecord::Base
     Resque.dequeue(TestFileJob, self.id)
     Resque.enqueue(PriorityTestFileJob, self.id)
   end
+  
 end

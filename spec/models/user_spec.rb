@@ -288,4 +288,84 @@ describe User do
       @user.number_of_domains.should == 1
     end
   end
+  
+  describe "(stats)" do
+    describe "pages_average_times" do 
+      before(:each) do
+        # The test files linked to the user are v. important, so create a fresh user record, just in case.
+        @user = FactoryGirl.create(:user)
+      end
+      it "should return nil when there are no test_runs" do
+        @user.stub(:test_runs).and_return([])
+        @user.pages_average_times.should be_nil
+      end
+      context "when there is one test run" do
+        before(:each) do
+          @test_run = FactoryGirl.create(:test_run)
+          @user.stub(:one_week_of_test_runs).and_return([@test_run])
+        end
+        context "with one domain" do
+          before(:each) do
+            @domain_response_hash = { "http://www.google.com" => 23 }
+          end
+          it "should return pages_average_times for the Run" do
+            @test_run.stub(:pages_average_times).and_return(@domain_response_hash)
+            @user.pages_average_times.should == @domain_response_hash
+          end
+        end
+        context "with two domains" do
+          before(:each) do
+            @domain_response_hash = { "http://www.google.com" => 17, "http://www.amazon.co.uk" => 23 }
+          end
+          it "should return pages_average_times for the Run" do
+            @test_run.stub(:pages_average_times).and_return(@domain_response_hash)
+            @user.pages_average_times.should == @domain_response_hash
+          end
+        end
+      end
+      context "when there are two test runs" do
+        before(:each) do
+          @test_run1 = FactoryGirl.create(:test_run)
+          @test_run2 = FactoryGirl.create(:test_run)
+          @user.stub(:one_week_of_test_runs).and_return([@test_run1, @test_run2])
+        end
+        context "where each has one (different) domain" do
+          before(:each) do
+            @domain_response_hash1 = { "http://www.google.com" => 17}
+            @domain_response_hash2 = { "http://www.amazon.co.uk" => 23 }
+          end
+          it "should return the union of the pages_average_times for the Runs" do
+            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
+            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
+            @user.pages_average_times.should == { "http://www.google.com" => 17, "http://www.amazon.co.uk" => 23 }
+          end
+        end
+        context "where both have the same one domain (with different times)" do
+          before(:each) do
+            @domain_response_hash1 = { "http://www.google.com" => 17}
+            @domain_response_hash2 = { "http://www.google.com" => 23 }
+          end
+          it "should return an array where the response time is the average of the two runs" do
+            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
+            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
+            @user.pages_average_times.should == { "http://www.google.com" => 20 }
+          end
+        end
+        context "where both have several domains with some overlap" do
+          before(:each) do
+            @domain_response_hash1 = { "http://www.google.com" => 17, "https://citrulu.com" => 14 }
+            @domain_response_hash2 = { "http://www.swingoutlondon.co.uk" => 18, "http://www.google.com" => 43 }
+          end
+          it "should return an array where the response time is the average of the two runs" do
+            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
+            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
+            @user.pages_average_times.should == { "http://www.google.com" => 30, 
+                                                    "https://citrulu.com" => 14, 
+                                                    "http://www.swingoutlondon.co.uk" => 18 }
+          end
+        end
+      end
+    end
+  end
+  
 end

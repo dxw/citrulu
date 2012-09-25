@@ -271,4 +271,90 @@ describe TestRun do
       TestRun.all.should include(@test_run_2)
     end
   end
+  
+  describe "(stats)" do
+    describe "pages_average_times" do
+      before(:each) do
+        @test_run = FactoryGirl.create(:test_run)
+      end
+      context "when there is one url with no response" do
+        before(:each) do
+          # e.g. because the page couldn't be retrieved
+          FactoryGirl.create(:test_group, test_run: @test_run, response: nil)
+        end
+        it "should return an empty hash" do
+          @test_run.pages_average_times.should == {}
+        end
+      end
+      context "when there is one url but no success response" do
+        # We're only interested in 200 codes:
+        before(:each) do
+          response = FactoryGirl.create(:response, code: "404" )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response)
+        end
+        it "should return an empty hash" do
+          @test_run.pages_average_times.should == {}
+        end
+      end
+      context "when there is one url and a success response but no response_time" do
+        before(:each) do
+          response = FactoryGirl.create(:response, code: "200", response_time: nil )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response)
+        end
+        it "should raise an exception" do
+          expect { @test_run.pages_average_times }.to raise_exception
+        end
+      end
+      context "when there is one url and a success response" do
+        before(:each) do
+          response = FactoryGirl.create(:response, code: "200", response_time: 500 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response, test_url: "http://www.swingoutlondon.co.uk")
+        end
+        it "should return a hash" do
+          @test_run.pages_average_times.should == { "http://www.swingoutlondon.co.uk" => 500 }
+        end
+      end
+      context "when there are several (different) urls and with success responses" do
+        before(:each) do
+          response1 = FactoryGirl.create(:response, code: "200", response_time: 500 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.swingoutlondon.co.uk")
+          response2 = FactoryGirl.create(:response, code: "200", response_time: 17 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.google.co.uk")
+          response3 = FactoryGirl.create(:response, code: "200", response_time: 23 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response3, test_url: "http://www.amazon.co.uk")
+        end
+        it "should return a hash" do
+          @test_run.pages_average_times.should == { "http://www.swingoutlondon.co.uk" => 500,
+                                                    "http://www.google.co.uk" => 17,
+                                                    "http://www.amazon.co.uk" => 23 }
+        end
+      end
+      context "when there are two groups with the same url and success responses" do
+        before(:each) do
+          response1 = FactoryGirl.create(:response, code: "200", response_time: 33 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.co.uk")
+          response2 = FactoryGirl.create(:response, code: "200", response_time: 17 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.google.co.uk")
+        end
+        it "should return a hash" do
+          @test_run.pages_average_times.should == { "http://www.google.co.uk" => 25 }
+        end
+      end
+      context "when there are multiple overlapping groups with success and failure responses" do
+        before(:each) do
+          response1 = FactoryGirl.create(:response, code: "200", response_time: 35 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.co.uk")
+          response2 = FactoryGirl.create(:response, code: "200", response_time: 23 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.amazon.co.uk")
+          response3 = FactoryGirl.create(:response, code: "200", response_time: 5 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response3, test_url: "http://www.google.co.uk")
+          response4 = FactoryGirl.create(:response, code: "404", response_time: 17 )
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response4, test_url: "http://www.google.co.uk")
+        end
+        it "should return a hash" do
+          @test_run.pages_average_times.should == { "http://www.google.co.uk" => 20 , "http://www.amazon.co.uk" => 23}
+        end
+      end
+    end
+  end
 end
