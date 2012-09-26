@@ -74,7 +74,7 @@
   %h2 Deleting a file
   %p To delete a file, make a DELETE request to:
   %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
-  %p The response is always 204, even if the file did not exist.
+  %p The response is 204 if the request succeeded, or an error.
 
   %h2 Compiling a file
   %p To compile a file, make a POST request to: 
