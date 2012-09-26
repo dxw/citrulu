@@ -39,7 +39,15 @@ module Api
 
       def update
         parameters  = prepare_params(params)
-        respond_with TestFile.update(params[:id], parameters[:test_file])
+        test_file = TestFile.update(params[:id], parameters[:test_file])
+
+        respond_with(test_file, :status => 200) do |format|
+          if test_file.save
+            format.json { render :json => test_file, :status => 200 }
+          else
+            format.json { render :json => {:error => test_file.errors}, :status => 422 }
+          end
+        end
       end
 
       def destroy
@@ -54,7 +62,6 @@ module Api
 
       def prepare_params(parameters)
         # Don't make people put everything in test_file[]
-puts parameters.inspect
         orig_params = parameters
 
         parameters = {:auth_token => orig_params[:auth_token], :format => orig_params[:format], :action => orig_params[:action], :controller => orig_params[:controller]}
@@ -77,18 +84,23 @@ puts parameters.inspect
         begin
           test_file = TestFile.find(params[:id])
         rescue ActiveRecord::RecordNotFound => e
-          test_file = nil
+          test_file = false
         end
+        puts test_file.inspect
 
         if !test_file || test_file.deleted?
-          respond_with({:error => 'That file has been deleted or does not exist'}, :status => 404)
+          respond_with do |format|
+            format.json { render :json => {:error => 'That file does not exist'}, :status => 404 }
+          end
         end
       end
 
       # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page
       def check_ownership!
         return check_ownership(params[:id], TestFile) do
-          respond_with({:error => 'You do not own that file.'}, :status => 401)
+          respond_with do |format|
+            format.json { render :json => {:error => 'You do not own that file.'}, :status => 401 }
+          end
         end
       end
     end
