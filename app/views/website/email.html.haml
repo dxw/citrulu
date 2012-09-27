@@ -1,25 +1,30 @@
 %h2 Your weekly summary
-%p{:style => content_p_styles} 
-  Citrulu ran your tests #{pluralize(@stats[:week_total_test_runs], 'time')} this week. 
-  - if @stats[:week_failed_test_runs] == 0
-    All of your runs completed successfully.
-  - else
-    #{@stats[:week_total_test_runs] - @stats[:week_failed_test_runs]} of those runs completed successfully, but #{@stats[:week_failed_test_runs]} found problems.
+%p{:style => content_p_styles}
+  You currently have #{ pluralize(@number_of_running_test_files, 'test file') } set to run, covering #{ pluralize(@number_of_domains, 'domain') }.
+%p{:style => content_p_styles}
+  - if @number_of_test_runs == 0
+    Citrulu hasn't run any of your test files yet.
+  -else
+    Citrulu ran your tests #{pluralize(@number_of_test_runs, 'time')} this week.
+    - if @number_of_failed_test_runs == 0
+      All of your runs completed successfully!
+    - elsif @number_of_successful_test_runs == 0
+      - if @number_of_failed_test_runs == 1
+        That run
+      - else
+        All #{ @number_of_failed_test_runs } of those runs
+      found problems
+    - else
+      #{ @number_of_successful_test_runs } of those runs completed successfully, but #{ @number_of_failed_test_runs } found problems.
 
-%p The pages that had problems this week were:
-%ul
-  - @broken_pages.each do |page|
-    %li 
-      %strong=truncated_test_url(page[:url], 15)
-      %br
-      this page breaks #{page[:badness]} (#{pluralize(page[:fails_this_week], 'time')} this week)
 
-%p Over all time:
-
-%ul
-  %li{:style => content_p_styles} http://flabberjabber.com has problems 39% of the time
-  %li{:style => content_p_styles} http://google.com has problems 22% of the time
-  %li{:style => content_p_styles} http://harry.com has problems 3.5% of the time
+- unless @number_of_failed_test_runs == 0
+  %p The pages that had problems this week were:
+  %ul
+    - @broken_pages.each do |page|
+      %li 
+        %strong=truncated_test_url(page[:url], 15)
+        this page breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
 
 - unless @page_response_times.blank?
   - # TODO - do something in the case that @page response times is blank (i.e. no tests have been run in the last week)

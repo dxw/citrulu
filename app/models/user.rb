@@ -262,14 +262,75 @@ class User < ActiveRecord::Base
   ####################
   # Stats and limits #
   ####################
+  
   def one_week_of_test_runs
-    TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+    TestRun.user_test_runs(self).past_week
   end
+  
+  def number_of_test_runs_in_past_week
+    return 0 if one_week_of_test_runs.blank?
+    one_week_of_test_runs.size 
+  end
+  def failed_runs_in_past_week
+    return [] if one_week_of_test_runs.blank?
+    one_week_of_test_runs.select{ |r| r.has_failures? }
+  end
+  def number_of_failed_test_runs_in_past_week
+    failed_runs_in_past_week.size
+  end
+  def number_of_successful_test_runs_in_past_week
+    number_of_test_runs_in_past_week - number_of_failed_test_runs_in_past_week
+  end
+  
+  def test_groups_with_failures
+    # As in ALL groups with failures EVER
+    TestGroup.user_groups(self).has_failures
+  end
+  
+  def groups_from_past_week
+    TestGroup.user_groups(self).past_week
+  end
+  
+  def groups_with_failures_in_past_week
+    test_groups_with_failures.past_week
+  end
+  def urls_with_failures_in_past_week
+    groups_with_failures_in_past_week.count(:group => :test_url)
+  end
+  def domains_with_failures_in_past_week
+    # locate isn't implemented in SQLITE3 - BALLS!
+    # groups_with_failures_in_past_week.select("substr(test_url, locate('/', test_url)-7, 7) as test_url").count(:group => :test_url)
+    test_groups_with_failures.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
+  end
+  
+  def broken_pages_list(urls_with_failures)
+    broken_pages = []
+    urls_with_failures.each do |url, number_of_failures|
+      broken_pages << {
+        :url => url,
+        :fails_this_week => number_of_failures,
+        :badness => fail_frequency(url),
+      }
+    end
+    broken_pages.sort!{ |a,b| b[:fails_this_week] <=> a[:fails_this_week] }
+  end
+  
+  def fail_frequency(test_url)
+    # i.e. how many times has this url failed for this user EVER?
+    # How many times has this page been tested in total?
+    total_tests = TestGroup.user_groups(self).testing_url(test_url)
+    total_tests = total_tests.size
+
+    # How many times has this page been irretrievable or had a failed assertion?
+    total_failed_tests = TestGroup.user_groups(self).testing_url(test_url).has_failures.size
+
+    (total_failed_tests.to_f/total_tests.to_f).round(2)
+  end
+
   
   def pages_average_times
     # Merge the (url => response_time) results of all of the test runs from the last week 
-    array_of_hashes = one_week_of_test_runs.map{ |test_run| test_run.pages_average_times }
-    
+    array_of_hashes = one_week_of_test_runs.map{ |test_run| test_run.pages_average_times } 
     array_of_hashes.reduce{ |bighash, this_hash | bighash.merge(this_hash){ |url, oldval, newval| (newval+oldval)/2} }
   end
   
@@ -277,13 +338,40 @@ class User < ActiveRecord::Base
   def number_of_domains
     domains.count
   end
+  def number_of_running_files
+    test_files.running.not_deleted.count
+  end
   
   # The list of unique domains across all active test files
   def domains
     # Approach: Compile all the files and concatenate the results together, then call 'count_domains' on the whole lot
-    relevant_test_files = test_files.running.not_deleted.not_tutorial.compiled
+    relevant_test_files = test_files.running.not_deleted.compiled
     relevant_test_files.collect{|f| f.domains}.compact.flatten.uniq
   end
+  
+
+  # def average_fix_speed
+  #   return 0 if test_runs.size == 0
+  # 
+  #   in_fail_spree = false
+  #   fail_sprees = []
+  #   start_fail = nil
+  # 
+  #   test_runs.sort{|a,b| a <=> b}.each do |run|
+  #     if !in_fail_spree && run.has_failures?
+  #       in_fail_spree = true
+  #       start_fail = run
+  #     elsif in_fail_spree && !run.has_failures?
+  #       in_fail_spree = false
+  # 
+  #       fail_sprees << run.time_run - start_fail.time_run
+  #     end
+  #   end
+  # 
+  #   fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
+  # end
+  
+  # -- END STATS
   
   
   def send_nudge_email

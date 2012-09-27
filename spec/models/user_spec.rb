@@ -366,6 +366,38 @@ describe User do
         end
       end
     end
+    
+    describe "groups_with_failures_in_past_week" do
+      before(:each) do
+        @user = FactoryGirl.create(:user)
+        @test_file = FactoryGirl.create(:test_file, user: @user)
+        @test_run = FactoryGirl.create(:test_run, test_file: @test_file)
+      end
+      it "should return [] if there are no test groups" do
+        @user.groups_with_failures_in_past_week.should == []
+      end
+      it "should return [] if there is a test_group with no failures" do
+        FactoryGirl.create(:test_group_no_failures, test_run: @test_run )
+        @user.groups_with_failures_in_past_week.should == []
+      end
+      context "when there is one test group with failures" do
+        before(:each) do
+          @test_group = FactoryGirl.create(:test_group_with_failures, test_run: @test_run)
+        end
+        it "should return that test group" do
+          @user.groups_with_failures_in_past_week.should == [@test_group]
+        end
+      end
+      it "should return the sum of all failed test groups from the past week" do
+        test_run1 = FactoryGirl.create(:test_run, test_file: @test_file)
+        
+        @test_group1 = FactoryGirl.create(:test_group_with_failures, test_run: @test_run)
+        @test_group2 = FactoryGirl.create(:test_group_with_failures, test_run: @test_run) 
+        @test_group3 = FactoryGirl.create(:test_group_with_failures, test_run: test_run1) 
+        
+        @user.groups_with_failures_in_past_week.should == [@test_group1, @test_group2, @test_group3]
+      end
+    end
   end
   
 end

@@ -52,15 +52,29 @@
       - unless @page_response_times.blank?
         %section.well.stats
           %header
-            %h3 Average page load times for the past week:
+            %h3 Average page load times:
+            %em (based on the past week)
           %ul.unstyled
             - @page_response_times.keys.sort.each do |url|
               %li.row-fluid
                 .span9.url= url
                 .span3.response_time= "#{@page_response_times[url] }ms"
                 -# needs to be this size in order to prevent nasty wrapping
-                
-          
+
+      %section.well.stats
+        - if @urls_with_failures_in_past_week.blank?
+          %header
+            %h3 No failures in the past week :)
+        - else
+          %header
+            %h3 Pages with failures:
+            %em (in the past week)
+          %ul.unstyled
+            - @urls_with_failures_in_past_week.keys.sort.each do |url|
+              %li.row-fluid
+                .span9.url=truncated_test_url(url, 15)
+                .span3.number_of_failures=pluralize(@urls_with_failures_in_past_week[url], 'time')
+        
 -#sexy_stats
   .row
     %h3.span12 Stats, for your reading pleasure
