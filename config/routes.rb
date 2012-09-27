@@ -5,7 +5,8 @@ SimpleFrontEndTesting::Application.routes.draw do
   mount Resque::Server, :at => "/resque"
 
   devise_for :admin_users, ActiveAdmin::Devise.config
-  
+ 
+
   # Force redirect of users/sign_up to the root - for analytics consistency (?)
   match 'users/sign_up' => redirect("/")
   
@@ -21,6 +22,17 @@ SimpleFrontEndTesting::Application.routes.draw do
   resources :test_files, :only => [:index, :create, :destroy, :edit, :update]
   resources :test_runs, :only => [:index, :show]
   resources :responses, :only => [:show]
+
+
+  namespace :api, defaults: {format: 'json'} do
+    namespace :v1 do
+      resources :test_files
+      match 'test_files/compile/:id' => "test_files#compile", :via => :post
+    end
+  end
+
+  # :destroy adds an :id param that we don't actually need. I can't see how to get rid of that.
+  resources :token_authentications, :only => [:create, :destroy]
 
   get "payments/choose_plan"
   match "payments/choose_plan" => "payments#change_plan", :via => :put
@@ -41,6 +53,7 @@ SimpleFrontEndTesting::Application.routes.draw do
   match 'email' => "website#email"
   match 'agencies' => "website#agencies"
   match 'wordpress' => "website#wordpress"
+  match 'api' => "website#api"
   
   authenticated :user do
     root :to => redirect('/test_files')

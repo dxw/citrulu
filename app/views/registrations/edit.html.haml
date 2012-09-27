@@ -97,7 +97,29 @@
                 plan. When that expires, you'll
               -# else
               After that you'll still have full access to Citrulu, but your tests won't be run and you won't receive any alerts.
-              
+ 
+%h3 API access
+%p Your API key is:
+%div.api_key#api_key
+  - if resource.authentication_token.blank?
+    Not set (
+    = link_to 'generate one', token_authentications_path, :method => :post
+    )
+  - else
+    = resource.authentication_token
+
+    %span
+      = link_to "Generate new token", token_authentications_path, :method => :post, :confirm => "Are you sure?"
+      |
+      = link_to "Delete token", token_authentication_path(:id => resource.id), :method => :delete, :confirm => "Are you sure?"
+
+-#%p
+  - if resource.authentication_token
+    %p 
+      You can use this url to log in:
+      %pre
+        = link_to 'https://www.citrulu.com' + root_path(:auth_token => resource.authentication_token), :auth_token => resource.authentication_token
+
 %h3 Terminate my account
 %p
   Unhappy? You can terminate your account at any time by #{mail_to 'contact@citrulu.com', 'sending us an email', subject: "Please Terminate my Citrulu account"} and we'll do our best to delete everything. If you terminate your account, we will not be able to recover it.

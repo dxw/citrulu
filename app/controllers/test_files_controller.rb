@@ -5,6 +5,7 @@ class TestFilesController < ApplicationController
   
   before_filter :authenticate_user!
   before_filter :check_ownership!, :only => [:show, :edit, :update, :destroy]
+  before_filter :check_deleted, :only => [:show, :edit, :destroy, :update]
    
   # GET /test_files
   def index
@@ -262,6 +263,15 @@ class TestFilesController < ApplicationController
     
   protected
     
+  def check_deleted
+    test_file = TestFile.find(params[:id])
+
+    if !test_file || test_file.deleted?
+      flash[:error] = "You tried to access a test file which doesn't exist!"
+      redirect_to test_files_path
+    end
+  end
+
   # If the user tries to access a test file that they don't own or doesn't exist, return them to the index page
   def check_ownership!
     return check_ownership(params[:id], TestFile) do
