@@ -3,7 +3,7 @@ class TestResult < ActiveRecord::Base
 
   alias_attribute :name, :original_line
   
-  scope :failed, where("result IS NOT ?", true)
+  scope :failed, where("result <> ?", true)
   
   def failed?
     !result

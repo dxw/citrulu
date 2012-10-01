@@ -30,6 +30,8 @@ class WebsiteController < ApplicationController
     
     @broken_pages = @user.broken_pages_list(@user.urls_with_failures_in_past_week)
     
+    @domains_list = @user.domains_list
+    
     @page_response_times = @user.pages_average_times
     
     # TODO:

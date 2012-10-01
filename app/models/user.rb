@@ -282,25 +282,30 @@ class User < ActiveRecord::Base
     number_of_test_runs_in_past_week - number_of_failed_test_runs_in_past_week
   end
   
-  def test_groups_with_failures
-    # As in ALL groups with failures EVER
-    TestGroup.user_groups(self).has_failures
+  def test_groups 
+    TestGroup.user_groups(self)
+  end
+  
+  def groups_with_failures
+    # As in ALL test groups with failures EVER
+    test_groups.has_failures
   end
   
   def groups_from_past_week
-    TestGroup.user_groups(self).past_week
+    test_groups.past_week
   end
-  
+
   def groups_with_failures_in_past_week
-    test_groups_with_failures.past_week
+    test_groups.has_failures.past_week
   end
   def urls_with_failures_in_past_week
-    groups_with_failures_in_past_week.count(:group => :test_url)
+    test_groups.has_failures.past_week.urls.count(:group => :test_url)
   end
   def domains_with_failures_in_past_week
-    # locate isn't implemented in SQLITE3 - BALLS!
-    # groups_with_failures_in_past_week.select("substr(test_url, locate('/', test_url)-7, 7) as test_url").count(:group => :test_url)
-    test_groups_with_failures.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
+    test_groups.has_failures.past_week.domains
+    
+    # Slow solution: get the groups 
+    # test_groups.has_failures.past_week.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
   end
   
   def broken_pages_list(urls_with_failures)
@@ -315,14 +320,28 @@ class User < ActiveRecord::Base
     broken_pages.sort!{ |a,b| b[:fails_this_week] <=> a[:fails_this_week] }
   end
   
+  # Success rates of domains in the past week
+  def domains_list
+    failures_list = domains_with_failures_in_past_week
+    
+    domains = []
+    test_groups.past_week.domains.each do |domain, count|
+      domains << {
+        :domain => domain,
+        :failure_rate => 100*failures_list[domain].to_f / count, :precision => 0
+      }
+    end
+    return domains
+  end
+  
   def fail_frequency(test_url)
     # i.e. how many times has this url failed for this user EVER?
     # How many times has this page been tested in total?
     total_tests = TestGroup.user_groups(self).testing_url(test_url)
-    total_tests = total_tests.size
+    total_tests = total_tests.length
 
     # How many times has this page been irretrievable or had a failed assertion?
-    total_failed_tests = TestGroup.user_groups(self).testing_url(test_url).has_failures.size
+    total_failed_tests = TestGroup.user_groups(self).testing_url(test_url).has_failures.length
 
     (total_failed_tests.to_f/total_tests.to_f).round(2)
   end

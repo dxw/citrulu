@@ -1,9 +1,32 @@
 %h2 Your weekly summary
+
+- if @number_of_running_test_files == 0
+  %p{:style => content_p_styles}
+    ="You don't currently have any test files set to run, so we're not keeping an eye on your sites."
+  %p{:style => content_p_styles}
+    Go to 
+    =link_to("your test files page", test_files_url, :style => content_a_styles)
+    to write a test file, or set some to run.
+  %p{:style => content_p_styles}
+    Please
+    = mail_to 'contact@citrulu.com', "get in touch with us", :style => content_a_styles
+    if there's anything we can do to help.
+    
+-else
+  %p{:style => content_p_styles}
+    ="You currently have #{ pluralize(@number_of_running_test_files, 'test file') } set to run," 
+    - if @number_of_domains > 0
+      covering #{ pluralize(@number_of_domains, 'domain') }.
+    - else
+      but no domains are actually being tested!
+      
+  
 %p{:style => content_p_styles}
-  You currently have #{ pluralize(@number_of_running_test_files, 'test file') } set to run, covering #{ pluralize(@number_of_domains, 'domain') }.
-%p{:style => content_p_styles}
-  - if @number_of_test_runs == 0
-    Citrulu hasn't run any of your test files yet.
+  - if @number_of_test_runs == 0 
+    - if @number_of_running_test_files > 0
+      Citrulu hasn't run any of your test files yet. This might be because you've only recently set them to run. If nothing gets run in the next hour or so, please
+      = mail_to 'contact@citrulu.com', "get in touch with us", :style => content_a_styles
+      and we'll look into it.
   -else
     Citrulu ran your tests #{pluralize(@number_of_test_runs, 'time')} this week.
     - if @number_of_failed_test_runs == 0
@@ -15,23 +38,36 @@
         All #{ @number_of_failed_test_runs } of those runs
       found problems
     - else
+      - # There must be at least one failed and one successful test run:
       #{ @number_of_successful_test_runs } of those runs completed successfully, but #{ @number_of_failed_test_runs } found problems.
 
 
 - unless @number_of_failed_test_runs == 0
   %p The pages that had problems this week were:
-  %ul
+  %ul    
     - @broken_pages.each do |page|
       %li 
         %strong=truncated_test_url(page[:url], 15)
         this page breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
+  
+  %p Over the past week:
+  %ul 
+    - @domains_list.each do |domain|
+      %li
+        %strong= truncated_test_url(domain[:domain], 15)
+        had problems
+        = number_to_percentage(domain[:failure_rate], precision: 0)
+        of the time
+
 
 - unless @page_response_times.blank?
   - # TODO - do something in the case that @page response times is blank (i.e. no tests have been run in the last week)
   %p{:style => content_p_styles} Your average response times for the week are:
   %ul
     - @page_response_times.keys.sort.each do |url|
-      %li{:style => content_p_styles}="#{ @page_response_times[url] }ms: #{ url }"
+      %li{:style => content_p_styles}
+        ="#{ @page_response_times[url] }ms:"
+        = truncated_test_url(url, 15)
 
 %table
   %tr

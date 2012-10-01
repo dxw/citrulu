@@ -74,6 +74,21 @@
               %li.row-fluid
                 .span9.url=truncated_test_url(url, 15)
                 .span3.number_of_failures=pluralize(@urls_with_failures_in_past_week[url], 'time')
+                
+      %section.well.stats
+        - if @urls_with_failures_in_past_week.blank?
+          %header
+            %h3 No failures in the past week :)
+        - else
+          %header
+            %h3 Domain failure rates:
+            %em (in the past week)
+          %ul.unstyled
+            - current_user.domains_list.each do |domain|
+              %li.row-fluid
+                .span9= truncated_test_url(domain[:domain], 15)
+                .span3= number_to_percentage(domain[:failure_rate], precision: 0)
+      
         
 -#sexy_stats
   .row
