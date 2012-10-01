@@ -50,7 +50,7 @@
         %strong=truncated_test_url(page[:url], 15)
         this page breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
   
-  %p Over the past week:
+  %p Over the past week we tested the following domains:
   %ul 
     - @domains_list.each do |domain|
       %li

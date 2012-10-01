@@ -37,13 +37,6 @@ class WebsiteController < ApplicationController
     
     @page_response_times = @user.pages_average_times
     
-    # TODO:
-    # Total checks on each domain
-    # Average Failures per Run
-    # -- current_user.test_files.first.average_failures_per_run
-    # Average Fix time 
-    # -- distance_of_time_in_words(Time.now, Time.now + current_user.test_files.first.average_fix_speed.seconds)
-    
     render :layout => "user_mailer"
   end
 end
