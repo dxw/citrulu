@@ -54,7 +54,7 @@
   %ul 
     - @domains_list.each do |domain|
       %li
-        %strong= truncated_test_url(domain[:domain], 15)
+        %strong= truncated_test_url('http://' + domain[:domain], 15)
         had problems
         = number_to_percentage(domain[:failure_rate], precision: 0)
         of the time
