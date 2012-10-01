@@ -302,10 +302,15 @@ class User < ActiveRecord::Base
     test_groups.has_failures.past_week.urls.count(:group => :test_url)
   end
   def domains_with_failures_in_past_week
+    # Solution is FAR from ideal :( the count part has to be in the select and the activerecord query doesn't return a count hash.
     test_groups.has_failures.past_week.domains
     
     # Slow solution: get the groups 
     # test_groups.has_failures.past_week.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
+  end
+  
+  def number_of_urls_in_past_week
+    test_groups.past_week.urls.count(:distinct => true)
   end
   
   def broken_pages_list(urls_with_failures)

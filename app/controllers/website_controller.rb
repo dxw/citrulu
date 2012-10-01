@@ -20,23 +20,24 @@ class WebsiteController < ApplicationController
     @title = "Citrulu summary 2012-04-05"
 
     @user = current_user
-    
-    @number_of_test_runs            = @user.number_of_test_runs_in_past_week
-    @number_of_failed_test_runs     = @user.number_of_failed_test_runs_in_past_week
-    @number_of_successful_test_runs = @user.number_of_successful_test_runs_in_past_week
-    
+        
+    # Details of the current status:
     @number_of_running_test_files   = @user.number_of_running_files
     @number_of_domains              = @user.number_of_domains
     
-    @broken_pages = @user.broken_pages_list(@user.urls_with_failures_in_past_week)
+    # Past week summary:
+    @number_of_test_runs            = @user.number_of_test_runs_in_past_week
+    @number_of_failed_test_runs     = @user.number_of_failed_test_runs_in_past_week
+    @number_of_successful_test_runs = @user.number_of_successful_test_runs_in_past_week
+    @number_of_urls                 = @user.number_of_urls_in_past_week
     
+    # Past week lists:
+    @broken_pages = @user.broken_pages_list(@user.urls_with_failures_in_past_week)
     @domains_list = @user.domains_list
     
     @page_response_times = @user.pages_average_times
     
     # TODO:
-    # Number of Groups 
-    # Number of Urls
     # Total checks on each domain
     # Average Failures per Run
     # -- current_user.test_files.first.average_failures_per_run

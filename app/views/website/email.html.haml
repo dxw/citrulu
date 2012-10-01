@@ -28,7 +28,7 @@
       = mail_to 'contact@citrulu.com', "get in touch with us", :style => content_a_styles
       and we'll look into it.
   -else
-    Citrulu ran your tests #{pluralize(@number_of_test_runs, 'time')} this week.
+    Citrulu ran your tests #{pluralize(@number_of_test_runs, 'time')} this week and checked #{pluralize(@number_of_urls, 'url') }.
     - if @number_of_failed_test_runs == 0
       All of your runs completed successfully!
     - elsif @number_of_successful_test_runs == 0

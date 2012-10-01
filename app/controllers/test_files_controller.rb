@@ -16,6 +16,8 @@ class TestFilesController < ApplicationController
     # Stats:
     @page_response_times = current_user.pages_average_times
     @urls_with_failures_in_past_week = current_user.urls_with_failures_in_past_week
+    @number_of_test_runs            = current_user.number_of_test_runs_in_past_week
+    @number_of_urls                 = current_user.number_of_urls_in_past_week
     
     respond_to do |format|
       format.html 
