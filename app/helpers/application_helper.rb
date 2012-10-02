@@ -1,8 +1,4 @@
-module ApplicationHelper
-  def controller_name
-    params[:controller].split("/").join(" ") if params[:controller]
-  end
-  
+module ApplicationHelper  
   def nav_link(text, path)
     if url_for(path) == request.fullpath # gives the current uri after the first slash
       content_tag :li, :class => "active" do 
