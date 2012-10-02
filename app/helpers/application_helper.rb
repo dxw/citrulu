@@ -27,6 +27,25 @@ module ApplicationHelper
     link_to(text, url, :target => '_blank', :title => url)
   end
 
+  def often_ness(frequency)
+    case frequency*100
+    when 0
+      'never'
+    when 0..5
+      'very rarely'
+    when 5..45
+      'occasionally'
+    when 45..55
+      'about half the time'
+    when 55..95
+      'quite often'
+    when 100
+      'every time the tests are run'
+    when 95..100
+      'all the time'
+    end
+  end
+
   def unimplemented_popover(text, options={})
     options={
       rel: "popover",

@@ -15,28 +15,4 @@ class WebsiteController < ApplicationController
       render :layout => "application"
     end
   end
-
-  def email
-    @title = "Citrulu summary 2012-04-05"
-
-    @user = current_user
-        
-    # Details of the current status:
-    @number_of_running_test_files   = @user.number_of_running_files
-    @number_of_domains              = @user.number_of_domains
-    
-    # Past week summary:
-    @number_of_test_runs            = @user.number_of_test_runs_in_past_week
-    @number_of_failed_test_runs     = @user.number_of_failed_test_runs_in_past_week
-    @number_of_successful_test_runs = @user.number_of_successful_test_runs_in_past_week
-    @number_of_urls                 = @user.number_of_urls_in_past_week
-    
-    # Past week lists:
-    @broken_pages = @user.broken_pages_list(@user.urls_with_failures_in_past_week)
-    @domains_list = @user.domains_list
-    
-    @page_response_times = @user.pages_average_times
-    
-    render :layout => "user_mailer"
-  end
 end
