@@ -398,6 +398,39 @@ describe User do
         @user.groups_with_failures_in_past_week.should == [@test_group1, @test_group2, @test_group3]
       end
     end
+
+    describe "enqueue_stats_email" do
+      before(:each) do
+        # We don't actually want to enqueue stuff:
+        Resque.stub(:enqueue)
+      end
+      it "should call enqueue on Resque with the stats job" do
+        Resque.should_receive(:enqueue).with(TestFileJob, anything())
+        @user.enqueue_stats_email
+      end
+      it "should call enqueue on Resque with the current user's ID" do
+        Resque.should_receive(:enqueue).with(anything(), @user.id)
+        @user.enqueue_stats_email
+      end
+    end
+    
+    describe ".enqueue_all_stats_emails" do
+      before(:each) do
+        # We don't actually want to enqueue stuff:
+        Resque.stub(:enqueue)
+        User.destroy_all
+      end
+      it "should do nothing if there is only one user, and that user has chosen not to receive emails" do
+        @user_no_notify = FactoryGirl.create(:user, email_preference: 0)
+        User.any_instance.should_not_receive(:enqueue_stats_email)
+        User.enqueue_all_stats_emails
+      end
+      it "if there is only one user, and that user has chosen to receive emails, it should enqueue an email for that user" do
+        @user_notify = FactoryGirl.create(:user, email_preference: 1)
+        User.any_instance.should_receive(:enqueue_stats_email).once
+        User.enqueue_all_stats_emails
+      end  
+    end
   end
   
 end

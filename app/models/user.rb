@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
   serialize :status # 4 possible values- :free, :paid, :cancelled, :inactive
   
+  scope :receiving_notifications, where(email_preference: 1)
+  
   has_many :test_files, :dependent => :destroy
   has_many :user_metas
   belongs_to :invitation
@@ -262,6 +264,20 @@ class User < ActiveRecord::Base
   ####################
   # Stats and limits #
   ####################
+  
+  def send_stats_email
+    UserMailer.weekly_stats_email(self).deliver
+  end
+  def self.send_all_stats_emails
+    receiving_notifications.each { |user| user.send_stats_email }
+  end
+  
+  def enqueue_stats_email
+    Resque.enqueue(TestFileJob, id)
+  end
+  def self.enqueue_all_stats_emails
+    receiving_notifications.each { |user| user.enqueue_stats_email }
+  end
   
   def one_week_of_test_runs
     TestRun.user_test_runs(self).past_week
