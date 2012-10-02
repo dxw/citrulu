@@ -44,6 +44,30 @@ class UserMailer < ActionMailer::Base
     
     mail(to: user.email, subject: subject)
   end
+  
+  # For us to know if stuff is going wrong:
+  def status_email(user)
+    @date = Date.today.to_s(:simple)
+    @title = "Citrulu daily status summary"
+    subject = "Citrulu daily status summary for #{ @date }"
+    
+    # Details of the current status:
+    @number_of_running_test_files   = user.number_of_running_files
+    @number_of_domains              = user.number_of_domains
+
+    # Past week summary:
+    @number_of_test_runs            = user.number_of_test_runs_in_past_week
+    @number_of_failed_test_runs     = user.number_of_failed_test_runs_in_past_week
+    @number_of_successful_test_runs = user.number_of_successful_test_runs_in_past_week
+    @number_of_urls                 = user.number_of_urls_in_past_week
+
+    # Past week lists:
+    @broken_pages = user.broken_pages_list(user.urls_with_failures_in_past_week)
+    @domains_list = user.domains_list
+
+    @page_response_times = user.pages_average_times_in_past_week
+    
+    mail(to: user.email, subject: subject, template_name: 'weekly_stats_email')
   end
   
   def first_test_notification_success(test_run)
