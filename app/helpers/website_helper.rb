@@ -12,7 +12,7 @@ module WebsiteHelper
     when 55..95
       'quite often'
     when 100
-      'every time it is run'
+      'every time the tests are run'
     when 95..100
       'all the time'
     end
