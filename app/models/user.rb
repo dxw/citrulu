@@ -367,11 +367,8 @@ class User < ActiveRecord::Base
     (total_failed_tests.to_f/total_tests.to_f).round(2)
   end
 
-  
-  def pages_average_times
-    # Merge the (url => response_time) results of all of the test runs from the last week 
-    array_of_hashes = one_week_of_test_runs.map{ |test_run| test_run.pages_average_times } 
-    array_of_hashes.reduce{ |bighash, this_hash | bighash.merge(this_hash){ |url, oldval, newval| (newval+oldval)/2} }
+  def pages_average_times_in_past_week
+    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url)
   end
   
   # The number of unique domains across all active test files

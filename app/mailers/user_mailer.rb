@@ -40,9 +40,10 @@ class UserMailer < ActionMailer::Base
     @broken_pages = user.broken_pages_list(user.urls_with_failures_in_past_week)
     @domains_list = user.domains_list
 
-    @page_response_times = user.pages_average_times
+    @page_response_times = user.pages_average_times_in_past_week
     
-    mail(to: user.email, subject: @title)
+    mail(to: user.email, subject: subject)
+  end
   end
   
   def first_test_notification_success(test_run)
