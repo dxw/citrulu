@@ -6,6 +6,10 @@ class TestRun < ActiveRecord::Base
 
   default_scope :order => 'time_run DESC'
 
+  scope :past_week, lambda { where("time_run > ?", Time.now - 7.days) }    
+    #http://guides.rubyonrails.org/active_record_querying.html#working-with-times
+  scope :user_test_runs, lambda { |user| joins(:test_file => [:user]).where("user_id = ?", user.id) }
+
   def name
     "#{test_file.name}::#{time_run}"
   end
@@ -82,18 +86,5 @@ class TestRun < ActiveRecord::Base
   def self.delete_all_older_than(limit_date)
     where( "time_run < ?", limit_date).destroy_all    
   end
-  
-  #########
-  # Stats #
-  #########
-  
-  def pages_average_times
-    test_groups.inject({}) do |hash, group| 
-      return hash unless group.response                # Ignore groups where the page couldn't be retrieved at all
-      return hash unless group.response.code == "200"  # Only interested in tests where the pages were successful
-      fail "Found a group (id##{group.id}) with a response but no response_time" if group.response.response_time.nil?
-      
-      hash.merge({ group.test_url => group.response.response_time }){ |url, oldval, newval| (newval+oldval)/2 }
-    end
-  end
+
 end

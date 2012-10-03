@@ -56,17 +56,17 @@ ActiveRecord::Schema.define(:version => 20120924153649) do
 
   create_table "plans", :force => true do |t|
     t.integer  "test_frequency"
-    t.datetime "created_at",                                                           :null => false
-    t.datetime "updated_at",                                                           :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
     t.string   "name_en"
     t.boolean  "default"
     t.integer  "spreedly_id"
     t.boolean  "active"
-    t.integer  "number_of_sites",         :limit => 255
-    t.integer  "mobile_alerts_allowance", :limit => 255
-    t.decimal  "cost_usd",                               :precision => 6, :scale => 2
+    t.integer  "number_of_sites"
+    t.integer  "mobile_alerts_allowance"
+    t.decimal  "cost_usd",                :precision => 6,  :scale => 2
     t.boolean  "free_trial"
-    t.decimal  "cost_gbp"
+    t.decimal  "cost_gbp",                :precision => 10, :scale => 0
   end
 
   add_index "plans", ["active", "name_en"], :name => "index_plans_on_active_and_name_en"
@@ -129,7 +129,6 @@ ActiveRecord::Schema.define(:version => 20120924153649) do
     t.datetime "time_run"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
-    t.boolean  "email_sent"
   end
 
   add_index "test_runs", ["test_file_id"], :name => "index_test_runs_on_test_file_id"

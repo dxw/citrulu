@@ -11,18 +11,6 @@ require 'spec_helper'
 #   end
 # end
 describe TestFilesHelper do
-  describe "controller_name" do
-    it "should return the name of a simple controller" do
-      params[:controller] = 'baz'
-      helper.controller_name.should == 'baz'
-    end
-    
-    it "should return the name of a nested controller" do
-      params[:controller] = 'foo/bar'
-      helper.controller_name.should == 'foo bar'
-    end
-  end
-
   describe "nav_link" do
     it "should return an <a> element with no class if the href is not the current page" do
       @request.stub!(:fullpath).and_return('/foo')

@@ -94,15 +94,15 @@ class CitruluParser < TesterGrammarParser
   def self.count_domains(parsed_object)
     self.domains(parsed_object).length
   end
+  
   def self.domains(parsed_object)
     raise ArgumentError, "Nil parsed object" if parsed_object.nil?
-    parsed_object.collect do |group| 
-      host = URI(group[:page][:url]).host
-      begin
-        PublicSuffix.parse(host).domain
-      rescue PublicSuffix::DomainInvalid
-        # Do nothing - don't count this URL: return nil and compact the whole array to remove nils.
-      end
-    end.compact.uniq
+    parsed_object.map{ |group| self.domain(group[:page][:url]) }.compact.uniq
+  end
+  
+  def self.domain(url)
+    PublicSuffix.parse(URI(url).host).domain
+  rescue PublicSuffix::DomainInvalid
+    # Do nothing - don't count this URL: return nil and compact the whole array to remove nils.
   end
 end

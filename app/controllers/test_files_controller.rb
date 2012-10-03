@@ -13,7 +13,11 @@ class TestFilesController < ApplicationController
     @recent_failed_pages = @test_files.collect{|t| t.last_run.number_of_failed_groups unless t.last_run.nil?}.flatten.compact.sum
     @recent_failed_assertions = @test_files.collect{|t| t.last_run.number_of_failed_tests unless t.last_run.nil?}.flatten.compact.sum
     
-    @page_response_times = current_user.pages_average_times
+    # Stats:
+    @page_response_times              = current_user.pages_average_times_in_past_week
+    @urls_with_failures_in_past_week  = current_user.urls_with_failures_in_past_week
+    @number_of_test_runs              = current_user.number_of_test_runs_in_past_week
+    @number_of_urls                   = current_user.number_of_urls_in_past_week
     
     respond_to do |format|
       format.html 

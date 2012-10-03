@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   #  end
 
   helper_method :check_ownership
-
+  
   def check_ownership(id, model)
     # If :id is numeric, assume it's an ID, otherwise let the page return a 404
     return nil if id == 0
@@ -22,5 +22,12 @@ class ApplicationController < ActionController::Base
   def log_event(event, properties = {})
     session[:events] ||= Array.new
     session[:events] << {name: event, properties: properties }
+  end
+  
+  before_filter :get_controller_and_action
+  
+  def get_controller_and_action
+    @controller = controller_name
+    @action     = action_name
   end
 end

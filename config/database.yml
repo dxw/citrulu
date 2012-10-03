@@ -3,28 +3,36 @@
 #
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
-development:
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
 # development:
-#   adapter: mysql2
-#   encoding: utf8
-#   database: citrulu
-#   username: root
-#   password: root
-#   socket: /Applications/MAMP/tmp/mysql/mysql.sock
+#   adapter: sqlite3
+#   database: db/development.sqlite3
+#   pool: 5
+#   timeout: 5000
+development:
+  adapter: mysql2
+  encoding: utf8
+  database: citrulu_dev
+  username: root
+  password: root
+  # socket: /Applications/MAMP/tmp/mysql/mysql.sock
 
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
+
+# test: &test
+#   adapter: sqlite3
+#   database: db/test.sqlite3
+#   pool: 5
+#   timeout: 5000
+
 test: &test
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
+  adapter: mysql2
+  encoding: utf8
+  database: citrulu_dev
+  username: root
+  password: root
 
 production:
   adapter: sqlite3

@@ -366,6 +366,71 @@ describe User do
         end
       end
     end
+    
+    describe "groups_with_failures_in_past_week" do
+      before(:each) do
+        @user = FactoryGirl.create(:user)
+        @test_file = FactoryGirl.create(:test_file, user: @user)
+        @test_run = FactoryGirl.create(:test_run, test_file: @test_file)
+      end
+      it "should return [] if there are no test groups" do
+        @user.groups_with_failures_in_past_week.should == []
+      end
+      it "should return [] if there is a test_group with no failures" do
+        FactoryGirl.create(:test_group_no_failures, test_run: @test_run )
+        @user.groups_with_failures_in_past_week.should == []
+      end
+      context "when there is one test group with failures" do
+        before(:each) do
+          @test_group = FactoryGirl.create(:test_group_with_failures, test_run: @test_run)
+        end
+        it "should return that test group" do
+          @user.groups_with_failures_in_past_week.should == [@test_group]
+        end
+      end
+      it "should return the sum of all failed test groups from the past week" do
+        test_run1 = FactoryGirl.create(:test_run, test_file: @test_file)
+        
+        @test_group1 = FactoryGirl.create(:test_group_with_failures, test_run: @test_run)
+        @test_group2 = FactoryGirl.create(:test_group_with_failures, test_run: @test_run) 
+        @test_group3 = FactoryGirl.create(:test_group_with_failures, test_run: test_run1) 
+        
+        @user.groups_with_failures_in_past_week.should == [@test_group1, @test_group2, @test_group3]
+      end
+    end
+
+    describe "enqueue_stats_email" do
+      before(:each) do
+        # We don't actually want to enqueue stuff:
+        Resque.stub(:enqueue)
+      end
+      it "should call enqueue on Resque with the stats job" do
+        Resque.should_receive(:enqueue).with(TestFileJob, anything())
+        @user.enqueue_stats_email
+      end
+      it "should call enqueue on Resque with the current user's ID" do
+        Resque.should_receive(:enqueue).with(anything(), @user.id)
+        @user.enqueue_stats_email
+      end
+    end
+    
+    describe ".enqueue_all_stats_emails" do
+      before(:each) do
+        # We don't actually want to enqueue stuff:
+        Resque.stub(:enqueue)
+        User.destroy_all
+      end
+      it "should do nothing if there is only one user, and that user has chosen not to receive emails" do
+        @user_no_notify = FactoryGirl.create(:user, email_preference: 0)
+        User.any_instance.should_not_receive(:enqueue_stats_email)
+        User.enqueue_all_stats_emails
+      end
+      it "if there is only one user, and that user has chosen to receive emails, it should enqueue an email for that user" do
+        @user_notify = FactoryGirl.create(:user, email_preference: 1)
+        User.any_instance.should_receive(:enqueue_stats_email).once
+        User.enqueue_all_stats_emails
+      end  
+    end
   end
   
 end

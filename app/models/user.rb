@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :invitation_code, :email_preference, :status
   serialize :status # 4 possible values- :free, :paid, :cancelled, :inactive
   
+  scope :receiving_notifications, where(email_preference: 1)
+  
   has_many :test_files, :dependent => :destroy
   has_many :user_metas
   belongs_to :invitation
@@ -262,28 +264,151 @@ class User < ActiveRecord::Base
   ####################
   # Stats and limits #
   ####################
-  def one_week_of_test_runs
-    TestRun.joins(:test_file => [:user]).where("user_id = :user_id and time_run > :time", {:user_id => self.id, :time => Time.now - 7.days})
+  
+  def send_stats_email
+    UserMailer.weekly_stats_email(self).deliver
+  end
+  def self.send_all_stats_emails
+    receiving_notifications.each { |user| user.send_stats_email }
   end
   
-  def pages_average_times
-    # Merge the (url => response_time) results of all of the test runs from the last week 
-    array_of_hashes = one_week_of_test_runs.map{ |test_run| test_run.pages_average_times }
+  def enqueue_stats_email
+    Resque.enqueue(TestFileJob, id)
+  end
+  def self.enqueue_all_stats_emails
+    receiving_notifications.each { |user| user.enqueue_stats_email }
+  end
+  
+  def one_week_of_test_runs
+    TestRun.user_test_runs(self).past_week
+  end
+  
+  def number_of_test_runs_in_past_week
+    return 0 if one_week_of_test_runs.blank?
+    one_week_of_test_runs.size 
+  end
+  def failed_runs_in_past_week
+    return [] if one_week_of_test_runs.blank?
+    one_week_of_test_runs.select{ |r| r.has_failures? }
+  end
+  def number_of_failed_test_runs_in_past_week
+    failed_runs_in_past_week.size
+  end
+  def number_of_successful_test_runs_in_past_week
+    number_of_test_runs_in_past_week - number_of_failed_test_runs_in_past_week
+  end
+  
+  def test_groups 
+    TestGroup.user_groups(self)
+  end
+  
+  def groups_with_failures
+    # As in ALL test groups with failures EVER
+    test_groups.has_failures
+  end
+  
+  def groups_from_past_week
+    test_groups.past_week
+  end
+
+  def groups_with_failures_in_past_week
+    test_groups.has_failures.past_week
+  end
+  def urls_with_failures_in_past_week
+    test_groups.has_failures.past_week.urls.count(:group => :test_url)
+  end
+  def domains_with_failures_in_past_week
+    # Solution is FAR from ideal :( the 'count' part has to be in the select and the activerecord query doesn't return a count hash.
+    test_groups.has_failures.past_week.domains
     
-    array_of_hashes.reduce{ |bighash, this_hash | bighash.merge(this_hash){ |url, oldval, newval| (newval+oldval)/2} }
+    # Slow solution: get the groups and map them
+    # test_groups.has_failures.past_week.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
+  end
+  
+  def number_of_urls_in_past_week
+    test_groups.past_week.urls.count(:distinct => true)
+  end
+  
+  def broken_pages_list(urls_with_failures)
+    broken_pages = []
+    urls_with_failures.each do |url, number_of_failures|
+      broken_pages << {
+        :url => url,
+        :fails_this_week => number_of_failures,
+        :badness => fail_frequency(url),
+      }
+    end
+    broken_pages.sort!{ |a,b| b[:fails_this_week] <=> a[:fails_this_week] }
+  end
+  
+  # Success rates of domains in the past week
+  def domains_list
+    failures_list = domains_with_failures_in_past_week
+    
+    domains = []
+    test_groups.past_week.domains.each do |domain, count|
+      domains << {
+        :domain => domain,
+        :failure_rate => 100*failures_list[domain].to_f / count, :precision => 0
+      }
+    end
+    return domains
+  end
+  
+  def fail_frequency(test_url)
+    # i.e. how many times has this url failed for this user EVER?
+    # How many times has this page been tested in total?
+    total_tests = TestGroup.user_groups(self).testing_url(test_url)
+    total_tests = total_tests.length
+
+    # How many times has this page been irretrievable or had a failed assertion?
+    total_failed_tests = TestGroup.user_groups(self).testing_url(test_url).has_failures.length
+
+    (total_failed_tests.to_f/total_tests.to_f).round(2)
+  end
+
+  def pages_average_times_in_past_week
+    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url)
   end
   
   # The number of unique domains across all active test files
   def number_of_domains
     domains.count
   end
+  def number_of_running_files
+    test_files.running.not_deleted.count
+  end
   
   # The list of unique domains across all active test files
   def domains
     # Approach: Compile all the files and concatenate the results together, then call 'count_domains' on the whole lot
-    relevant_test_files = test_files.running.not_deleted.not_tutorial.compiled
+    relevant_test_files = test_files.running.not_deleted.compiled
     relevant_test_files.collect{|f| f.domains}.compact.flatten.uniq
   end
+  
+
+  # def average_fix_speed
+  #   return 0 if test_runs.size == 0
+  # 
+  #   in_fail_spree = false
+  #   fail_sprees = []
+  #   start_fail = nil
+  # 
+  #   test_runs.sort{|a,b| a <=> b}.each do |run|
+  #     if !in_fail_spree && run.has_failures?
+  #       in_fail_spree = true
+  #       start_fail = run
+  #     elsif in_fail_spree && !run.has_failures?
+  #       in_fail_spree = false
+  # 
+  #       fail_sprees << run.time_run - start_fail.time_run
+  #     end
+  #   end
+  # 
+  #   fail_sprees.inject(0.0){|sum,n| sum+n} / fail_sprees.size
+  # end
+  
+  # -- END STATS
   
   
   def send_nudge_email
