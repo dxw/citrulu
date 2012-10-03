@@ -19,9 +19,6 @@ gem 'treetop'
 # For deciding whether domains are unique:
 gem 'public_suffix'
 
-# Rails seems to depend on this
-gem 'therubyracer'
-
 # For to run the tests
 gem 'mechanize'
 
