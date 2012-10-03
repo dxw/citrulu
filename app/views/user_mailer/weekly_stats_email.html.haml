@@ -49,16 +49,19 @@
       - @broken_pages.each do |page|
         %li 
           %strong=truncated_test_url(page[:url], 15)
-          this page breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
+          breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
   
     %p Over the past week we tested the following domains:
     %ul 
       - @domains_list.each do |domain|
         %li
           %strong= truncated_test_url('http://' + domain[:domain], 15)
-          had problems
-          = number_to_percentage(domain[:failure_rate], precision: 0)
-          of the time
+          - if domain[:failure_rate] == 0
+            didn't have any problems
+          - else
+            had problems
+            = number_to_percentage(domain[:failure_rate], precision: 0)
+            of the time
 
 
   - unless @page_response_times.blank?
@@ -67,7 +70,7 @@
     %ul
       - @page_response_times.keys.sort.each do |url|
         %li{:style => content_p_styles}
-          ="#{ @page_response_times[url] }ms:"
+          ="#{ @page_response_times[url].round }ms:"
           = truncated_test_url(url, 15)
 
   %table

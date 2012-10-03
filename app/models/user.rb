@@ -358,13 +358,13 @@ class User < ActiveRecord::Base
   def fail_frequency(test_url)
     # i.e. how many times has this url failed for this user EVER?
     # How many times has this page been tested in total?
-    total_tests = TestGroup.user_groups(self).testing_url(test_url)
+    total_tests = test_groups.testing_url(test_url)
     total_tests = total_tests.length
 
     # How many times has this page been irretrievable or had a failed assertion?
-    total_failed_tests = TestGroup.user_groups(self).testing_url(test_url).has_failures.length
+    total_failed_tests = test_groups.testing_url(test_url).has_failures.length
 
-    (total_failed_tests.to_f/total_tests.to_f).round(2)
+    (total_failed_tests.to_f/total_tests.to_f)
   end
 
   def pages_average_times_in_past_week

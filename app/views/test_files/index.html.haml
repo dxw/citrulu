@@ -68,7 +68,7 @@
           - @page_response_times.keys.sort.each do |url|
             %li.row-fluid
               .span9.url= url
-              .span3.response_time= "#{@page_response_times[url] }ms"
+              .span3.response_time= "#{ @page_response_times[url].round }ms"
               -# needs to be this size in order to prevent nasty wrapping
 
     %section.well.stats
