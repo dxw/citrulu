@@ -25,6 +25,8 @@ class TestFilesController < ApplicationController
       @page_response_times = current_user.pages_average_times_in_past_week
     end
     
+    @domains_list = current_user.domains_list
+    
     respond_to do |format|
       format.html 
       format.json { render json: @test_files }

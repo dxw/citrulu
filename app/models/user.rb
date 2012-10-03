@@ -380,19 +380,11 @@ class User < ActiveRecord::Base
   
   # The number of unique domains across all active test files
   def number_of_domains
-    domains.count
+    test_groups.domains.count
   end
   def number_of_running_files
     test_files.running.not_deleted.count
-  end
-  
-  # The list of unique domains across all active test files
-  def domains
-    # Approach: Compile all the files and concatenate the results together, then call 'count_domains' on the whole lot
-    relevant_test_files = test_files.running.not_deleted.compiled
-    relevant_test_files.collect{|f| f.domains}.compact.flatten.uniq
-  end
-  
+  end 
 
   # def average_fix_speed
   #   return 0 if test_runs.size == 0
