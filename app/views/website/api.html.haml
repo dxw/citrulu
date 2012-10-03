@@ -27,7 +27,7 @@
   %h2 Retrieving a file
   %p To retrieve all the data for a particular file, make a GET request to:
   %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
-  %p The response is a JSON object containing all the data for the specified file. The fields are:
+  %p The response is a JSON object containing the data for the specified file, or an error. The fields are:
   %dl
     %dt name
     %dd A string containing name of the file.
@@ -61,14 +61,14 @@
     %dd A string containing body of the file.
     %dt run_tests
     %dd A boolean, indicating whether or not Citrulu should run the tests.
-  %p The response is a JSON object containing the data for the new file.
+  %p The response is a JSON object containing the data for the new file, or an error.
   %p <strong>Important note:</strong> Citrulu will not attempt to compile the new file, and files must be successfully compiled before they can be run. The run_tests parameter will therefore have no effect unless you also compile the file (see below). You must compile a new file, or its tests will not run.
 
   %h2 Updating a file
   %p To update a file, make a PUT request to:
   %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
   %p The body of your request should be an HTTP query string containing data for the parameters you wish to update. The permitted parameters are the same as those for creating a file (see above)
-  %p The response is 204 if the request succeeded, or an error if not. The body is always empty.
+  %p The response is a JSON object containing the data for the updated file, or an error. 
   %p <strong>Important note:</strong> Citrulu will not attempt to compile the updated file, and files must be successfully compiled before they can be run. If you do not compile the updated file, Citrulu will continue to run the most recently compiled set of tests (assuming that run_tests is true)
 
   %h2 Deleting a file
