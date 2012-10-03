@@ -1,0 +1,67 @@
+Your weekly summary for the week ending <%= @date %>:
+---------------
+
+<% if @number_of_running_test_files == 0 %>
+You don't currently have any test files set to run, so we're not keeping an eye on your sites.
+Go to your test files page to write a test file, or set some to run: <%=raw url_for test_files_url %>
+Please get in touch with us if there's anything we can do to help: <contact@citrulu.com>
+<% else %> 
+You currently have <%= pluralize(@number_of_running_test_files, 'test file') %> set to run, <%= @number_of_domains == 0 ? "but no domains are actually being tested!" : "covering #{ pluralize(@number_of_domains, 'domain') }."%>   
+<% end %>    
+
+<% if @number_of_test_runs == 0 %> 
+  <% if @number_of_running_test_files > 0 %>
+Citrulu hasn't run any of your test files yet. This might be because you've only recently set them to run. If nothing gets run in the next hour or so, please get in touch with us and we'll look into it: <contact@citrulu.com>.
+  <% end %>
+<% else %>
+Citrulu ran your tests <%= pluralize(@number_of_test_runs, 'time') %> this week and checked <%= pluralize(@number_of_urls, 'url') %>.
+  <% if @number_of_failed_test_runs == 0 %>
+All of your runs completed successfully!
+  <% elsif @number_of_successful_test_runs == 0 %>
+<%= @number_of_failed_test_runs == 1 ? "That run" : "All #{ @number_of_failed_test_runs } of those runs" %> found problems.
+  <% else %>
+<%= @number_of_successful_test_runs %> of those runs completed successfully, but <%= @number_of_failed_test_runs %> found problems.
+  <% end %>
+<% end %>
+
+<% unless @number_of_failed_test_runs == 0 %>
+The pages that had problems this week were:
+  <% @broken_pages.each do |page| %>
+- <%= page[:url] %> breaks <%= often_ness(page[:badness]) %> (<%= pluralize(page[:fails_this_week], 'time') %> this week)
+  <% end %>
+<% end %>
+
+<% unless @domains_list.blank? %>
+Over the past week we tested the following domains:
+  <% @domains_list.each do |domain| %>
+- <%= 'http://' + domain[:domain] %> <%= domain[:failure_rate] == 0 ? "didn't have any problems" : "had problems #{number_to_percentage(domain[:failure_rate], precision: 0)} of the time" %>
+  <% end %>
+<% end %>
+
+<% if @page_response_times %>
+Your average response times for the week are:
+  <% @page_response_times.each do |url, response_time| %>
+- <%= "#{ response_time.round }ms: #{url}" %>
+  <% end %>
+<% elsif @fastest_page_response_times && @slowest_page_response_times %>
+The pages with the slowest average response times for the week are:
+  <% @slowest_page_response_times.each do |url, response_time| %>
+- <%= "#{ response_time.round }ms: #{url}" %>
+  <% end %>
+The pages with the fastest average response times for the week are:
+  <% @fastest_page_response_times.each do |url, response_time| %>
+- <%= "#{ response_time.round }ms: #{url}" %>
+  <% end %>
+<% end %>
+
+Up to date?
+Is there more stuff you should be testing?
+Update your tests: <%=raw url_for test_files_url %>
+    
+Full results
+Want all the gory details?
+Browse full results: <%=raw url_for test_runs_url %>
+
+Plan
+Your current plan: <em>Cornichon</em>
+Upgrade" <%= raw url_for :controller => :payments, :action => :choose_plan, :only_path => false %>
