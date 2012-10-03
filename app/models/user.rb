@@ -368,8 +368,15 @@ class User < ActiveRecord::Base
   end
 
   def pages_average_times_in_past_week
-    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url)
+    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC",)
   end
+  def fastest_n_pages_average_times_in_past_week(n=5)
+    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time ASC", :limit => n)
+  end
+  def slowest_n_pages_average_times_in_past_week(n=5)
+    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC", :limit => n)
+  end
+  
   
   # The number of unique domains across all active test files
   def number_of_domains

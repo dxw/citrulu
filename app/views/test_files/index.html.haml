@@ -57,18 +57,40 @@
         %ul.unstyled
           %li run your tests #{ pluralize(@number_of_test_runs, "time") }
           %li checked #{ pluralize(@number_of_urls, "url") }
-            
-    
-    - unless @page_response_times.blank?
+      
+    - if @page_response_times
       %section.well.stats
         %header
           %h3 Average page load times:
           %em (based on the past week)
         %ul.unstyled
-          - @page_response_times.keys.sort.each do |url|
+          - @page_response_times.each do |url, response_time|
             %li.row-fluid
-              .span9.url= url
-              .span3.response_time= "#{ @page_response_times[url].round }ms"
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
+              -# needs to be this size in order to prevent nasty wrapping
+      
+    - elsif @fastest_page_response_times && @slowest_page_response_times
+      %section.well.stats
+        %header
+          %h3 Slowest average page load times:
+          %em (based on the past week)
+        %ul.unstyled
+          - @slowest_page_response_times.each do |url, response_time|
+            %li.row-fluid
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
+              -# needs to be this size in order to prevent nasty wrapping
+              
+      %section.well.stats
+        %header
+          %h3 Fastest average page load times:
+          %em (based on the past week)
+        %ul.unstyled
+          - @fastest_page_response_times.each do |url, response_time|
+            %li.row-fluid
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
               -# needs to be this size in order to prevent nasty wrapping
 
     %section.well.stats
