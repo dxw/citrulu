@@ -380,7 +380,8 @@ class User < ActiveRecord::Base
   
   # The number of unique domains across all active test files
   def number_of_domains
-    test_groups.domains.count
+    relevant_test_files = test_files.running.not_deleted.compiled
+    relevant_test_files.collect{ |file| file.domains }.compact.flatten.uniq.count
   end
   def number_of_running_files
     test_files.running.not_deleted.count
