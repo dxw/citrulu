@@ -4,6 +4,9 @@ source 'http://gems.github.com'
 gem 'rake'
 gem 'rails', '3.2.3'
 
+gem 'therubyracer'
+# therubyracer is a js runtime, required for the asset pipeline on systems which don't have a built-in js runtime. therubyracer apparently very memory-intensive, we should try and replace it with something better (e.g. Mustang)
+
 # Pagination
 gem 'kaminari'
 
