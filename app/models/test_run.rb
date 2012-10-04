@@ -6,10 +6,10 @@ class TestRun < ActiveRecord::Base
 
   default_scope :order => 'time_run DESC'
 
-  scope :past_week, lambda { where("time_run > ?", Time.now - 7.days) }    
-    #http://guides.rubyonrails.org/active_record_querying.html#working-with-times
+  scope :past_days, lambda { |days| where("time_run > ?", Time.now - days.days) }    
   scope :user_test_runs, lambda { |user| joins(:test_file => [:user]).where("user_id = ?", user.id) }
-
+  scope :has_failures, where(:id => TestGroup.has_failures.select(:test_run_id))
+  
   def name
     "#{test_file.name}::#{time_run}"
   end

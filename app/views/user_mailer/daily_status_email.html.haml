@@ -1,0 +1,39 @@
+- content_for :content do
+  %h2 Your daily summary for #{ @date }
+
+  %p{:style => content_p_styles}
+    Between all the users there are currently #{ @number_of_running_test_files } test files set to run.
+  
+  %p{:style => content_p_styles}
+    - if @number_of_test_runs == 0 
+      WHAT THE HECK?!?!? No tests were run in the past day. Sadface.
+    -else
+      Citrulu ran tests #{ @number_of_test_runs } times in the past day and checked #{ @number_of_urls } urls.
+      - if @number_of_failed_test_runs == 0
+        All of those test runs completed successfully! IT'S A FRIGGIN' MIRACLE
+      - else
+        - # There must be at least one failed and one successful test run:
+        #{ @number_of_successful_test_runs } of those runs completed successfully, but #{ @number_of_failed_test_runs } found problems.
+  -if @number_of_test_runs < 23 
+    %p{:style => content_p_styles}
+      #{ @number_of_test_runs } test runs seems low - we'd expect at least 23... HMMMMMMM... 
+        
+  - unless @number_of_failed_test_runs == 0
+    %p In total #{ @number_of_failed_urls } urls had problems. Here are the urls which failed the most:
+    %ul 
+      - @broken_pages.each do |url, failcount|
+        %li 
+          %strong=truncated_test_url(url, 15)
+          (#{pluralize(failcount, 'time')})
+  
+  / admin_user_path(test_file.user)
+  
+  - unless @number_of_test_runs == 0 
+    %p{:style => content_p_styles} The pages with the slowest average response times for the week are:
+    %ul
+      - @slowest_page_response_times.each do |url, response_time|
+        %li{:style => content_p_styles}
+          ="#{ response_time.round }ms:"
+          = truncated_test_url(url, 15)
+          
+= render :template => 'user_mailer/notification'

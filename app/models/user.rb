@@ -271,6 +271,9 @@ class User < ActiveRecord::Base
   def self.send_all_stats_emails
     receiving_notifications.each { |user| user.send_stats_email }
   end
+  def send_daily_status_email
+    UserMailer.daily_status_email(self).deliver
+  end
   
   def enqueue_stats_email
     Resque.enqueue(TestFileJob, id)
@@ -280,7 +283,7 @@ class User < ActiveRecord::Base
   end
   
   def one_week_of_test_runs
-    TestRun.user_test_runs(self).past_week
+    TestRun.user_test_runs(self).past_days(7)
   end
   
   def number_of_test_runs_in_past_week
@@ -308,25 +311,25 @@ class User < ActiveRecord::Base
   end
   
   def groups_from_past_week
-    test_groups.past_week
+    test_groups.past_days(7)
   end
 
   def groups_with_failures_in_past_week
-    test_groups.has_failures.past_week
+    test_groups.has_failures.past_days(7)
   end
   def urls_with_failures_in_past_week
-    test_groups.has_failures.past_week.urls.count(:group => :test_url)
+    test_groups.has_failures.past_days(7).urls.count(:group => :test_url)
   end
   def domains_with_failures_in_past_week
     # Solution is FAR from ideal :( the 'count' part has to be in the select and the activerecord query doesn't return a count hash.
-    test_groups.has_failures.past_week.domains
+    test_groups.has_failures.past_days(7).domains
     
     # Slow solution: get the groups and map them
-    # test_groups.has_failures.past_week.map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
+    # test_groups.has_failures.past_days(7).map{ |group| CitruluParser.domain(group.test_url) }.compact.uniq 
   end
   
   def number_of_urls_in_past_week
-    test_groups.past_week.urls.count(:distinct => true)
+    test_groups.past_days(7).urls.count(:distinct => true)
   end
   
   def broken_pages_list(urls_with_failures)
@@ -346,7 +349,7 @@ class User < ActiveRecord::Base
     failures_list = domains_with_failures_in_past_week
     
     domains = []
-    test_groups.past_week.domains.each do |domain, count|
+    test_groups.past_days(7).domains.each do |domain, count|
       domains << {
         :domain => domain,
         :failure_rate => 100*failures_list[domain].to_f / count, :precision => 0
@@ -368,18 +371,19 @@ class User < ActiveRecord::Base
   end
 
   def pages_average_times_in_past_week
-    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC",)
+    test_groups.past_days(7).average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC",)
   end
   def fastest_n_pages_average_times_in_past_week(n=5)
-    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time ASC", :limit => n)
+    test_groups.past_days(7).average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time ASC", :limit => n)
   end
   def slowest_n_pages_average_times_in_past_week(n=5)
-    test_groups.past_week.average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC", :limit => n)
+    test_groups.past_days(7).average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC", :limit => n)
   end
   
   
   # The number of unique domains across all active test files
   def number_of_domains
+    # Can't do this in SQL because the domains currently tested by a file are stored in a serialised array
     relevant_test_files = test_files.running.not_deleted.compiled
     relevant_test_files.collect{ |file| file.domains }.compact.flatten.uniq.count
   end

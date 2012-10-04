@@ -14,6 +14,6 @@ task :send_status_email => :environment do
   duncan = User.where(email: "duncan@dxw.com").first
   
   # Happy to let it fail noisily if either of these doesn't exist:
-  UserMailer.status_email(harry).deliver
-  UserMailer.status_email(duncan).deliver
+  harry.send_daily_status_email
+  duncan.send_daily_status_email
 end
