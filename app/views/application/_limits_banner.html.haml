@@ -1,4 +1,4 @@
-- if current_user.number_of_domains > current_user.plan.number_of_sites && @controller != "payments"
+- if current_user.number_of_domains > current_user.plan.number_of_sites && @controller_name != "payments"
   #limits_banner.banner
     .row
       .container
