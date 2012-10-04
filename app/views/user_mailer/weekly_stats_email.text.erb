@@ -63,5 +63,5 @@ Want all the gory details?
 Browse full results: <%=raw url_for test_runs_url %>
 
 Plan
-Your current plan: <em>Cornichon</em>
+Your current plan: <%= @plan_name %>
 Upgrade" <%= raw url_for :controller => :payments, :action => :choose_plan, :only_path => false %>

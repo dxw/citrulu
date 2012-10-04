@@ -46,6 +46,8 @@ class UserMailer < ActionMailer::Base
     @number_of_running_test_files   = user.number_of_running_files
     @number_of_domains              = @domains_list.length
     
+    @plan_name = user.plan.name # If the user doesn't have a plan, this should have been caught way earlier
+    
     mail(to: user.email, subject: subject)
   end
   
@@ -74,6 +76,8 @@ class UserMailer < ActionMailer::Base
     # Details of the current status:
     @number_of_running_test_files   = user.number_of_running_files
     @number_of_domains              = @domains_list.length
+    
+    @plan_name = user.plan.name # If the user doesn't have a plan, this should have been caught way earlier
     
     mail(to: user.email, subject: subject, template_name: 'weekly_stats_email')
   end

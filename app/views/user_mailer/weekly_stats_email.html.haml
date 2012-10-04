@@ -103,8 +103,7 @@
           =link_to "Browse full results", test_runs_url
       %td{:width => "33%", :valign=> "top"}
         %h3 Plan
-        %p{:style => content_p_styles} Your current plan: <em>Cornichon</em>
-        %br
+        %p{:style => content_p_styles} Your current plan: #{ @plan_name }
         %p{:style => content_p_styles} 
           =link_to "Upgrade", { :controller => :payments, :action => :choose_plan, :only_path => false }
 
