@@ -10,10 +10,11 @@ end
 
 desc "Send a status email to Harry and Duncan"
 task :send_status_email => :environment do
-  harry = User.where(email: "harry@dxw.com").first
-  duncan = User.where(email: "duncan@dxw.com").first
+  UserMailer.daily_status_email("harry@dxw.com").deliver
+  UserMailer.daily_status_email("duncan@dxw.com").deliver
   
-  # Happy to let it fail noisily if either of these doesn't exist:
-  harry.send_daily_status_email
-  duncan.send_daily_status_email
+  if TestRun.past_days(1).count < 5
+    UserMailer.daily_status_email("systems@dxw.com").deliver
+  end
+    
 end

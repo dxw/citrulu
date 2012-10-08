@@ -52,8 +52,8 @@ class UserMailer < ActionMailer::Base
   end
   
   # For us to know if stuff is going wrong:
-  def daily_status_email(user)
-    fail "Don't send this email to other people silly!" unless ["harry@dxw.com", "duncan@dxw.com"].include?(user.email)
+  def daily_status_email(email)
+    fail "Don't send this email to other people silly!" unless ["harry@dxw.com", "duncan@dxw.com", "systems@dxw.com"].include?(email)
     
     @date = Date.today.to_s(:simple)
     @title = "Citrulu daily status summary"
@@ -73,7 +73,7 @@ class UserMailer < ActionMailer::Base
     @broken_pages                   = TestGroup.past_days(1).has_failures.urls.count(:group => :test_url, :order => "count_test_url DESC", :limit => 10)
     @slowest_page_response_times    = TestGroup.past_days(1).average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC", :limit => 10)
     
-    mail(to: user.email, subject: subject)
+    mail(to: email, subject: subject)
   end
   
   def first_test_notification_success(test_run)
