@@ -5,7 +5,14 @@ end
 
 desc "Send all the stats emails"
 task :run_stats_emails => :environment do
-  User.send_all_stats_emails
+  # User.send_all_stats_emails
+  
+  # Temporarily, instead: just send to Harry and Duncan so that we can check that it doesn't return nonsense
+  harry = User.where(email:"harry@dxw.com").first
+  duncan = User.where(email:"duncan@dxw.com").first
+  
+  harry.send_stats_email
+  duncan.send_stats_email
 end
 
 desc "Send a status email to Harry and Duncan"
