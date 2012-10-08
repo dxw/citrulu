@@ -20,6 +20,19 @@ class TestRunner
       file.enqueue if file.due
     end
   end
+  
+  def self.run_all_tests
+    TestFile.not_deleted.running.compiled.each do |file|
+      if file.user.nil?
+        raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
+      end
+      
+      # Only run tests for users who are paid up (or on the free trial)
+      next if !file.user.active?
+
+      run_test(file) if file.due
+    end
+  end
 
   def self.run_test(file)
     if !file.run_tests?
