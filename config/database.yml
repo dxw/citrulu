@@ -30,7 +30,7 @@ development:
 test: &test
   adapter: mysql2
   encoding: utf8
-  database: citrulu_dev
+  database: citrulu_test
   username: root
   password: root
 
