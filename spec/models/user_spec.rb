@@ -14,7 +14,8 @@ describe User do
   
   context "when it is created"
     it "should add the tutorial test files" do
-      @user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
+      user = FactoryGirl.create(:user_with_tutorials)
+      user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
     end
     it "should set the email preference to recieve test run emails" do
       @user.email_preference.should == 1

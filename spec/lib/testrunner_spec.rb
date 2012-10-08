@@ -107,6 +107,9 @@ describe TestRunner do
       
       
       context "when emails are enabled" do
+        before(:all) do
+          @message = Mail::Message.new
+        end
         before(:each) do
           @user = FactoryGirl.create(:user, :email_preference => 1)
           @test_file = FactoryGirl.create(:compiled_test_file, :user => @user)
@@ -150,8 +153,8 @@ describe TestRunner do
         it "should send a 'First' success message on the first test run" do
           stub_execute_test_groups_to_succeed
           
-          UserMailer.should_receive(:first_test_notification_success).and_return(Mail::Message.new)
-          Mail::Message.any_instance.should_receive(:deliver)
+          UserMailer.should_receive(:first_test_notification_success).and_return(@message)
+          @message.should_receive(:deliver)
           
           TestRunner.run_test(@test_file)
         end
@@ -162,8 +165,8 @@ describe TestRunner do
           
           Timecop.travel(Time.now + 5)
           
-          UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
-          Mail::Message.any_instance.should_receive(:deliver)
+          UserMailer.should_receive(:test_notification_success).and_return(@message)
+          @message.should_receive(:deliver)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_test(@test_file)
@@ -172,8 +175,8 @@ describe TestRunner do
         end
 
         it "should send the 'first failure' message the first time a test fails" do
-          UserMailer.should_receive(:first_test_notification_failure).and_return(Mail::Message.new)
-          Mail::Message.any_instance.should_receive(:deliver)
+          UserMailer.should_receive(:first_test_notification_failure).and_return(@message)
+          @message.should_receive(:deliver)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
@@ -200,20 +203,20 @@ describe TestRunner do
           stub_execute_test_groups_to_succeed
           TestRunner.run_test(@test_file)
           
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
-          Mail::Message.any_instance.should_receive(:deliver)
+          UserMailer.should_receive(:test_notification_failure).and_return(@message)
+          @message.should_receive(:deliver)
 
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
         end
 
-        it "should send a failure message if the tests failed, then succeeded, then failed again for teh same reason." do
+        it "should send a failure message if the tests failed, then succeeded, then failed again for the same reason." do
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_test(@test_file)
-
+          
           UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
           Mail::Message.any_instance.should_receive(:deliver)
 
@@ -224,15 +227,15 @@ describe TestRunner do
         
         it "should send a failure message when groups have failed but no tests have failed" do
           # "group has failed" == "page could not be retrieved" == "message is not nil"          
-          TestFile.stub(:execute_test_groups) do |file,test_run|
+          TestRunner.stub(:execute_test_groups) do |file,test_run|
             FactoryGirl.create(:test_group_no_failures, :message => "I have failed", :test_run => test_run)
           end
+          TestRunner.stub(:get_email_hash)
+          TestRun.any_instance.stub(:users_first_run?).and_return(false)
           
-          TestRunner.run_test(@test_file)
-          
-          UserMailer.should_receive(:test_notification_failure).and_return(Mail::Message.new)
-          Mail::Message.any_instance.should_receive(:deliver)
-          
+          UserMailer.should_receive(:test_notification_failure).and_return(@message)
+          @message.should_receive(:deliver)  
+           
           TestRunner.run_test(@test_file)
         end
         

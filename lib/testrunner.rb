@@ -66,8 +66,7 @@ class TestRunner
         
         # If it's exactly the same as the last failure email, don't send it unless some time has passed:
         #   First strip out the unique parts (at the moment only the link to the specific test run)
-        
-        email_hash = Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
+        email_hash = get_email_hash(email)
 
         if (email_hash != file.user.last_failure_email_hash) ||
           (file.user.last_failure_email_time.nil? ||
@@ -88,6 +87,10 @@ class TestRunner
         file.user.save!
       end
     end
+  end  
+  
+  def self.get_email_hash(email)
+    Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
   end
   
   # Factored out to make testing possible
