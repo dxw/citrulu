@@ -115,10 +115,12 @@ describe TestRunner do
           Mail::Message.any_instance.stub(:text_part).and_return(Mail::Part.new)
         end
         
-        it "should not send success messages if the last TestRun was successful" do
+        it "should not send a success messages for the last in the following sequence of TestRuns: Fail Pass Pass" do
           # Tests Fail...
           stub_execute_test_groups_to_fail          
           TestRunner.run_test(@test_file)
+          
+          Timecop.travel(Time.now + 5)
           
           # ...then succeed...
           stub_execute_test_groups_to_succeed
@@ -127,11 +129,15 @@ describe TestRunner do
           # UserMailer.should_receive(:test_notification)  
           TestRunner.run_test(@test_file)
           
+          Timecop.travel(Time.now + 10)
+          
           stub_execute_test_groups_to_succeed
           
           # ...still succeeding - shouldn't get mail...
           UserMailer.should_not_receive(:test_notification_success)      
           TestRunner.run_test(@test_file)
+          
+          Timecop.return() #So that it doesn't look like the test took 15 seconds!
         end
       
         it "should not send a success message on the first test run" do
@@ -153,12 +159,16 @@ describe TestRunner do
         it "should send success messages if the last TestRun was a failure" do
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
-
+          
+          Timecop.travel(Time.now + 5)
+          
           UserMailer.should_receive(:test_notification_success).and_return(Mail::Message.new)
           Mail::Message.any_instance.should_receive(:deliver)
 
           stub_execute_test_groups_to_succeed
           TestRunner.run_test(@test_file)
+          
+          Timecop.return() #So that it doesn't look like the test took over 5 seconds!
         end
 
         it "should send the 'first failure' message the first time a test fails" do
@@ -170,6 +180,8 @@ describe TestRunner do
         end
         
         it "should not send a second failure message if the first was recently delivered" do
+          TestRun.any_instance.stub(:users_first_run?).and_return(false)
+          
           stub_execute_test_groups_to_fail
           TestRunner.run_test(@test_file)
           

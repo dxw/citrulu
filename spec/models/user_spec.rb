@@ -134,6 +134,8 @@ describe User do
         Timecop.travel(Time.now + (@free_trial_days -1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_true
+        
+        Timecop.return() # So that the test running time metrics are accurate
       end
     
       it "should return false if the user is active and was created MORE than x days ago" do
@@ -142,6 +144,8 @@ describe User do
         Timecop.travel(Time.now + (@free_trial_days +1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_false
+        
+        Timecop.return() # So that the test running time metrics are accurate
       end
     end
   end
