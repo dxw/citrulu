@@ -290,7 +290,7 @@ describe User do
   end
   
   describe "(stats)" do
-    describe "pages_average_times_in_past_week", :focus do 
+    describe "pages_average_times_in_past_week" do 
       before(:each) do
         # The test files linked to the user are v. important, so create a fresh user record, just in case.
         @user = FactoryGirl.create(:user)
