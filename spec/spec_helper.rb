@@ -25,8 +25,9 @@ Spork.prefork do
   require 'rspec/rails'
   require 'rspec/autorun'
 
-  load File.expand_path("../../db/seeds.rb", __FILE__)
-  #http://stackoverflow.com/questions/1574797/how-to-load-dbseed-data-into-test-database-automatically
+  # This line loads the seeds into the test db. The seeds connect to Spreedly so this is probably not a great idea, so instead we've done a global before :all (see bottom of file) to set up the default plan
+  # load File.expand_path("../../db/seeds.rb", __FILE__)
+  # http://stackoverflow.com/questions/1574797/how-to-load-dbseed-data-into-test-database-automatically
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -79,5 +80,14 @@ Spork.each_run do
   silence_warnings do
     Dir["#{Rails.root}/app/models/**/*.rb"].each {|f| load f}
   end
+  
+  # Global test setup:
+  RSpec.configure do |config|
+    config.before(:all) { FactoryGirl.create(:plan, default:true) }
+    config.before(:each) {}
+    config.after(:all) {}
+    config.after(:each) {}
+  end
+  
 end
 
