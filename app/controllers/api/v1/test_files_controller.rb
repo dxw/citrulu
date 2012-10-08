@@ -86,7 +86,6 @@ module Api
         rescue ActiveRecord::RecordNotFound => e
           test_file = false
         end
-        puts test_file.inspect
 
         if !test_file || test_file.deleted?
           respond_with do |format|
