@@ -81,8 +81,7 @@ class User < ActiveRecord::Base
     end
     self[:status] = new_status
   end
-
-
+  
   # THESE TWO METHODS WILL BE REQUIRED when we impose free trial limits.
   # Until then, leave them commented out so we can be sure that nothing is trying to use them:
   
@@ -282,6 +281,9 @@ class User < ActiveRecord::Base
     receiving_notifications.each { |user| user.enqueue_stats_email }
   end
   
+  def test_runs
+    TestRun.user_test_runs(self)
+  end
   def one_week_of_test_runs
     TestRun.user_test_runs(self).past_days(7)
   end
