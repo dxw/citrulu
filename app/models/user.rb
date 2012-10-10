@@ -446,9 +446,10 @@ class User < ActiveRecord::Base
   # Update details on Spreedly
   def update_subscriber
     # TODO: later on, we should maybe assume that every user has a subscription and so raise an error if they dont 
-    return if subscriber.nil?
     
     if changed.include?("email")
+      return if subscriber.nil?
+
       subscriber.update_attributes(
         :email => email,
         :screen_name => email
