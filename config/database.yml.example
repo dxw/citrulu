@@ -13,7 +13,7 @@ development:
   encoding: utf8
   database: citrulu_dev
   username: root
-  password: root
+  password: 
   # socket: /Applications/MAMP/tmp/mysql/mysql.sock
 
 
@@ -30,9 +30,9 @@ development:
 test: &test
   adapter: mysql2
   encoding: utf8
-  database: citrulu_dev
+  database: citrulu_test
   username: root
-  password: root
+  password: 
 
 production:
   adapter: sqlite3
