@@ -1,6 +1,7 @@
 .bundle
 coverage
 db/*.sqlite3
+config/database.yml
 log/*.log
 tmp/
 .sass-cache/
