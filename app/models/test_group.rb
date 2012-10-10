@@ -29,8 +29,7 @@ class TestGroup < ActiveRecord::Base
   
   scope :user_groups, lambda{ |user| joins(:test_run => {:test_file => :user}).where(:test_files => { :user_id => user.id }) }
   scope :testing_url, lambda{ |test_url| where(test_url: test_url) }
-  scope :past_week, lambda { joins(:test_run).where("test_runs.time_run > ?", Time.now - 7.days) }    
-    #http://guides.rubyonrails.org/active_record_querying.html#working-with-times
+  scope :past_days, lambda { |days| joins(:test_run).where("test_runs.time_run > ?", Time.now - days.days) }
   
   def name
     return so if !so.blank?

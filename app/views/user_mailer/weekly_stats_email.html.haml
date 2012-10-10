@@ -37,7 +37,7 @@
           That run
         - else
           All #{ @number_of_failed_test_runs } of those runs
-        found problems
+        found problems.
       - else
         - # There must be at least one failed and one successful test run:
         #{ @number_of_successful_test_runs } of those runs completed successfully, but #{ @number_of_failed_test_runs } found problems.
@@ -49,27 +49,45 @@
       - @broken_pages.each do |page|
         %li 
           %strong=truncated_test_url(page[:url], 15)
-          this page breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
+          breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
   
+  - unless @domains_list.blank?
     %p Over the past week we tested the following domains:
     %ul 
       - @domains_list.each do |domain|
         %li
           %strong= truncated_test_url('http://' + domain[:domain], 15)
-          had problems
-          = number_to_percentage(domain[:failure_rate], precision: 0)
-          of the time
+          - if domain[:failure_rate] == 0
+            didn't have any problems
+          - else
+            had problems
+            = number_to_percentage(domain[:failure_rate], precision: 0)
+            of the time
 
 
-  - unless @page_response_times.blank?
-    - # TODO - do something in the case that @page response times is blank (i.e. no tests have been run in the last week)
+  - if @page_response_times
     %p{:style => content_p_styles} Your average response times for the week are:
     %ul
-      - @page_response_times.keys.sort.each do |url|
+      - @page_response_times.each do |url, response_time|
         %li{:style => content_p_styles}
-          ="#{ @page_response_times[url] }ms:"
+          ="#{ response_time.round }ms:"
           = truncated_test_url(url, 15)
-
+  - elsif @fastest_page_response_times && @slowest_page_response_times
+    %p{:style => content_p_styles} The pages with the slowest average response times for the week are:
+    %ul
+      - @slowest_page_response_times.each do |url, response_time|
+        %li{:style => content_p_styles}
+          ="#{ response_time.round }ms:"
+          = truncated_test_url(url, 15)
+    
+    %p{:style => content_p_styles} The pages with the fastest average response times for the week are:
+    %ul
+      - @fastest_page_response_times.each do |url, response_time|
+        %li{:style => content_p_styles}
+          ="#{ response_time.round }ms:"
+          = truncated_test_url(url, 15)
+  - # else # TODO - do something in the case that @page response times is blank (i.e. no tests have been run in the last week)
+  
   %table
     %tr
       %td{:width => "33%", :valign=> "top"}
@@ -85,8 +103,7 @@
           =link_to "Browse full results", test_runs_url
       %td{:width => "33%", :valign=> "top"}
         %h3 Plan
-        %p{:style => content_p_styles} Your current plan: <em>Cornichon</em>
-        %br
+        %p{:style => content_p_styles} Your current plan: #{ @plan_name }
         %p{:style => content_p_styles} 
           =link_to "Upgrade", { :controller => :payments, :action => :choose_plan, :only_path => false }
 

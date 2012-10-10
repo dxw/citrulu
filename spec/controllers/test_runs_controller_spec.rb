@@ -10,10 +10,11 @@ describe TestRunsController do
     {}
   end
   
-  before(:each) do
+  before(:each) do    
     # For ownership checks: create another user with their own test run
     other_user = FactoryGirl.create(:user)
-    @other_test_run = FactoryGirl.create(:test_run, :test_file => other_user.test_files.first)
+    test_file = FactoryGirl.create(:test_file, user: other_user)
+    @other_test_run = FactoryGirl.create(:test_run, :test_file => test_file)
   end
   
   describe "GET index" do
@@ -29,7 +30,8 @@ describe TestRunsController do
       assigns(:not_running_test_files)[0].should be_a(TestFile) 
     end
     it "should define @test_runs" do
-      FactoryGirl.create(:test_run, :test_file => @user.test_files[0])
+      test_file = FactoryGirl.create(:test_file, user: @user)
+      FactoryGirl.create(:test_run, :test_file => test_file)
       get :index
       assigns(:test_runs)[0].should be_a(TestRun) 
     end

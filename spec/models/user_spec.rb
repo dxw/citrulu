@@ -14,7 +14,8 @@ describe User do
   
   context "when it is created"
     it "should add the tutorial test files" do
-      @user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
+      user = FactoryGirl.create(:user_with_tutorials)
+      user.test_files.last.test_file_text.should == TUTORIAL_TEST_FILES.first[:text]
     end
     it "should set the email preference to recieve test run emails" do
       @user.email_preference.should == 1
@@ -134,6 +135,8 @@ describe User do
         Timecop.travel(Time.now + (@free_trial_days -1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_true
+        
+        Timecop.return() # So that the test running time metrics are accurate
       end
     
       it "should return false if the user is active and was created MORE than x days ago" do
@@ -142,6 +145,8 @@ describe User do
         Timecop.travel(Time.now + (@free_trial_days +1).days)
         @user.status = :free
         @user.is_within_free_trial?.should be_false
+        
+        Timecop.return() # So that the test running time metrics are accurate
       end
     end
   end
@@ -290,79 +295,80 @@ describe User do
   end
   
   describe "(stats)" do
-    describe "pages_average_times" do 
+    describe "pages_average_times_in_past_week" do 
       before(:each) do
         # The test files linked to the user are v. important, so create a fresh user record, just in case.
         @user = FactoryGirl.create(:user)
+        @test_file = FactoryGirl.create(:test_file, user: @user)
+        @test_run = FactoryGirl.create(:test_run, test_file: @test_file)
       end
-      it "should return nil when there are no test_runs" do
-        @user.stub(:test_runs).and_return([])
-        @user.pages_average_times.should be_nil
+      it "should return nil when there are no test groups" do
+        @user.pages_average_times_in_past_week.should == {}
       end
-      context "when there is one test run" do
+      context "when there is one test group" do
         before(:each) do
-          @test_run = FactoryGirl.create(:test_run)
-          @user.stub(:one_week_of_test_runs).and_return([@test_run])
+          response = FactoryGirl.create(:response, response_time: 23)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response, test_url: "http://www.google.com" )
         end
-        context "with one domain" do
-          before(:each) do
-            @domain_response_hash = { "http://www.google.com" => 23 }
-          end
-          it "should return pages_average_times for the Run" do
-            @test_run.stub(:pages_average_times).and_return(@domain_response_hash)
-            @user.pages_average_times.should == @domain_response_hash
-          end
+        it "should return the response_time for that group" do
+          @user.pages_average_times_in_past_week.should == { "http://www.google.com" => 23}
         end
-        context "with two domains" do
-          before(:each) do
-            @domain_response_hash = { "http://www.google.com" => 17, "http://www.amazon.co.uk" => 23 }
-          end
-          it "should return pages_average_times for the Run" do
-            @test_run.stub(:pages_average_times).and_return(@domain_response_hash)
-            @user.pages_average_times.should == @domain_response_hash
-          end
+      end  
+      context "when there are two test groups with different urls" do
+        before(:each) do
+          response1 = FactoryGirl.create(:response, response_time: 17)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.com" )
+          response2 = FactoryGirl.create(:response, response_time: 23)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.amazon.co.uk" )
+        end
+        it "should return the response times for both groups" do
+          @user.pages_average_times_in_past_week.should == { "http://www.google.com" => 17, "http://www.amazon.co.uk" => 23 }
         end
       end
-      context "when there are two test runs" do
+      context "when there are two test groups with the same url and different response_times" do
         before(:each) do
-          @test_run1 = FactoryGirl.create(:test_run)
-          @test_run2 = FactoryGirl.create(:test_run)
-          @user.stub(:one_week_of_test_runs).and_return([@test_run1, @test_run2])
+          response1 = FactoryGirl.create(:response, response_time: 17)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.com" )
+          response2 = FactoryGirl.create(:response, response_time: 23)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.google.com" )
         end
-        context "where each has one (different) domain" do
-          before(:each) do
-            @domain_response_hash1 = { "http://www.google.com" => 17}
-            @domain_response_hash2 = { "http://www.amazon.co.uk" => 23 }
-          end
-          it "should return the union of the pages_average_times for the Runs" do
-            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
-            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
-            @user.pages_average_times.should == { "http://www.google.com" => 17, "http://www.amazon.co.uk" => 23 }
-          end
+        it "should return the response times for both groups" do
+          @user.pages_average_times_in_past_week.should == { "http://www.google.com" => 20 }
         end
-        context "where both have the same one domain (with different times)" do
-          before(:each) do
-            @domain_response_hash1 = { "http://www.google.com" => 17}
-            @domain_response_hash2 = { "http://www.google.com" => 23 }
-          end
-          it "should return an array where the response time is the average of the two runs" do
-            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
-            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
-            @user.pages_average_times.should == { "http://www.google.com" => 20 }
-          end
+      end
+      context "when there are three test groups with different urls from the same domain" do
+        before(:each) do
+          response1 = FactoryGirl.create(:response, response_time: 17)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.com" )
+          response2 = FactoryGirl.create(:response, response_time: 23)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.google.com/foo" )          
+          response2 =  FactoryGirl.create(:response, response_time: 11)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "http://www.google.com?search=bar" )
         end
-        context "where both have several domains with some overlap" do
-          before(:each) do
-            @domain_response_hash1 = { "http://www.google.com" => 17, "https://citrulu.com" => 14 }
-            @domain_response_hash2 = { "http://www.swingoutlondon.co.uk" => 18, "http://www.google.com" => 43 }
-          end
-          it "should return an array where the response time is the average of the two runs" do
-            @test_run1.stub(:pages_average_times).and_return(@domain_response_hash1)
-            @test_run2.stub(:pages_average_times).and_return(@domain_response_hash2)
-            @user.pages_average_times.should == { "http://www.google.com" => 30, 
-                                                    "https://citrulu.com" => 14, 
-                                                    "http://www.swingoutlondon.co.uk" => 18 }
-          end
+        it "should treat all the urls individually" do
+          @user.pages_average_times_in_past_week.should == {  "http://www.google.com" => 17, 
+                                                              "http://www.google.com/foo" => 23, 
+                                                              "http://www.google.com?search=bar" => 11 }
+        end
+      end
+      context "where there are a number of test groups from different test runs with some overlap" do
+        before(:each) do
+          test_run2 = FactoryGirl.create(:test_run, test_file: @test_file)
+          
+          response1 = FactoryGirl.create(:response, response_time: 11)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response1, test_url: "http://www.google.com" )
+          response2 = FactoryGirl.create(:response, response_time: 23)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response2, test_url: "https://citrulu.com" )
+          
+          response3 = FactoryGirl.create(:response, response_time: 18)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response3, test_url: "http://www.swingoutlondon.co.uk" )
+          response4 = FactoryGirl.create(:response, response_time: 14)
+          FactoryGirl.create(:test_group, test_run: @test_run, response: response4, test_url: "http://www.google.com" )
+        end
+        it "should return the average response times for overlapping urls" do
+          @user.pages_average_times_in_past_week.should == {  "http://www.google.com" => 12.5, 
+                                                              "https://citrulu.com" => 23, 
+                                                              "http://www.swingoutlondon.co.uk" => 18 }
         end
       end
     end

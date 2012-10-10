@@ -20,6 +20,19 @@ class TestRunner
       file.enqueue if file.due
     end
   end
+  
+  def self.run_all_tests
+    TestFile.not_deleted.running.compiled.each do |file|
+      if file.user.nil?
+        raise "TestRunner tried to run tests on an orphaned test file (id: #{file.id}) - user was nil."
+      end
+      
+      # Only run tests for users who are paid up (or on the free trial)
+      next if !file.user.active?
+
+      run_test(file) if file.due
+    end
+  end
 
   def self.run_test(file)
     if !file.run_tests?
@@ -53,8 +66,7 @@ class TestRunner
         
         # If it's exactly the same as the last failure email, don't send it unless some time has passed:
         #   First strip out the unique parts (at the moment only the link to the specific test run)
-        
-        email_hash = Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
+        email_hash = get_email_hash(email)
 
         if (email_hash != file.user.last_failure_email_hash) ||
           (file.user.last_failure_email_time.nil? ||
@@ -75,6 +87,10 @@ class TestRunner
         file.user.save!
       end
     end
+  end  
+  
+  def self.get_email_hash(email)
+    Digest::MD5.hexdigest(email.text_part.body.raw_source.gsub(/http\:\/\/.*\/test_runs\/[^\n]*/,""))
   end
   
   # Factored out to make testing possible

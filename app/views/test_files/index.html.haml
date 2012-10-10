@@ -57,18 +57,40 @@
         %ul.unstyled
           %li run your tests #{ pluralize(@number_of_test_runs, "time") }
           %li checked #{ pluralize(@number_of_urls, "url") }
-            
-    
-    - unless @page_response_times.blank?
+      
+    - if @page_response_times
       %section.well.stats
         %header
           %h3 Average page load times:
           %em (based on the past week)
         %ul.unstyled
-          - @page_response_times.keys.sort.each do |url|
+          - @page_response_times.each do |url, response_time|
             %li.row-fluid
-              .span9.url= url
-              .span3.response_time= "#{@page_response_times[url] }ms"
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
+              -# needs to be this size in order to prevent nasty wrapping
+      
+    - elsif @fastest_page_response_times && @slowest_page_response_times
+      %section.well.stats
+        %header
+          %h3 Slowest average page load times:
+          %em (based on the past week)
+        %ul.unstyled
+          - @slowest_page_response_times.each do |url, response_time|
+            %li.row-fluid
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
+              -# needs to be this size in order to prevent nasty wrapping
+              
+      %section.well.stats
+        %header
+          %h3 Fastest average page load times:
+          %em (based on the past week)
+        %ul.unstyled
+          - @fastest_page_response_times.each do |url, response_time|
+            %li.row-fluid
+              .span9.url= truncated_test_url(url, 15)
+              .span3.response_time= "#{ response_time.round }ms"
               -# needs to be this size in order to prevent nasty wrapping
 
     %section.well.stats
@@ -86,47 +108,11 @@
               .span3.number_of_failures=pluralize(@urls_with_failures_in_past_week[url], 'time')
               
     %section.well.stats
-      - if @urls_with_failures_in_past_week.blank?
-        %header
-          %h3 No failures in the past week :)
-      - else
-        %header
-          %h3 Domain failure rates:
-          %em (in the past week)
-        %ul.unstyled
-          - current_user.domains_list.each do |domain|
-            %li.row-fluid
-              .span9= truncated_test_url('http://' + domain[:domain], 15)
-              .span3= number_to_percentage(domain[:failure_rate], precision: 0)
-      
-        
--#sexy_stats
-  .row
-    %h3.span12 Stats, for your reading pleasure
-  .row
-    .stat.span2
-      %img{:src => "http://placehold.it/25x50"}
-      %p You've got <strong>#{pluralize(current_user.test_files.count, 'test file')}</strong>
-    / - if current_user.test_files.first.compiled?
-    /   .stat.span2
-    /     %img{:src => "http://placehold.it/25x50"}
-    /     %p Testing <strong>#{pluralize(current_user.test_files.first.number_of_pages, 'page')}</strong>
-    /   .stat.span2
-    /     %img{:src => "http://placehold.it/25x50"}
-    /     %p Checking <strong>#{pluralize(current_user.test_files.first.number_of_tests, 'condition')}</strong>
-    /   .stat.span2
-    /     %img{:src => "http://placehold.it/25x50"}
-    /     %p On average, checking <strong>#{pluralize(current_user.test_files.first.number_of_tests/current_user.test_files.first.number_of_pages, 'condition')}</strong> per page
-    / - if current_user.test_files.first.test_runs.size != 0
-    /   .stat.span2
-    /     %img{:src => "http://placehold.it/25x50"}
-    /     %p In a typical test run, <strong>#{pluralize(current_user.test_files.first.average_failures_per_run, 'page')}</strong>  fail
-    /   .stat.span2
-    /     %img{:src => "http://placehold.it/25x50"}
-    /     %p
-    /       On average, failing pages are fixed within 
-    /       %strong#{distance_of_time_in_words(Time.now, Time.now + current_user.test_files.first.average_fix_speed.seconds)}
-
-
-
-
+      %header
+        %h3 Domain failure rates:
+        %em (in the past week)
+      %ul.unstyled
+        - @domains_list.each do |domain|
+          %li.row-fluid
+            .span9= truncated_test_url('http://' + domain[:domain], 15)
+            .span3= number_to_percentage(domain[:failure_rate], precision: 0)

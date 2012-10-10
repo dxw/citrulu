@@ -4,12 +4,10 @@ class TestRun < ActiveRecord::Base
   belongs_to :test_file
   has_many :test_groups, :dependent => :destroy
 
-  default_scope :order => 'time_run DESC'
-
-  scope :past_week, lambda { where("time_run > ?", Time.now - 7.days) }    
-    #http://guides.rubyonrails.org/active_record_querying.html#working-with-times
+  scope :past_days, lambda { |days| where("time_run > ?", Time.now - days.days) }    
   scope :user_test_runs, lambda { |user| joins(:test_file => [:user]).where("user_id = ?", user.id) }
-
+  scope :has_failures, where(:id => TestGroup.has_failures.select(:test_run_id))
+  
   def name
     "#{test_file.name}::#{time_run}"
   end
@@ -69,11 +67,8 @@ class TestRun < ActiveRecord::Base
   end
   
   def previous_run
-    # The ID comparison shouldn't be nescessary, but apparently Is
-    test_file.test_runs.select{|run| (run.id != id) && (run.time_run < time_run) }.max{|a,b|a.time_run <=> b.time_run}
-    
-    # Definition by ID is cleaner but probably not what we should be doing...
-    # test_file.test_runs.select{|run|run.id < id}.max{|a,b|a.id <=> b.id}
+    # Using "first" means that this will return either nil or the single object returned:
+    previous_run_array = test_file.test_runs.where("(time_run < ?)", time_run).order("time_run DESC").limit(1).first
   end
   
   # Are there any other test_runs?

@@ -8,8 +8,7 @@ describe ConfirmationsController do
   describe "show" do
     
     it "Sends a welcome email to logged in users" do
-      @user = Factory.create(:user)
-      @user.confirm!  
+      @user = Factory.create(:confirmed_user)
       User.stub(:confirm_by_token).and_return(@user)
 
       @user.should_receive(:send_welcome_email)
