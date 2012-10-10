@@ -78,7 +78,7 @@ end
 
 group :development, :test do
    gem 'rspec-rails'
-   gem 'sqlite3'
+   gem 'mysql2', '0.3.10'
 end
 
 group :production do
