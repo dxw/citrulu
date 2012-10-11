@@ -1,6 +1,7 @@
 .container.apidocs
   %header.title
-    %h1.masthead Citrulu
+    =link_to "/" do
+      %h1.masthead Citrulu
     %p Using the API
   %nav
     =link_to "<--Back","/"
@@ -13,7 +14,7 @@
   %h2 How do I use it?
 
   %p The API works using HTTPS requests which return JSON objects.
-  %p To make API requests, you need an API key which is available from your Account Settings page. This key needs to be passed in with every request as the auth_token parameter.
+  %p To make API requests, you need an API key which is available from your #{ link_to "Account Settings", edit_user_registration_url } page. This key needs to be passed in with every request as the auth_token parameter.
 
   %h2 Results
   %p If there is an error, a response in the 4xx range will be returned, along with an error message in JSON format.
@@ -62,14 +63,18 @@
     %dt run_tests
     %dd A boolean, indicating whether or not Citrulu should run the tests.
   %p The response is a JSON object containing the data for the new file, or an error.
-  %p <strong>Important note:</strong> Citrulu will not attempt to compile the new file, and files must be successfully compiled before they can be run. The run_tests parameter will therefore have no effect unless you also compile the file (see below). You must compile a new file, or its tests will not run.
+  %p.alert.alert-info 
+    %strong Important note:
+    Citrulu will not attempt to compile the new file, and files must be successfully compiled before they can be run. The run_tests parameter will therefore have no effect unless you also compile the file (see below). You must compile a new file, or its tests will not run.
 
   %h2 Updating a file
   %p To update a file, make a PUT request to:
   %pre https://www.citrulu.com/api/v1/test_files/<span class="variable">[id of file]</span>?auth_token=<span class="variable">[your api key]</span>
-  %p The body of your request should be an HTTP query string containing data for the parameters you wish to update. The permitted parameters are the same as those for creating a file (see above)
+  %p The body of your request should be an HTTP query string containing data for the parameters you wish to update. The permitted parameters are the same as those for creating a file (see above).
   %p The response is a JSON object containing the data for the updated file, or an error. 
-  %p <strong>Important note:</strong> Citrulu will not attempt to compile the updated file, and files must be successfully compiled before they can be run. If you do not compile the updated file, Citrulu will continue to run the most recently compiled set of tests (assuming that run_tests is true)
+  %p.alert.alert-info
+    %strong Important note:
+    Citrulu will not attempt to compile the updated file, and files must be successfully compiled before they can be run. If you do not compile the updated file, Citrulu will continue to run the most recently compiled set of tests (assuming that run_tests is true)
 
   %h2 Deleting a file
   %p To delete a file, make a DELETE request to:
