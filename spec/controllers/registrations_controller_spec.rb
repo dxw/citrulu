@@ -35,7 +35,7 @@ describe RegistrationsController do
     end
     
     context "when the update is successful" do
-      it "redirects to edit" do
+      it "should redirect to edit" do
         User.any_instance.stub(:update_with_password).and_return(true)
         put :update
         response.should redirect_to(:controller => "registrations", :action => "edit")
