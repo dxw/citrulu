@@ -26,4 +26,8 @@ class RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     new_session_path(resource)
   end
+  
+  def after_update_path_for(resource)
+    edit_registration_path(resource)
+  end
 end
