@@ -124,6 +124,30 @@ class User < ActiveRecord::Base
     all.each{|user| user.set_status}
   end
   
+  # Adapted from http://stackoverflow.com/questions/4907617/ruby-on-rails-devise-gem-how-to-remove-current-password-when-password-is-blank
+  def update_with_password(params={})
+    current_password = params.delete(:current_password)
+
+    if params[:password].blank?
+      params.delete(:password)
+      params.delete(:password_confirmation) if params[:password_confirmation].blank?
+    end
+    
+    if params[:password].blank? && params[:password_confirmation].blank? && params[:email] == email
+      result = update_attributes(params)
+    else 
+      result =  if valid_password?(current_password)
+                  update_attributes(params) 
+                else
+                  errors.add(:current_password, current_password.blank? ? :blank : :invalid)
+                  attributes = params 
+                  false
+                end
+    end
+
+    clean_up_passwords
+    result
+  end
 
   ###################
   # SUBSCRIBER CRUD #
