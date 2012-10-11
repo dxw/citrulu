@@ -6,7 +6,7 @@ describe RegistrationsController do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
   
-  describe "PUT update", :focus do
+  describe "PUT update" do
     login_user
     
     it "should require the current password for updating the email" do
