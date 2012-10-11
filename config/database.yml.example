@@ -24,7 +24,7 @@ production:
 
 
 # To use MYSQL through MAMP add:
-socket: /Applications/MAMP/tmp/mysql/mysql.sock
+# socket: path/to/MAMP/tmp/mysql/mysql.sock
 
 # To use SQLite:
 # Ensure the SQLite 3 gem is defined in your Gemfile (gem 'sqlite3')
