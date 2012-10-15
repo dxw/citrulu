@@ -27,6 +27,10 @@ class RegistrationsController < Devise::RegistrationsController
     new_session_path(resource)
   end
   
+  def user_url(resource)
+    edit_registration_url(resource)
+  end
+  
   def after_update_path_for(resource)
     edit_registration_path(resource)
   end
