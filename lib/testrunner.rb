@@ -147,10 +147,10 @@ class TestRunner
         
         agent = Mechanize.new
         agent.open_timeout = 5
-        agent.read_timeout = 5
+        agent.read_timeout = 15
         agent.redirect_ok = group[:page][:redirect]
         agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        agent.user_agent = "CitruluBot/1.0"
+        agent.user_agent = "CitruluBot/1.0 (http://citrulu.com/bot)"
         
         agent.get(group[:first]) unless group[:first].blank?
         
@@ -159,7 +159,6 @@ class TestRunner
         url = URI.parse(group[:page][:url])
 
         agent.auth(url.user, url.password) if url.user
-
         page = agent.send(group[:page][:method], url.scheme + '://' + url.host + (url.port == 80 ? '' : ":#{url.port}") + url.path + (url.query.blank? ? '' : '?' + url.query), group[:page][:data])
 
       rescue Mechanize::ResponseCodeError => e
