@@ -243,6 +243,21 @@ body.registrations {
   }
 }
 
+// The following should be defined in bootstrap but don't seem to work:
+p.text-info {
+  color: #3A87AD;
+}
+p.text-warning {
+  color: #C09853;
+}
+p.text-error {
+  color: #B94A48;
+}
+p.text-success {
+  color: #468847;
+}
+
+
 //Twitter bootstrap, in sass, via a gem.
 @import "bootstrap";
 

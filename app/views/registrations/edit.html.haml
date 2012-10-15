@@ -15,7 +15,13 @@
         = f.password_field :password
         = f.password_field :password_confirmation, :placeholder => "Confirm Password"
         %p.help-block Leave blank if you don't want to change it
+    %li.control-group 
+      = f.label :current_password, :class => 'control-label'
+      .controls
+        = f.password_field :current_password
+        %p.help-block.text-error We need your current password to confirm changes to your email address or password.
         
+    
     %li.control-group 
       = f.label :email_preference, :class => 'control-label'
       .controls  
@@ -23,11 +29,7 @@
           =f.check_box :email_preference
           If this box is ticked, you'll receive an email every time a test run has failed tests.    
         
-    %li.control-group 
-      = f.label :current_password, :class => 'control-label'
-      .controls
-        = f.password_field :current_password
-        %p.help-block We need your current password to confirm any changes.
+
 
   .form-actions
     = f.submit "Update", :class => "btn btn-primary"
