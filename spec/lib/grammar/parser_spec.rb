@@ -291,6 +291,29 @@ describe CitruluParser do
     end    
   end
   
+  
+  describe "check_predefines" do
+    it "shouldn't raise an exception if there are no names" do
+      parsed_object = [{ tests: [value: "foo"] }]
+      CitruluParser.new.check_predefines(parsed_object).should
+    end
+    it "shouldn't raise an exception if there are names for which valid predefines were found"
+    it "should raise an exception if there are names for which a valid predefine could not be found"
+    it "should raise an exception mentioning multiple names if there are multiple names for which a valid predefine could not be found"
+  end
+  
+  describe "valid_predef?" do
+    it "should return true if the predef was found" do
+      Predefs.stub(:find).and_return true
+      CitruluParser.new.valid_predef?(:foo).should be_true
+    end
+    it "should return false if the predef was not found" do
+      Predefs.stub(:find).and_raise(Predefs::PredefNotFoundError)
+      CitruluParser.new.valid_predef?(:foo).should be_false
+    end
+  end
+  
+  
   describe "count_checks" do
     it "should fail if the parsed object is nil" do
       expect { CitruluParser.count_checks(nil) }.to raise_error(ArgumentError)

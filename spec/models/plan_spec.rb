@@ -2,40 +2,46 @@
 require 'spec_helper'
 
 describe Plan do
-  before(:each) do
-    # plan = FactoryGirl.create(:plan, url_count: 2, test_file_count: 2)
-    #     @user1 = FactoryGirl.create(:user, plan: plan)
-    #     FactoryGirl.create(:test_file, user: @user1, compiled_test_file_text: "On http://dxw.com\n  I should see x\nOn http://dxw.com/1\n  I should see y")
-    #     ]
-    # 
-    #     @user2 = FactoryGirl.create(:user, plan: plan)
-    #     @user2.test_files = [
-    #       FactoryGirl.create(:test_file, user: @user2, compiled_test_file_text: "On http://dxw.com\n  I should see x\nOn http://dxw.com/1\n  I should see y"),
-    #       FactoryGirl.create(:test_file, user: @user2, compiled_test_file_text: "On http://dxw.com/3\n  I should see x")
-    #     ]
-    # 
-    #     plan = FactoryGirl.create(:plan, url_count: 6, test_file_count: 1)
-    #     @user3 = FactoryGirl.create(:user, plan: plan)
-    #     @user3.test_files = [
-    #       FactoryGirl.create(:test_file, user: @user3, compiled_test_file_text: "On http://dxw.com\n  I should see x\nOn http://dxw.com/1\n  I should see y"),
-    #       FactoryGirl.create(:test_file, user: @user3, compiled_test_file_text: "On http://dxw.com/3\n  I should see x")
-    #     ]
+  describe "print_cost" do
+    it "should return a formatted string" do
+      FactoryGirl.create(:plan, cost_gbp: 2323.0).print_cost.should == "£2323"
+    end
   end
-
-  it "should limit the number of domains in test files" do
-   pending
+  
+  describe "cost" do
+    it "should return cost_gbp" do
+      FactoryGirl.create(:plan, cost_gbp: 2323.0).cost.should == 2323.0
+    end
   end
-
-  it "should allow unlimited domains" do
-    # @user2.plan.url_count = -1
-    #     @user2.plan.save!
-    #     @user3.plan.test_file_count = -1
-    #     @user3.plan.save!
-    # 
-    #     @user2.quota[:url_count].should == [3, '∞']
-    #     @user2.over_quota?.should == false
-    # 
-    #     @user3.quota[:test_file_count].should == [2, '∞']
-    #     @user3.over_quota?.should == false
+  
+  
+  describe ".cornichon" do
+    it "should return a plan" do
+      plan = FactoryGirl.create(:plan, :name_en => "Cornichon", :active => true)
+      Plan.cornichon.should == plan
+    end
+    it "should return the most recent active plan with that name"
+  end
+  describe ".gherkin" do
+    it "should return a plan" do
+      plan = FactoryGirl.create(:plan, :name_en => "Gherkin", :active => true)
+      Plan.gherkin.should == plan
+    end
+    it "should return the most recent active plan with that name"
+  end
+  describe ".cucumber" do
+    it "should return a plan" do
+      plan = FactoryGirl.create(:plan, :name_en => "Cucumber", :active => true)
+      Plan.cucumber.should == plan
+    end
+    it "should return the most recent active plan with that name"
+  end
+  
+  describe ".spreedly_plans" do
+    it "should fetch plans from spreedly" do
+      RSpreedly::SubscriptionPlan.stub(:all)
+      RSpreedly::SubscriptionPlan.should_receive(:all)
+      Plan.spreedly_plans
+    end
   end
 end

@@ -5,6 +5,35 @@ describe RegistrationsController do
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
+  describe "POST create" do
+    before(:each) do
+      User.any_instance.stub(:active_for_authentication?).and_return false # At the moment we always require users to confirm before logging in
+    end
+    context "when the record is successfully saved" do
+      before(:each) do
+        User.any_instance.stub(:save).and_return true
+      end
+      it "should redirect to the sign in path" do
+        post :create
+        response.should redirect_to(controller: "sessions", action: "new")
+      end
+      it "should log an event" do
+        pending "These tests don't actually seem to be calling the def.n in registrations_controller.rb"
+        controller.should_receive(:log_event)
+        post :create
+      end
+    end
+    context "when the record is not successfully saved" do
+      before(:each) do
+        User.any_instance.stub(:save).and_return false
+      end
+      it "should render the homepage " do
+        post :create
+        response.should render_template(action: "new")
+      end
+    end
+  
+  end
   
   describe "PUT update" do
     login_user

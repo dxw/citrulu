@@ -32,12 +32,14 @@ class PaymentsController < ApplicationController
     
     redirect_to action: "change_plan_confirmation"
   end
-
+  
+  # GET /new
   def new
     @plan = Plan.find(params[:plan_id])   
     log_event("started purchase", {:plan => params[:plan_id]})
   end
   
+  # POST /test_files/create
   def create
     @plan = Plan.find(params[:plan_id])
     

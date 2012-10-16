@@ -17,17 +17,26 @@ describe WebsiteController do
       assigns(:features).should be_a(Array)
       assigns(:features).first.should be_a(Hash)
     end
-    
-    it "renders the terms template" do
+    it "renders the features template" do
       response.should render_template("features")
     end
   end
   
   describe "GET terms" do
-    it "renders the terms template" do
-      get :terms
-      response.should render_template("terms")
+    context "when the user is logged in" do
+      login_user
+      it "renders the terms template" do
+        get :terms
+        response.should render_template("terms")
+      end
     end
+    context "when the user is not logged in " do
+      it "renders the terms template" do
+        get :terms
+        response.should render_template("terms")
+      end
+    end
+    
   end
 
 end
