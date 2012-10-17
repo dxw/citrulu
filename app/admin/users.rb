@@ -1,4 +1,15 @@
 ActiveAdmin.register User do
+  filter :email
+  filter :email, :as => :select, collection: proc { User.order(:email) }
+  filter :unconfirmed_email
+  filter :email_preference, :as => :select
+  filter :created_at
+  filter :confirmed_at
+  filter :last_sign_in_at
+  # filter :status # Doesn't work! Boo!
+  filter :invitation
+  
+  
   index do
     column :email
     column :tutorials_opened do |user|
@@ -21,6 +32,8 @@ ActiveAdmin.register User do
     column :current_sign_in_ip
     column :last_sign_in_ip
     column :confirmed_at
+    
+    column :status
     
     default_actions
   end

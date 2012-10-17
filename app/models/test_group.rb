@@ -1,6 +1,9 @@
 class TestGroup < ActiveRecord::Base
   belongs_to :test_run
+  has_one :test_file, :through => :test_run
+  has_one :owner, :through => :test_run
   belongs_to :response, :dependent => :destroy
+  
 
   has_many :test_results, :dependent => :destroy
   accepts_nested_attributes_for :test_results

@@ -1,6 +1,8 @@
 ActiveAdmin.register TestFile do
-  filter :user, order: "email asc"
-  filter :name
+  filter :id, :as => :numeric
+  filter :run_tests, :as => :select, :label => "Set to Run"
+  filter :user, order: "email asc", :label => "User Email"
+  filter :user_email, :as => :string
   filter :frequency
   filter :created_at
   filter :updated_at
@@ -10,14 +12,18 @@ ActiveAdmin.register TestFile do
   filter :domains
   
   index do
+    column :id
     column :name
     column :test_file_text do |file|
       div truncate(file.test_file_text)
     end
-    column :compiled_test_file_text do |file|
-      div truncate(file.compiled_test_file_text)
+    # column :compiled_test_file_text do |file|
+    #   div truncate(file.compiled_test_file_text)
+    # end
+    column "Set to Run", :run_tests
+    column "Owner's email" do |file| 
+      file.user.email
     end
-    column :run_tests
     column :created_at
     column :updated_at
     default_actions

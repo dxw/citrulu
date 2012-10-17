@@ -2,6 +2,7 @@ class TestRun < ActiveRecord::Base
   require 'symbolizer' 
  
   belongs_to :test_file
+  has_one :owner, :through => :test_file
   has_many :test_groups, :dependent => :destroy
 
   scope :past_days, lambda { |days| where("time_run > ?", Time.now - days.days) }    
@@ -61,11 +62,6 @@ class TestRun < ActiveRecord::Base
   end
   
   
-
-  def owner
-    test_file.user
-  end
-  
   def previous_run
     # Using "first" means that this will return either nil or the single object returned:
     previous_run_array = test_file.test_runs.where("(time_run < ?)", time_run).order("time_run DESC").limit(1).first
@@ -74,7 +70,7 @@ class TestRun < ActiveRecord::Base
   # Are there any other test_runs?
   def users_first_run?
     test_file.test_runs(true) # Cache-busting
-    test_file.test_runs.length == 1 && test_file.user.test_files.select{|f| (f.id != test_file.id) && !f.test_runs.empty?}.blank? 
+    test_file.test_runs.length == 1 && owner.test_files.select{|f| (f.id != test_file.id) && !f.test_runs.empty?}.blank? 
   end  
 
 

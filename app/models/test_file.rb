@@ -2,7 +2,8 @@ require 'parser'
 require 'symbolizer'
 
 class TestFile < ActiveRecord::Base
-  belongs_to :user 
+  belongs_to :user
+  belongs_to :owner, :class_name => "User", foreign_key: "user_id"
   has_many :test_runs, :dependent => :destroy
   serialize :domains # An array of strings - each string is a domain found in the test file
 
@@ -32,10 +33,6 @@ class TestFile < ActiveRecord::Base
     fail "Frequency was nil on test_file ##{id} when trying to calculate 'due'" if !frequency
     
     last_run.time_run + frequency < DateTime.now
-  end
-
-  def owner
-    user
   end
 
   def number_of_pages
