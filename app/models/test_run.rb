@@ -6,7 +6,6 @@ class TestRun < ActiveRecord::Base
   has_many :test_groups, :dependent => :destroy
 
   scope :past_days, lambda { |days| where("time_run > ?", Time.now - days.days) }    
-  scope :user_test_runs, lambda { |user| joins(:test_file => [:user]).where("user_id = ?", user.id) }
   scope :has_failures, where(:id => TestGroup.has_failures.select(:test_run_id))
   
   def name

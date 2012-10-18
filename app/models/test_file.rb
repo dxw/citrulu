@@ -5,6 +5,7 @@ class TestFile < ActiveRecord::Base
   belongs_to :user
   belongs_to :owner, :class_name => "User", foreign_key: "user_id"
   has_many :test_runs, :dependent => :destroy
+  has_many :test_groups, :through => :test_runs
   serialize :domains # An array of strings - each string is a domain found in the test file
 
   # By default we only deal with test files where 'deleted' is Not true

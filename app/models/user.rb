@@ -46,6 +46,8 @@ class User < ActiveRecord::Base
   scope :receiving_notifications, where(email_preference: 1)
   
   has_many :test_files, :dependent => :destroy
+  has_many :test_runs, :through => :test_files
+  has_many :test_groups, :through => :test_files
   has_many :user_metas
   belongs_to :invitation
   belongs_to :plan
@@ -305,11 +307,8 @@ class User < ActiveRecord::Base
     receiving_notifications.each { |user| user.enqueue_stats_email }
   end
   
-  def test_runs
-    TestRun.user_test_runs(self)
-  end
   def one_week_of_test_runs
-    TestRun.user_test_runs(self).past_days(7)
+    test_runs.past_days(7)
   end
   
   def number_of_test_runs_in_past_week
@@ -325,10 +324,6 @@ class User < ActiveRecord::Base
   end
   def number_of_successful_test_runs_in_past_week
     number_of_test_runs_in_past_week - number_of_failed_test_runs_in_past_week
-  end
-  
-  def test_groups 
-    TestGroup.user_groups(self)
   end
   
   def groups_with_failures
