@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :plan do
+  factory :plan, :aliases => [:active_plan] do
     name_en 'Plan'
     active true
     cost_usd 1000

@@ -14,6 +14,46 @@ describe Plan do
     end
   end
   
+  describe ".cheapest active plan" do
+    before(:all) do
+      Plan.destroy_all
+    end
+    before(:each) do
+      FactoryGirl.create(:plan, active: false)
+    end
+    it "should return nil when there are no active plans" do
+      Plan.cheapest_active_plan.should be_nil
+    end
+    context "when there is one active plan" do
+      it "should return that plan" do
+        plan = FactoryGirl.create(:active_plan)
+        Plan.cheapest_active_plan.should == plan
+      end
+    end
+    context "when there are several active plans" do
+      it "should return the cheapest" do
+        FactoryGirl.create(:active_plan, cost_gbp: 2)
+        plan = FactoryGirl.create(:active_plan, cost_gbp: 1)
+        FactoryGirl.create(:active_plan, cost_gbp: 3)
+        Plan.cheapest_active_plan.should == plan
+      end
+    end
+  end
+  
+  describe ".default" do
+    context "when there is one active default plan" do
+      before(:each) do
+        @plan = FactoryGirl.create(:plan, default: true, active: true)
+      end
+      it "should return that plan" do
+        Plan.default.should == @plan
+      end
+    end
+    context "when there is no active default plan" do
+      
+    end
+  end
+  
   
   describe ".cornichon" do
     it "should return a plan" do

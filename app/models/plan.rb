@@ -3,6 +3,8 @@ class Plan < ActiveRecord::Base
   has_many :users
   
   alias_attribute :name, :name_en
+  
+  scope :active, where(:active => true)
 
   def print_cost
     # Stored as a decimal, but round to the nearest pound for display:
@@ -13,15 +15,14 @@ class Plan < ActiveRecord::Base
     cost_gbp
   end
 
-
+  
   def self.default
     default_plan = where(:default => true).first
     if default_plan && default_plan.active?
       return default_plan
     else
       # Something's gone FOOBAR:
-      cheapest_active_plan = Plan.where(:active => true).order('cost_usd asc').first
-      if cheapest_active_plan.nil?
+      if cheapest_active_plan.blank?
         raise "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, or indeed any active plans at all!"
       else
         logger.error "SOMETHING'S GONE FOOBAR! Couldn't find a default plan, so returned the cheapest active plan (ID#{cheapest_active_plan.id}) instead. NOT IDEAL!"
@@ -30,6 +31,9 @@ class Plan < ActiveRecord::Base
     end
   end
   
+  def self.cheapest_active_plan
+    self.active.order('cost_gbp asc').first
+  end
 
   def self.cornichon
     self.where(:name_en => "Cornichon", :active => true).first

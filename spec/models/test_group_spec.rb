@@ -15,6 +15,15 @@ describe TestGroup do
     expect{ TestResult.find(test_result_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe "name" do
+    it "should return the 'So That' clause if it's not empty" do
+      FactoryGirl.create(:test_group, so: "foobar").name.should == "foobar"
+    end
+    it "should return a string based on the url if the 'So That' clause is empty" do
+      FactoryGirl.create(:test_group, so: nil, method: "get", test_url: "http://baz.com").name.should == "get::http://baz.com"
+    end
+  end
+  
   describe "failed_tests" do
     it "should return the empty array if there are no failures" do
       @test_group_no_failures.failed_tests.should be_empty
