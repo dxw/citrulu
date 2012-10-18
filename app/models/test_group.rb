@@ -55,4 +55,8 @@ class TestGroup < ActiveRecord::Base
   def has_failed_tests?
     number_of_failed_tests > 0
   end
+  
+  def self.failed_groups_reasons(limit=nil)
+    failed.count(:group => :message, :limit => limit)
+  end
 end

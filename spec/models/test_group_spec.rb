@@ -14,13 +14,52 @@ describe TestGroup do
     
     expect{ TestResult.find(test_result_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
-  
+
   describe "name" do
     it "should return the 'So That' clause if it's not empty" do
       FactoryGirl.create(:test_group, so: "foobar").name.should == "foobar"
     end
     it "should return a string based on the url if the 'So That' clause is empty" do
       FactoryGirl.create(:test_group, so: nil, method: "get", test_url: "http://baz.com").name.should == "get::http://baz.com"
+    end
+  end
+  
+  describe ".failed_groups_reasons" do
+    it "should return an empty hash when there are no failed groups" do
+      TestGroup.failed_groups_reasons.should == {}
+    end
+    it "should return a single result if there is only one failed group" do
+      group = FactoryGirl.create(:test_group_no_results, message: "foo" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 1 } 
+    end
+    it "should return two results if there are two failed groups with different messages" do
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      FactoryGirl.create(:test_group_no_results, message: "bar" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 1, 'bar' => 1,  } 
+    end
+    it "should return a single result if there are two failed groups with the same messages" do
+      FactoryGirl.create_list(:test_group_no_results, 2, message: "foo" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 2 } 
+    end
+    it "should return the correct result in a complex example " do
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      FactoryGirl.create(:test_group_no_results, message: "foos" )
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      FactoryGirl.create(:test_group_no_results, message: "baz" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 2, 'foos' => 1, 'baz' => 1 } 
+    end
+    it "should only return 2 results if the limit is 2 and all the messages are different" do
+      FactoryGirl.create_list(:failed_test_group, 5)
+      TestGroup.failed_groups_reasons(2).length.should == 2 
+    end
+    it "should return the correct result if the limit is 1 and there are multiple failed groups with the same message" do
+      FactoryGirl.create_list(:test_group_no_results, 4, message: "foo" )
+      TestGroup.failed_groups_reasons(1).should == { 'foo' => 4 }
+    end
+    it "should return the correct result if the limit is 3 and there are multiple failed groups with two messages" do
+      FactoryGirl.create_list(:test_group_no_results, 2, message: "foo" )
+      FactoryGirl.create_list(:test_group_no_results, 5, message: "bar" )
+      TestGroup.failed_groups_reasons(3).should == { 'foo' => 2, 'bar' => 5 }
     end
   end
   

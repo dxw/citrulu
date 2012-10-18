@@ -18,7 +18,7 @@ FactoryGirl.define do
       failed_results 0
       
       factory :failed_test_group do
-        message "Failed to retrieve page"
+        sequence(:message) { |n| "Failed to retrieve page#{n}@dxw.com" }
       end
     end
     
