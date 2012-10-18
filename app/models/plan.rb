@@ -46,7 +46,6 @@ class Plan < ActiveRecord::Base
   end
   
   def self.get_plan_name_from_plan_level(plan_level)
-    puts plan_level.to_sym.inspect
     LEVELS[plan_level.to_sym]
   end
   
