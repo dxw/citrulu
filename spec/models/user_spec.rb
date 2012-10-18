@@ -48,6 +48,51 @@ describe User do
     expect{ TestFile.find(test_file_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe "status=" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+    it "should succeed if the new status is :free" do
+      expect{ @user.status = :free }.to_not raise_error
+      @user.status.should == :free
+    end
+    it "should succeed if the new status is :paid" do
+      expect{ @user.status = :paid }.to_not raise_error
+      @user.status.should == :paid
+    end
+    it "should succeed if the new status is :cancelled" do
+      expect{ @user.status = :cancelled }.to_not raise_error
+      @user.status.should == :cancelled
+    end
+    it "should succeed if the new status is :inactive" do
+      expect{ @user.status = :inactive }.to_not raise_error
+      @user.status.should == :inactive
+    end
+    it "should raise an error if the new status is :awesome" do
+      expect{ @user.status = :awesome }.to raise_error
+      @user.status.should_not == :awesome 
+    end
+  end
+  
+  describe "create_or_update_subscriber" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+      @user.stub(:create_subscriber)
+      @user.stub(:update_subscriber)
+    end
+    after(:each) do
+      @user.create_or_update_subscriber
+    end
+    it "should update the spreedly subscriber if already subscribed" do
+      @user.stub(:subscribed?).and_return true
+      @user.should_receive(:update_subscriber)
+    end
+    it "should create the spreedly subscriber if not already subscribed" do
+      @user.stub(:subscribed?).and_return false
+      @user.should_receive(:create_subscriber)
+    end
+  end
+  
   context "when dealing with Spreedly" do
     before(:each) do
       @plan = FactoryGirl.create(:plan)
@@ -404,7 +449,31 @@ describe User do
         @user.groups_with_failures_in_past_week.should == [@test_group1, @test_group2, @test_group3]
       end
     end
-
+    
+    describe "(stats_lists)" do
+      before(:each) do
+        @user = FactoryGirl.create(:user)
+      end
+      describe "broken_pages_list" do
+        before(:each) do
+          @user.stub(:fail_frequency).and_return "baz"
+        end
+        it "should return an array of hashes" do
+          @user.broken_pages_list({ "foo" => 1 }).first.should be_a(Hash)
+        end
+      end
+      describe "domains_list" do
+        before(:each) do
+          @user.stub(:domains_with_failures_in_past_week).and_return({ "foo" => 1 })
+          @user.stub(:domains_in_past_week).and_return({ "foo" => 2 })
+          @user.stub(:test_groups).and_return
+        end
+        it "should return an array of hashes" do
+          @user.domains_list.first.should be_a(Hash)
+        end
+      end
+    end
+    
     describe "enqueue_stats_email" do
       before(:each) do
         # We don't actually want to enqueue stuff:
@@ -436,6 +505,40 @@ describe User do
         User.any_instance.should_receive(:enqueue_stats_email).once
         User.enqueue_all_stats_emails
       end  
+    end
+  end
+  
+  describe "(enqueueing files)" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+      @file1 = FactoryGirl.create(:test_file)
+      @file2 = FactoryGirl.create(:test_file)
+      @user.stub(:test_files).and_return([@file1, @file2])
+      
+      TestFile.any_instance.stub(:enqueue)
+      TestFile.any_instance.stub(:priority_enqueue)
+      TestFile.any_instance.stub(:prioritise)
+    end
+    describe "enqueue_test_files" do
+      it "should enqueue all the user's test files" do
+        @file1.should_receive(:enqueue)
+        @file2.should_receive(:enqueue)
+        @user.enqueue_test_files
+      end
+    end
+    describe "priority_enqueue_test_files" do
+      it "should priority_enqueue all the user's test files" do
+        @file1.should_receive(:priority_enqueue)
+        @file2.should_receive(:priority_enqueue)
+        @user.priority_enqueue_test_files
+      end
+    end
+    describe "prioritise_test_files" do
+      it "should prioritise all the user's test files" do
+        @file1.should_receive(:prioritise)
+        @file2.should_receive(:prioritise)
+        @user.prioritise_test_files
+      end
     end
   end
   

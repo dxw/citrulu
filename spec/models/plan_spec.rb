@@ -41,6 +41,9 @@ describe Plan do
   end
   
   describe ".default" do
+    before(:all) do
+      Plan.destroy_all
+    end
     context "when there is one active default plan" do
       before(:each) do
         @plan = FactoryGirl.create(:plan, default: true, active: true)
@@ -50,10 +53,69 @@ describe Plan do
       end
     end
     context "when there is no active default plan" do
-      
+      context "but there is a cheapest active plan" do
+        before(:each) do
+          @plan = FactoryGirl.create(:plan)
+          Plan.stub(:cheapest_active_plan).and_return @plan
+        end
+        it "should return that plan" do
+          Plan.default.should == @plan
+        end
+        it "should raise an error in the log" do
+          Rails.logger.should_receive(:error)
+          Plan.default
+        end
+      end
+      context "and there are no active plans" do
+        before(:each) do
+          Plan.stub(:cheapest_active_plan).and_return nil
+        end
+        it "should raise an error" do
+          expect{ Plan.default }.to raise_error
+        end
+        
+      end
     end
   end
   
+
+  describe ".get_plan_name_from_plan_level" do
+    it "should return the correct plan name" do
+      stub_const("Plan::LEVELS", { :foo => "Bar" })
+      Plan.get_plan_name_from_plan_level("foo").should == "Bar"
+    end
+  end
+  describe ".get_plan_from_level" do
+    it "should retrieve the named plan" do
+      Plan.stub(:get_plan_name_from_plan_level).and_return("Baz")
+      bar = FactoryGirl.create(:active_plan, name_en: "Baz")
+      Plan.get_plan_from_level(:faz).should == bar
+    end
+  end
+  describe ".get_spreedly_plan" do
+    it "should_not_return a plan if it is not enabled" do
+      splan = double("RSpreedly::SubscriptionPlan")
+      splan.stub(:name).and_return("baz")
+      splan.stub(:enabled).and_return false
+    
+      Plan.get_spreedly_plan([splan], "baz").should be_nil
+    end
+    it "should return the specified plan" do
+      splan1 = double("RSpreedly::SubscriptionPlan")
+      splan1.stub(:name).and_return("foo")
+      splan1.stub(:enabled).and_return true
+      
+      splan2 = double("RSpreedly::SubscriptionPlan")
+      splan2.stub(:name).and_return("bar")
+      splan2.stub(:enabled).and_return true
+      
+      spreedly_plans = [splan1, splan2]
+      
+      Plan.get_spreedly_plan(spreedly_plans, "foo").should == splan1
+      Plan.get_spreedly_plan(spreedly_plans, "bar").should == splan2
+      
+    end
+  end
   
   describe ".cornichon" do
     it "should return a plan" do

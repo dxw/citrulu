@@ -203,4 +203,36 @@ describe TestFile do
       FactoryGirl.create(:test_file, tutorial_id: nil).is_a_tutorial.should be_false
     end
   end
+  
+  describe "(resque methods)" do
+    before(:each) do
+      Resque.stub(:enqueue)
+      Resque.stub(:dequeue)
+      
+      @test_file = FactoryGirl.create(:test_file)
+    end
+    describe "enqueue" do
+      it "should call Resque and enqueue with TestFileJob" do
+        Resque.should_receive(:enqueue).with(TestFileJob, anything())
+        @test_file.enqueue
+      end
+    end
+    describe "priority_enqueue" do
+      it "should call Resque and enqueue with PriorityTestFileJob" do
+        Resque.should_receive(:enqueue).with(PriorityTestFileJob, anything())
+        @test_file.priority_enqueue
+      end
+    end
+    describe "prioritise" do
+      it "should call Resque and dequeue with TestFileJob" do
+        Resque.should_receive(:dequeue).with(TestFileJob, anything())
+        @test_file.prioritise
+      end
+      it "should call Resque and enqueue with PriorityTestFileJob" do
+        Resque.should_receive(:enqueue).with(PriorityTestFileJob, anything())
+        @test_file.prioritise
+      end
+    end
+  end
+ 
 end

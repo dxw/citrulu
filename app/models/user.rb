@@ -341,6 +341,10 @@ class User < ActiveRecord::Base
   def urls_with_failures_in_past_week
     test_groups.has_failures.past_days(7).urls.count(:group => :test_url)
   end
+  
+  def domains_in_past_week
+    test_groups.past_days(7).domains
+  end
   def domains_with_failures_in_past_week
     # Solution is FAR from ideal :( the 'count' part has to be in the select and the activerecord query doesn't return a count hash.
     test_groups.has_failures.past_days(7).domains
@@ -370,7 +374,7 @@ class User < ActiveRecord::Base
     failures_list = domains_with_failures_in_past_week
     
     domains = []
-    test_groups.past_days(7).domains.each do |domain, count|
+    domains_in_past_week.each do |domain, count|
       domains << {
         :domain => domain,
         :failure_rate => 100*failures_list[domain].to_f / count, :precision => 0
@@ -491,10 +495,6 @@ class User < ActiveRecord::Base
     #else
       # TODO - handle errors? (set on subscriber when stop_auto_renew returns false)
     end
-  end
-  
-  def inf val
-    val != -1 ? val : '∞'
   end
   
   def set_email_preference

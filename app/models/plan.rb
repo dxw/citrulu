@@ -46,6 +46,7 @@ class Plan < ActiveRecord::Base
   end
   
   def self.get_plan_name_from_plan_level(plan_level)
+    puts plan_level.to_sym.inspect
     LEVELS[plan_level.to_sym]
   end
   
@@ -55,7 +56,7 @@ class Plan < ActiveRecord::Base
   
   def self.get_spreedly_plan(plans, name)
     # There should only be one enabled plan per name...
-    plans.select{|p| p.name == name && p.enabled = true }.first
+    plans.select{|p| p.name == name && p.enabled }.first
   end
 
   def self.spreedly_plans
