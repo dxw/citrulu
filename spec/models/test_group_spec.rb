@@ -15,6 +15,26 @@ describe TestGroup do
     expect{ TestResult.find(test_result_id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
   
+  describe ".failed_groups_reasons" do
+    it "should return nil when there are no failed groups" do
+      TestGroup.failed_groups_reasons.should be_nil
+    end
+    it "should return a single result if there is only one failed group" do
+      group = FactoryGirl.create(:test_group_no_results, message: "foo" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 1 } 
+    end
+    it "should return two results if there are two failed groups with different messages" do
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      FactoryGirl.create(:test_group_no_results, message: "bar" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 1, 'bar' => 1,  } 
+    end
+    it "should return a single result if there are two failed groups with the same messages" do
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      FactoryGirl.create(:test_group_no_results, message: "foo" )
+      TestGroup.failed_groups_reasons.should == { 'foo' => 2 } 
+    end
+  end
+  
   describe "failed_tests" do
     it "should return the empty array if there are no failures" do
       @test_group_no_failures.failed_tests.should be_empty
