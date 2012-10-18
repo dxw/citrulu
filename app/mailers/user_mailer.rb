@@ -73,6 +73,9 @@ class UserMailer < ActionMailer::Base
     @broken_pages                   = TestGroup.past_days(1).has_failures.urls.count(:group => :test_url, :order => "count_test_url DESC", :limit => 10)
     @slowest_page_response_times    = TestGroup.past_days(1).average(:response_time, :joins => :response, :group => :test_url, :order => "average_response_time DESC", :limit => 10)
     
+    @number_of_failed_test_groups   = TestGroup.past_days(1).failed.count
+    @failed_groups_reasons          = TestGroup.past_days(1).failed_groups_reasons(10) 
+    
     mail(to: email, subject: subject)
   end
   

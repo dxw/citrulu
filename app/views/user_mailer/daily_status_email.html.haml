@@ -14,9 +14,9 @@
       - else
         - # There must be at least one failed and one successful test run:
         #{ @number_of_successful_test_runs } of those runs completed successfully, but #{ @number_of_failed_test_runs } found problems.
-  -if @number_of_test_runs < 23 
+  -if @number_of_test_runs < 1000 
     %p{:style => content_p_styles}
-      #{ @number_of_test_runs } test runs seems low - we'd expect at least 23... HMMMMMMM... 
+      #{ @number_of_test_runs } test runs seems low - we'd expect over 1000... HMMMMMMM... 
         
   - unless @number_of_failed_test_runs == 0
     %p In total #{ @number_of_failed_urls } urls had problems. Here are the urls which failed the most:
@@ -26,7 +26,13 @@
           %strong=truncated_test_url(url, 15)
           (#{pluralize(failcount, 'time')})
   
-  / admin_user_path(test_file.user)
+  - if @number_of_failed_test_groups > 0
+    %p #{@number_of_failed_test_groups} test groups failed to retrieve the page. Here are the most common failure reasons:
+    %ul 
+      - @failed_groups_reasons.each do |message, failcount|
+        %li
+          %abbr{ title: message }=message.truncate(50)
+          (#{pluralize(failcount, 'group')})
   
   - unless @number_of_test_runs == 0 
     %p{:style => content_p_styles} The pages with the slowest average response times for the week are:
