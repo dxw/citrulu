@@ -6,15 +6,15 @@ ActiveAdmin.register TestGroup do
     column :method
 
     column :message do |file|
-      div truncate(file.message)
+      truncate(file.message)
     end
 
     column :data do |group|
-      div truncate(group.data)
+      truncate(group.data)
     end
 
     column :test_run do |group|
-      div "#{group.test_run.test_file.name} / #{group.test_run.time_run}"
+      "#{group.test_run.test_file.name} / #{group.test_run.time_run}"
     end
   
     column :created_at

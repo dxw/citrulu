@@ -15,10 +15,10 @@ ActiveAdmin.register Response do
       "#{response.response_time}ms"
     end
     column :headers do |response|
-      div truncate(response.headers)
+      truncate(response.headers)
     end
     column :content do |response|
-      div truncate(response.content)
+      truncate(response.content)
     end
     default_actions
   end

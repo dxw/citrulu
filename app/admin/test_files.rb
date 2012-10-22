@@ -15,7 +15,7 @@ ActiveAdmin.register TestFile do
     column :id
     column :name
     column :test_file_text do |file|
-      div truncate(file.test_file_text)
+      truncate(file.test_file_text)
     end
     # column :compiled_test_file_text do |file|
     #   div truncate(file.compiled_test_file_text)
