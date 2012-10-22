@@ -5,12 +5,12 @@ ActiveAdmin.register TestGroup do
     column :test_url
     column :method
 
-    column :message do |file|
-      truncate(file.message)
+    column :message do |group|
+      truncate(group.message) unless group.message.nil
     end
 
     column :data do |group|
-      truncate(group.data)
+      truncate(group.data) unless group.data.nil
     end
 
     column :test_run do |group|
