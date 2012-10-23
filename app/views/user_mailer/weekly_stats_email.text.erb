@@ -34,7 +34,7 @@ The pages that had problems this week were:
 <% unless @domains_list.blank? %>
 Over the past week we tested the following domains:
   <% @domains_list.each do |domain| %>
-- <%= 'http://' + domain[:domain] %> <%= domain[:failure_rate] == 0 ? "didn't have any problems" : "had problems #{number_to_percentage(domain[:failure_rate], precision: 0)} of the time" %>
+- <%= 'http://' + domain[:domain] %> <%= domain[:failure_rate] == 0 ? "didn't have any problems" : "had problems #{number_to_percentage(domain[:failure_rate], precision: 0)} of the times that we checked" %>
   <% end %>
 <% end %>
 
