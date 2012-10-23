@@ -27,7 +27,7 @@ All of your runs completed successfully!
 <% unless @number_of_failed_test_runs == 0 %>
 The pages that had problems this week were:
   <% @broken_pages.each do |page| %>
-- <%= page[:url] %> breaks <%= often_ness(page[:badness]) %> (<%= pluralize(page[:fails_this_week], 'time') %> this week)
+- <%= page[:url] %> breaks <%#= often_ness(page[:badness]) %>(<%= pluralize(page[:fails_this_week], 'time') %> this week)
   <% end %>
 <% end %>
 

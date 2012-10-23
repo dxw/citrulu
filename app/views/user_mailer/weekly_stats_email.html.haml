@@ -49,7 +49,8 @@
       - @broken_pages.each do |page|
         %li 
           %strong=truncated_test_url(page[:url], 15)
-          breaks #{often_ness(page[:badness])} (#{pluralize(page[:fails_this_week], 'time')} this week)
+          -# breaks #{often_ness(page[:badness])}
+          (#{pluralize(page[:fails_this_week], 'time')} this week)
   
   - unless @domains_list.blank?
     %p Over the past week we tested the following domains:
