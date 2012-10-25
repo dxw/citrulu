@@ -19,7 +19,7 @@ module SimpleFrontEndTesting
     
     config.to_prepare do
       # The Registrations controller uses the main website layouts, not the devise layouts:
-      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "application" }   
+      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "devise" }   
       Devise::Mailer.layout "user_mailer"
     end
 
