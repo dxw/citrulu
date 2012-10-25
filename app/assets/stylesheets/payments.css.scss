@@ -42,4 +42,59 @@ body.payments {
     font-size: 1.5em;
     text-align: center;
   }
+  
+  table {
+    p {
+        margin: 0;
+    }
+
+    small {
+      font-size: 90%;
+    }
+
+    thead td, thead th {
+      font-size: 18px;
+      font-weight: bold;
+      padding-bottom: 20px;
+    }
+
+    td {
+      font-size: 15px;
+      text-align: center;
+    }
+
+    td .btn { 
+      margin: 1em;
+      padding: 1em;
+      line-height: 1.6;
+    }
+  }
+
+  .feature {
+    text-align: left;
+    padding: 10px 10px 10px 0;
+  }
+
+  .features {
+    h2 {
+      padding: 1.5em 0 0.5em 0;
+    }
+    .row {
+      padding: 15px 0;
+    }
+    p {
+      text-align: justify;
+    }
+    i {
+      position: relative;
+      top: 0.3em;
+      margin-left: 0.3em;
+    }
+  }
+
+  .comingsoon {
+    font-style: italic;
+    font-weight: normal;
+    font-size: 15px;
+  }
 }
