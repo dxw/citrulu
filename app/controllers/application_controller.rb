@@ -30,4 +30,14 @@ class ApplicationController < ActionController::Base
     @controller_name = controller_name
     @action_name     = action_name 
   end
+  
+  
+  def after_sign_out_path_for(resource)
+    if Rails.env == 'production'
+      "https://www.citrulu.com"
+    else # Rails.env == 'development'
+      super
+    end
+  end
+  
 end
