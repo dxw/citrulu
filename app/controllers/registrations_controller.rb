@@ -1,5 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
-
+  protect_from_forgery :except => [:create]
+  
+  
   # Copied verbatim from the devise code on 04/09/2012 in order to put log_event messages in
   def create
     build_resource
