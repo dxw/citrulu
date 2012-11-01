@@ -6,11 +6,11 @@ ActiveAdmin.register TestGroup do
     column :method
 
     column :message do |group|
-      truncate(group.message) unless group.message.nil
+      truncate(group.message) unless group.message.nil?
     end
 
     column :data do |group|
-      truncate(group.data) unless group.data.nil
+      truncate(group.data) unless group.data.nil?
     end
 
     column :test_run do |group|
