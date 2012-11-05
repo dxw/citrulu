@@ -47,7 +47,7 @@ GEM
     arel (3.0.2)
     awesome_print (1.0.2)
     bcrypt-ruby (3.0.1)
-    bootstrap-sass (2.0.4.1)
+    bootstrap-sass (2.1.1.0)
     bourbon (2.1.1)
       sass (>= 3.1)
     builder (3.0.4)
@@ -283,7 +283,7 @@ PLATFORMS
 DEPENDENCIES
   activeadmin
   awesome_print
-  bootstrap-sass (~> 2.0.3)
+  bootstrap-sass (~> 2.1.1)
   capybara
   codemirror-rails
   coffee-rails (~> 3.2.0)
