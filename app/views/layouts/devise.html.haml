@@ -1,8 +1,8 @@
 - content_for :content do
-      
+    
   %header#banner.navbar.navbar-fixed-top
     .navbar-inner
-      .container-fluid
+      .container
         = link_to image_tag('logo.png'), 'http://www.citrulu.com', :class => 'brand'
         %nav#nav-main.nav-collapse
           %ul#menu-primary-navigation.nav
@@ -12,21 +12,21 @@
             %li= link_to 'Login', 'http://www.citrulu.com/#login', :class => 'btn btn-login'
             %li= link_to 'Sign Up', 'http://www.citrulu.com/#signup', :class => 'btn btn-signup-nav'
               
-  .form-horizontal.well
-    - flash.each do |name, message|
-      = flash_message(name, message)
-    = devise_error_messages!
-    = yield
-  %footer#content-info.container-fluid
-  .row
-    .span3
-      = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
-    .footer-social
-      %p
-        = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
-        = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
-    .footer-links.span8
-      %ul
-        %li Blah
+    .form-horizontal.container-fluid
+      - flash.each do |name, message|
+        = flash_message(name, message)
+      = devise_error_messages!
+      = yield
+    %footer#content-info.container-fluid
+    .row-fluid
+      .span3
+        = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
+      .footer-social
+        %p
+          = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
+          = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
+      .footer-links.span8
+        %ul
+          %li Blah
 
 = render :template => 'layouts/application'
