@@ -9,8 +9,8 @@
             %li= link_to 'Three Steps', 'http://www.citrulu.com/#3steps'
             %li= link_to 'Features', 'http://www.citrulu.com/#features'
             %li= link_to 'Pricing', 'http://www.citrulu.com/#pricing'
-            %li= link_to 'Login', 'http://www.citrulu.com/#login', :class => 'btn btn-login'
-            %li= link_to 'Sign Up', 'http://www.citrulu.com/#signup', :class => 'btn btn-signup-nav'
+            %li= link_to 'Login', new_session_path(resource_name), :class => 'btn btn-login'
+            %li= link_to 'Sign Up', new_registration_path(resource_name), :class => 'btn btn-signup-nav'
               
     .form-horizontal.container-fluid
       - flash.each do |name, message|
