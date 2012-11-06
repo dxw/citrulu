@@ -12,13 +12,15 @@
               =image_tag('signup-citrulu-bot.png')
               %h2 Sign up
               %p For a free beta account
-            = f.email_field :email, :placeholder => "Email"
-            = f.password_field :password, :placeholder => "Password"
-            = f.password_field :password_confirmation, :placeholder => "Confirm Password"
+            
+            .controls-row
+              = f.email_field :email, :placeholder => "Email"
+            .controls-row
+              = f.password_field :password, :placeholder => "Password"
+              = f.password_field :password_confirmation, :placeholder => "Confirm Password"
     
-          .signup-form-button.span4
-            = button_tag(:type => 'submit', :class => 'btn btn-signup') do
-              = content_tag(:span, 'Sign Up', :class => 'pencil-icon')
+          = button_tag(:type => 'submit', :class => 'btn btn-signup', :id => "signup_button") do
+            = content_tag(:span, 'Sign Up', :class => 'pencil-icon')
           %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
           %ul.unstyled.devise_links
             %li= link_to "Sign in", new_session_path(resource_name)

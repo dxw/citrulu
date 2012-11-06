@@ -40,9 +40,8 @@ body.registrations section#signup {
     border: 1px solid #bac4c7;
     border-radius: 5px;
     background-image: url('/assets/bg.png');
-    margin-top: 20px;
-    margin-right: 25%;
-    margin-left: 25%!important;
+    float: none;
+    margin: 25px auto;
   }
 
     .signup-inner {
@@ -51,22 +50,17 @@ body.registrations section#signup {
       border-radius: 5px;
       background-color: #fff;
       padding: 30px;
-      input {
-        margin-left:50px;
-        clear: both;
-        .user_email {
-          width: 430px;
-        }
-        .password {
-          width: 203px;
-        }
+      text-align: center;
+      input#user_email {
+        width: 430px;
+      }
+      input#user_password, input#user_password_confirmation{
+        width: 202px;
       }
     }
-
-    .signup-form-button {
-      margin-top: -35px;
-      margin-right: 45%!important;
-      margin-left: 45%!important;
+    #signup_button {
+      display: block;
+      margin: -35px auto;
     }
 }
 
@@ -78,17 +72,6 @@ input, input[type="email"], input[type="password"] {
   text-align: center;
   border-color: transparent;
   box-shadow: inset 1px 1px 1px #bedce5;
-  
-  &#user_email {
-    width: 430px;
-     margin-bottom: 10px;
-  }
-
-  &#user_password, &#user_password_confirmation {
-    width: 200px;
-    margin-bottom: 10px;
-    margin-right: 3px!important;
-  }
 }
 
 .btn-signup {
