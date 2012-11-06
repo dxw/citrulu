@@ -26,53 +26,10 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
 }
 
 
-
 #error_explanation{
 	@extend  .alert-error;
 }
 
-
-.container.devise {
-  padding-top: 100px;
-  width: 260px;
-
-	.alert {
-		margin: 0 auto 20px;
-	}
-	.user_form {
-		margin: auto;
-		width: 240px;
-	}
-	.form-horizontal {
-    input {
-      margin-bottom: 0.5em;
-    }
-    label.checkbox{
-      width: 100%;
-      margin-bottom: 0.5em;
-    }
-    input[type="submit"] {
-      // handle buttons with long text:
-      white-space: normal;
-    }
-  }
-  
-}
-
-ul.devise_links {
-  li.last {
-    border-right: 0;
-  }
-  li {
-    &:last-child {
-      border-right: 0;
-    }
-
-    border-right: 1px solid black;
-    padding: 0 10px 0 5px;
-    display: inline-block;
-  }
-}
 
 .banner {
   width: 100%;
