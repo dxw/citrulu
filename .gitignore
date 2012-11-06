@@ -11,3 +11,4 @@ public/system
 app/assets/images/workingimages
 vendor/bundle
 log
+.idea/
