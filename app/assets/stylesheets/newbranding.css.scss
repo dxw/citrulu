@@ -1,5 +1,4 @@
-
-body.registrations section.signup {
+body.registrations section#signup {
   margin-top: 50px;
 
   h1, h2, h3, h4, h5, h6 {
@@ -8,35 +7,36 @@ body.registrations section.signup {
     color: #067295;
   }
 
-  h2 {
-    font-size: 48px;
-  }
-
-  section header h2, section header p {
-    text-align: center;
-  }
-
-  header h2 {
-    font-family: 'Source Sans Pro', sans-serif;
-  }
-
-  header p {
-	  font-family: 'Source Sans Pro', sans-serif; 
-	  color: #0a89b2;
-	  font-size: 20px;
-	  font-weight: 400;
-	  line-height: 30px;
-	  margin-top: 15px;
-	  margin-bottom: 30px;
-	 }
-
-  header img {
+  legend {
+    padding-top: 25px;
     float: left;
-    margin-right: 15px;
-    margin-left: 100px;
+    height: 110px;
+    text-align: center;
+    border: none;
+    
+    h2 {
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 48px;
+    }
+
+    p {
+      font-family: 'Source Sans Pro', sans-serif; 
+      color: #0a89b2;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 30px;
+      margin-top: 15px;
+      margin-bottom: 30px;
+     }
+
+    img {
+      float: left;
+      margin-right: 15px;
+      margin-left: 100px;
+    }
   }
 
-  div.signup-outer {
+  fieldset {
     border: 1px solid #bac4c7;
     border-radius: 5px;
     background-image: url('/assets/bg.png');
@@ -45,60 +45,49 @@ body.registrations section.signup {
     margin-left: 25%!important;
   }
 
-    div.signup-inner {
+    .signup-inner {
       margin: 20px;
       border: 1px solid #bac4c7;
       border-radius: 5px;
       background-color: #fff;
       padding: 30px;
-    }
-
-      div.signup-text {
-        padding-top: 25px;
-        float: left;
-        height: 110px;
-      }
-
-      div.signup-form {
+      input {
         margin-left:50px;
         clear: both;
-      }
-      
-        input.user_email {
+        .user_email {
           width: 430px;
-          margin-bottom: 10px;
         }
-
-        input.password {
+        .password {
           width: 203px;
-          margin-bottom: 10px;
         }
+      }
+    }
 
-          div.signup-form-button {
-            margin-top: -35px;
-            margin-right: 45%!important;
-            margin-left: 45%!important;
-          }
-          
+    .signup-form-button {
+      margin-top: -35px;
+      margin-right: 45%!important;
+      margin-left: 45%!important;
+    }
 }
 
 input, input[type="email"], input[type="password"] {
-	background-color: #e9f5f9;
-	border-radius: 5px;
-	padding: 10px;
-	text-align: center;
-	border-color: transparent;
-	box-shadow: inset 1px 1px 1px #bedce5;
-	
-	&#user_email {
+  background-color: #e9f5f9;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  border-color: transparent;
+  box-shadow: inset 1px 1px 1px #bedce5;
+  
+  &#user_email {
     width: 430px;
-   	margin-bottom: 10px;
+     margin-bottom: 10px;
   }
 
-	&#user_password, &#user_password_confirmation {
+  &#user_password, &#user_password_confirmation {
     width: 200px;
-	  margin-bottom: 10px;
-	  margin-right: 3px!important;
+    margin-bottom: 10px;
+    margin-right: 3px!important;
   }
 }
 
@@ -132,9 +121,9 @@ input, input[type="email"], input[type="password"] {
 }
 
 .pencil-icon {
-	background-image: url("/assets/pencil-icon.png");
-	background-repeat: no-repeat;
-	padding-left:30px;
+  background-image: url("/assets/pencil-icon.png");
+  background-repeat: no-repeat;
+  padding-left:30px;
 }
 
 // * Bootstrap fix *//
