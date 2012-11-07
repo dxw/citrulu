@@ -5,32 +5,44 @@
   %header#banner.navbar.navbar-fixed-top
     .navbar-inner
       .container
+        %a.btn.btn-navbar{ 'data-toggle' => "collapse", 'data-target' => ".nav-collapse" }
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
         = link_to image_tag('logo.png'), 'http://www.citrulu.com', :class => 'brand'
-        %nav#nav-main.nav-collapse
+        %nav#nav-main.nav-collapse.collapse
           %ul#menu-primary-navigation.nav
             %li= link_to 'Three Steps', 'http://www.citrulu.com/#3steps'
             %li= link_to 'Features', 'http://www.citrulu.com/#features'
             %li= link_to 'Pricing', 'http://www.citrulu.com/#pricing'
             %li= link_to 'Login', new_session_path(resource_name), :class => 'btn btn-login'
-            %li= link_to 'Sign Up', new_registration_path(resource_name), :class => 'btn btn-signup-nav'
+            %li.btn.btn-signup-nav= link_to 'Sign Up', new_registration_path(resource_name)
               
+  .blue-bg
+    .container-fluid
+
+    - flash.each do |name, message|
+      = flash_message(name, message)
+    = devise_error_messages!
   
-  - flash.each do |name, message|
-    = flash_message(name, message)
-  = devise_error_messages!
-  
-  = yield
-  
-  %footer#content-info.container-fluid
-  .row-fluid
-    .span3
-      = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
-    .footer-social
-      %p
-        = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
-        = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
-    .footer-links.span8
-      %ul
-        %li Blah
+    = yield
+
+  .blue-bg.blue-bg-finish
+
+  %footer#content-info.container
+    .row-fluid
+      .span3
+        = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
+      .footer-social
+        %p
+          = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
+          = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
+      .footer-links.span8
+        %ul#menu-footer-navigation
+          %li= link_to 'Support', 'http://www.citrulu.com/support'
+          %li= link_to 'Terms & Conditions', 'http://www.citrulu.com/terms'
+          %li= link_to 'Privacy Policy', 'http://www.citrulu.com/privacy'
+          %li= link_to 'Support', 'http://www.citrulu.com/api'
+
 
 = render :template => 'layouts/application'

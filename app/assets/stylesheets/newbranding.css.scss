@@ -1,5 +1,8 @@
 //TODO: find a better way of selecting the non-logged-in pages:
+
 body.registrations.new, body.sessions, body.passwords, body.confirmations {
+
+  background-image: url('/assets/bg.png');
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Source Sans Pro', sans-serif;
@@ -12,19 +15,20 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
    ========================================================================== */
   
   form {
-    margin: 25px auto;
+    margin: 60px auto 40px auto;
     max-width: 690px;
 
     legend {
-      padding-top: 25px;
+      padding-top: 10px;
       float: left;
-      height: 110px;
-      text-align: center;
+      height: 118px;
       border: none;
     
       h2 {
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 48px;
+        width: 500px;
+        margin-top: 30px;
       }
 
       p {
@@ -35,6 +39,7 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
         line-height: 30px;
         margin-top: 15px;
         margin-bottom: 30px;
+        width: 500px;
        }
 
       img {
@@ -58,20 +63,25 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
       background-color: #fff;
       padding: 30px;
       text-align: center;
+
+      #terms {
+        font-size:11px;
+      }
     }
     
     input, input[type="email"], input[type="password"] {
       width: 202px;
       background-color: #e9f5f9;
       border-radius: 5px;
-      padding: 10px;
       margin-bottom: 10px;
       text-align: center;
       border-color: transparent;
       box-shadow: inset 1px 1px 1px #bedce5;
+      height: 30px;
+      width: 220px;
     }
     input.full_width {
-      width: 430px;
+      width: 455px;
     }
     @media (max-width: 1200px) {
       input.full_width {
@@ -119,7 +129,36 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
     padding-left:30px;
   }
 
-  
+/* ==========================================================================
+ Devise links
+ ========================================================================== */
+
+  ul.unstyled.devise_links {
+
+    max-width: 690px;
+    margin: 70px auto 0px auto;
+    clear:both;
+    text-align: center;
+
+    li {
+      margin-right: 15px;
+      display: inline;
+      text-align: center;
+
+      a {
+        padding-right: 15px;
+      }
+
+      &:after {
+        content: '|';
+      }
+
+      &:last-child:after {
+        content: none;
+      }
+
+    }
+  }
 
 
 /* ==========================================================================
@@ -128,16 +167,11 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
   
   /* On the body, to accommodate the navbar: */
   padding-top: 86px;
-  
-  .navbar-fixed-top .navbar-inner, .navbar-static-top .navbar-inner {
-    -webkit-box-shadow: none!important;
-    box-shadow: none!important;
-  }
 
   .navbar-inner {
     background-color: #9ddcef;
     background-image: none;
-    border: 2px solid rgba(6,114,149,0.5);
+    border-bottom: 1px solid rgba(6, 114, 149, 0.4);
     -webkit-box-shadow: 0px 0px 0px 0px;
     -moz-box-shadow: none;
     box-shadow: 0px 0px 0px 0px;
@@ -149,79 +183,197 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
     background-image: url('/assets/bg.png');
     background-position: top center;
 
-      div.container-fluid {
+      div.container {
         height: 85px;
-      }
 
         ul#menu-primary-navigation {
           float:right;
           margin-top: 20px;
-        }
 
           li {
             margin-right: 20px;
           }
-
-            &.btn-signup {
-              margin-right: 0px;
-            }
-
-            &.btn-login {
-              margin-right: 40px;
-              font-weight: 600;
-            }
-
-              a {
-                background-image: url("../img/login-icon.png");
-                background-repeat: no-repeat;
-                background-position: 0px 13px;
-                padding-left: 20px;
-              }
+        }
+      }
   }
 
-  .navbar .nav li  {
-
-    a {
-    text-shadow: none;
-    color: #454500;
-    }
-
-    &.active a {
-      color: #077194;
-      text-decoration: none;
-      background-color: transparent;
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
-      box-shadow: none;
-    }
-
-      &:hover {
-      text-shadow: none;
-      color: #077194;
-      }
-
-    &.btn-signup-nav a {
-      color: #fff;
-      background-image: url("../img/pencil-icon.png");
-      background-repeat: no-repeat;
-      background-position: 0px 6px;
-    }
+  .navbar {
 
     .btn-navbar {
       background-color: #0a89b2;
       background-image: none;
       margin-right: 0px;
-    }
 
       &:hover {
         background-color: #1db8ea;
         background-image: none;
         margin-right: 0px;
       }
+    }
 
+    .nav li  {
+
+      &.btn-signup-nav {
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+        background-color: #87B71D;
+        background-image: -moz-linear-gradient(top, #9ED426, #87B71D);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ED426), to(#87B71D));
+        background-image: -webkit-linear-gradient(top, #9ED426, #87B71D);
+        background-image: -o-linear-gradient(top, #9ED426, #87B71D);
+        background-image: linear-gradient(to bottom, #9ED426, #87B71D);
+        border: 0px;
+        height: 35px;
+        line-height: 12px;
+        padding: 0px 20px 0px 30px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        width: 120px;
+        text-shadow: 2px 2px 1px black;
+
+          a {
+            margin-right: 0px;
+            color: #fff;
+            background-image: url("/assets/pencil-icon.png");
+            background-repeat: no-repeat;
+            background-position: 0px 6px;
+          }
+      }
+
+      a {
+        text-shadow: none;
+        color: #454500;
+        background-color: transparent;
+        border: 0px;
+        box-shadow: none;
+        margin-top: 0px;
+
+        &.btn-login {
+          margin-right: 40px;
+          font-weight: 600;
+          background-image: url("/assets/login-icon.png");
+          background-repeat: no-repeat;
+          background-position: 0px 13px;
+          padding-left: 20px;
+
+        }
+      }
+    }
   }
 
   .brand {
     margin-top: 10px;
+  }
+}
+
+
+/* ==========================================================================
+   Footer
+*/
+
+footer {
+
+  color: #fff;
+
+  ul#menu-footer-navigation {
+  margin-left: 0px;
+  text-align: right;
+
+    li {
+    list-style-type: none;
+    display: inline;
+    margin: 0px 15px 0px 0px;
+
+      a {
+        padding-right: 15px;
+      }
+
+      &:after {
+        content: '|';
+      }
+
+      &:last-child:after {
+        content: none;
+      }
+    }
+  }
+
+  div.footer-links {
+  margin-top: 46px;
+  text-align: right;
+  float: right!important;
+  margin-right: 30px;
+  }
+
+  div.footer-social {
+  float: right;
+  margin-top: 40px;
+  }
+}
+
+
+
+/* ==========================================================================
+   Backgrounds
+*/
+
+div.blue-bg {
+  background-image: url("/assets/soft-blue-bg.png");
+  background-repeat: repeat-x;
+  background-position: top 2px;
+  background-color: #e9f5f9;
+  width: 100%;
+  float:left;
+  display: inline;
+  border-top: 1px solid #fff;
+}
+
+
+div.blue-bg-finish {
+  background-image: url("/assets/soft-blue-bg-finish.png");
+  height: 60px;
+  background-position: center bottom;
+  background-color: #e9f5f9;
+  border-top: none;
+  border-bottom: 1px solid #fff;
+}
+
+/* ==========================================================================
+   Page specific tweaks
+*/
+
+
+body.sessions {
+
+  form {
+      legend {
+
+        h2 {
+        margin-top: 50px;
+        }
+
+        img {
+        margin-left: 130px;
+        }
+    }
+  }
+}
+
+body.passwords {
+
+  form {
+    legend {
+
+      h2 {
+        margin-top: 0px;
+        font-size: 40px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 20px;
+      }
+
+    }
   }
 }

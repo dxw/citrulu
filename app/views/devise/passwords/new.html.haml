@@ -5,12 +5,13 @@
       %legend
         =image_tag('signup-citrulu-bot.png')
         %h2 Forgot your password?
+        %p We'll email you reset instructions
         
       .controls-row
         = f.email_field :email, :placeholder => "Enter your email address", :class => "full_width"
         
   = button_tag(:type => 'submit', :class => 'btn btn-signup') do
-    = content_tag(:span, 'Send me reset password instructions', :class => 'pencil-icon')
+    = content_tag(:span, 'Reset')
     
 %ul.unstyled.devise_links
   %li=link_to "Sign in", new_session_path(resource_name)
