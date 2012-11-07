@@ -1,6 +1,6 @@
 //TODO: find a better way of selecting the non-logged-in pages:
 
-body.registrations.new, body.sessions, body.passwords, body.confirmations {
+body.registrations.new, body.registrations.create, body.sessions, body.passwords, body.confirmations {
 
   background-image: url('/assets/bg.png');
   
