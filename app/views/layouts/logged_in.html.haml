@@ -46,7 +46,15 @@
             %a.brand{:href => '/'} Citrulu
             | Built with love by <a href="http://dxw.com">dxw</a>
             %br
-            = link_to("Terms of use", "#{BROCHUREWARE}/terms")
+            = mail_to("contact@citrulu.com", "Contact")
+            | 
+            = link_to("Support", "#{BROCHUREWARE}/support")
+            | 
+            = link_to("Terms and Conditions", "#{BROCHUREWARE}/terms")
+            | 
+            = link_to("Privacy Policy", "#{BROCHUREWARE}/privacy")
+            | 
+            = link_to("API", "#{BROCHUREWARE}/api")
         .span2
           .content
             =twitter_button
