@@ -1,0 +1,25 @@
+body.registrations {
+  #subscription_details {
+  .row {
+    p {
+      padding: 5px 0;
+      }
+    }
+  }
+
+  div.api_key {
+    background: #dee;
+    padding: 20px;
+    margin: 0 auto 20px;
+    width: 400px;
+    font-size: 140%;
+    text-align: center;
+
+    span {
+      display: block;
+      padding: 20px 2px 0 0;
+      font-size: 13px;
+      text-align: right;
+    }
+  }
+}

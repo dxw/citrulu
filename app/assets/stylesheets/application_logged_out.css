@@ -1,0 +1,13 @@
+/*
+ *= require imports
+ *= require newbranding
+ *= require_self
+*/
+
+/* Not sure why this was here. Delete if it looks like it's not required.
+@media (min-width: 1200px) {
+  .span12, .container {
+    width: 1170px;
+  }
+}
+*/

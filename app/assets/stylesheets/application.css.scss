@@ -1,0 +1,149 @@
+/*
+ *= require imports
+ *= require codemirror
+ *= require mode-citrulu
+ *= require payments
+ *= require response
+ *= require test_files
+ *= require test_runs
+ *= require account_settings
+ *= require_self
+*/
+
+/* As little code as possible should be in here. For the sake of clarity, as much as possible should be moved to topic stylesheets */
+
+/**********
+  DEFAULTS
+ **********/
+.hero-unit {  
+  h1 {
+    margin-bottom: 20px;
+  }
+}
+
+section {
+  margin-bottom: 18px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+  background-color: #fff;
+}
+
+
+/********
+  HEADER
+ ********/
+.navbar {
+  .brand a {
+    color: #fff;
+    &:hover { 
+      text-decoration: none;
+    }
+  }
+  .nav li a { 
+    clear: left;
+    //otherwise the nav links look even worse when the page gets narrow
+  }
+  
+  #user_nav {
+    padding: 10px 40px 11px;
+    line-height: 19px;
+    color: #fff;
+    text-decoration: none;
+    float: right;
+  }
+}
+
+.banner {
+  width: 100%;
+  padding: 10px;
+  text-align: center;  
+  &.beta{
+    background: #EBB68F;
+  }
+  &.status_banner{
+    background: #EBB68F;
+    text-align: left;
+    span.text {
+      margin-right: 250px;
+    }
+    a.btn {
+      float: right;
+      margin-left: 20px;
+    }
+  }
+  &#limits_banner{
+    background: #FCF8E3;
+    color: #765B2C;
+    text-align: left;
+  }
+}
+
+
+/********
+  FOOTER
+ ********/
+footer {
+  background: #f8f8f8;
+  border-top: 1px solid #ddd;
+  margin-top:40px;
+
+  .logo {
+    text-align: right;
+  
+    img {
+      padding-right: 20px;
+    }
+  }
+
+  .citrulu {
+    padding-top: 3px;
+  
+    a.brand {
+      color: #555;
+      font-size: 15px;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .twitter-follow-button {
+    padding-top: 10px;
+  }
+
+  .content {
+    padding: 10px;
+  }
+}
+
+
+/*************
+  FORM ERRORS
+ *************/
+
+#error_explanation{
+  @extend  .alert-error;
+}
+
+#error_explanation {
+  padding: 15px;
+  margin: 0 0 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+
+  li {
+    color: #000;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+
