@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
     if Rails.env == 'production'
       "https://www.citrulu.com"
     else # Rails.env == 'development'
-      super
+      "/sign_in"
     end
   end
   
