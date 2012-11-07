@@ -15,7 +15,7 @@
         = f.password_field :password, :placeholder => "Password"
         = f.password_field :password_confirmation, :placeholder => "Confirm Password"
   
-        %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", :action => "terms", :controller => "website")}.
+        %p#terms By registering for this service, you confirm that you agree to our #{link_to("Terms & Conditions", "#{BROCHUREWARE}/terms")}.
   
   = button_tag(:type => 'submit', :class => 'btn btn-signup') do
     = content_tag(:span, 'Sign Up', :class => 'pencil-icon')

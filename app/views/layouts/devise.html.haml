@@ -9,12 +9,12 @@
           %span.icon-bar
           %span.icon-bar
           %span.icon-bar
-        = link_to image_tag('logo.png'), 'http://www.citrulu.com', :class => 'brand'
+        = link_to image_tag('logo.png'), BROCHUREWARE, :class => 'brand'
         %nav#nav-main.nav-collapse.collapse
           %ul#menu-primary-navigation.nav
-            %li= link_to 'Three Steps', 'http://www.citrulu.com/#3steps'
-            %li= link_to 'Features', 'http://www.citrulu.com/#features'
-            %li= link_to 'Pricing', 'http://www.citrulu.com/#pricing'
+            %li= link_to 'Three Steps', "#{BROCHUREWARE}/#3steps"
+            %li= link_to 'Features', "#{BROCHUREWARE}/#features"
+            %li= link_to 'Pricing', "#{BROCHUREWARE}/#pricing"
             %li= link_to 'Login', new_session_path(resource_name), :class => 'btn btn-login'
             %li.btn.btn-signup-nav= link_to 'Sign Up', new_registration_path(resource_name)
               
@@ -24,7 +24,7 @@
     - flash.each do |name, message|
       = flash_message(name, message)
     = devise_error_messages!
-  
+
     = yield
 
   .blue-bg.blue-bg-finish
@@ -36,7 +36,7 @@
       .footer-social
         %p
           = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
-          = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
+          = link_to image_tag('twitter.png'), 'http://www.twitter.com/citrulu', :alt => 'Citrulu Twitter'
       .footer-links.span8
         %ul#menu-footer-navigation
           %li= link_to 'Support', 'http://www.citrulu.com/support'
