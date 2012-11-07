@@ -45,14 +45,6 @@ SimpleFrontEndTesting::Application.routes.draw do
   get "payments/update_confirmation"
   match "payments/destroy" => "payments#destroy", :via => :delete
   get "payments/cancel_confirmation"
-
-  # Website pages routes:
-  match 'terms' => "website#terms"
-  match 'info' => "website#info"
-  match 'email' => "website#email"
-  match 'agencies' => "website#agencies"
-  match 'wordpress' => "website#wordpress"
-  match 'api' => "website#api"
   
   authenticated :user do
     root :to => redirect('/test_files')
