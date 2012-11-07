@@ -1,8 +1,13 @@
-body.registrations.new {
-  section#signup {
-    margin: auto;
+/* ==========================================================================
+   Logged-out forms 
+   ========================================================================== */
+
+//TODO: find a better way of selecting the non-logged-in pages
+body.registrations.new, body.sessions, body.passwords, body.confirmations {
+  form {
+    margin: 25px auto;
     max-width: 690px;
-  
+    
     h1, h2, h3, h4, h5, h6 {
       font-family: 'Source Sans Pro', sans-serif;
       font-weight: 300;
@@ -37,33 +42,33 @@ body.registrations.new {
         margin-left: 100px;
       }
     }
-
-    fieldset {
+    
+    .form-inner {
       border: 1px solid #bac4c7;
       border-radius: 5px;
       background-image: url('/assets/bg.png');
       float: none;
-      margin: 25px auto;
     }
-
-      .signup-inner {
-        margin: 20px;
-        border: 1px solid #bac4c7;
-        border-radius: 5px;
-        background-color: #fff;
-        padding: 30px;
-        text-align: center;
-        input#user_email {
-          width: 430px;
-        }
-        input#user_password, input#user_password_confirmation{
-          width: 202px;
-        }
+    
+    fieldset {
+      margin: 20px;
+      border: 1px solid #bac4c7;
+      border-radius: 5px;
+      background-color: #fff;
+      padding: 30px;
+      text-align: center;
+      input#user_email {
+        width: 430px;
       }
-      #signup_button {
-        display: block;
-        margin: -35px auto;
+      input#user_password, input#user_password_confirmation{
+        width: 202px;
       }
+    }
+    
+    button {
+      display: block;
+      margin: -35px auto;
+    }
 
     input, input[type="email"], input[type="password"] {
       background-color: #e9f5f9;
@@ -74,47 +79,53 @@ body.registrations.new {
       border-color: transparent;
       box-shadow: inset 1px 1px 1px #bedce5;
     }
+  }
+  
+  .btn-signup {
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    background-color: #87b71d;
+    background-image: -moz-linear-gradient(top, #9ed426, #87b71d);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ed426), to(#87b71d));
+    background-image: -webkit-linear-gradient(top, #9ed426, #87b71d);
+    background-image: -o-linear-gradient(top, #9ed426, #87b71d);
+    background-image: linear-gradient(to bottom, #9ed426, #87b71d);
+    border: 0px;
+    line-height: 12px;
+    padding: 18px 40px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    text-shadow: 1px 1px 1px #374518;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 400;
+    font-family: 'Source Sans Pro', sans-serif; 
 
-    .btn-signup {
-      color: #fff;
-      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-      background-color: #87b71d;
-      background-image: -moz-linear-gradient(top, #9ed426, #87b71d);
-      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ed426), to(#87b71d));
-      background-image: -webkit-linear-gradient(top, #9ed426, #87b71d);
-      background-image: -o-linear-gradient(top, #9ed426, #87b71d);
-      background-image: linear-gradient(to bottom, #9ed426, #87b71d);
-      border: 0px;
-      line-height: 12px;
-      padding: 18px 40px;
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
-      box-shadow: none;
-      text-shadow: 1px 1px 1px #374518;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 400;
-      margin-right: 10px;
-      font-family: 'Source Sans Pro', sans-serif; 
+      &:hover {
+        color: #fff;
+        background-color: #87b71d;
+        *background-color: #d9d9d9;
+      }
+  }
 
-        &:hover {
-          color: #fff;
-          background-color: #87b71d;
-          *background-color: #d9d9d9;
-        }
-    }
-
-    .pencil-icon {
-      background-image: url("/assets/pencil-icon.png");
-      background-repeat: no-repeat;
-      padding-left:30px;
-    }
+  .pencil-icon {
+    background-image: url("/assets/pencil-icon.png");
+    background-repeat: no-repeat;
+    padding-left:30px;
   }
 }
+  
+
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
 
 
 //TODO: find a better way of selecting the non-logged-in pages
 body.registrations.new, body.sessions, body.passwords, body.confirmations {
+  padding-top: 86px;
   .navbar-fixed-top .navbar-inner, .navbar-static-top .navbar-inner {
     -webkit-box-shadow: none!important;
     box-shadow: none!important;

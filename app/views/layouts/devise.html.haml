@@ -2,7 +2,6 @@
   =stylesheet_link_tag("application_logged_out")
 
 - content_for :content do
-    
   %header#banner.navbar.navbar-fixed-top
     .navbar-inner
       .container
@@ -15,21 +14,23 @@
             %li= link_to 'Login', new_session_path(resource_name), :class => 'btn btn-login'
             %li= link_to 'Sign Up', new_registration_path(resource_name), :class => 'btn btn-signup-nav'
               
-    .form-horizontal.container-fluid
-      - flash.each do |name, message|
-        = flash_message(name, message)
-      = devise_error_messages!
-      = yield
-    %footer#content-info.container-fluid
-    .row-fluid
-      .span3
-        = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
-      .footer-social
-        %p
-          = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
-          = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
-      .footer-links.span8
-        %ul
-          %li Blah
+  
+  - flash.each do |name, message|
+    = flash_message(name, message)
+  = devise_error_messages!
+  
+  = yield
+  
+  %footer#content-info.container-fluid
+  .row-fluid
+    .span3
+      = link_to image_tag('dxw-logo.png'), 'http://www.dxw.com', :alt => 'Made by DXW'
+    .footer-social
+      %p
+        = link_to image_tag('facebook.png'), 'http://www.facebook.com', :alt => 'Citrulu Facebook'
+        = link_to image_tag('twitter.png'), 'http://www.twitter.com', :alt => 'Citrulu Twitter'
+    .footer-links.span8
+      %ul
+        %li Blah
 
 = render :template => 'layouts/application'
