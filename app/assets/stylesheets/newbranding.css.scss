@@ -377,3 +377,58 @@ body.passwords {
     }
   }
 }
+
+body.passwords.edit {
+
+  form {
+    legend {
+
+      h2 {
+        margin-top: 25px;
+      }
+    } }
+}
+
+/* ==========================================================================
+   Errors
+*/
+
+#error_explanation, .alert {
+  width: 640px;
+  margin: 50px auto 0px auto;
+  background-color: #F2DEDE;
+  color: #B94A48;
+  padding: 25px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px red dotted;
+
+    h2 {
+      font-size: 30px;
+      color: red;
+    }
+
+    ul li {
+      list-style-type: none;
+    }
+}
+
+.alert.alert-success {
+  width: 640px;
+  margin: 50px auto 0px auto;
+  color: #468847;
+  background-color: #DFF0D8;;
+  padding: 25px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px green dotted;
+
+  h2 {
+    font-size: 30px;
+    color: green;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+}
