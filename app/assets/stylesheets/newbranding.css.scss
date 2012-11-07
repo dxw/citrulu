@@ -57,20 +57,10 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
       background-color: #fff;
       padding: 30px;
       text-align: center;
-      input#user_email {
-        width: 430px;
-      }
-      input#user_password, input#user_password_confirmation{
-        width: 202px;
-      }
     }
     
-    button {
-      display: block;
-      margin: -35px auto;
-    }
-
     input, input[type="email"], input[type="password"] {
+      width: 202px;
       background-color: #e9f5f9;
       border-radius: 5px;
       padding: 10px;
@@ -78,6 +68,20 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
       text-align: center;
       border-color: transparent;
       box-shadow: inset 1px 1px 1px #bedce5;
+    }
+    input.full_width {
+      width: 430px;
+    }
+    @media (max-width: 1200px) {
+      input.full_width {
+        width: 202px;
+      }
+    }
+    
+    
+    button {
+      display: block;
+      margin: -35px auto;
     }
   }
   

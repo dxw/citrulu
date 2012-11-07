@@ -7,7 +7,7 @@
         =image_tag('signup-citrulu-bot.png')
         %h2 Resend confirmation instructions
       
-      = f.email_field :email, :placeholder => "Email address"
+      = f.email_field :email, :placeholder => "Email address", :class => "full_width"
 
   = button_tag(:type => 'submit', :class => 'btn btn-signup') do
     = content_tag(:span, 'Resend confirmation instructions', :class => 'pencil-icon')

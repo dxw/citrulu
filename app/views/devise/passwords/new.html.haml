@@ -7,7 +7,7 @@
         %h2 Forgot your password?
         
       .controls-row
-        = f.email_field :email, :placeholder => "Enter your email address"
+        = f.email_field :email, :placeholder => "Enter your email address", :class => "full_width"
         
   = button_tag(:type => 'submit', :class => 'btn btn-signup') do
     = content_tag(:span, 'Send me reset password instructions', :class => 'pencil-icon')

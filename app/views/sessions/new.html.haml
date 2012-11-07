@@ -7,9 +7,9 @@
         =image_tag('signup-citrulu-bot.png')
         %h2 Sign in
       .controls-row
-        = f.email_field :email, :placeholder => "Email"
+        = f.email_field :email, :placeholder => "Email", :class => "full_width"
       .controls-row
-        = f.password_field :password, :placeholder => "Password"
+        = f.password_field :password, :placeholder => "Password", :class => "full_width"
         - if devise_mapping.rememberable?
           %label.checkbox.inline{ :for => "user_remember_me" }      
             = f.check_box :remember_me
