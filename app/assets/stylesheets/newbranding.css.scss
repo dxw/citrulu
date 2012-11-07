@@ -1,18 +1,19 @@
+//TODO: find a better way of selecting the non-logged-in pages:
+body.registrations.new, body.sessions, body.passwords, body.confirmations {
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+    color: #067295;
+  }
+  
 /* ==========================================================================
    Logged-out forms 
    ========================================================================== */
-
-//TODO: find a better way of selecting the non-logged-in pages
-body.registrations.new, body.sessions, body.passwords, body.confirmations {
+  
   form {
     margin: 25px auto;
     max-width: 690px;
-    
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Source Sans Pro', sans-serif;
-      font-weight: 300;
-      color: #067295;
-    }
 
     legend {
       padding-top: 25px;
@@ -78,7 +79,6 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
       }
     }
     
-    
     button {
       display: block;
       margin: -35px auto;
@@ -106,11 +106,11 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
     font-weight: 400;
     font-family: 'Source Sans Pro', sans-serif; 
 
-      &:hover {
-        color: #fff;
-        background-color: #87b71d;
-        *background-color: #d9d9d9;
-      }
+    &:hover {
+      color: #fff;
+      background-color: #87b71d;
+      *background-color: #d9d9d9;
+    }
   }
 
   .pencil-icon {
@@ -118,18 +118,17 @@ body.registrations.new, body.sessions, body.passwords, body.confirmations {
     background-repeat: no-repeat;
     padding-left:30px;
   }
-}
+
   
 
 
 /* ==========================================================================
    Navigation
    ========================================================================== */
-
-
-//TODO: find a better way of selecting the non-logged-in pages
-body.registrations.new, body.sessions, body.passwords, body.confirmations {
+  
+  /* On the body, to accommodate the navbar: */
   padding-top: 86px;
+  
   .navbar-fixed-top .navbar-inner, .navbar-static-top .navbar-inner {
     -webkit-box-shadow: none!important;
     box-shadow: none!important;
