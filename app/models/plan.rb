@@ -36,13 +36,13 @@ class Plan < ActiveRecord::Base
   end
 
   def self.cornichon
-    self.where(:name_en => "Cornichon", :active => true).first
+    self.where(:name_en => "Super Tests", :active => true).first
   end
   def self.gherkin
-    self.where(:name_en => "Gherkin", :active => true).first
+    self.where(:name_en => "Mega Tests", :active => true).first
   end
   def self.cucumber
-    self.where(:name_en => "Cucumber", :active => true).first
+    self.where(:name_en => "Ultra Tests", :active => true).first
   end
   
   def self.get_plan_name_from_plan_level(plan_level)
@@ -63,10 +63,10 @@ class Plan < ActiveRecord::Base
   end
     
   LEVELS = {
-    :bronze => "Cornichon",
-    :silver => "Gherkin",
-    :gold => "Cucumber",
-    :bespoke => "Marrow",
+    :bronze => "Super Tests",
+    :silver => "Mega Tests",
+    :gold => "Ultra Tests",
+    :bespoke => "Super Turbo Tests",
   }
   
   def self.limits

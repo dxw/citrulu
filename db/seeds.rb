@@ -2,18 +2,18 @@
 spreedly_plans = Plan.spreedly_plans
 
 # N.B. If any of the following plans don't already exist in Spreedly, this will (correctly) fail
-cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cornichon")
+cornichon_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Super Tests")
 cornichon_price = cornichon_spreedly.price.to_f unless cornichon_spreedly.nil?
 
-gherkin_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Gherkin")
+gherkin_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Mega Tests")
 gherkin_price = gherkin_spreedly.price.to_f unless gherkin_spreedly.nil?
 
-cucumber_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Cucumber")
+cucumber_spreedly = Plan.get_spreedly_plan(spreedly_plans, "Ultra Tests")
 cucumber_price = cucumber_spreedly.price.to_f unless cucumber_spreedly.nil?
 
 Plan.create([
   {
-    name_en: 'Cornichon Free',
+    name_en: 'Super Tests Free',
     default: true,
     free_trial: true,
     spreedly_id: nil,
@@ -25,7 +25,7 @@ Plan.create([
     mobile_alerts_allowance: 0,
   },
   {
-    name_en: 'Cornichon',
+    name_en: 'Super Tests',
     default: false,
     # cost_usd: cornichon_spreedly.price.to_f, # $5 to start with?
     cost_gbp: cornichon_spreedly.price.to_f, # £5 to start with?
@@ -38,7 +38,7 @@ Plan.create([
     mobile_alerts_allowance: 0,
   },
   {
-    name_en: 'Gherkin',
+    name_en: 'Mega Tests',
     # cost_usd: gherkin_spreedly.price.to_f, # $15 to start with?
     cost_gbp: gherkin_spreedly.price.to_f, # £15 to start with?
     spreedly_id: gherkin_spreedly.id,
@@ -50,7 +50,7 @@ Plan.create([
     mobile_alerts_allowance: 15,
   },
   {
-    name_en: 'Cucumber',
+    name_en: 'Ultra Tests',
     # cost_usd: cucumber_spreedly.price.to_f, # $50 to start with?
     cost_gbp: cucumber_spreedly.price.to_f, # £50 to start with?
     spreedly_id: cucumber_spreedly.id,
