@@ -1,9 +1,16 @@
 = content_for :title, "Citrulu for website monitoring - change your password?"
-= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f|
-  %legend
-    %h2 Change your password
-  = f.hidden_field :reset_password_token
-  = f.password_field :password, :placeholder => "New password"
-  = f.password_field :password_confirmation, :placeholder => "Confirm new password"
-  = f.submit "Change my password", :class => "btn btn-primary"
+= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => "edit_password", :class => "form-horizontal" } ) do |f|
+  .form-inner
+    %fieldset
+      %legend
+        =image_tag('signup-citrulu-bot.png')
+        %h2 Change your password
+      = f.hidden_field :reset_password_token
+      .controls-row
+        = f.password_field :password, :placeholder => "New password"
+        = f.password_field :password_confirmation, :placeholder => "Confirm new password"
+
+  = button_tag(:type => 'submit', :class => 'btn btn-signup') do
+    = content_tag(:span, "Change my password", :class => 'pencil-icon')
+
 = render "links"

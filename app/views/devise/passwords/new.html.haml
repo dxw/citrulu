@@ -1,10 +1,17 @@
 = content_for :title, "Citrulu for website monitoring - forgot your password?"
-= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f|
-  %legend
-    %h2 Forgot your password?
-  %div
-    = f.email_field :email, :placeholder => "Enter your email address"
-  %div= f.submit "Send me reset password instructions", :class => "btn btn-primary"
+= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :id => "new_password", :class => "form-horizontal" }) do |f|
+  .form-inner
+    %fieldset
+      %legend
+        =image_tag('signup-citrulu-bot.png')
+        %h2 Forgot your password?
+        
+      .controls-row
+        = f.email_field :email, :placeholder => "Enter your email address"
+        
+  = button_tag(:type => 'submit', :class => 'btn btn-signup') do
+    = content_tag(:span, 'Send me reset password instructions', :class => 'pencil-icon')
+    
 %ul.unstyled.devise_links
   %li=link_to "Sign in", new_session_path(resource_name)
   %li= link_to "Sign up", new_registration_path(resource_name)
