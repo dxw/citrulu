@@ -89,6 +89,13 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
       }
     }
     
+    .field_with_errors {
+      display: inline;
+      input {
+        border-color: #B94A48;
+      }
+    }
+    
     button {
       display: block;
       margin: -35px auto;
