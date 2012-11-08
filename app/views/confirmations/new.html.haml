@@ -9,8 +9,7 @@
       
       = f.email_field :email, :placeholder => "Email address", :class => "full_width"
 
-  = button_tag(:type => 'submit', :class => 'btn btn-signup') do
-    = content_tag(:span, 'Resend confirmation instructions', :class => 'pencil-icon')
+  = button_tag('Resend', :type => 'submit', :class => 'btn btn-signup')
 
 %ul.unstyled.devise_links
   %li= link_to "Sign in", new_session_path(resource_name)
