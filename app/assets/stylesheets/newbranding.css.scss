@@ -1,8 +1,23 @@
 //TODO: find a better way of selecting the non-logged-in pages:
 
+@media (min-width: 990px) and (max-width: 5000px) {
+  body.registrations.new, body.registrations.create, body.sessions, body.passwords, body.confirmations {
+    padding-top: 86px;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 767px) {
+  body.registrations.new, body.registrations.create, body.sessions, body.passwords, body.confirmations {
+    padding:0px;
+  }
+}
+
 body.registrations.new, body.registrations.create, body.sessions, body.passwords, body.confirmations {
 
   background-image: url('/assets/bg.png');
+  overflow-x: hidden;
+
+  /* hiding weird extra space on smaller screens - above */
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Source Sans Pro', sans-serif;
@@ -101,7 +116,77 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
       margin: -35px auto;
     }
   }
-  
+
+  @media (min-width: 767px) and (max-width: 1200px) {
+
+  form {
+
+    fieldset {
+      max-width: 324px;
+
+      legend {
+        padding-top: 5px;
+        text-align: center;
+        margin: auto;
+        display: block;
+        clear: both;
+        height: auto;
+
+        img {
+          float: none;
+          display: block;
+          margin: auto;
+        }
+
+        h2 {
+          width: auto;
+          margin-top: 10px;
+        }
+
+        p {
+          width: auto;
+          margin-bottom: 20px;
+        }
+
+      }
+    }
+  }
+  }
+
+  @media (min-width: 0px) and (max-width: 767px) {
+
+    form {
+
+      .form-inner {
+        display: block;
+        margin: auto;
+      }
+
+      fieldset {
+        max-width: 200px;
+
+        legend {
+
+          height: auto;
+
+          p {
+            max-width: 100%;
+            font-size: 16px;
+            line-height: 20px;
+            margin-bottom: 10px;
+          }
+
+          h2 {
+            margin-top: 0px;
+            font-size: 32px;
+            line-height: 38px;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+
   .btn-signup {
     color: #fff;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
@@ -167,13 +252,19 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
     }
   }
 
+  @media (min-width: 0px) and (max-width: 767px) {
+    ul.unstyled.devise_links {
+      padding: 0px 20px;
+    }
+  }
 
 /* ==========================================================================
    Navigation
    ========================================================================== */
-  
-  /* On the body, to accommodate the navbar: */
-  padding-top: 86px;
+
+  .nav-collapse .nav > li > a, .nav-collapse .dropdown-menu a {
+    font-weight: normal;
+  }
 
   .navbar-inner {
     background-color: #9ddcef;
@@ -216,6 +307,10 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
         background-image: none;
         margin-right: 0px;
       }
+    }
+
+    .brand {
+      margin-top: 10px;
     }
 
     .nav li  {
@@ -268,11 +363,179 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
     }
   }
 
-  .brand {
-    margin-top: 10px;
-  }
-}
+  @media (min-width: 0px) and (max-width: 1200px) {
 
+  .navbar-fixed-top {
+   margin-bottom: 0px;
+  }
+
+  .navbar  {
+    margin-bottom: 0px;
+
+    .btn, .btn-group {
+      margin-top: 25px;
+    }
+
+    .btn-navbar {
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+
+      .icon-bar {
+        width: 43px;
+        background-color: transparent;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        height: 15px;
+        display: none;
+
+        &:first-child {
+          background: url("../img/login-icon.png") no-repeat 0px 0px;
+          padding-left: 20px;
+          display: block;
+        }
+
+        &:first-child:after {
+          content:'menu';
+          padding-right: 20px;
+        }
+      }
+    }
+
+    .navbar-inner {
+
+        div.container {
+        padding-right: 20px;
+        padding-left: 20px;
+
+          ul#menu-primary-navigation {
+            margin-top: 0px;
+            padding: 0px;
+            border-radius: 5px;
+
+            li {
+              margin-right: 0px;
+              background-color: rgba(255,255,255,0.8);
+              border-radius: 5px;
+
+              &.btn-signup-nav {
+                margin-top: 0px;
+                background-color: transparent;
+                background-image: none;
+                padding: 0px;
+                margin: 0px;
+                width: 100%;
+
+                a {
+                  background-color: transparent;
+                  margin: 0px;
+                  font-weight: bold;
+                  padding: 14px 15px 14px 30px;
+                  background-position: 8px 9px;
+                  background-color: rgba(255,255,255,0.8);
+                  color: #76a216;
+                  margin: 0px;
+                  text-align: left;
+                }
+              }
+
+                &.btn-login {
+                width: 100%;
+                   a {
+                    font-weight: bold;
+                    padding-left: 30px;
+                    background-position: 13px 13px;
+                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  @media (min-width: 980px) and (max-width: 1200px) {
+
+  .navbar {
+
+    .nav-collapse,
+    .nav-collapse.collapse {
+      height:0;
+      overflow: hidden;
+      clear: both;
+    }
+
+    .btn-navbar {
+      display: block;
+    }
+
+    .nav {
+      position: relative;
+      left: 0;
+      display: block;
+    }
+    .navbar-inner {
+      padding: 5px;
+    }
+
+    ul#menu-primary-navigation {
+      max-width: 172px;
+      float: right;
+      margin-right: 0px;
+
+      li {
+        margin-bottom: 2px;
+        width: 100%;
+
+          &.btn-signup-nav {
+            a {
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  @media (min-width: 0px) and (max-width: 767px) {
+    .brand img {
+      width: 220px;
+      margin-top: 8px;
+    }
+  }
+
+
+  @media (min-width: 0px) and (max-width: 767px) {
+
+    #fdbk_tab {
+      display: none;
+    }
+
+    .navbar-inner {
+      padding: 0px 20px;
+    }
+
+    .navbar {
+
+      a.brand {
+
+        padding-left: 0px;
+
+        img {
+          width: 200px!important;
+        }
+      }
+
+      .btn-navbar {
+      margin-right: 0px;
+      width: 50px;
+
+        .icon-bar:first-child:after {
+          content:'menu';
+          font-size: 10px;
+        }
+      }
+    }
+  }
 
 /* ==========================================================================
    Footer
@@ -318,7 +581,76 @@ footer {
   }
 }
 
+@media (min-width: 0px) and (max-width: 1200px) {
+footer {
+ padding-right: 20px;
+ padding-left: 20px;
+ padding-bottom: 20px;
 
+  img {
+    max-width: 190px;
+  }
+
+  div.footer-links {
+    margin-right: 30px;
+    float: left;
+    width: 97%;
+    margin-top: 10px!important;
+  }
+
+  .span3 {
+    width: 190px;
+    float: left;
+
+      img {
+      width: 170px;
+      margin-top: 10px;
+    }
+  }
+
+  ul#menu-footer-navigation {
+
+    li {
+      background-color: rgba(255,255,255,0.8);
+      border-radius: 5px;
+      padding: 5px 8px;
+      margin-bottom: 5px;
+      text-align: center;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        &:after {
+        content: none;
+        }
+    }
+  }
+}
+}
+
+
+@media (min-width: 0px) and (max-width: 550px) {
+
+footer {
+
+  div.footer-links.span8 {
+
+    margin-right: 0px;
+    margin-left: 0px;
+
+    ul#menu-footer-navigation {
+      width: 94%;
+
+      li {
+        clear:both;
+        width: 100%;
+        display: block;
+      }
+    }
+  }
+}
+}
 
 /* ==========================================================================
    Backgrounds
@@ -335,7 +667,6 @@ div.blue-bg {
   border-top: 1px solid #fff;
 }
 
-
 div.blue-bg-finish {
   background-image: url("/assets/soft-blue-bg-finish.png");
   height: 60px;
@@ -343,6 +674,7 @@ div.blue-bg-finish {
   background-color: #e9f5f9;
   border-top: none;
   border-bottom: 1px solid #fff;
+  margin-top: 0px;
 }
 
 /* ==========================================================================
@@ -393,7 +725,8 @@ body.passwords.edit {
       h2 {
         margin-top: 25px;
       }
-    } }
+    }
+  }
 }
 
 /* ==========================================================================
@@ -438,4 +771,90 @@ body.passwords.edit {
   ul li {
     list-style-type: none;
   }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+
+
+
+
+
+@media (min-width: 767px) and (max-width: 1200px) {
+  div.container {
+    max-width: 710px;
+  }
+}
+
+/* ==========================================================================
+   Non-Menu Responsive
+   ========================================================================== */
+
+@media (min-width: 0px) and (max-width: 767px) {
+  body {
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+  }
+}
+
+
+
+@media (min-width: 767px) and (max-width: 1200px) {
+  div.container {
+  max-width: 710px;
+  }
+}
+
+
+
+
+@media (min-width: 767px) and (max-width: 1200px) {
+  div.signup-text {
+    padding-top: 5px;
+    margin-left: 19%;
+    margin-right: 19%;
+    text-align: center;
+  }
+  input {
+    width: 203px!important;
+  }
+  div.form-inner {
+    display: block;
+    margin: auto!important;
+    float: none;
+    max-width: 425px;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 767px) {
+  div.form-inner{
+    max-width: 300px;
+  }
+  input {
+    width: 90%!important;
+  }
+  fieldset img {
+    display: none;
+  }
+  div.signup-text {
+    width: 100%;
+    text-align: center;
+    padding-top: 0px!important;
+  }
+  div.signup-form {
+    margin:auto;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 500px) {
+  section.signup .row {
+    max-width: 320px;
+    display: block;
+    float: none;
+    margin: auto;
+  }
+}
 }
