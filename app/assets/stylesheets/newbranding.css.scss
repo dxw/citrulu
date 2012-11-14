@@ -355,8 +355,9 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
           font-weight: 600;
           background-image: url("/assets/login-icon.png");
           background-repeat: no-repeat;
-          background-position: 0px 13px;
-          padding-left: 20px;
+          background-position: 13px 13px;
+          padding-left: 30px;
+          text-align: left;
 
         }
       }
@@ -388,7 +389,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
         display: none;
 
         &:first-child {
-          background: url("../img/login-icon.png") no-repeat 0px 0px;
+          background: url("/assets/responsive-menu-icon.png") no-repeat 2px 3px;
           padding-left: 20px;
           display: block;
         }
@@ -651,6 +652,12 @@ footer {
   }
 }
 }
+
+  @media (min-width: 550px) and (max-width: 1200px) {
+    footer {
+      max-width: 710px;
+    }
+  }
 
 /* ==========================================================================
    Backgrounds
