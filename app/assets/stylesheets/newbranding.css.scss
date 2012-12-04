@@ -14,7 +14,7 @@
 
 body.registrations.new, body.registrations.create, body.sessions, body.passwords, body.confirmations {
 
-  background-image: url('/assets/bg.png');
+  background-image: image-url('/assets/bg.png');
   overflow-x: hidden;
 
   /* hiding weird extra space on smaller screens - above */
@@ -67,7 +67,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
     .form-inner {
       border: 1px solid #bac4c7;
       border-radius: 5px;
-      background-image: url('/assets/bg.png');
+      background-image: image-url('/assets/bg.png');
       float: none;
     }
     
@@ -216,7 +216,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
   }
 
   .pencil-icon {
-    background-image: url("/assets/pencil-icon.png");
+    background-image: image-url("/assets/pencil-icon.png");
     background-repeat: no-repeat;
     padding-left:30px;
   }
@@ -278,7 +278,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
     color: #454500;
     text-transform: uppercase;
     letter-spacing: 2px;
-    background-image: url('/assets/bg.png');
+    background-image: image-url('/assets/bg.png');
     background-position: top center;
 
       div.container {
@@ -336,7 +336,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
           a {
             margin-right: 0px;
             color: #fff;
-            background-image: url("/assets/pencil-icon.png");
+            background-image: image-url("/assets/pencil-icon.png");
             background-repeat: no-repeat;
             background-position: 0px 6px;
           }
@@ -353,7 +353,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
         &.btn-login {
           margin-right: 40px;
           font-weight: 600;
-          background-image: url("/assets/login-icon.png");
+          background-image: image-url("/assets/login-icon.png");
           background-repeat: no-repeat;
           background-position: 13px 13px;
           padding-left: 30px;
@@ -389,7 +389,7 @@ body.registrations.new, body.registrations.create, body.sessions, body.passwords
         display: none;
 
         &:first-child {
-          background: url("/assets/responsive-menu-icon.png") no-repeat 2px 3px;
+          background: image-url("/assets/responsive-menu-icon.png") no-repeat 2px 3px;
           padding-left: 20px;
           display: block;
         }
@@ -664,7 +664,7 @@ footer {
 */
 
 div.blue-bg {
-  background-image: url("/assets/soft-blue-bg.png");
+  background-image: image-url("/assets/soft-blue-bg.png");
   background-repeat: repeat-x;
   background-position: top 2px;
   background-color: #e9f5f9;
@@ -675,7 +675,7 @@ div.blue-bg {
 }
 
 div.blue-bg-finish {
-  background-image: url("/assets/soft-blue-bg-finish.png");
+  background-image: image-url("/assets/soft-blue-bg-finish.png");
   height: 60px;
   background-position: center bottom;
   background-color: #e9f5f9;

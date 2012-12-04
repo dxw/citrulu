@@ -20,7 +20,7 @@ body.payments {
   }
   
   .working {
-    background: transparent url("loader.gif") no-repeat right;
+    background: transparent image-url("loader.gif") no-repeat right;
     display: inline-block;
     width: 16px;
     height: 16px;
