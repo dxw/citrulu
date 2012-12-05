@@ -150,7 +150,7 @@ class TestRunner
         agent.read_timeout = 15
         agent.redirect_ok = group[:page][:redirect]
         agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        agent.user_agent = "CitruluBot/1.0 (http://citrulu.com/bot)"
+        agent.user_agent = "CitruluBot/1.0 (https://www.citrulu.com/bot)"
         
         agent.get(group[:first]) unless group[:first].blank?
         
