@@ -59,7 +59,7 @@ SimpleFrontEndTesting::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.default_url_options = {
-    :host => 'citrulu.com'
+    :host => 'app.citrulu.com', :protocol => 'https://'
   }
   
   # Exception notifications: 
