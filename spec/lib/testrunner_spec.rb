@@ -265,6 +265,8 @@ describe TestRunner do
   describe ".execute_tests" do
     before(:each) do  
       @dummy_page = FactoryGirl.build(:mechanize_page)
+      Net::HTTP.stub(:last_response_time).and_return(0.001)
+      TestRunner.stub(:get_test_results)
     end
     
     def stub_mechanize(dummy_page=nil)
@@ -349,7 +351,24 @@ describe TestRunner do
         
         TestRunner.execute_tests(test_groups)
       end  
-        
+      
+      it "should generate the test results" do
+        stub_mechanize(@dummy_page)
+        test_groups = [
+          {:page => {:url => "http://example.com/", :method => "get"}, :tests => "bar"}
+        ]
+
+        TestRunner.should_receive(:get_test_results).with(@dummy_page,"bar")
+
+        TestRunner.execute_tests(test_groups)
+      end
+
+      it "should set a message on the group when it can't retrieve one of the test_results" do
+        stub_mechanize
+        TestRunner.stub(:get_test_results).and_raise(RuntimeError.new("faz"))
+
+        TestRunner.execute_tests(@test_groups)[0][:message].should == "faz"
+      end
         
       it "should set the response time" do
         pending("There's a railscast on how to freeze time...")
@@ -364,24 +383,40 @@ describe TestRunner do
         foo = TestRunner.execute_tests(@test_groups)[0][:response_attributes][:code].should == 404
       end
       
-      it "should generate the test results" do
-        stub_mechanize(@dummy_page)
-        test_groups = [
-          {:page => {:url => "http://example.com/", :method => "get"}, :tests => "bar"}
-        ]
+      context "when the page has content" do
+        before(:each) do
+          stub_mechanize(@dummy_page)
+          @dummy_page.stub(:content).and_return("Some page content")
+        end
+        context "and the content is a reasonable size" do
+          it "should set the content to the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should == "Some page content"
+          end
+          it "should set 'truncated' to false on the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_false
+          end
+        end
+        context "and the content is large" do
+          before(:each) do
+            stub_const("TestRunner::MAX_CONTENT_BYTESIZE", 10)
+          end
+          it "should set truncated content to the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should be < "Some page content"
+          end
+          it "should set 'truncated' to true on the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_true
+          end
+        end
+        
+        it "should set the content hash to the response" do
+          TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content_hash].should be_a(String)
+        end
+      end
       
-        TestRunner.should_receive(:get_test_results).with(@dummy_page,"bar")
-        
-        TestRunner.execute_tests(test_groups)
+      context "when the page has no content" do
+        pending "some sort of error?"
       end
-        
-      it "should set a message on the group when it can't retrieve one of the test_results" do
-        stub_mechanize
-        TestRunner.stub(:get_test_results).and_raise(RuntimeError.new("faz"))
-        
-        TestRunner.execute_tests(@test_groups)[0][:message].should == "faz"
-      end
-    end  
+    end 
   end
 
 

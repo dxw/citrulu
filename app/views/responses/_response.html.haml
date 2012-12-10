@@ -1,5 +1,18 @@
 %h2
   #{response.code}:
   =link_to response.test_group.test_url 
-%p.meta Retrieved #{response.test_group.time_run} in #{response.response_time}ms
+%p.meta 
+  Retrieved #{response.test_group.time_run} in #{response.response_time}ms
+  %em 
+    -if response.truncated?
+      (truncated to #{ number_to_human_size(TestRunner::MAX_CONTENT_BYTESIZE) })
+    -else
+      (#{ number_to_human_size(response.content.bytesize) })
+      
 %pre.response=response.headers+"\n\n"+response.content
+
+-if response.truncated?
+  .alert.alert-info
+    %strong
+      Why can't I see the whole thing?
+    %p Although we ran your tests on the whole page, it was a bit too big for us to store the whole thing, so we're just showing the initial segment.

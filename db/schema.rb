@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120924153649) do
+ActiveRecord::Schema.define(:version => 20121210173143) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20120924153649) do
     t.text    "headers"
     t.text    "content"
     t.string  "code"
+    t.boolean "truncated"
   end
 
   create_table "test_files", :force => true do |t|
@@ -129,6 +130,7 @@ ActiveRecord::Schema.define(:version => 20120924153649) do
     t.datetime "time_run"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.boolean  "email_sent"
   end
 
   add_index "test_runs", ["test_file_id"], :name => "index_test_runs_on_test_file_id"

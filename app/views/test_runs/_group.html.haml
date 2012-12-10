@@ -25,7 +25,10 @@
   %p.meta
     =group.updated_at
     - if group.response
-      %a{:href => response_path(group.response)} View page
+      %a{:href => response_path(group.response)}<
+        View page
+        -if group.response.truncated
+          (truncated)
     - if group.test_run.test_file.deleted
       %i.error (File deleted)
     - else

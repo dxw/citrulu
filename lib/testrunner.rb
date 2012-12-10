@@ -7,6 +7,7 @@ class TestRunner
   end
   
   FAILURE_EMAIL_FREQUENCY = 1.hour
+  MAX_CONTENT_BYTESIZE = 300*1024
 
   def self.enqueue_all_tests
     TestFile.not_deleted.running.compiled.each do |file|
@@ -125,9 +126,18 @@ class TestRunner
 
         group_params[:test_results_attributes] = get_test_results(page, group[:tests])
 
-        if page.content && group_params[:test_results_attributes].any?{|x| !x[:result]}
-          group_params[:response_attributes][:content] = page.content.encode
-          group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+        # Only save the page content if one of the tests has failed:
+        if page.content #&& group_params[:test_results_attributes].any?{|x| !x[:result]}
+          page_content = page.content.encode # Encode is maybe needed to force it into UTF-8?     
+          if page_content.bytesize > MAX_CONTENT_BYTESIZE
+            group_params[:response_attributes][:truncated] = true
+            io = StringIO.new(page_content)
+            io.truncate(MAX_CONTENT_BYTESIZE)
+            page_content = io.read
+          end
+          
+          group_params[:response_attributes][:content] = page_content
+          group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page_content))
         end
       rescue Exception => e
         group_params[:message] = e.to_s
