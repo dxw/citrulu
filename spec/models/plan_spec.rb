@@ -119,21 +119,21 @@ describe Plan do
   
   describe ".cornichon" do
     it "should return a plan" do
-      plan = FactoryGirl.create(:plan, :name_en => "Cornichon", :active => true)
+      plan = FactoryGirl.create(:plan, :name_en => "Super Tests", :active => true)
       Plan.cornichon.should == plan
     end
     it "should return the most recent active plan with that name"
   end
   describe ".gherkin" do
     it "should return a plan" do
-      plan = FactoryGirl.create(:plan, :name_en => "Gherkin", :active => true)
+      plan = FactoryGirl.create(:plan, :name_en => "Mega Tests", :active => true)
       Plan.gherkin.should == plan
     end
     it "should return the most recent active plan with that name"
   end
   describe ".cucumber" do
     it "should return a plan" do
-      plan = FactoryGirl.create(:plan, :name_en => "Cucumber", :active => true)
+      plan = FactoryGirl.create(:plan, :name_en => "Ultra Tests", :active => true)
       Plan.cucumber.should == plan
     end
     it "should return the most recent active plan with that name"
