@@ -117,10 +117,6 @@ class TestRunner
     def self.handle_retrieved_page(agent, page, group_params, group)
       group_params[:response_attributes] = {}
       group_params[:response_attributes][:response_time] = (agent.agent.http.last_response_time*1000).to_i
-      if page.content
-        group_params[:response_attributes][:content] = page.content.encode
-        group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
-      end
       group_params[:response_attributes][:headers] = page.header.collect{|header| "#{header[0]}: #{header[1]}"}.join("\n")
       group_params[:response_attributes][:code] = page.code
 
@@ -128,7 +124,11 @@ class TestRunner
         agent.get(group[:finally]) unless group[:finally].blank?
 
         group_params[:test_results_attributes] = get_test_results(page, group[:tests])
-        
+
+        if page.content && group_params[:test_results_attributes].any?{|x| !x[:result]}
+          group_params[:response_attributes][:content] = page.content.encode
+          group_params[:response_attributes][:content_hash] = Digest.hexencode(Digest::SHA256.new.digest(page.content))
+        end
       rescue Exception => e
         group_params[:message] = e.to_s
       end
