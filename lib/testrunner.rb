@@ -127,7 +127,7 @@ class TestRunner
         group_params[:test_results_attributes] = get_test_results(page, group[:tests])
 
         # Only save the page content if one of the tests has failed:
-        if page.content #&& group_params[:test_results_attributes].any?{|x| !x[:result]}
+        if page.content && page.content.class == String #&& group_params[:test_results_attributes].any?{|x| !x[:result]}
           page_content = page.content.encode # Encode is maybe needed to force it into UTF-8?     
           if page_content.bytesize > MAX_CONTENT_BYTESIZE
             group_params[:response_attributes][:truncated] = true
