@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'testrunner'
 
 describe TestRunner do
   describe "enqueue_all_tests" do
