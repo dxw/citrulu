@@ -60,9 +60,15 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-spork'
   gem 'guard-livereload'
+  gem 'spork', '> 0.9.0.rc'
   gem 'awesome_print'
   gem 'jnunemaker-crack'
   gem 'pry_debug'
+  
+  # gems to notify guard of file changes - see https://github.com/guard/guard:
+  gem 'rb-inotify', :require => false # Linux
+  gem 'rb-fsevent', :require => false # OSX
+  gem 'rb-fchange', :require => false # Window
 end
 
 group :test do
@@ -71,9 +77,6 @@ group :test do
   gem 'timecop'
   gem 'capybara'
   gem 'factory_girl_rails', '~> 1.2'
-  gem 'spork', '> 0.9.0.rc'
-#  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
-  gem 'rb-fsevent', :require => false 
 end
 
 group :development, :test do
