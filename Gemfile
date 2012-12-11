@@ -4,55 +4,57 @@ source 'http://gems.github.com'
 gem 'rake'
 gem 'rails', '3.2.3'
 
-gem 'therubyracer'
-# therubyracer is a js runtime, required for the asset pipeline on systems which don't have a built-in js runtime. therubyracer apparently very memory-intensive, we should try and replace it with something better (e.g. Mustang)
+gem 'mysql2', '0.3.10'
 
-# Pagination
-gem 'kaminari'
 
-# Authentication management with devise:
-gem 'devise'
+# FUNCTIONALITY
+# ===============================================================
+gem 'codemirror-rails'  # Text editor
+gem 'treetop'           # Treetop to drive the grammar
+gem 'mechanize'         # For to run the tests
+gem 'resque', :require => 'resque/server' # Message queue
+gem 'rspreedly'         # Spreedly for payments
+gem 'devise'            # Authentication management with devise
+gem 'public_suffix'     # For deciding whether domains are unique
+gem 'kaminari'          # Pagination
 
-# Text editor:
-gem 'codemirror-rails'
 
-# Treetop to drive the grammar:
-gem 'treetop'
+# ADMIN and MONITORING
+# ===============================================================
+gem 'activeadmin'
+gem "meta_search",  '>= 1.1.0.pre'
+gem "formtastic",   "~> 2.1.1"
 
-# For deciding whether domains are unique:
-gem 'public_suffix'
+gem 'rails_exception_handler'   # Nicer exception reporting
+gem 'exception_notification'    # Exception emails
 
-# For to run the tests
-gem 'mechanize'
 
-# Spreedly for payments
-gem 'rspreedly'
-
+# HTML / CSS / JS
+# ===============================================================
 # Gems used in all environments
 gem 'haml'
 gem 'haml_rails'
 gem 'jquery-rails'
-
-# Nicer exception reporting
-gem 'rails_exception_handler'
-
-# Exception emails:
-gem 'exception_notification'
-
-gem 'activeadmin'
-gem "meta_search",    '>= 1.1.0.pre'
-gem "formtastic", "~> 2.1.1"
-
-# Message queue
-gem 'resque', :require => 'resque/server'
+gem 'therubyracer'
+# therubyracer is a js runtime, required for the asset pipeline on systems 
+# which don't have a built-in js runtime. therubyracer apparently very memory-intensive, 
+# we should try and replace it with something better (e.g. Mustang), but attempts 
+# have so far been unsuccessful
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails', '  ~> 3.2.0'
+  gem 'sass-rails',     '~> 3.2.0'
   gem 'bootstrap-sass', '~> 2.1.1'
-  gem 'coffee-rails', '~> 3.2.0'
+  gem 'coffee-rails',   '~> 3.2.0'
   gem 'uglifier'
+end
+
+
+# TESTING and DEBUG
+# ===============================================================
+group :development, :test do
+   gem 'rspec-rails'
 end
 
 group :development do
@@ -77,13 +79,4 @@ group :test do
   gem 'timecop'
   gem 'capybara'
   gem 'factory_girl_rails', '~> 1.2'
-end
-
-group :development, :test do
-   gem 'rspec-rails'
-   gem 'mysql2', '0.3.10'
-end
-
-group :production do
-   gem 'mysql2', '0.3.10'
 end
