@@ -388,28 +388,41 @@ describe TestRunner do
           stub_mechanize(@dummy_page)
           @dummy_page.stub(:content).and_return("Some page content")
         end
-        context "and the content is a reasonable size" do
-          it "should set the content to the response" do
-            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should == "Some page content"
-          end
-          it "should set 'truncated' to false on the response" do
-            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_false
-          end
-        end
-        context "and the content is large" do
+        context "and at least one of the tests has failed" do
           before(:each) do
-            stub_const("TestRunner::MAX_CONTENT_BYTESIZE", 10)
+            TestRunner.stub(:get_test_results).and_return [{ result: true }, { result: false }]
           end
-          it "should set truncated content to the response" do
-            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should be < "Some page content"
+          context "and the content is a reasonable size" do
+            it "should set the content to the response" do
+              TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should == "Some page content"
+            end
+            it "should set 'truncated' to false on the response" do
+              TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_false
+            end
           end
-          it "should set 'truncated' to true on the response" do
-            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_true
+          context "and the content is large" do
+            before(:each) do
+              stub_const("TestRunner::MAX_CONTENT_BYTESIZE", 10)
+            end
+            it "should set truncated content to the response" do
+              TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should be < "Some page content"
+            end
+            it "should set 'truncated' to true on the response" do
+              TestRunner.execute_tests(@test_groups)[0][:response_attributes][:truncated].should be_true
+            end
+          end
+        
+          it "should set the content hash to the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content_hash].should be_a(String)
           end
         end
-        
-        it "should set the content hash to the response" do
-          TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content_hash].should be_a(String)
+        context "and all of the tests passed" do
+          before(:each) do
+            TestRunner.stub(:get_test_results).and_return [{ result: true }, { result: true }]
+          end
+          it "should NOT set the content to the response" do
+            TestRunner.execute_tests(@test_groups)[0][:response_attributes][:content].should be_blank
+          end
         end
       end
       
