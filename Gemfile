@@ -28,6 +28,8 @@ gem "formtastic",   "~> 2.1.1"
 gem 'rails_exception_handler'   # Nicer exception reporting
 gem 'exception_notification'    # Exception emails
 
+gem 'rack-mini-profiler'        # Displays a breakdown of load times down the stack on dev
+
 
 # HTML / CSS / JS
 # ===============================================================
