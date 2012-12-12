@@ -3,7 +3,9 @@
  *= require newbranding
  *= require_self
 */
-
+body {
+  -webkit-text-size-adjust:100%;
+}
 /* Not sure why this was here. Delete if it looks like it's not required.
 @media (min-width: 1200px) {
   .span12, .container {
