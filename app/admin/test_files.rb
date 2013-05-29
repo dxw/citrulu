@@ -1,7 +1,6 @@
 ActiveAdmin.register TestFile do
   filter :id, :as => :numeric
   filter :run_tests, :as => :select, :label => "Set to Run"
-  filter :user, order: "email asc", :label => "User Email"
   filter :user_email, :as => :string
   filter :frequency
   filter :created_at

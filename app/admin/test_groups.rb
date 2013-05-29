@@ -1,4 +1,12 @@
 ActiveAdmin.register TestGroup do
+  filter :id, :as => :numeric
+  filter :test_url
+  filter :message
+  filter :test_run_id, :as => :numeric
+  filter :time_run
+  filter :created_at
+  filter :updated_at
+ 
   index do
     column :time_run
     column :so
@@ -13,9 +21,9 @@ ActiveAdmin.register TestGroup do
       truncate(group.data) unless group.data.nil?
     end
 
-    column :test_run do |group|
-      "#{group.test_run.test_file.name} / #{group.test_run.time_run}"
-    end
+    # column :test_run do |group|
+    #       "#{group.test_run.test_file.name} / #{group.test_run.time_run}"
+    #     end
   
     column :created_at
     column :updated_at
