@@ -41,11 +41,11 @@ ActiveAdmin.register User do
     h2 "#{user.email} (##{user.id})"
     
     h3 "Test files:"
-    if user.test_files.not_tutorial.blank?
+    if user.test_files.blank?
       para "No non-tutorial test files"
     else
       ul do
-        user.test_files.not_tutorial.each do |file|
+        user.test_files.each do |file|
           string = file.name
           string += " (deleted)" if file.deleted?
           li link_to string, admin_test_file_path(file)
