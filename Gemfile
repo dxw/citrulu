@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 source 'http://gems.github.com'
 
 gem 'rake'
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.16'
 
 gem 'mysql2', '0.3.10'
 
