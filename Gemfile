@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 source 'http://gems.github.com'
 
 gem 'rake'
-gem 'rails', '3.2.16'
+gem 'rails', '3.2.17'
 
 gem 'mysql2', '0.3.10'
 
@@ -38,9 +38,9 @@ gem 'haml'
 gem 'haml_rails'
 gem 'jquery-rails'
 gem 'therubyracer'
-# therubyracer is a js runtime, required for the asset pipeline on systems 
-# which don't have a built-in js runtime. therubyracer apparently very memory-intensive, 
-# we should try and replace it with something better (e.g. Mustang), but attempts 
+# therubyracer is a js runtime, required for the asset pipeline on systems
+# which don't have a built-in js runtime. therubyracer apparently very memory-intensive,
+# we should try and replace it with something better (e.g. Mustang), but attempts
 # have so far been unsuccessful
 
 # Gems used only for assets and not required
@@ -68,7 +68,7 @@ group :development do
   gem 'awesome_print'
   gem 'jnunemaker-crack'
   gem 'pry_debug'
-  
+
   # gems to notify guard of file changes - see https://github.com/guard/guard:
   gem 'rb-inotify', :require => false # Linux
   gem 'rb-fsevent', :require => false # OSX
