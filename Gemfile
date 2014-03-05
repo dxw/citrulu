@@ -62,9 +62,8 @@ end
 group :development do
   gem 'guard-rails'
   gem 'guard-rspec'
-  gem 'guard-spork'
   gem 'guard-livereload'
-  gem 'spork', '> 0.9.0.rc'
+  gem 'zeus', "~> 0.13" # Guard requires this to be in the gemfile
   gem 'awesome_print'
   gem 'jnunemaker-crack'
   gem 'pry_debug'
