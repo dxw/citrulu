@@ -16,10 +16,10 @@ module SimpleFrontEndTesting
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    
+
     config.to_prepare do
       # The Registrations controller uses the main website layouts, not the devise layouts:
-      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "devise" }   
+      Devise::RegistrationsController.layout proc{ |controller| user_signed_in? ? "logged_in" : "devise" }
       Devise::Mailer.layout "user_mailer"
     end
 
@@ -41,6 +41,7 @@ module SimpleFrontEndTesting
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.enforce_available_locales = true
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -53,8 +54,8 @@ module SimpleFrontEndTesting
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-    
-    # On the advice of Devise: 
+
+    # On the advice of Devise:
     # If you are deploying Rails 3.1 on Heroku, you may want to set:
     # config.assets.initialize_on_precompile = false
     # forcing your application to not access the DB or load models when precompiling your assets.
