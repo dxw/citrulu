@@ -7,10 +7,11 @@ ActiveAdmin.register User do
   filter :last_sign_in_at
   # filter :status # Doesn't work! Boo!
   filter :invitation, :as => :select, :collection => proc { Invitation.all.collect{ |i| [i.description, i.id] }}
-  
-  
+
+
   index do
     column :email
+    column :unconfirmed_email
     column :tutorials_opened do |user|
       user.test_files.tutorials.compiled.count
     end
@@ -20,26 +21,22 @@ ActiveAdmin.register User do
     column :files_running do |user|
       user.test_files.running.not_deleted.count
     end
-    column :unconfirmed_email
-    column :email_preference
     column :sign_in_count
     column :invitation do |user|
       user.invitation.description if user.invitation
     end
     column :current_sign_in_at
-    column :last_sign_in_at
-    column :current_sign_in_ip
-    column :last_sign_in_ip
+    column :created_at
     column :confirmed_at
-    
+
     column :status
-    
+
     default_actions
   end
-  
+
   show do
     h2 "#{user.email} (##{user.id})"
-    
+
     h3 "Test files:"
     if user.test_files.blank?
       para "No non-tutorial test files"
@@ -52,8 +49,8 @@ ActiveAdmin.register User do
         end
       end
     end
-    
-    
+
+
     attributes_table do
       row :plan do
         "#{user.plan.name} (#{user.status})"
@@ -74,9 +71,11 @@ ActiveAdmin.register User do
       end
       row :email_preference
       row :invitation
+      row :current_sign_in_ip
+      row :last_sign_in_ip
     end
-    
-    
-    
+
+
+
   end
 end
