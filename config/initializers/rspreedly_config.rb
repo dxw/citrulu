@@ -4,10 +4,10 @@
 RSpreedly::Config.setup do |config|
   
   if Rails.env == 'production'
-    config.api_key    = "290336bdd75acd2edc793e3b89d9945052349e8f"
+    config.api_key    = "XXXXX"
     config.site_name  = "Citrulu"
   else
-    config.api_key        = "2d8046e6407e97adcbe8a19e7ab2a22c46a5cfbb"
+    config.api_key        = "XXXXXX"
     config.site_name      = "dgmstuart-test"
   end
 end
